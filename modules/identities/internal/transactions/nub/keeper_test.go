@@ -5,6 +5,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store"
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/params"
+	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/auxiliaries/define"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/mapper"
@@ -102,6 +103,21 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 			want: transactionResponse{
 				Success: true,
 				Error:   nil,
+			},
+		},
+		{
+			name:   "Duplicate nub identity addition.",
+			fields: fields{keepers.IdentitiesKeeper},
+			args: args{
+				context: ctx,
+				msg: message{
+					From:  types.AccAddress("addr"),
+					NubID: base.NewID("newID"),
+				},
+			},
+			want: transactionResponse{
+				Success: false,
+				Error:   errors.EntityAlreadyExists,
 			},
 		},
 	}
