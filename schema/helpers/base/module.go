@@ -16,6 +16,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/params"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/gorilla/mux"
+	"github.com/persistenceOne/persistenceSDK/constants"
 	xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/pkg/errors"
@@ -80,7 +81,7 @@ func (module module) ValidateGenesis(rawMessage json.RawMessage) error {
 }
 func (module module) RegisterRESTRoutes(cliContext context.CLIContext, router *mux.Router) {
 	for _, query := range module.queries.GetList() {
-		router.HandleFunc(query.GetRoute()+"/{query}", query.RESTQueryHandler(cliContext)).Methods("GET")
+		router.HandleFunc(query.GetRoute()+fmt.Sprintf("/{%s}", constants.QueryRoute), query.RESTQueryHandler(cliContext)).Methods("GET")
 	}
 
 	for _, transaction := range module.transactions.GetList() {

@@ -7,6 +7,7 @@ package constants
 
 const ProjectName = "xprt"
 const ProjectRoute = "/" + ProjectName
+const QueryRoute = "query"
 
 const IDSeparator = "."
 const FirstOrderCompositeIDSeparator = "|"
