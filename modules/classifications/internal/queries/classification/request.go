@@ -32,7 +32,17 @@ func (queryRequest queryRequest) FromMap(vars map[string]string) helpers.QueryRe
 	return newQueryRequest(base.NewID(vars[Query.GetName()]))
 }
 
-func queryRequestPrototype() helpers.QueryRequest {
+func (queryRequest queryRequest) Encode() ([]byte, error) {
+	//TODO
+	panic("implement me")
+}
+
+func (queryRequest queryRequest) Decode(bytes []byte) (helpers.QueryRequest, error) {
+	//TODO
+	panic("implement me")
+}
+
+func requestPrototype() helpers.QueryRequest {
 	return queryRequest{}
 }
 

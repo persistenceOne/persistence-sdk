@@ -9,8 +9,10 @@ import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
-	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/mapper"
+	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/key"
+	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/mappable"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/mappables"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
 
@@ -27,13 +29,13 @@ func (auxiliaryKeeper auxiliaryKeeper) Help(context sdkTypes.Context, AuxiliaryR
 		return newAuxiliaryResponse(nil, errors.InvalidRequest)
 	}
 
-	classificationID := mapper.NewClassificationID(base.NewID(context.ChainID()), auxiliaryRequest.ImmutableTraits, auxiliaryRequest.MutableTraits)
-	classifications := mapper.NewClassifications(auxiliaryKeeper.mapper, context).Fetch(classificationID)
-	if classifications.Get(classificationID) != nil {
+	classificationID := key.NewClassificationID(base.NewID(context.ChainID()), auxiliaryRequest.ImmutableTraits, auxiliaryRequest.MutableTraits)
+	classifications := auxiliaryKeeper.mapper.NewCollection(context).Fetch(key.New(classificationID))
+	if classifications.Get(key.New(classificationID)).(mappables.Classification) != nil {
 		return newAuxiliaryResponse(base.NewID(classificationID.String()), errors.EntityAlreadyExists)
 	}
 
-	classifications = classifications.Add(mapper.NewClassification(classificationID, auxiliaryRequest.ImmutableTraits, auxiliaryRequest.MutableTraits))
+	classifications = classifications.Add(mappable.NewClassification(classificationID, auxiliaryRequest.ImmutableTraits, auxiliaryRequest.MutableTraits))
 	return newAuxiliaryResponse(base.NewID(classificationID.String()), nil)
 }
 

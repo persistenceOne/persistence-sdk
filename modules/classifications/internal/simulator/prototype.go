@@ -3,8 +3,10 @@
  SPDX-License-Identifier: Apache-2.0
 */
 
-package transactions
+package simulator
 
-import "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
+import "github.com/persistenceOne/persistenceSDK/schema/helpers"
 
-var Transactions = base.NewTransactions()
+func Prototype() helpers.Simulator {
+	return newSimulator()
+}

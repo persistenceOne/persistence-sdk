@@ -3,9 +3,12 @@
  SPDX-License-Identifier: Apache-2.0
 */
 
-package mapper
+package mappable
 
 import (
+	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/key"
+	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/mappables"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
@@ -29,16 +32,11 @@ func (classification classification) GetMutables() types.Mutables {
 	return classification.MutableTraits
 }
 
-func (classification classification) Encode() []byte {
-	return packageCodec.MustMarshalBinaryBare(classification)
+func (classification classification) GetKey() helpers.Key {
+	return key.New(classification.ID)
 }
-func (classification classification) Decode(bytes []byte) helpers.Mappable {
-	packageCodec.MustUnmarshalBinaryBare(bytes, &classification)
-	return classification
-}
-
-func classificationPrototype() helpers.Mappable {
-	return classification{}
+func (classification) RegisterCodec(codec *codec.Codec) {
+	codec.RegisterConcrete(classification{}, module.Route+"/"+"asset", nil)
 }
 
 func NewClassification(ID types.ID, immutableTraits types.Immutables, mutableTraits types.Mutables) mappables.Classification {
