@@ -7,6 +7,7 @@ package key
 
 import (
 	"bytes"
+	"log"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -52,6 +53,11 @@ func (classificationID classificationID) IsPartial() bool {
 	return len(classificationID.HashID.Bytes()) == 0
 }
 func (classificationID classificationID) Matches(key helpers.Key) bool {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Println("panic occurred:", err)
+		}
+	}()
 	return classificationID.Equals(classificationIDFromInterface(key))
 }
 
