@@ -58,7 +58,7 @@ func (classificationID classificationID) Matches(key helpers.Key) bool {
 			log.Println("Panic occurred:", err)
 		}
 	}()
-	
+
 	return classificationID.Equals(classificationIDFromInterface(key))
 }
 
