@@ -55,9 +55,10 @@ func (classificationID classificationID) IsPartial() bool {
 func (classificationID classificationID) Matches(key helpers.Key) bool {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Println("panic occurred:", err)
+			log.Println("Panic occurred:", err)
 		}
 	}()
+	
 	return classificationID.Equals(classificationIDFromInterface(key))
 }
 
