@@ -69,7 +69,6 @@ const (
 	FlagPage               = "page"
 	FlagLimit              = "limit"
 	FlagUnsafeCORS         = "unsafe-cors"
-	FlagKafkaBool          = "kafkabool"
 )
 
 // LineBreak can be included in a command list to provide a blank line

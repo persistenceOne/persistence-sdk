@@ -38,7 +38,9 @@ type transaction struct {
 	keeperPrototype  func() helpers.TransactionKeeper
 }
 
+// TODO remove
 
+var KafkaBool = false
 var KafkaState queuing.KafkaState
 
 var _ helpers.Transaction = (*transaction)(nil)
@@ -170,7 +172,7 @@ func (transaction transaction) RESTRequestHandler(cliContext context.CLIContext)
 		cliContext = cliContext.WithFromName(fromName)
 		cliContext = cliContext.WithBroadcastMode(viper.GetString(flags.FlagBroadcastMode))
 
-		if cliContext.KafkaBool {
+		if KafkaBool {
 			ticketID := queuing.TicketIDGenerator(transaction.name)
 			jsonResponse := queuing.SendToKafka(queuing.NewKafkaMsgFromRest(msg, ticketID, baseReq, cliContext), KafkaState, cliContext.Codec)
 

@@ -43,8 +43,6 @@ type CLIContext struct {
 	GenerateOnly  bool
 	Indent        bool
 	SkipConfirm   bool
-	KafkaBool 	  bool
-
 }
 
 // NewCLIContextWithInputAndFrom returns a new initialized CLIContext with parameters from the
@@ -94,7 +92,6 @@ func NewCLIContextWithInputAndFrom(input io.Reader, from string) CLIContext {
 		FromName:      fromName,
 		Indent:        viper.GetBool(flags.FlagIndentResponse),
 		SkipConfirm:   viper.GetBool(flags.FlagSkipConfirmation),
-		KafkaBool: 	   viper.GetBool(flags.FlagKafkaBool),
 	}
 
 	// create a verifier for the specific chain ID and RPC client
