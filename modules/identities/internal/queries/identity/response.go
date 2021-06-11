@@ -11,9 +11,9 @@ import (
 )
 
 type queryResponse struct {
-	Success bool               `json:"success"`
-	Error   error              `json:"error"`
-	List    []helpers.Mappable `json:"list"`
+	Success  bool             `json:"success"`
+	Error    error            `json:"error"`
+	Mappable helpers.Mappable `json:"mappable"`
 }
 
 var _ helpers.QueryResponse = (*queryResponse)(nil)
@@ -37,15 +37,15 @@ func (queryResponse queryResponse) Decode(bytes []byte) (helpers.QueryResponse, 
 func responsePrototype() helpers.QueryResponse {
 	return queryResponse{}
 }
-func newQueryResponse(collection helpers.Collection, error error) helpers.QueryResponse {
+func newQueryResponse(mappable helpers.Mappable, error error) helpers.QueryResponse {
 	success := true
 	if error != nil {
 		success = false
 	}
 
 	return queryResponse{
-		Success: success,
-		Error:   error,
-		List:    collection.GetList(),
+		Success:  success,
+		Error:    error,
+		Mappable: mappable,
 	}
 }

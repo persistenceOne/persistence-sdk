@@ -37,15 +37,18 @@ func (queryResponse queryResponse) Decode(bytes []byte) (helpers.QueryResponse, 
 func responsePrototype() helpers.QueryResponse {
 	return queryResponse{}
 }
-func newQueryResponse(collection helpers.Collection, error error) helpers.QueryResponse {
+func newQueryResponse(mappable helpers.Mappable, error error) helpers.QueryResponse {
 	success := true
 	if error != nil {
 		success = false
 	}
 
+	var mappables []helpers.Mappable
+	mappables = append(mappables, mappable)
+
 	return queryResponse{
 		Success: success,
 		Error:   error,
-		List:    collection.GetList(),
+		List:    mappables,
 	}
 }
