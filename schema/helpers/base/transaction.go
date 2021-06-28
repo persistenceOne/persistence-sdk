@@ -14,7 +14,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -83,7 +83,7 @@ func (transaction transaction) HandleMessage(context sdkTypes.Context, message s
 	return &sdkTypes.Result{Events: context.EventManager().Events()}, nil
 }
 
-func (transaction transaction) RESTRequestHandler(cliContext context.CLIContext) http.HandlerFunc {
+func (transaction transaction) RESTRequestHandler(cliContext client.Context) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, httpRequest *http.Request) {
 		transactionRequest := transaction.requestPrototype()
 		if !rest.ReadRESTReq(responseWriter, httpRequest, cliContext.Codec, &transactionRequest) {

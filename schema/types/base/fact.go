@@ -7,7 +7,7 @@ package base
 
 import (
 	"github.com/99designs/keyring"
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
@@ -27,7 +27,7 @@ func (fact fact) IsMeta() bool {
 	return false
 }
 func (fact fact) Sign(_ keyring.Keyring) types.Fact {
-	clicont := context.NewCLIContext()
+	clicont := client.Context()
 	sign, _, _ := clicont.Keybase.Sign(clicont.FromName, keys.DefaultKeyPass, fact.HashID.Bytes())
 	Signature := signature{
 		ID:             id{IDString: fact.HashID.String()},

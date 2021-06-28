@@ -8,7 +8,7 @@ package base
 import (
 	"fmt"
 
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
@@ -86,7 +86,7 @@ func (cliCommand cliCommand) ReadString(cliFlag helpers.CLIFlag) string {
 	panic(fmt.Errorf("uregistered flag %v type %T", cliFlag.GetName(), cliFlag.GetValue()))
 }
 
-func (cliCommand cliCommand) ReadBaseReq(cliContext context.CLIContext) rest.BaseReq {
+func (cliCommand cliCommand) ReadBaseReq(cliContext client.Context) rest.BaseReq {
 	return rest.BaseReq{
 		From:     cliContext.GetFromAddress().String(),
 		ChainID:  cliContext.ChainID,

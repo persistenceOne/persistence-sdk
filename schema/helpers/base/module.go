@@ -11,7 +11,6 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	sdkTypesModule "github.com/cosmos/cosmos-sdk/types/module"
@@ -82,7 +81,7 @@ func (module module) ValidateGenesis(rawMessage json.RawMessage) error {
 	genesisState := module.genesisPrototype().Decode(rawMessage)
 	return genesisState.Validate()
 }
-func (module module) RegisterRESTRoutes(cliContext context.CLIContext, router *mux.Router) {
+func (module module) RegisterRESTRoutes(cliContext client.Context, router *mux.Router) {
 	for _, query := range module.queriesPrototype().GetList() {
 		router.HandleFunc("/"+module.Name()+"/"+query.GetName()+fmt.Sprintf("/{%s}", query.GetName()), query.RESTQueryHandler(cliContext)).Methods("GET")
 	}
