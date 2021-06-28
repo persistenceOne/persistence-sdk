@@ -7,13 +7,14 @@ package identity
 
 import (
 	"github.com/asaskevich/govalidator"
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/common"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
+//TODO: Query service amd proto
 
 type queryRequest struct {
 	IdentityID types.ID `json:"identityID" valid:"required~required field identityID missing"`
@@ -26,7 +27,7 @@ func (queryRequest queryRequest) Validate() error {
 	return Error
 }
 
-func (queryRequest queryRequest) FromCLI(cliCommand helpers.CLICommand, _ context.CLIContext) helpers.QueryRequest {
+func (queryRequest queryRequest) FromCLI(cliCommand helpers.CLICommand, _ client.Context) helpers.QueryRequest {
 	return newQueryRequest(base.NewID(cliCommand.ReadString(flags.IdentityID)))
 }
 

@@ -27,5 +27,5 @@ type Parameters interface {
 	GetKeyTable() subspace.KeyTable
 	subspace.ParamSet
 
-	Initialize(params.Subspace) Parameters
+	Initialize(params) Parameters
 }

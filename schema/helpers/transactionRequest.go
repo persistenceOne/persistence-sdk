@@ -7,19 +7,21 @@ package helpers
 
 import (
 	"encoding/json"
+	"github.com/gogo/protobuf/proto"
 
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 )
 
 type TransactionRequest interface {
+	proto.Message
 	GetBaseReq() rest.BaseReq
 
-	FromCLI(CLICommand, context.CLIContext) (TransactionRequest, error)
+	FromCLI(CLICommand, client.Context) (TransactionRequest, error)
 	FromJSON(json.RawMessage) (TransactionRequest, error)
 	MakeMsg() (sdkTypes.Msg, error)
-	RegisterCodec(*codec.Codec)
+	RegisterCodec(protoCodec *codec.ProtoCodec)
 	Request
 }

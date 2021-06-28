@@ -26,6 +26,7 @@ type message struct {
 	MutableMetaProperties   types.MetaProperties `json:"mutableMetaProperties" valid:"required~required field mutableMetaProperties missing"`
 	MutableProperties       types.Properties     `json:"mutableProperties" valid:"required~required field mutableProperties missing"`
 }
+//TODO: message.proto with service
 
 var _ sdkTypes.Msg = message{}
 
@@ -45,7 +46,7 @@ func (message message) GetSignBytes() []byte {
 func (message message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{message.From}
 }
-func (message) RegisterCodec(codec *codec.Codec) {
+func (message) RegisterCodec(codec *codec.ProtoCodec) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
 }
 func messageFromInterface(msg sdkTypes.Msg) message {

@@ -16,6 +16,7 @@ import (
 )
 
 type Query interface {
+	//TODO: proto file
 	GetName() string
 	Command(*codec.Codec) *cobra.Command
 	HandleMessage(sdkTypes.Context, abciTypes.RequestQuery) ([]byte, error)

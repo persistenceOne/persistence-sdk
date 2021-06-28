@@ -7,7 +7,7 @@ package asset
 
 import (
 	"testing"
-
+	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
@@ -24,9 +24,9 @@ import (
 
 func Test_Asset_Request(t *testing.T) {
 
-	var Codec = codec.New()
+	var Codec = codec.NewLegacyAmino()
 	schema.RegisterCodec(Codec)
-	sdkTypes.RegisterCodec(Codec)
+	sdkTypes.RegisterLegacyAminoCodec(Codec)
 	codec.RegisterCrypto(Codec)
 	codec.RegisterEvidences(Codec)
 	vesting.RegisterCodec(Codec)

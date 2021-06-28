@@ -7,8 +7,9 @@ package burn
 
 import (
 	"encoding/json"
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client/"
 	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/codec/types"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
@@ -22,7 +23,7 @@ import (
 )
 
 func Test_Burn_Request(t *testing.T) {
-	var Codec = codec.New()
+	var Codec = codec.NewProtoCodec()
 	schema.RegisterCodec(Codec)
 	sdkTypes.RegisterCodec(Codec)
 	codec.RegisterCrypto(Codec)
@@ -30,7 +31,7 @@ func Test_Burn_Request(t *testing.T) {
 	vesting.RegisterCodec(Codec)
 	Codec.Seal()
 	cliCommand := baseHelpers.NewCLICommand("", "", "", []helpers.CLIFlag{flags.FromID, flags.AssetID})
-	cliContext := context.NewCLIContext().WithCodec(Codec)
+	cliContext := client.Context{}WithCodec(Codec)
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)
