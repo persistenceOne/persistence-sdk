@@ -1,0 +1,31 @@
+syntax = "proto3";
+package burn;
+
+import "third_party/proto/cosmos_proto/cosmos.proto";
+//import "third_party/proto/gogoproto/gogo.proto";
+import "google/protobuf/any.proto";
+
+option go_package = "/burn";
+
+message message {
+  string accAddress = 1;
+  google.protobuf.Any fromID = 2 [(cosmos_proto.accepts_interface) = "ID"];
+  google.protobuf.Any assetID = 3 [(cosmos_proto.accepts_interface) = "ID"];
+}
+
+message transactionRequest {
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.goproto_stringer) = false;
+  option (gogoproto.equal)            = false;
+  google.protobuf.Any baseReq = 1 [(cosmos_proto.accpets_interface) = "BaseReq"];
+  string fromID = 2;
+  string assetID = 3;
+}
+
+message transactionKeeper {
+  google.protobuf.Any mapper = 1 [(cosmos_proto.accepts_interface) = "Mapper"];
+  google.protobuf.Any burnAuxiliary = 2 [(cosmos_proto.accepts_interface) = "Auxiliary"];
+  google.protobuf.Any maintainAuxiliary = 3 [(cosmos_proto.accepts_interface) = "Auxiliary"];
+  google.protobuf.Any supplementAuxiliary = 4 [(cosmos_proto.accepts_interface) = "Auxiliary"];
+  google.protobuf.Any verifyAuxiliary = 5 [(cosmos_proto.accepts_interface) = "Auxiliary"];
+}
