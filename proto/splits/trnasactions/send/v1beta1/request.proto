@@ -1,21 +1,21 @@
-syntax="proto3";
+syntax = "proto3";
 
 package base;
 
 import "third_party/proto/gogoproto/gogo.proto";
 import "proto/comoshelpers/v1beta1/basereq.proto";
 
-option go_package= "modules/identities/internal/transactions/nub";
+option go_package = "modules/splits/internal/transactions/send";
 
 message transactionRequest {
     option (gogoproto.goproto_getters) = false;
     option (gogoproto.goproto_stringer) = false;
     option (gogoproto.equal)            = false;
-    
+
     BaseReq BaseReq =1;
-    string nub_id =2;
-
-
+    string from_id  = 2;
+    string to_id =3;
+    string ownable_id = 4;
+    string value =5;
+    
 }
-
-

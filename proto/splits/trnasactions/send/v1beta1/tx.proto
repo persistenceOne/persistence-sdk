@@ -1,0 +1,21 @@
+syntax ="proto3";
+
+package base;
+
+import "third_party/proto/gogoproto/gogo.proto";
+
+
+option go_package = "modules/splits/internal/transactions/send";
+
+message message {
+    option (gogoproto.goproto_getters) = false;
+    // option (gogoproto.goproto_stringer) = false;
+    option (gogoproto.equal)            = false;
+
+    string from =1;
+    string from_id =2;
+    string to_id =3;
+    string ownable_id =4;
+    string value =5 [(gogoproto.customtype) = "Dec", (gogoproto.nullable) = false];
+    
+}
