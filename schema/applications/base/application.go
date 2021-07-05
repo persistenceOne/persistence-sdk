@@ -7,6 +7,12 @@ package base
 
 import (
 	"encoding/json"
+	"github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/cosmos/cosmos-sdk/x/crisis"
+	"github.com/cosmos/cosmos-sdk/x/distribution"
+	"github.com/cosmos/cosmos-sdk/x/params"
+	"github.com/cosmos/cosmos-sdk/x/slashing"
+	"github.com/cosmos/cosmos-sdk/x/staking"
 	"io"
 	"os"
 	"path/filepath"
@@ -15,20 +21,16 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	sdkTypesModule "github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	"github.com/cosmos/cosmos-sdk/x/bank"
-	"github.com/cosmos/cosmos-sdk/x/crisis"
-	"github.com/cosmos/cosmos-sdk/x/distribution"
 	"github.com/cosmos/cosmos-sdk/x/evidence"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	"github.com/cosmos/cosmos-sdk/x/gov"
 	"github.com/cosmos/cosmos-sdk/x/mint"
-	"github.com/cosmos/cosmos-sdk/x/params"
-	"github.com/cosmos/cosmos-sdk/x/slashing"
-	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/supply"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	"github.com/persistenceOne/persistenceSDK/modules/assets"
@@ -61,47 +63,84 @@ import (
 	tendermintTypes "github.com/tendermint/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
 	"honnef.co/go/tools/version"
+	authTypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	bankTypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	capabilityTypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	crisisTypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
+	distributionTypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
+	evidenceTypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
+	genutilTypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
+	govTypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	mintTypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	stakingTypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	slashingTypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
+	upgradeTypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	authKeeprs "github.com/cosmos/cosmos-sdk/x/auth/keeper"
+	bankKeepers "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+	capabilityKeepers "github.com/cosmos/cosmos-sdk/x/capability/keeper"
+	crisisKeepers "github.com/cosmos/cosmos-sdk/x/crisis/keeper"
+	distributionKeepers "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
+	evidenceKeeprs "github.com/cosmos/cosmos-sdk/x/evidence/keeper"
+	govKeepers "github.com/cosmos/cosmos-sdk/x/gov/keeper"
+	mintKeepers "github.com/cosmos/cosmos-sdk/x/mint/keeper"
+	paramsKeepers "github.com/cosmos/cosmos-sdk/x/params/keeper"
+	stakingKeepers "github.com/cosmos/cosmos-sdk/x/staking/keeper"
+	slashingKeepers "github.com/cosmos/cosmos-sdk/x/slashing/keeper"
 )
 
 type application struct {
-	name string
+	baseApp				*baseapp.BaseApp
+	legacyAmino			*codec.LegacyAmino
+	applicationCodec 	codec.Marshaler
+	interfaceRegistry	types.InterfaceRegistry
 
-	moduleBasicManager module.BasicManager
+	moduleBasicManager 	module.BasicManager
+	keys 				map[string]*sdkTypes.KVStoreKey
 
-	codec *codec.Codec
+	stakingKeeper      	stakingKeepers.Keeper
+	slashingKeeper     	slashingKeepers.Keeper
+	distributionKeeper 	distributionKeepers.Keeper
+	crisisKeeper       	crisisKeepers.Keeper
 
-	enabledWasmProposalTypeList []wasm.ProposalType
-	moduleAccountPermissions    map[string][]string
-	tokenReceiveAllowedModules  map[string]bool
-
-	keys map[string]*sdkTypes.KVStoreKey
-
-	stakingKeeper      staking.Keeper
-	slashingKeeper     slashing.Keeper
-	distributionKeeper distribution.Keeper
-	crisisKeeper       crisis.Keeper
-
-	moduleManager *module.Manager
+	moduleManager 		*sdkTypesModule.Manager
 
 	baseapp.BaseApp
 }
 
+func (application application) GetDefaultNodeHome() string {
+	panic("implement me")
+}
+
+func (application application) GetDefaultClientHome() string {
+	panic("implement me")
+}
+
+func (application application) GetModuleBasicManager() module.BasicManager {
+	panic("implement me")
+}
+
+func (application application) GetCodec() *interface{} {
+	panic("implement me")
+}
+
+func (application application) MountStoreWithDB(key sdkTypes.StoreKey, typ sdkTypes.StoreType, db tendermintDB.DB) {
+	panic("implement me")
+}
+
+func (application application) LoadLatestVersion(baseKey *sdkTypes.KVStoreKey) error {
+	panic("implement me")
+}
+
+func (application application) LoadVersion(version int64, baseKey *sdkTypes.KVStoreKey) error {
+	panic("implement me")
+}
+
 var _ applications.Application = (*application)(nil)
 
-func (application application) GetDefaultNodeHome() string {
-	return os.ExpandEnv("$HOME/." + application.name + "/Node")
-}
-func (application application) GetDefaultClientHome() string {
-	return os.ExpandEnv("$HOME/." + application.name + "/Client")
-}
-func (application application) GetModuleBasicManager() module.BasicManager {
-	return application.moduleBasicManager
-}
-func (application application) GetCodec() *codec.Codec {
-	return application.codec
-}
+
 func (application application) LoadHeight(height int64) error {
-	return application.LoadVersion(height, application.keys[baseapp.MainStoreKey])
+	return application.LoadVersion(height)
 }
 func (application application) ExportApplicationStateAndValidators(forZeroHeight bool, jailWhiteList []string) (json.RawMessage, []tendermintTypes.GenesisValidator, error) {
 	context := application.NewContext(true, abciTypes.Header{Height: application.LastBlockHeight()})
@@ -125,7 +164,7 @@ func (application application) ExportApplicationStateAndValidators(forZeroHeight
 
 		application.crisisKeeper.AssertInvariants(context)
 
-		application.stakingKeeper.IterateValidators(context, func(_ int64, val staking.ValidatorI) (stop bool) {
+		application.stakingKeeper.IterateValidators(context, func(_ int64, val stakingTypes.ValidatorI) (stop bool) {
 			_, _ = application.distributionKeeper.WithdrawValidatorCommission(context, val.GetOperator())
 			return false
 		})
@@ -142,7 +181,7 @@ func (application application) ExportApplicationStateAndValidators(forZeroHeight
 		height := context.BlockHeight()
 		context = context.WithBlockHeight(0)
 
-		application.stakingKeeper.IterateValidators(context, func(_ int64, val staking.ValidatorI) (stop bool) {
+		application.stakingKeeper.IterateValidators(context, func(_ int64, val stakingTypes.ValidatorI) (stop bool) {
 
 			scraps := application.distributionKeeper.GetValidatorOutstandingRewards(context, val.GetOperator())
 			feePool := application.distributionKeeper.GetFeePool(context)
@@ -160,7 +199,7 @@ func (application application) ExportApplicationStateAndValidators(forZeroHeight
 
 		context = context.WithBlockHeight(height)
 
-		application.stakingKeeper.IterateRedelegations(context, func(_ int64, redelegation staking.Redelegation) (stop bool) {
+		application.stakingKeeper.IterateRedelegations(context, func(_ int64, redelegation stakingTypes.Redelegation) (stop bool) {
 			for i := range redelegation.Entries {
 				redelegation.Entries[i].CreationHeight = 0
 			}
@@ -168,7 +207,7 @@ func (application application) ExportApplicationStateAndValidators(forZeroHeight
 			return false
 		})
 
-		application.stakingKeeper.IterateUnbondingDelegations(context, func(_ int64, unbondingDelegation staking.UnbondingDelegation) (stop bool) {
+		application.stakingKeeper.IterateUnbondingDelegations(context, func(_ int64, unbondingDelegation stakingTypes.UnbondingDelegation) (stop bool) {
 			for i := range unbondingDelegation.Entries {
 				unbondingDelegation.Entries[i].CreationHeight = 0
 			}
@@ -176,8 +215,8 @@ func (application application) ExportApplicationStateAndValidators(forZeroHeight
 			return false
 		})
 
-		store := context.KVStore(application.keys[staking.StoreKey])
-		kvStoreReversePrefixIterator := sdkTypes.KVStoreReversePrefixIterator(store, staking.ValidatorsKey)
+		store := context.KVStore(application.keys[stakingTypes.StoreKey])
+		kvStoreReversePrefixIterator := sdkTypes.KVStoreReversePrefixIterator(store, stakingTypes.ValidatorsKey)
 		counter := int16(0)
 
 		for ; kvStoreReversePrefixIterator.Valid(); kvStoreReversePrefixIterator.Next() {
@@ -204,7 +243,7 @@ func (application application) ExportApplicationStateAndValidators(forZeroHeight
 
 		application.slashingKeeper.IterateValidatorSigningInfos(
 			context,
-			func(validatorConsAddress sdkTypes.ConsAddress, validatorSigningInfo slashing.ValidatorSigningInfo) (stop bool) {
+			func(validatorConsAddress sdkTypes.ConsAddress, validatorSigningInfo slashingTypes.ValidatorSigningInfo) (stop bool) {
 				validatorSigningInfo.StartHeight = 0
 				application.slashingKeeper.SetValidatorSigningInfo(context, validatorConsAddress, validatorSigningInfo)
 				return false
@@ -235,16 +274,16 @@ func (application application) Initialize(logger log.Logger, db tendermintDB.DB,
 
 	application.keys = sdkTypes.NewKVStoreKeys(
 		baseapp.MainStoreKey,
-		auth.StoreKey,
-		supply.StoreKey,
-		staking.StoreKey,
-		mint.StoreKey,
-		distribution.StoreKey,
-		slashing.StoreKey,
-		gov.StoreKey,
-		params.StoreKey,
-		upgrade.StoreKey,
-		evidence.StoreKey,
+		authTypes.StoreKey,
+		bankTypes.StoreKey,
+		stakingTypes.StoreKey,
+		mintTypes.StoreKey,
+		distributionTypes.StoreKey,
+		slashingTypes.StoreKey,
+		govTypes.StoreKey,
+		paramsTypes.StoreKey,
+		upgradeTypes.StoreKey,
+		evidenceTypes.StoreKey,
 		wasm.StoreKey,
 		assets.Prototype().Name(),
 		classifications.Prototype().Name(),
@@ -255,15 +294,15 @@ func (application application) Initialize(logger log.Logger, db tendermintDB.DB,
 		splits.Prototype().Name(),
 	)
 
-	transientStoreKeys := sdkTypes.NewTransientStoreKeys(params.TStoreKey)
+	transientStoreKeys := sdkTypes.NewTransientStoreKeys(paramsTypes.TStoreKey)
 
-	paramsKeeper := params.NewKeeper(
+	paramsKeeper := paramsKeepers.NewKeeper(
 		application.codec,
 		application.keys[params.StoreKey],
 		transientStoreKeys[params.TStoreKey],
 	)
 
-	accountKeeper := auth.NewAccountKeeper(
+	accountKeeper := authKeeprs.NewAccountKeeper(
 		application.codec,
 		application.keys[auth.StoreKey],
 		paramsKeeper.Subspace(auth.DefaultParamspace),
@@ -275,13 +314,13 @@ func (application application) Initialize(logger log.Logger, db tendermintDB.DB,
 		blacklistedAddresses[supply.NewModuleAddress(account).String()] = !application.tokenReceiveAllowedModules[account]
 	}
 
-	bankKeeper := bank.NewBaseKeeper(
+	bankKeeper := bankKeepers.NewBaseKeeper(
 		accountKeeper,
 		paramsKeeper.Subspace(bank.DefaultParamspace),
 		blacklistedAddresses,
 	)
 
-	supplyKeeper := supply.NewKeeper(
+	supplyKeeper := .NewKeeper(
 		application.codec,
 		application.keys[supply.StoreKey],
 		accountKeeper,
@@ -443,9 +482,9 @@ func (application application) Initialize(logger log.Logger, db tendermintDB.DB,
 		&wasm.MessageEncoders{Custom: wasmUtilities.CustomEncoder(assets.Prototype(), classifications.Prototype(), identities.Prototype(), maintainers.Prototype(), metas.Prototype(), orders.Prototype(), splits.Prototype())},
 		nil)
 
-	govRouter := gov.NewRouter().AddRoute(
-		gov.RouterKey,
-		gov.ProposalHandler,
+	govRouter := govTypes.NewRouter().AddRoute(
+		govTypes.RouterKey,
+		govTypes.ProposalHandler,
 	).AddRoute(
 		params.RouterKey,
 		params.NewParamChangeProposalHandler(paramsKeeper),
@@ -461,7 +500,7 @@ func (application application) Initialize(logger log.Logger, db tendermintDB.DB,
 		govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(wasmKeeper, application.enabledWasmProposalTypeList))
 	}
 
-	govKeeper := gov.NewKeeper(
+	govKeeper := govKeepers.NewKeeper(
 		application.codec,
 		application.keys[gov.StoreKey],
 		paramsKeeper.Subspace(gov.DefaultParamspace).WithKeyTable(gov.ParamKeyTable()),

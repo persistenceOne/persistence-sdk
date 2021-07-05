@@ -5,7 +5,10 @@
 
 package types
 
+import "github.com/gogo/protobuf/proto"
+
 type Properties interface {
+	proto.Message
 	Get(ID) Property
 
 	GetList() []Property

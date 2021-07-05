@@ -7,8 +7,9 @@ package helpers
 
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/params"
-	"github.com/cosmos/cosmos-sdk/x/params/subspace"
+	//"github.com/cosmos/cosmos-sdk/x/params"
+	params "github.com/cosmos/cosmos-sdk/x/params/types"
+	subspace "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 

@@ -9,40 +9,74 @@ import (
 	"github.com/99designs/keyring"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/keys"
+	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/gogo/protobuf/proto"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type fact struct {
-	HashID     types.ID         `json:"hashID"`
-	TypeID     types.ID         `json:"typeID"`
-	Signatures types.Signatures `json:"signatures"`
+//type fact struct {
+//	HashID     types.ID         `json:"hashID"`
+//	TypeID     types.ID         `json:"typeID"`
+//	Signatures types.Signatures `json:"signatures"`
+//}
+
+var _ types.Fact = &Fact{}
+var _ cdctypes.UnpackInterfacesMessage = &Fact{}
+
+func (fact *Fact) UnpackInterfaces(unpacker cdctypes.AnyUnpacker) error {
+	var hashID types.ID
+	var typeID types.ID
+	var signature types.Signatures
+	err := unpacker.UnpackAny(fact.HashID, &hashID)
+	err1 := unpacker.UnpackAny(fact.TypeID, &typeID)
+	err2 := unpacker.UnpackAny(fact.Signatures, &signature)
+	if err != nil {
+		return err
+	} else if err1 != nil {
+		return err1
+	} else if err2 != nil {
+		return err2
+	}
+	return nil
 }
 
-var _ types.Fact = (*fact)(nil)
-
-func (fact fact) GetHashID() types.ID             { return fact.HashID }
-func (fact fact) GetTypeID() types.ID             { return fact.TypeID }
-func (fact fact) GetSignatures() types.Signatures { return fact.Signatures }
-func (fact fact) IsMeta() bool {
+func (fact *Fact) GetHashID() types.ID { return fact.HashID.GetCachedValue().(types.ID) }
+func (fact *Fact) GetTypeID() types.ID { return fact.TypeID.GetCachedValue().(types.ID) }
+func (fact *Fact) GetSignatures() types.Signatures {
+	return fact.Signatures.GetCachedValue().(types.Signatures)
+}
+func (fact *Fact) IsMeta() bool {
 	return false
 }
-func (fact fact) Sign(_ keyring.Keyring) types.Fact {
-	clicont := client.Context()
-	sign, _, _ := clicont.Keybase.Sign(clicont.FromName, keys.DefaultKeyPass, fact.HashID.Bytes())
-	Signature := signature{
-		ID:             id{IDString: fact.HashID.String()},
+func (fact *Fact) Sign(_ keyring.Keyring) types.Fact {
+	clicont := client.Context{}
+	sign, _, _ := clicont.Keybase.Sign(clicont.FromName, keys.DefaultKeyPass, fact.GetHashID().Bytes())
+	signature := Signature{
+		ID:             Id{IDstring: fact.GetHashID().String()},
 		SignatureBytes: sign,
-		ValidityHeight: height{clicont.Height},
+		ValidityHeight: Height{Value: clicont.Height},
 	}
-	fact.GetSignatures().Add(Signature)
+	fact.GetSignatures().Add(signature)
 
 	return fact
 }
 
 func NewFact(data types.Data) types.Fact {
-	return fact{
-		HashID:     data.GenerateHashID(),
-		TypeID:     data.GetTypeID(),
+	_, ok := data.(proto.Message)
+	if !ok {
+		return &Fact{}
+	}
+	any, err := cdctypes.NewAnyWithValue(data.GenerateHashID())
+	if err != nil {
+		return &Fact{}
+	}
+	any1, err := cdctypes.NewAnyWithValue(data.GetTypeID())
+	if err != nil {
+		return &Fact{}
+	}
+	return &Fact{
+		HashID:     any,
+		TypeID:     any1,
 		Signatures: signatures{},
 	}
 }

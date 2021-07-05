@@ -1,0 +1,40 @@
+syntax = "proto3";
+package test.base.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+
+option go_package="test_oneof/base";
+
+message sendToken {
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.goproto_stringer) = false;
+  option (gogoproto.equal)            = false;
+
+  string fromAddr =1;
+  string toAddr = 2;
+  Token Token =3;
+
+
+}
+
+message requestToken {
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.goproto_stringer) = false;
+  option (gogoproto.equal)            = false;
+
+  string fromAddr = 1;
+  string toAddr = 2;
+  Token Token =3;
+
+
+}
+
+message Token {
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.goproto_stringer) = false;
+  option (gogoproto.equal)            = false;
+
+  uint32 Token = 1;
+
+
+}

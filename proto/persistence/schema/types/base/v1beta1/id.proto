@@ -1,0 +1,13 @@
+syntax = "proto3";
+package persistence.schema.types.base.v1beta1;
+
+import "third_party/proto/cosmos_proto/cosmos.proto";
+//import "third_party/proto/gogoproto/gogo.proto";
+//import "google/protobuf/any.proto";
+
+option go_package = "types/base";
+
+message id {
+  option (cosmos_proto.implements_interface) = "ID";
+  string IDstring = 1;
+}

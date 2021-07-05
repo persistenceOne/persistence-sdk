@@ -17,10 +17,10 @@ import (
 
 type Transaction interface {
 	GetName() string
-	Command(*codec.Codec) *cobra.Command
+	Command(protoCodec *codec.ProtoCodec) *cobra.Command
 	HandleMessage(sdkTypes.Context, sdkTypes.Msg) (*sdkTypes.Result, error)
 	RESTRequestHandler(client.Context) http.HandlerFunc
-	RegisterCodec(*codec.Codec)
+	RegisterCodec(protoCodec *codec.ProtoCodec)
 	DecodeTransactionRequest(json.RawMessage) (sdkTypes.Msg, error)
 	InitializeKeeper(Mapper, Parameters, ...interface{}) Transaction
 }
