@@ -7,7 +7,7 @@ package helpers
 
 import (
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/types/rest"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ type CLICommand interface {
 	ReadInt(CLIFlag) int
 	ReadBool(CLIFlag) bool
 	ReadString(CLIFlag) string
-	ReadBaseReq(ctx client.Context) rest.BaseReq
+	ReadBaseReq(ctx client.Context) *test_types.BaseReq
 
 	CreateCommand(func(command *cobra.Command, args []string) error) *cobra.Command
 }

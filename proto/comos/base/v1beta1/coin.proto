@@ -1,9 +1,9 @@
 syntax = "proto3";
-package base;
+package cosmos.base.v1beta1;
 
 import "third_party/proto/gogoproto/gogo.proto";
 
-option go_package                       = "schema/test_types";
+option go_package                       = "github.com/cosmos/cosmos-sdk/types";
 option (gogoproto.goproto_stringer_all) = false;
 option (gogoproto.stringer_all)         = false;
 

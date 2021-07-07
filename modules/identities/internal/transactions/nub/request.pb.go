@@ -11,7 +11,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
-	test_types "schema/test_types"
+	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
 	sync "sync"
 )
 

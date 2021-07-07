@@ -5,12 +5,23 @@
 
 package helpers
 
-import "github.com/cosmos/cosmos-sdk/codec"
+import (
+	"github.com/cosmos/cosmos-sdk/codec"
+)
 
-func RegisterCodec(codec *codec.ProtoCodec) {
-	//TODO: Register Interface TO be replaced by Any from protobuf
+
+func RegisterLegacyAminoCodec(codec *codec.LegacyAmino) {
 	codec.RegisterInterface((*Mappable)(nil), nil)
 	codec.RegisterInterface((*QueryRequest)(nil), nil)
 	codec.RegisterInterface((*QueryResponse)(nil), nil)
 	codec.RegisterInterface((*TransactionRequest)(nil), nil)
 }
+
+
+//func RegisterCodec(codec *codec.ProtoCodec) {
+//	//TODO: Register Interface TO be replaced by Any from protobuf
+//	codec.RegisterInterface((*Mappable)(nil), nil)
+//	codec.RegisterInterface((*QueryRequest)(nil), nil)
+//	codec.RegisterInterface((*QueryResponse)(nil), nil)
+//	codec.RegisterInterface((*TransactionRequest)(nil), nil)
+//}

@@ -11,22 +11,23 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type id struct {
+type ID struct {
 	IDString string `json:"idString"`
 }
 
-var _ types.ID = (*id)(nil)
+var _ types.ID = (*ID)(nil)
 
-func (id id) String() string {
+func (id ID) String() string {
 	return id.IDString
+
 }
-func (id id) Bytes() []byte {
+func (id ID) Bytes() []byte {
 	return []byte(id.IDString)
 }
-func (id id) Equals(compareID types.ID) bool {
+func (id ID) Equals(compareID types.ID) bool {
 	return bytes.Equal(id.Bytes(), compareID.Bytes())
 }
 
 func NewID(idString string) types.ID {
-	return id{IDString: idString}
+	return ID{IDString: idString}
 }
