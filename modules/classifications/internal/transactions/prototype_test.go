@@ -22,6 +22,11 @@ func TestPrototype(t *testing.T) {
 	anyarr := make([]*types.Any, 2)
 	//cli := &base.CliCommand{Use: "NoUse", Short:"No short"}
 	//spot1 , err := types.NewAnyWithValue(cli)
+	/*Note :
+	1. Transaction has to implement the Transactions Interface in order to unpackInterface.
+	2. CliCommand is not working as it has to have its own impl of unpacking and packing before bring used.
+	3. Nested marshalling and unmarshalling testing can be done through 2nd point.
+	*/
 	spot2, err := types.NewAnyWithValue(&test_helpers.Transaction{Name: "Arham"})
 	fmt.Println(spot2)
 	spot3, err := types.NewAnyWithValue(&test_helpers.Transaction{Name: "Chordia"})
