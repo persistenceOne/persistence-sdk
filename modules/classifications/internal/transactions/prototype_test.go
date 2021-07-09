@@ -18,10 +18,6 @@ func TestRegister(t *testing.T) {
 }
 
 func TestPrototype(t *testing.T) {
-	//var ele1 helpers.Transaction = &base.Transaction{Name : "Arham"}
-	//var ele2 helpers.Transaction = &base.Transaction{Name : "Chordia"}
-	//a := test_helpers.NewTransactions(ele1, ele2)
-	//fmt.Println(test_helpers.NewTransactions(ele1, ele2))
 	registry := test_helpers.NewTestInterfaceRegistry()
 	anyarr := make([]*types.Any, 2)
 	//cli := &base.CliCommand{Use: "NoUse", Short:"No short"}
