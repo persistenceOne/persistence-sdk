@@ -19,8 +19,8 @@ message BaseReq {
     uint64 account_number=4;
     uint64 sequence =5;
     uint64 timeout_height =6;
-    repeated cosmos.base.v1beta1.Coin fees =7 ;
-    repeated cosmos.base.v1beta1.DecCoin gas_prices =8 ;
+    repeated cosmos.base.v1beta1.Coin fees =7 [(gogoproto.nullable) = false] ;
+    repeated cosmos.base.v1beta1.DecCoin gas_prices =8 [(gogoproto.nullable) = false] ;
     string gas = 9;
     string gas_adjustment = 10;
     bool simulate = 11;

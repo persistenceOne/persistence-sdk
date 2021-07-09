@@ -16,7 +16,7 @@ type CLICommand interface {
 	ReadInt(CLIFlag) int
 	ReadBool(CLIFlag) bool
 	ReadString(CLIFlag) string
-	ReadBaseReq(ctx client.Context) *test_types.BaseReq
+	ReadBaseReq(ctx client.Context) test_types.BaseReq
 
 	CreateCommand(func(command *cobra.Command, args []string) error) *cobra.Command
 }

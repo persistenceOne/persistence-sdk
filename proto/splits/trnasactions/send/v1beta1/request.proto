@@ -14,7 +14,7 @@ message transactionRequest {
     option (gogoproto.equal)            = false;
     option (cosmos_proto.implements_interface) = "TransactionResponse";
 
-    cosmos.base.v1beta1.BaseReq base_req =1;
+    cosmos.base.v1beta1.BaseReq base_req =1 [(gogoproto.nullable) = false];
     string from_iD  = 2;
     string to_iD =3;
     string ownable_iD = 4;

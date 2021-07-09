@@ -17,7 +17,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
@@ -47,7 +46,7 @@ func (transactionRequest TransactionRequest) FromJSON(rawMessage json.RawMessage
 }
 
 func (transactionRequest TransactionRequest) GetBaseReq() test_types.BaseReq   {
-	return *(transactionRequest.BaseReq)
+	return transactionRequest.BaseReq
 }
 func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 	from, Error := sdkTypes.AccAddressFromBech32(transactionRequest.GetBaseReq().From)
@@ -62,9 +61,9 @@ func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 
 	return newMessage(
 		from,
-		base.NewID(transactionRequest.FromID),
-		base.NewID(transactionRequest.ToID),
-		base.NewID(transactionRequest.OwnableID),
+		test_types.NewID(transactionRequest.FromID),
+		test_types.NewID(transactionRequest.ToID),
+		test_types.NewID(transactionRequest.OwnableID),
 		value,
 	), nil
 }
@@ -74,8 +73,8 @@ func (TransactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
 func requestPrototype() TransactionRequest {
 	return TransactionRequest{}
 }
-func newTransactionRequest(baseReq *test_types.BaseReq, fromID string, toID string, ownableID string, value string) TransactionRequest {
-	return TransactionRequest{
+func newTransactionRequest(baseReq test_types.BaseReq, fromID string, toID string, ownableID string, value string) *TransactionRequest {
+	return &TransactionRequest{
 		BaseReq:   baseReq,
 		FromID:    fromID,
 		ToID:      toID,

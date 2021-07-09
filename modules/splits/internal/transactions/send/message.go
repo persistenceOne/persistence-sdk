@@ -5,20 +5,19 @@
 
 package send
 
-import (
-	"encoding/json"
-	"github.com/asaskevich/govalidator"
-	"github.com/cosmos/cosmos-sdk/codec"
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/errors"
-	xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
-	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+ import (
+	 "encoding/json"
+	 "github.com/asaskevich/govalidator"
+	 "github.com/cosmos/cosmos-sdk/codec"
+	 sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	 "github.com/cosmos/cosmos-sdk/types/errors"
+	 xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
+	 "github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
+	 "github.com/persistenceOne/persistenceSDK/schema/test_types"
 
-	"github.com/persistenceOne/persistenceSDK/schema/types"
-	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
-
-)
+	 //"github.com/persistenceOne/persistenceSDK/schema/types"
+	 codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
+ )
 
 
 
@@ -53,16 +52,16 @@ func messageFromInterface(msg sdkTypes.Msg) *Message {
 		return &Message{}
 	}
 }
-func messagePrototype() *Message {
-	return &Message{}
+func messagePrototype() Message {
+	return Message{}
 }
 
 //TODO:types mismatch
 
 func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, ownableID test_types.ID, value sdkTypes.Dec) *Message {
-	return Message{
-		From: string(from),
-		FromID:    (fromID),
+	return &Message{
+		From: from,
+		FromID:    fromID,
 		ToID:      toID,
 		OwnableID: ownableID,
 		Value:     value,
