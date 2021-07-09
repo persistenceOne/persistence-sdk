@@ -31,25 +31,14 @@ func (idData idData) GetTypeID() types.ID {
 func (idData idData) GenerateHashID() types.ID {
 	return NewID(meta.Hash(idData.Value.String()))
 }
-func (idData idData) AsAccAddress() (sdkTypes.AccAddress, error) {
-	zeroValue, _ := accAddressData{}.ZeroValue().AsAccAddress()
-	return zeroValue, errors.EntityNotFound
-}
-func (idData idData) AsAccAddressList() ([]sdkTypes.AccAddress, error) {
-	zeroValue, _ := accAddressListData{}.ZeroValue().AsAccAddressList()
-	return zeroValue, errors.IncorrectFormat
-}
 func (idData idData) AsString() (string, error) {
-	zeroValue, _ := stringData{}.ZeroValue().AsString()
-	return zeroValue, errors.IncorrectFormat
+	return "", errors.EntityNotFound
 }
 func (idData idData) AsDec() (sdkTypes.Dec, error) {
-	zeroValue, _ := decData{}.ZeroValue().AsDec()
-	return zeroValue, errors.IncorrectFormat
+	return sdkTypes.Dec{}, errors.EntityNotFound
 }
 func (idData idData) AsHeight() (types.Height, error) {
-	zeroValue, _ := heightData{}.ZeroValue().AsHeight()
-	return zeroValue, errors.IncorrectFormat
+	return height{}, errors.EntityNotFound
 }
 func (idData idData) AsID() (types.ID, error) {
 	return idData.Value, nil

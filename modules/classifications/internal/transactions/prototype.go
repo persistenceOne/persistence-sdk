@@ -7,9 +7,9 @@ package transactions
 
 import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/helpers/base"
+	"github.com/persistenceOne/persistenceSDK/schema/test_helpers"
 )
 
 func Prototype() helpers.Transactions {
-	return base.NewTransactions()
+	return test_helpers.NewTransactions()
 }

@@ -11,10 +11,10 @@ import (
 )
 
 // NewConsumer : is a consumer which is needed to create child consumers to consume topics
-func NewConsumer(kafkaNodes []string) sarama.Consumer {
+func NewConsumer(kafkaPorts []string) sarama.Consumer {
 	config := sarama.NewConfig()
 
-	consumer, Error := sarama.NewConsumer(kafkaNodes, config)
+	consumer, Error := sarama.NewConsumer(kafkaPorts, config)
 	if Error != nil {
 		panic(Error)
 	}
@@ -34,7 +34,7 @@ func PartitionConsumers(consumer sarama.Consumer, topic string) sarama.Partition
 }
 
 // KafkaTopicConsumer : Takes a consumer and makes it consume a topic message at a time
-func KafkaTopicConsumer(topic string, consumers map[string]sarama.PartitionConsumer, cdc *codec.Codec) KafkaMsg {
+func KafkaTopicConsumer(topic string, consumers map[string]sarama.PartitionConsumer, cdc *codec.LegacyAmino) KafkaMsg {
 	partitionConsumer := consumers[topic]
 
 	if len(partitionConsumer.Messages()) == 0 {

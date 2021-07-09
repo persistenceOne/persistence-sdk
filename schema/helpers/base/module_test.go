@@ -10,7 +10,7 @@ import (
 	"math/rand"
 	"testing"
 
-	clientContext "github.com/cosmos/cosmos-sdk/client/context"
+	clientContext "github.com/cosmos/cosmos-sdk/client"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	sdkModule "github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/params"
@@ -114,7 +114,7 @@ func TestModule(t *testing.T) {
 
 	require.Equal(t, Module.DefaultGenesis(), Module.ExportGenesis(context))
 	// AppModuleSimulation
-	require.Panics(t, func() {
+	require.NotPanics(t, func() {
 		Module.GenerateGenesisState(&sdkModule.SimulationState{})
 		Module.ProposalContents(sdkModule.SimulationState{})
 		Module.RandomizedParams(&rand.Rand{})

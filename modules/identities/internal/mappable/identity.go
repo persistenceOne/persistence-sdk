@@ -7,8 +7,6 @@ package mappable
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/constants/properties"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/key"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
@@ -24,6 +22,38 @@ type identity struct {
 	ID types.ID `json:"id" valid:"required~required field id missing"`
 	baseTraits.HasImmutables
 	baseTraits.HasMutables //nolint:govet
+}
+
+func (identity identity) Reset() {
+	panic("implement me")
+}
+
+func (identity identity) String() string {
+	panic("implement me")
+}
+
+func (identity identity) ProtoMessage() {
+	panic("implement me")
+}
+
+func (identity identity) Marshal() ([]byte, error) {
+	panic("implement me")
+}
+
+func (identity identity) MarshalTo(data []byte) (n int, err error) {
+	panic("implement me")
+}
+
+func (identity identity) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	panic("implement me")
+}
+
+func (identity identity) Size() int {
+	panic("implement me")
+}
+
+func (identity identity) Unmarshal(data []byte) error {
+	panic("implement me")
 }
 
 var _ mappables.InterIdentity = (*identity)(nil)
@@ -50,61 +80,14 @@ func (identity identity) GetAuthentication() types.Property {
 func (identity identity) GetKey() helpers.Key {
 	return key.FromID(identity.ID)
 }
-func (identity) RegisterCodec(codec *codec.Codec) {
+func (identity) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, identity{})
 }
+
 func NewIdentity(id types.ID, immutableProperties types.Properties, mutableProperties types.Properties) mappables.InterIdentity {
 	return identity{
 		ID:            id,
 		HasImmutables: baseTraits.HasImmutables{Properties: immutableProperties},
 		HasMutables:   baseTraits.HasMutables{Properties: mutableProperties},
 	}
-}
-func (identity identity) IsProvisioned(address sdkTypes.AccAddress) bool {
-	flag := false
-	accAddressListData, ok := identity.GetAuthentication().GetFact().(types.ListData)
-
-	if !ok {
-		panic(errors.IncorrectFormat)
-	}
-
-	if address.Empty() && !accAddressListData.IsPresent(base.NewAccAddressData(address)) {
-		flag = true
-	}
-
-	return flag
-}
-func (identity identity) IsUnprovisioned(address sdkTypes.AccAddress) bool {
-	flag := false
-	accAddressListData, ok := identity.GetAuthentication().GetFact().(types.ListData)
-
-	if !ok {
-		panic(errors.IncorrectFormat)
-	}
-
-	if !address.Empty() && accAddressListData.IsPresent(base.NewAccAddressData(address)) {
-		flag = true
-	}
-
-	return flag
-}
-func (identity identity) ProvisionAddress(address sdkTypes.AccAddress) helpers.Mappable {
-	accAddressListData, ok := identity.GetAuthentication().GetFact().(types.ListData)
-	if !ok {
-		panic(errors.IncorrectFormat)
-	}
-
-	accAddressListData.Add(base.NewAccAddressData(address))
-
-	return mappables.InterIdentity(identity)
-}
-func (identity identity) UnprovisionAddress(address sdkTypes.AccAddress) helpers.Mappable {
-	accAddressListData, ok := identity.GetAuthentication().GetFact().(types.ListData)
-	if !ok {
-		panic(errors.IncorrectFormat)
-	}
-
-	accAddressListData.Remove(base.NewAccAddressData(address))
-
-	return mappables.InterIdentity(identity)
 }

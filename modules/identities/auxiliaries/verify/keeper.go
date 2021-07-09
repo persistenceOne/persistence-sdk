@@ -8,19 +8,12 @@ package verify
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
-	"github.com/persistenceOne/persistenceSDK/constants/properties"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/key"
-	"github.com/persistenceOne/persistenceSDK/modules/metas/auxiliaries/supplement"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/mappables"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
 
 type auxiliaryKeeper struct {
-	mapper              helpers.Mapper
-	parameters          helpers.Parameters
-	supplementAuxiliary helpers.Auxiliary
+	mapper helpers.Mapper
 }
 
 var _ helpers.AuxiliaryKeeper = (*auxiliaryKeeper)(nil)
@@ -34,41 +27,16 @@ func (auxiliaryKeeper auxiliaryKeeper) Help(context sdkTypes.Context, request he
 		return newAuxiliaryResponse(errors.EntityNotFound)
 	}
 
-	metaProperties, Error := supplement.GetMetaPropertiesFromResponse(auxiliaryKeeper.supplementAuxiliary.GetKeeper().Help(context, supplement.NewAuxiliaryRequest(identity.(mappables.InterIdentity).GetAuthentication())))
-	if Error != nil {
-		return newAuxiliaryResponse(Error)
-	}
-
-	accAddressListData, ok := metaProperties.Get(base.NewID(properties.Authentication)).GetMetaFact().GetData().(types.ListData)
-	if !ok {
-		panic(errors.IncorrectFormat)
-	}
-
-	if !accAddressListData.IsPresent(base.NewAccAddressData(auxiliaryRequest.Address)) {
-		return newAuxiliaryResponse(errors.NotAuthorized)
-	}
+	//  TODO implement
+	//if !identity.(mappables.InterIdentity).IsProvisioned(auxiliaryRequest.Address) {
+	//	return newAuxiliaryResponse(errors.NotAuthorized)
+	//}
 
 	return newAuxiliaryResponse(nil)
 }
 
-func (auxiliaryKeeper auxiliaryKeeper) Initialize(mapper helpers.Mapper, parameters helpers.Parameters, auxiliaries []interface{}) helpers.Keeper {
-	auxiliaryKeeper.mapper, auxiliaryKeeper.parameters = mapper, parameters
-
-	for _, auxiliary := range auxiliaries {
-		switch value := auxiliary.(type) {
-		case helpers.Auxiliary:
-			switch value.GetName() {
-			case supplement.Auxiliary.GetName():
-				auxiliaryKeeper.supplementAuxiliary = value
-			default:
-				break
-			}
-		default:
-			panic(errors.UninitializedUsage)
-		}
-	}
-
-	return auxiliaryKeeper
+func (auxiliaryKeeper) Initialize(mapper helpers.Mapper, _ helpers.Parameters, _ []interface{}) helpers.Keeper {
+	return auxiliaryKeeper{mapper: mapper}
 }
 
 func keeperPrototype() helpers.AuxiliaryKeeper {

@@ -11,6 +11,18 @@ type transactions struct {
 	transactionList []helpers.Transaction
 }
 
+func (transactions transactions) Reset() {
+	panic("implement me")
+}
+
+func (transactions transactions) String() string {
+	panic("implement me")
+}
+
+func (transactions transactions) ProtoMessage() {
+	panic("implement me")
+}
+
 var _ helpers.Transactions = (*transactions)(nil)
 
 func (transactions transactions) Get(name string) helpers.Transaction {

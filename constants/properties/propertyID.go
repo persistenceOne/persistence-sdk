@@ -9,12 +9,12 @@ package properties
 const (
 	Authentication    = "authentication"
 	Burn              = "burn"
-	Creation          = "creation"
 	ExchangeRate      = "exchangeRate"
+	Creation          = "creation"
 	Expiry            = "expiry"
 	Lock              = "lock"
 	MakerOwnableSplit = "makerOwnableSplit"
 	NubID             = "nubID"
-	TakerID           = "takerID"
 	Value             = "value"
+	TakerID           = "takerID"
 )

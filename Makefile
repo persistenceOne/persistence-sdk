@@ -6,14 +6,14 @@ VERSION := $(shell echo $(shell git describe --tags) | sed 's/^v//')
 COMMIT := $(shell git log -1 --format='%H')
 LEDGER_ENABLED ?= true
 BINDIR ?= $(HOME)/go/bin
-SIMAPP = ./simulation/make
+SIMAPP = ./utilities/simulation/make
 
 export GO111MODULE = on
 
 all: build test
 
 # The below include contains the tools and runsim targets.
-include simulation/make/Makefile
+include utilities/simulation/make/Makefile
 
 ########################################
 ### Build

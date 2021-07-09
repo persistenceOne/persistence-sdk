@@ -108,12 +108,10 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 
 	t.Run("PositiveCase", func(t *testing.T) {
 		want := newTransactionResponse(nil)
-		require.Panics(t, func() {
-			if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, identityID,
-				mutableMetaProperties, mutableProperties)); !reflect.DeepEqual(got, want) {
-				t.Errorf("Transact() = %v, want %v", got, want)
-			}
-		})
+		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, identityID,
+			mutableMetaProperties, mutableProperties)); !reflect.DeepEqual(got, want) {
+			t.Errorf("Transact() = %v, want %v", got, want)
+		}
 	})
 
 	t.Run("NegativeCase - verify identity mock error", func(t *testing.T) {
@@ -145,22 +143,18 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	t.Run("NegativeCase - conform error", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
-		require.Panics(t, func() {
-			if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, identityID,
-				conformMockErrorProperties, mutableProperties)); !reflect.DeepEqual(got, want) {
-				t.Errorf("Transact() = %v, want %v", got, want)
-			}
-		})
+		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, identityID,
+			conformMockErrorProperties, mutableProperties)); !reflect.DeepEqual(got, want) {
+			t.Errorf("Transact() = %v, want %v", got, want)
+		}
 	})
 	t.Run("NegativeCase - maintain Error", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
-		require.Panics(t, func() {
-			if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, maintainIdentityMockError, identityID,
-				mutableMetaProperties, mutableProperties)); !reflect.DeepEqual(got, want) {
-				t.Errorf("Transact() = %v, want %v", got, want)
-			}
-		})
+		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, maintainIdentityMockError, identityID,
+			mutableMetaProperties, mutableProperties)); !reflect.DeepEqual(got, want) {
+			t.Errorf("Transact() = %v, want %v", got, want)
+		}
 	})
 
 }

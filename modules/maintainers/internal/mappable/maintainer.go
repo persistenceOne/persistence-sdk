@@ -23,6 +23,38 @@ type maintainer struct {
 	MutateMaintainer     bool             `json:"mutateMaintainer" valid:"required field mutateMaintainer missing"`
 }
 
+func (maintainer maintainer) Reset() {
+	panic("implement me")
+}
+
+func (maintainer maintainer) String() string {
+	panic("implement me")
+}
+
+func (maintainer maintainer) ProtoMessage() {
+	panic("implement me")
+}
+
+func (maintainer maintainer) Marshal() ([]byte, error) {
+	panic("implement me")
+}
+
+func (maintainer maintainer) MarshalTo(data []byte) (n int, err error) {
+	panic("implement me")
+}
+
+func (maintainer maintainer) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	panic("implement me")
+}
+
+func (maintainer maintainer) Size() int {
+	panic("implement me")
+}
+
+func (maintainer maintainer) Unmarshal(data []byte) error {
+	panic("implement me")
+}
+
 var _ mappables.Maintainer = (*maintainer)(nil)
 
 func (maintainer maintainer) GetID() types.ID { return maintainer.ID }
@@ -51,7 +83,7 @@ func (maintainer maintainer) GetKey() helpers.Key {
 	return key.FromID(maintainer.ID)
 }
 
-func (maintainer) RegisterCodec(codec *codec.Codec) {
+func (maintainer) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, maintainer{})
 }
 func NewMaintainer(id types.ID, maintainedProperties types.Properties, addMaintainer bool, removeMaintainer bool, mutateMaintainer bool) mappables.Maintainer {

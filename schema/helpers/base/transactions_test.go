@@ -13,7 +13,7 @@ import (
 
 func TestNewTransactions(t *testing.T) {
 	Transactions1 := NewTransactions()
-	Transactions2 := NewTransactions(transaction{})
+	Transactions2 := NewTransactions(Transaction{})
 
 	// GetName
 	require.Equal(t, nil, Transactions1.Get(""))
@@ -21,5 +21,5 @@ func TestNewTransactions(t *testing.T) {
 
 	// GetList
 	require.Equal(t, []helpers.Transaction(nil), Transactions1.GetList())
-	require.Equal(t, []helpers.Transaction{transaction{}}, Transactions2.GetList())
+	require.Equal(t, []helpers.Transaction{Transaction{}}, Transactions2.GetList())
 }

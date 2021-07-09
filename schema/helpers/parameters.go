@@ -7,12 +7,13 @@ package helpers
 
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/params"
-	"github.com/cosmos/cosmos-sdk/x/params/subspace"
+	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"github.com/gogo/protobuf/proto"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
 type Parameters interface {
+	proto.Message
 	String() string
 
 	Validate() error
@@ -24,8 +25,8 @@ type Parameters interface {
 	Fetch(sdkTypes.Context, types.ID) Parameters
 	Mutate(sdkTypes.Context, types.Parameter) Parameters
 
-	GetKeyTable() subspace.KeyTable
-	subspace.ParamSet
+	GetKeyTable() paramsTypes.KeyTable
+	paramsTypes.ParamSet
 
-	Initialize(params.Subspace) Parameters
+	Initialize(paramsTypes.Subspace) Parameters
 }

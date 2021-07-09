@@ -22,6 +22,38 @@ type classification struct {
 	baseTraits.HasMutables //nolint:govet
 }
 
+func (classification classification) Reset() {
+	panic("implement me")
+}
+
+func (classification classification) String() string {
+	panic("implement me")
+}
+
+func (classification classification) ProtoMessage() {
+	panic("implement me")
+}
+
+func (classification classification) Marshal() ([]byte, error) {
+	panic("implement me")
+}
+
+func (classification classification) MarshalTo(data []byte) (n int, err error) {
+	panic("implement me")
+}
+
+func (classification classification) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	panic("implement me")
+}
+
+func (classification classification) Size() int {
+	panic("implement me")
+}
+
+func (classification classification) Unmarshal(data []byte) error {
+	panic("implement me")
+}
+
 var _ mappables.Classification = (*classification)(nil)
 
 func (classification classification) GetID() types.ID { return classification.ID }
@@ -29,7 +61,7 @@ func (classification classification) GetKey() helpers.Key {
 	return key.FromID(classification.ID)
 }
 
-func (classification) RegisterCodec(codec *codec.Codec) {
+func (classification) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, classification{})
 }
 

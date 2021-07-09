@@ -16,6 +16,7 @@ var (
 	ClassificationID        = base.NewCLIFlag("classificationID", "", "ClassificationID")
 	Coins                   = base.NewCLIFlag("coins", "", "Coins")
 	ExpiresIn               = base.NewCLIFlag("expiresIn", int64(-1), "ExpiresIn")
+	ExchangeRate            = base.NewCLIFlag("exchangeRate", "1", "ExchangeRateProperty")
 	FromID                  = base.NewCLIFlag("fromID", "", "FromID")
 	IdentityID              = base.NewCLIFlag("identityID", "", "IdentityID")
 	ImmutableMetaProperties = base.NewCLIFlag("immutableMetaProperties", "", "immutableMetaProperties")

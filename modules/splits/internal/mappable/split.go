@@ -22,6 +22,38 @@ type split struct {
 	Value sdkTypes.Dec `json:"value" valid:"required~required field value missing, matches(^[0-9]$)~invalid field value"`
 }
 
+func (split split) Reset() {
+	panic("implement me")
+}
+
+func (split split) String() string {
+	panic("implement me")
+}
+
+func (split split) ProtoMessage() {
+	panic("implement me")
+}
+
+func (split split) Marshal() ([]byte, error) {
+	panic("implement me")
+}
+
+func (split split) MarshalTo(data []byte) (n int, err error) {
+	panic("implement me")
+}
+
+func (split split) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	panic("implement me")
+}
+
+func (split split) Size() int {
+	panic("implement me")
+}
+
+func (split split) Unmarshal(data []byte) error {
+	panic("implement me")
+}
+
 var _ mappables.Split = (*split)(nil)
 
 func (split split) GetID() types.ID { return split.ID }
@@ -48,7 +80,7 @@ func (split split) CanSend(outValue sdkTypes.Dec) bool {
 func (split split) GetKey() helpers.Key {
 	return key.FromID(split.ID)
 }
-func (split) RegisterCodec(codec *codec.Codec) {
+func (split) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, split{})
 }
 

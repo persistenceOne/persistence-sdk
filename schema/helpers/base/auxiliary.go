@@ -13,6 +13,18 @@ type auxiliary struct {
 	keeperPrototype func() helpers.AuxiliaryKeeper
 }
 
+func (auxiliary auxiliary) Reset() {
+	panic("implement me")
+}
+
+func (auxiliary auxiliary) String() string {
+	panic("implement me")
+}
+
+func (auxiliary auxiliary) ProtoMessage() {
+	panic("implement me")
+}
+
 var _ helpers.Auxiliary = (*auxiliary)(nil)
 
 func (auxiliary auxiliary) GetName() string                    { return auxiliary.name }

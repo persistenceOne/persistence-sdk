@@ -97,21 +97,17 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 
 	t.Run("PositiveCase", func(t *testing.T) {
 		want := newTransactionResponse(nil)
-		require.Panics(t, func() {
-			if got := keepers.MaintainersKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, toID, classificationID)); !reflect.DeepEqual(got, want) {
-				t.Errorf("Transact() = %v, want %v", got, want)
-			}
-		})
+		if got := keepers.MaintainersKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, toID, classificationID)); !reflect.DeepEqual(got, want) {
+			t.Errorf("Transact() = %v, want %v", got, want)
+		}
 	})
 
 	t.Run("NegativeCase - non-maintainer adding maintainer", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.NotAuthorized)
-		require.Panics(t, func() {
-			if got := keepers.MaintainersKeeper.Transact(context, newMessage(defaultAddr, fakeFromID, toID, classificationID)); !reflect.DeepEqual(got, want) {
-				t.Errorf("Transact() = %v, want %v", got, want)
-			}
-		})
+		if got := keepers.MaintainersKeeper.Transact(context, newMessage(defaultAddr, fakeFromID, toID, classificationID)); !reflect.DeepEqual(got, want) {
+			t.Errorf("Transact() = %v, want %v", got, want)
+		}
 	})
 
 	t.Run("NegativeCase - verify identity fail", func(t *testing.T) {
@@ -122,18 +118,14 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	})
 	t.Run("NegativeCase - ReAdd same maintainer", func(t *testing.T) {
 		want := newTransactionResponse(errors.EntityAlreadyExists)
-		require.Panics(t, func() {
-			if got := keepers.MaintainersKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, toID, classificationID)); !reflect.DeepEqual(got, want) {
-				t.Errorf("Transact() = %v, want %v", got, want)
-			}
-		})
+		if got := keepers.MaintainersKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, toID, classificationID)); !reflect.DeepEqual(got, want) {
+			t.Errorf("Transact() = %v, want %v", got, want)
+		}
 	})
 	t.Run("NegativeCase - conform mock error", func(t *testing.T) {
 		want := newTransactionResponse(test.MockError)
-		require.Panics(t, func() {
-			if got := keepers.MaintainersKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, toID2, classificationID)); !reflect.DeepEqual(got, want) {
-				t.Errorf("Transact() = %v, want %v", got, want)
-			}
-		})
+		if got := keepers.MaintainersKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, toID2, classificationID)); !reflect.DeepEqual(got, want) {
+			t.Errorf("Transact() = %v, want %v", got, want)
+		}
 	})
 }

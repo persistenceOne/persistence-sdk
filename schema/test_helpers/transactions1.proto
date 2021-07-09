@@ -1,0 +1,24 @@
+syntax = "proto3";
+package test_helpers;
+
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/any.proto";
+//import "proto/persistence/schema/types/base/v1beta1/id.proto";
+//import "proto/persistence/schema/types/base/v1beta1/height.proto";
+
+option go_package = "schema/test_helpers";
+option (gogoproto.goproto_getters_all) = false;
+
+message transaction {
+  option (cosmos_proto.implements_interface) = "helpers.Transaction";
+  string name = 1;
+  google.protobuf.Any cliCommand = 2 [(cosmos_proto.accepts_interface) = "helpers.CLICommand"];
+  google.protobuf.Any keeper = 3 [(cosmos_proto.accepts_interface) = "helpers.TransactionKeeper"];
+}
+
+message transactions {
+  option (cosmos_proto.implements_interface) = "helpers.Transactions";
+  repeated google.protobuf.Any transactionList = 1 [(cosmos_proto.accepts_interface) = "helpers.Transaction"];
+
+}

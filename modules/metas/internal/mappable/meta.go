@@ -20,6 +20,38 @@ type meta struct {
 	Data types.Data `json:"data" valid:"required field data missing"`
 }
 
+func (meta meta) Reset() {
+	panic("implement me")
+}
+
+func (meta meta) String() string {
+	panic("implement me")
+}
+
+func (meta meta) ProtoMessage() {
+	panic("implement me")
+}
+
+func (meta meta) Marshal() ([]byte, error) {
+	panic("implement me")
+}
+
+func (meta meta) MarshalTo(data []byte) (n int, err error) {
+	panic("implement me")
+}
+
+func (meta meta) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	panic("implement me")
+}
+
+func (meta meta) Size() int {
+	panic("implement me")
+}
+
+func (meta meta) Unmarshal(data []byte) error {
+	panic("implement me")
+}
+
 var _ mappables.Meta = (*meta)(nil)
 
 func (meta meta) GetData() types.Data { return meta.Data }
@@ -27,7 +59,7 @@ func (meta meta) GetID() types.ID     { return meta.ID }
 func (meta meta) GetKey() helpers.Key {
 	return key.FromID(meta.GetID())
 }
-func (meta) RegisterCodec(codec *codec.Codec) {
+func (meta) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, meta{})
 }
 

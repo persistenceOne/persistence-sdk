@@ -13,19 +13,19 @@ import (
 	dbm "github.com/tendermint/tm-db"
 )
 
-// TicketID : is a type that implements string
-type TicketID string
+// Ticket : is a type that implements string
+type Ticket string
 
 // KafkaMsg : is a store that can be stored in kafka queues
 type KafkaMsg struct {
 	Msg         sdk.Msg      `json:"msg"`
-	TicketID    TicketID     `json:"ticketID"`
+	TicketID    Ticket       `json:"ticketID"`
 	BaseRequest rest.BaseReq `json:"base_req"`
 	KafkaCli    KafkaCliCtx  `json:"kafkaCliCtx"`
 }
 
 // NewKafkaMsgFromRest : makes a msg to send to kafka queue
-func NewKafkaMsgFromRest(msg sdk.Msg, ticketID TicketID, baseRequest rest.BaseReq, cliCtx client.Context) KafkaMsg {
+func NewKafkaMsgFromRest(msg sdk.Msg, ticketID Ticket, baseRequest rest.BaseReq, cliCtx client.Context) KafkaMsg {
 	kafkaCli := KafkaCliCtx{
 		OutputFormat:  cliCtx.OutputFormat,
 		ChainID:       cliCtx.ChainID,
@@ -33,14 +33,12 @@ func NewKafkaMsgFromRest(msg sdk.Msg, ticketID TicketID, baseRequest rest.BaseRe
 		HomeDir:       cliCtx.HomeDir,
 		NodeURI:       cliCtx.NodeURI,
 		From:          cliCtx.From,
-		TrustNode:     cliCtx.TrustNode,
 		UseLedger:     cliCtx.UseLedger,
 		BroadcastMode: cliCtx.BroadcastMode,
 		Simulate:      cliCtx.Simulate,
 		GenerateOnly:  cliCtx.GenerateOnly,
 		FromAddress:   cliCtx.FromAddress,
 		FromName:      cliCtx.FromName,
-		Indent:        cliCtx.Indent,
 		SkipConfirm:   cliCtx.SkipConfirm,
 	}
 
@@ -60,14 +58,12 @@ func CliCtxFromKafkaMsg(kafkaMsg KafkaMsg, cliContext client.Context) client.Con
 	cliContext.HomeDir = kafkaMsg.KafkaCli.HomeDir
 	cliContext.NodeURI = kafkaMsg.KafkaCli.NodeURI
 	cliContext.From = kafkaMsg.KafkaCli.From
-	cliContext.TrustNode = kafkaMsg.KafkaCli.TrustNode
 	cliContext.UseLedger = kafkaMsg.KafkaCli.UseLedger
 	cliContext.BroadcastMode = kafkaMsg.KafkaCli.BroadcastMode
 	cliContext.Simulate = kafkaMsg.KafkaCli.Simulate
 	cliContext.GenerateOnly = kafkaMsg.KafkaCli.GenerateOnly
 	cliContext.FromAddress = kafkaMsg.KafkaCli.FromAddress
 	cliContext.FromName = kafkaMsg.KafkaCli.FromName
-	cliContext.Indent = kafkaMsg.KafkaCli.Indent
 	cliContext.SkipConfirm = kafkaMsg.KafkaCli.SkipConfirm
 
 	return cliContext
@@ -95,22 +91,21 @@ type KafkaCliCtx struct {
 
 // TicketIDResponse : is a json structure to send TicketID to user
 type TicketIDResponse struct {
-	TicketID TicketID `json:"ticketID" valid:"required~ticketID is mandatory,length(20)~ticketID length should be 20" `
+	TicketID Ticket `json:"ticketID" valid:"required~ticketID is mandatory,length(20)~ticketID length should be 20" `
 }
 
-// kafkaState : is a struct showing the state of kafka
-type kafkaState struct {
+// KafkaState : is a struct showing the state of kafka
+type KafkaState struct {
 	KafkaDB   *dbm.GoLevelDB
 	Admin     sarama.ClusterAdmin
 	Consumer  sarama.Consumer
 	Consumers map[string]sarama.PartitionConsumer
 	Producer  sarama.SyncProducer
 	Topics    []string
-	IsEnabled bool
 }
 
 // NewKafkaState : returns a kafka state
-func NewKafkaState(kafkaPorts []string) *kafkaState {
+func NewKafkaState(kafkaPorts []string) KafkaState {
 	kafkaDB, _ := dbm.NewGoLevelDB("KafkaDB", DefaultCLIHome)
 	admin := KafkaAdmin(kafkaPorts)
 	producer := NewProducer(kafkaPorts)
@@ -123,13 +118,12 @@ func NewKafkaState(kafkaPorts []string) *kafkaState {
 		consumers[topic] = partitionConsumer
 	}
 
-	return &kafkaState{
+	return KafkaState{
 		KafkaDB:   kafkaDB,
 		Admin:     admin,
 		Consumer:  consumer,
 		Consumers: consumers,
 		Producer:  producer,
 		Topics:    Topics,
-		IsEnabled: true,
 	}
 }

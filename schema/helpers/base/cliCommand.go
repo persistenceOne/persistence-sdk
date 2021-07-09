@@ -15,22 +15,34 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type cliCommand struct {
-	use         string
-	short       string
+type CliCommand struct {
+	Use         string
+	Short       string
 	long        string
 	cliFlagList []helpers.CLIFlag
 }
 
-var _ helpers.CLICommand = (*cliCommand)(nil)
+func (cliCommand CliCommand) Reset() {
+	panic("implement me")
+}
 
-func (cliCommand cliCommand) registerFlags(command *cobra.Command) {
+func (cliCommand CliCommand) String() string {
+	panic("implement me")
+}
+
+func (cliCommand CliCommand) ProtoMessage() {
+	panic("implement me")
+}
+
+var _ helpers.CLICommand = (*CliCommand)(nil)
+
+func (cliCommand CliCommand) registerFlags(command *cobra.Command) {
 	for _, cliFlag := range cliCommand.cliFlagList {
 		cliFlag.Register(command)
 	}
 }
 
-func (cliCommand cliCommand) ReadInt64(cliFlag helpers.CLIFlag) int64 {
+func (cliCommand CliCommand) ReadInt64(cliFlag helpers.CLIFlag) int64 {
 	switch cliFlag.GetValue().(type) {
 	case int64:
 		for _, registeredCliFlag := range cliCommand.cliFlagList {
@@ -44,7 +56,7 @@ func (cliCommand cliCommand) ReadInt64(cliFlag helpers.CLIFlag) int64 {
 	panic(fmt.Errorf("uregistered flag %v type %T", cliFlag.GetName(), cliFlag.GetValue()))
 }
 
-func (cliCommand cliCommand) ReadInt(cliFlag helpers.CLIFlag) int {
+func (cliCommand CliCommand) ReadInt(cliFlag helpers.CLIFlag) int {
 	switch cliFlag.GetValue().(type) {
 	case int:
 		for _, registeredCliFlag := range cliCommand.cliFlagList {
@@ -58,7 +70,7 @@ func (cliCommand cliCommand) ReadInt(cliFlag helpers.CLIFlag) int {
 	panic(fmt.Errorf("uregistered flag %v type %T", cliFlag.GetName(), cliFlag.GetValue()))
 }
 
-func (cliCommand cliCommand) ReadBool(cliFlag helpers.CLIFlag) bool {
+func (cliCommand CliCommand) ReadBool(cliFlag helpers.CLIFlag) bool {
 	switch cliFlag.GetValue().(type) {
 	case bool:
 		for _, registeredCliFlag := range cliCommand.cliFlagList {
@@ -72,7 +84,7 @@ func (cliCommand cliCommand) ReadBool(cliFlag helpers.CLIFlag) bool {
 	panic(fmt.Errorf("uregistered flag %v type %T", cliFlag.GetName(), cliFlag.GetValue()))
 }
 
-func (cliCommand cliCommand) ReadString(cliFlag helpers.CLIFlag) string {
+func (cliCommand CliCommand) ReadString(cliFlag helpers.CLIFlag) string {
 	switch cliFlag.GetValue().(type) {
 	case string:
 		for _, registeredCliFlag := range cliCommand.cliFlagList {
@@ -86,29 +98,31 @@ func (cliCommand cliCommand) ReadString(cliFlag helpers.CLIFlag) string {
 	panic(fmt.Errorf("uregistered flag %v type %T", cliFlag.GetName(), cliFlag.GetValue()))
 }
 
-func (cliCommand cliCommand) ReadBaseReq(cliContext client.Context) rest.BaseReq {
+func (cliCommand CliCommand) ReadBaseReq(cliContext client.Context) rest.BaseReq {
 	return rest.BaseReq{
 		From:     cliContext.GetFromAddress().String(),
 		ChainID:  cliContext.ChainID,
 		Simulate: cliContext.Simulate,
 	}
 }
-func (cliCommand cliCommand) CreateCommand(runE func(command *cobra.Command, args []string) error) *cobra.Command {
+func (cliCommand CliCommand) CreateCommand(runE func(command *cobra.Command, args []string) error) *cobra.Command {
 	command := &cobra.Command{
-		Use:   cliCommand.use,
-		Short: cliCommand.short,
+		Use:   cliCommand.Use,
+		Short: cliCommand.Short,
 		Long:  cliCommand.long,
 		RunE:  runE,
 	}
 	cliCommand.registerFlags(command)
 
-	return flags.PostCommands(command)[0]
+	flags.AddTxFlagsToCmd(command)
+
+	return command
 }
 
 func NewCLICommand(use string, short string, long string, cliFlagList []helpers.CLIFlag) helpers.CLICommand {
-	return cliCommand{
-		use:         use,
-		short:       short,
+	return CliCommand{
+		Use:         use,
+		Short:       short,
 		long:        long,
 		cliFlagList: cliFlagList,
 	}

@@ -3,5 +3,5 @@
  SPDX-License-Identifier: Apache-2.0
 */
 
-// Package metas defines the metas module.
+// metas package defines the metas module.
 package metas

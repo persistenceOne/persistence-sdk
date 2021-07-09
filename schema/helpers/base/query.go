@@ -9,7 +9,6 @@ import (
 	"net/http"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
@@ -31,23 +30,21 @@ type query struct {
 var _ helpers.Query = (*query)(nil)
 
 func (query query) GetName() string { return query.name }
-func (query query) Command(codec *codec.Codec) *cobra.Command {
+func (query query) Command() *cobra.Command {
 	runE := func(command *cobra.Command, args []string) error {
-		cliContext := client.Context().WithCodec(codec)
+		cliContext, Error := client.GetClientQueryContext(command)
+		if Error != nil {
+			return Error
+		}
 
 		queryRequest := query.requestPrototype().FromCLI(query.cliCommand, cliContext)
+
 		responseBytes, _, Error := query.query(queryRequest, cliContext)
-
 		if Error != nil {
 			return Error
 		}
 
-		response, Error := query.responsePrototype().Decode(responseBytes)
-		if Error != nil {
-			return Error
-		}
-
-		return cliContext.PrintOutput(response)
+		return cliContext.PrintBytes(responseBytes)
 	}
 
 	return query.cliCommand.CreateCommand(runE)

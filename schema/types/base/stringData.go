@@ -30,28 +30,17 @@ func (stringData stringData) ZeroValue() types.Data {
 func (stringData stringData) GenerateHashID() types.ID {
 	return NewID(meta.Hash(stringData.Value))
 }
-func (stringData stringData) AsAccAddress() (sdkTypes.AccAddress, error) {
-	zeroValue, _ := accAddressData{}.ZeroValue().AsAccAddress()
-	return zeroValue, errors.EntityNotFound
-}
-func (stringData stringData) AsAccAddressList() ([]sdkTypes.AccAddress, error) {
-	zeroValue, _ := accAddressListData{}.ZeroValue().AsAccAddressList()
-	return zeroValue, errors.IncorrectFormat
-}
 func (stringData stringData) AsString() (string, error) {
 	return stringData.Value, nil
 }
 func (stringData stringData) AsDec() (sdkTypes.Dec, error) {
-	zeroValue, _ := decData{}.ZeroValue().AsDec()
-	return zeroValue, errors.IncorrectFormat
+	return sdkTypes.Dec{}, errors.EntityNotFound
 }
 func (stringData stringData) AsHeight() (types.Height, error) {
-	zeroValue, _ := heightData{}.ZeroValue().AsHeight()
-	return zeroValue, errors.IncorrectFormat
+	return height{}, errors.EntityNotFound
 }
 func (stringData stringData) AsID() (types.ID, error) {
-	zeroValue, _ := idData{}.ZeroValue().AsID()
-	return zeroValue, errors.IncorrectFormat
+	return id{}, errors.EntityNotFound
 }
 func (stringData stringData) Get() interface{} {
 	return stringData.Value

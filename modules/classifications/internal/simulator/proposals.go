@@ -9,16 +9,17 @@ import (
 	"math/rand"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
+	simulation1 "github.com/cosmos/cosmos-sdk/x/simulation"
 )
 
-func (simulator) WeightedProposalContentList() []simulation.WeightedProposalContent {
-	return []simulation.WeightedProposalContent{
+func (simulator) WeightedProposalContentList() []simulation1.WeightedProposalContent {
+	return []simulation1.WeightedProposalContent{
 		{
-			AppParamsKey:       OpWeightSubmitTextProposal,
-			DefaultWeight:      DefaultWeightTextProposal,
-			ContentSimulatorFn: simulateTextProposalContent,
+			appParamsKey:       OpWeightSubmitTextProposal,
+			defaultWeight:      DefaultWeightTextProposal,
+			contentSimulatorFn: simulateTextProposalContent,
 		},
 	}
 }

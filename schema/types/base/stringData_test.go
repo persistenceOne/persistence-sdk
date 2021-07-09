@@ -32,21 +32,21 @@ func Test_StringData(t *testing.T) {
 
 	dataAsID, Error := testStringData.AsID()
 	require.Equal(t, id{}, dataAsID)
-	require.Equal(t, errors.IncorrectFormat, Error)
+	require.Equal(t, errors.EntityNotFound, Error)
 
 	dataAsHeight, Error := testStringData.AsHeight()
 	require.Equal(t, height{}, dataAsHeight)
-	require.Equal(t, errors.IncorrectFormat, Error)
+	require.Equal(t, errors.EntityNotFound, Error)
 
 	dataAsDec, Error := testStringData.AsDec()
-	require.Equal(t, sdkTypes.ZeroDec(), dataAsDec)
-	require.Equal(t, errors.IncorrectFormat, Error)
+	require.Equal(t, sdkTypes.Dec{}, dataAsDec)
+	require.Equal(t, errors.EntityNotFound, Error)
 
 	require.Equal(t, value, testStringData.Get())
 
 	data, Error := ReadStringData("testString")
+	require.Equal(t, stringData{Value: "testString"}, data)
 	require.Nil(t, Error)
-	require.Equal(t, stringData{Value: "testString"}.String(), data.String())
 
 	require.Equal(t, false, testStringData.Equal(testStringData2))
 	require.Equal(t, true, testStringData.Equal(testStringData))
