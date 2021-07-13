@@ -10,8 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	//"github.com/cosmos/cosmos-sdk/types/rest"
-	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 )
 
 type TransactionRequest interface {
@@ -21,6 +20,7 @@ type TransactionRequest interface {
 	FromCLI(CLICommand, client.Context) (TransactionRequest, error)
 	FromJSON(json.RawMessage) (TransactionRequest, error)
 	MakeMsg() (sdkTypes.Msg, error)
+	//TODO: how to use protocodec
 	RegisterCodec(codec *codec.LegacyAmino)
 	Request
 }

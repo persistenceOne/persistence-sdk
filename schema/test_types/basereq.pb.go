@@ -6,11 +6,14 @@ package test_types
 import (
 	fmt "fmt"
 	types "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/rest"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
 	math_bits "math/bits"
+	"net/http"
+	"strings"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -31,12 +34,67 @@ type BaseReq struct {
 	AccountNumber uint64          `protobuf:"varint,4,opt,name=account_number,json=accountNumber,proto3" json:"account_number,omitempty"`
 	Sequence      uint64          `protobuf:"varint,5,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	TimeoutHeight uint64          `protobuf:"varint,6,opt,name=timeout_height,json=timeoutHeight,proto3" json:"timeout_height,omitempty"`
-	Fees          []types.Coin    `protobuf:"bytes,7,rep,name=fees,proto3" json:"fees"`
-	GasPrices     []types.DecCoin `protobuf:"bytes,8,rep,name=gas_prices,json=gasPrices,proto3" json:"gas_prices"`
+	Fees          types.Coins    `protobuf:"bytes,7,rep,name=fees,proto3" json:"fees"`
+	GasPrices     types.DecCoins `protobuf:"bytes,8,rep,name=gas_prices,json=gasPrices,proto3" json:"gas_prices"`
 	Gas           string          `protobuf:"bytes,9,opt,name=gas,proto3" json:"gas,omitempty"`
 	GasAdjustment string          `protobuf:"bytes,10,opt,name=gas_adjustment,json=gasAdjustment,proto3" json:"gas_adjustment,omitempty"`
 	Simulate      bool            `protobuf:"varint,11,opt,name=simulate,proto3" json:"simulate,omitempty"`
 }
+//additionally added
+func NewBaseReq(
+	from, memo, chainID string, gas, gasAdjustment string, accNumber, seq uint64,
+	fees types.Coins, gasPrices types.DecCoins, simulate bool,
+) BaseReq {
+	return BaseReq{
+		From:          strings.TrimSpace(from),
+		Memo:          strings.TrimSpace(memo),
+		ChainId:       strings.TrimSpace(chainID),
+		Fees:          fees,
+		GasPrices:     gasPrices,
+		Gas:           strings.TrimSpace(gas),
+		GasAdjustment: strings.TrimSpace(gasAdjustment),
+		AccountNumber: accNumber,
+		Sequence:      seq,
+		Simulate:      simulate,
+	}
+}
+
+func (br BaseReq) ValidateBasic(w http.ResponseWriter) bool {
+	if !br.Simulate {
+		switch {
+		case len(br.ChainId) == 0:
+			rest.WriteErrorResponse(w, http.StatusUnauthorized, "chain-id required but not specified")
+			return false
+
+		case !br.Fees.IsZero() && !br.GasPrices.IsZero():
+			// both fees and gas prices were provided
+			rest.WriteErrorResponse(w, http.StatusBadRequest, "cannot provide both fees and gas prices")
+			return false
+
+		case !br.Fees.IsValid() && !br.GasPrices.IsValid():
+			// neither fees or gas prices were provided
+			rest.WriteErrorResponse(w, http.StatusPaymentRequired, "invalid fees or gas prices provided")
+			return false
+		}
+	}
+
+	if _, err := types.AccAddressFromBech32(br.From); err != nil || len(br.From) == 0 {
+		rest.WriteErrorResponse(w, http.StatusUnauthorized, fmt.Sprintf("invalid from address: %s", br.From))
+		return false
+	}
+
+	return true
+}
+
+
+func (br BaseReq) Sanitize() BaseReq {
+return NewBaseReq(
+br.From, br.Memo, br.ChainId, br.Gas, br.GasAdjustment,
+br.AccountNumber, br.Sequence, br.Fees, br.GasPrices, br.Simulate,
+)
+}
+
+//auto generated
 
 func (m *BaseReq) Reset()         { *m = BaseReq{} }
 func (m *BaseReq) String() string { return proto.CompactTextString(m) }

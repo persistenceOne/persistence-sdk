@@ -48,6 +48,7 @@ func (transactionRequest TransactionRequest) FromJSON(rawMessage json.RawMessage
 func (transactionRequest TransactionRequest) GetBaseReq() test_types.BaseReq   {
 	return transactionRequest.BaseReq
 }
+
 func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 	from, Error := sdkTypes.AccAddressFromBech32(transactionRequest.GetBaseReq().From)
 	if Error != nil {
@@ -70,7 +71,7 @@ func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 func (TransactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, TransactionRequest{})
 }
-func requestPrototype() TransactionRequest {
+func requestPrototype() helpers.TransactionRequest {
 	return TransactionRequest{}
 }
 func newTransactionRequest(baseReq test_types.BaseReq, fromID string, toID string, ownableID string, value string) *TransactionRequest {

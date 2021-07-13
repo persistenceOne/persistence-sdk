@@ -33,9 +33,9 @@ type Message struct {
 	Value     github_com_cosmos_cosmos_sdk_types.Dec                        `protobuf:"bytes,5,opt,name=value,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"value"`
 }
 
-func (m *Message) Reset()         { *m = Message{} }
-func (m *Message) String() string { return proto.CompactTextString(m) }
-func (*Message) ProtoMessage()    {}
+func (m Message) Reset()         { m = Message{} }
+func (m Message) String() string { return proto.CompactTextString(&m) }
+func (Message) ProtoMessage()    {}
 func (*Message) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8382cab0e70961f8, []int{0}
 }

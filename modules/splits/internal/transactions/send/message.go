@@ -13,6 +13,7 @@ package send
 	 "github.com/cosmos/cosmos-sdk/types/errors"
 	 xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
 	 "github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
+	 "github.com/persistenceOne/persistenceSDK/schema/helpers"
 	 "github.com/persistenceOne/persistenceSDK/schema/test_types"
 
 	 //"github.com/persistenceOne/persistenceSDK/schema/types"
@@ -52,7 +53,7 @@ func messageFromInterface(msg sdkTypes.Msg) *Message {
 		return &Message{}
 	}
 }
-func messagePrototype() Message {
+func messagePrototype() helpers.Message {
 	return Message{}
 }
 
