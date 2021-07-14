@@ -7,7 +7,7 @@ package burn
 
 import (
 	"encoding/json"
-	"github.com/cosmos/cosmos-sdk/client/"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
