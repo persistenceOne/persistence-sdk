@@ -8,28 +8,16 @@ package base
 import (
 	"encoding/json"
 
-	proto "github.com/gogo/protobuf/proto"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 )
 
-// msg type for testing
+// TestMessage msg type for testing
 type TestMessage struct {
 	From sdkTypes.AccAddress
 	ID   string
 }
-
-func (message TestMessage) Reset() {
-	message = TestMessage{}
-}
-
-func (message TestMessage) String() string {
-	return proto.CompactTextString(message)
-}
-
-func (message TestMessage) ProtoMessage() {}
 
 var _ helpers.Message = (*TestMessage)(nil)
 
@@ -53,7 +41,7 @@ func (message TestMessage) ValidateBasic() error { return nil }
 func (message TestMessage) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{message.From}
 }
-func (message TestMessage) RegisterCodec(codec *codec.LegacyAmino) {
+func (message TestMessage) RegisterCodec(codec *codec.Codec) {
 	codec.RegisterConcrete(TestMessage{}, "test/TestMessage", nil)
 }
 

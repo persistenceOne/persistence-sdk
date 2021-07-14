@@ -13,64 +13,68 @@ import (
 	dbm "github.com/tendermint/tm-db"
 )
 
-// Ticket : is a type that implements string
-type Ticket string
+// TicketID : is a type that implements string
+type TicketID string
 
-// KafkaMsg : is a store that can be stored in kafka queues
-type KafkaMsg struct {
+// kafkaMsg : is a store that can be stored in kafka queues
+type kafkaMsg struct {
 	Msg         sdk.Msg      `json:"msg"`
-	TicketID    Ticket       `json:"ticketID"`
+	TicketID    TicketID     `json:"TicketID"`
 	BaseRequest rest.BaseReq `json:"base_req"`
-	KafkaCli    KafkaCliCtx  `json:"kafkaCliCtx"`
+	KafkaCliCtx kafkaCliCtx  `json:"kafkaCliCtx"`
 }
 
 // NewKafkaMsgFromRest : makes a msg to send to kafka queue
-func NewKafkaMsgFromRest(msg sdk.Msg, ticketID Ticket, baseRequest rest.BaseReq, cliCtx client.Context) KafkaMsg {
-	kafkaCli := KafkaCliCtx{
-		OutputFormat:  cliCtx.OutputFormat,
-		ChainID:       cliCtx.ChainID,
-		Height:        cliCtx.Height,
-		HomeDir:       cliCtx.HomeDir,
-		NodeURI:       cliCtx.NodeURI,
-		From:          cliCtx.From,
+func NewKafkaMsgFromRest(msg sdk.Msg, ticketID TicketID, baseRequest rest.BaseReq, cliCtx client.Context) kafkaMsg {
+	kafkaCliCtx := kafkaCliCtx{
+		OutputFormat: cliCtx.OutputFormat,
+		ChainID:      cliCtx.ChainID,
+		Height:       cliCtx.Height,
+		HomeDir:      cliCtx.HomeDir,
+		NodeURI:      cliCtx.NodeURI,
+		From:         cliCtx.From,
+		//TrustNode:     cliCtx.TrustNode,
 		UseLedger:     cliCtx.UseLedger,
 		BroadcastMode: cliCtx.BroadcastMode,
 		Simulate:      cliCtx.Simulate,
 		GenerateOnly:  cliCtx.GenerateOnly,
 		FromAddress:   cliCtx.FromAddress,
 		FromName:      cliCtx.FromName,
-		SkipConfirm:   cliCtx.SkipConfirm,
+		//Indent:        cliCtx.Indent,
+		SkipConfirm: cliCtx.SkipConfirm,
 	}
 
-	return KafkaMsg{
+	return kafkaMsg{
 		Msg:         msg,
 		TicketID:    ticketID,
 		BaseRequest: baseRequest,
-		KafkaCli:    kafkaCli,
+		KafkaCliCtx: kafkaCliCtx,
 	}
 }
 
-// CliCtxFromKafkaMsg : sets the transaction and cli contexts again to consume
-func CliCtxFromKafkaMsg(kafkaMsg KafkaMsg, cliContext client.Context) client.Context {
-	cliContext.OutputFormat = kafkaMsg.KafkaCli.OutputFormat
-	cliContext.ChainID = kafkaMsg.KafkaCli.ChainID
-	cliContext.Height = kafkaMsg.KafkaCli.Height
-	cliContext.HomeDir = kafkaMsg.KafkaCli.HomeDir
-	cliContext.NodeURI = kafkaMsg.KafkaCli.NodeURI
-	cliContext.From = kafkaMsg.KafkaCli.From
-	cliContext.UseLedger = kafkaMsg.KafkaCli.UseLedger
-	cliContext.BroadcastMode = kafkaMsg.KafkaCli.BroadcastMode
-	cliContext.Simulate = kafkaMsg.KafkaCli.Simulate
-	cliContext.GenerateOnly = kafkaMsg.KafkaCli.GenerateOnly
-	cliContext.FromAddress = kafkaMsg.KafkaCli.FromAddress
-	cliContext.FromName = kafkaMsg.KafkaCli.FromName
-	cliContext.SkipConfirm = kafkaMsg.KafkaCli.SkipConfirm
+// cliCtxFromKafkaMsg : sets the transaction and cli contexts again to consume
+func cliCtxFromKafkaMsg(kafkaMsg kafkaMsg, cliContext client.Context) client.Context {
+	cliContext.OutputFormat = kafkaMsg.KafkaCliCtx.OutputFormat
+	cliContext.ChainID = kafkaMsg.KafkaCliCtx.ChainID
+	cliContext.Height = kafkaMsg.KafkaCliCtx.Height
+	cliContext.HomeDir = kafkaMsg.KafkaCliCtx.HomeDir
+	cliContext.NodeURI = kafkaMsg.KafkaCliCtx.NodeURI
+	cliContext.From = kafkaMsg.KafkaCliCtx.From
+	//cliContext.TrustNode = kafkaMsg.KafkaCliCtx.TrustNode
+	cliContext.UseLedger = kafkaMsg.KafkaCliCtx.UseLedger
+	cliContext.BroadcastMode = kafkaMsg.KafkaCliCtx.BroadcastMode
+	cliContext.Simulate = kafkaMsg.KafkaCliCtx.Simulate
+	cliContext.GenerateOnly = kafkaMsg.KafkaCliCtx.GenerateOnly
+	cliContext.FromAddress = kafkaMsg.KafkaCliCtx.FromAddress
+	cliContext.FromName = kafkaMsg.KafkaCliCtx.FromName
+	//cliContext.Indent = kafkaMsg.KafkaCliCtx.Indent
+	cliContext.SkipConfirm = kafkaMsg.KafkaCliCtx.SkipConfirm
 
 	return cliContext
 }
 
-// KafkaCliCtx : client tx without codec
-type KafkaCliCtx struct {
+// kafkaCliCtx : client tx without codec
+type kafkaCliCtx struct {
 	FromAddress   sdk.AccAddress
 	OutputFormat  string
 	ChainID       string
@@ -89,41 +93,38 @@ type KafkaCliCtx struct {
 	SkipConfirm   bool
 }
 
-// TicketIDResponse : is a json structure to send TicketID to user
-type TicketIDResponse struct {
-	TicketID Ticket `json:"ticketID" valid:"required~ticketID is mandatory,length(20)~ticketID length should be 20" `
-}
-
-// KafkaState : is a struct showing the state of kafka
-type KafkaState struct {
+// kafkaState : is a struct showing the state of kafka
+type kafkaState struct {
 	KafkaDB   *dbm.GoLevelDB
 	Admin     sarama.ClusterAdmin
 	Consumer  sarama.Consumer
 	Consumers map[string]sarama.PartitionConsumer
 	Producer  sarama.SyncProducer
 	Topics    []string
+	IsEnabled bool
 }
 
 // NewKafkaState : returns a kafka state
-func NewKafkaState(kafkaPorts []string) KafkaState {
-	kafkaDB, _ := dbm.NewGoLevelDB("KafkaDB", DefaultCLIHome)
-	admin := KafkaAdmin(kafkaPorts)
-	producer := NewProducer(kafkaPorts)
-	consumer := NewConsumer(kafkaPorts)
+func NewKafkaState(nodeList []string) *kafkaState {
+	kafkaDB, _ := dbm.NewGoLevelDB("KafkaDB", defaultCLIHome)
+	admin := kafkaAdmin(nodeList)
+	producer := newProducer(nodeList)
+	consumer := newConsumer(nodeList)
 
 	var consumers = make(map[string]sarama.PartitionConsumer)
 
-	for _, topic := range Topics {
-		partitionConsumer := PartitionConsumers(consumer, topic)
+	for _, topic := range topics {
+		partitionConsumer := partitionConsumers(consumer, topic)
 		consumers[topic] = partitionConsumer
 	}
 
-	return KafkaState{
+	return &kafkaState{
 		KafkaDB:   kafkaDB,
 		Admin:     admin,
 		Consumer:  consumer,
 		Consumers: consumers,
 		Producer:  producer,
-		Topics:    Topics,
+		Topics:    topics,
+		IsEnabled: true,
 	}
 }

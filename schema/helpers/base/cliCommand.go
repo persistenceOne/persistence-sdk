@@ -7,10 +7,10 @@ package base
 
 import (
 	"fmt"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/spf13/cobra"
 )
@@ -20,18 +20,6 @@ type CliCommand struct {
 	Short       string
 	long        string
 	cliFlagList []helpers.CLIFlag
-}
-
-func (cliCommand CliCommand) Reset() {
-	panic("implement me")
-}
-
-func (cliCommand CliCommand) String() string {
-	panic("implement me")
-}
-
-func (cliCommand CliCommand) ProtoMessage() {
-	panic("implement me")
 }
 
 var _ helpers.CLICommand = (*CliCommand)(nil)
@@ -98,10 +86,10 @@ func (cliCommand CliCommand) ReadString(cliFlag helpers.CLIFlag) string {
 	panic(fmt.Errorf("uregistered flag %v type %T", cliFlag.GetName(), cliFlag.GetValue()))
 }
 
-func (cliCommand CliCommand) ReadBaseReq(cliContext client.Context) rest.BaseReq {
-	return rest.BaseReq{
+func (cliCommand CliCommand) ReadBaseReq(cliContext client.Context) test_types.BaseReq {
+	return test_types.BaseReq{
 		From:     cliContext.GetFromAddress().String(),
-		ChainID:  cliContext.ChainID,
+		ChainId:  cliContext.ChainID,
 		Simulate: cliContext.Simulate,
 	}
 }

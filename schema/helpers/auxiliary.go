@@ -5,10 +5,7 @@
 
 package helpers
 
-import "github.com/gogo/protobuf/proto"
-
 type Auxiliary interface {
-	proto.Message
 	GetName() string
 	GetKeeper() AuxiliaryKeeper
 	Initialize(Mapper, Parameters, ...interface{}) Auxiliary

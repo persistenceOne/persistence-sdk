@@ -5,10 +5,7 @@
 
 package helpers
 
-import "github.com/gogo/protobuf/proto"
-
 type Transactions interface {
-	proto.Message
 	Get(string) Transaction
 	GetList() []Transaction
 }

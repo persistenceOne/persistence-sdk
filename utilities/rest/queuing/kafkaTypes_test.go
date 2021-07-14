@@ -6,53 +6,53 @@
 package queuing
 
 import (
-	"testing"
-
-	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/std"
-	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
-	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	"github.com/persistenceOne/persistenceSDK/schema"
+	"github.com/persistenceOne/persistenceSDK/utilities/random"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func Test_Kafka_Types(t *testing.T) {
 
-	var Codec = codec.NewLegacyAmino()
+	var Codec = codec.New()
 	schema.RegisterCodec(Codec)
+	sdkTypes.RegisterCodec(Codec)
+	codec.RegisterCrypto(Codec)
 	codec.RegisterEvidences(Codec)
-	vestingTypes.RegisterLegacyAminoCodec(Codec)
-	std.RegisterLegacyAminoCodec(Codec)
-
-	cliContext := client.Context{}.WithLegacyAmino(Codec)
+	vesting.RegisterCodec(Codec)
+	Codec.Seal()
+	cliContext := context.NewCLIContext().WithCodec(Codec)
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
 	testBaseReq := rest.BaseReq{From: fromAddress, ChainID: "test", Fees: sdkTypes.NewCoins()}
 
-	testMessage := testdata.NewTestMsg()
+	testMessage := sdkTypes.NewTestMsg()
 
-	//testMsg:=newMessage(burn)
-	ticketID := TicketIDGenerator("name")
+	ticketID := TicketID(random.GenerateID("name"))
 	testKafkaMsg := NewKafkaMsgFromRest(testMessage, ticketID, testBaseReq, cliContext)
-	kafkaCli := KafkaCliCtx{
+	kafkaCliCtx := kafkaCliCtx{
 		OutputFormat:  cliContext.OutputFormat,
 		ChainID:       cliContext.ChainID,
 		Height:        cliContext.Height,
 		HomeDir:       cliContext.HomeDir,
 		NodeURI:       cliContext.NodeURI,
 		From:          cliContext.From,
+		TrustNode:     cliContext.TrustNode,
 		UseLedger:     cliContext.UseLedger,
 		BroadcastMode: cliContext.BroadcastMode,
 		Simulate:      cliContext.Simulate,
 		GenerateOnly:  cliContext.GenerateOnly,
 		FromAddress:   cliContext.FromAddress,
 		FromName:      cliContext.FromName,
+		Indent:        cliContext.Indent,
 		SkipConfirm:   cliContext.SkipConfirm,
 	}
-	require.Equal(t, KafkaMsg{Msg: testMessage, TicketID: ticketID, BaseRequest: testBaseReq, KafkaCli: kafkaCli}, testKafkaMsg)
-	require.Equal(t, cliContext, CliCtxFromKafkaMsg(testKafkaMsg, cliContext))
+	require.Equal(t, kafkaMsg{Msg: testMessage, TicketID: ticketID, BaseRequest: testBaseReq, KafkaCliCtx: kafkaCliCtx}, testKafkaMsg)
+	require.Equal(t, cliContext, cliCtxFromKafkaMsg(testKafkaMsg, cliContext))
 	//require
 }

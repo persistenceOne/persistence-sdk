@@ -1,0 +1,16 @@
+syntax="proto3";
+
+package persistence.assets.splits.transactions.unwrap.v1beta1;
+
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "modules/splits/internal/transactions/unwrap";
+
+message transactionResponse {
+  option (gogoproto.equal)            = false;
+  option (cosmos_proto.implements_interface) = "TransactionResponse";
+
+  bool success =1;
+  string error =2 [ (gogoproto.customtype) = "error", (gogoproto.nullable) = false];
+}

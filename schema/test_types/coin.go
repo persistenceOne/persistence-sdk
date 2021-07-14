@@ -13,6 +13,7 @@ import (
 
 // NewCoin returns a new coin with a denomination and amount. It will panic if
 // the amount is negative or if the denomination is invalid.
+
 func NewCoin(denom string, amount Int) Coin {
 	coin := Coin{
 		Denom:  denom,

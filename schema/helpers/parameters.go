@@ -8,12 +8,10 @@ package helpers
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/gogo/protobuf/proto"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
 type Parameters interface {
-	proto.Message
 	String() string
 
 	Validate() error

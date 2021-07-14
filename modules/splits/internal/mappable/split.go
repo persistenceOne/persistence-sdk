@@ -12,6 +12,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/mappables"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/traits"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
@@ -22,45 +23,13 @@ type split struct {
 	Value sdkTypes.Dec `json:"value" valid:"required~required field value missing, matches(^[0-9]$)~invalid field value"`
 }
 
-func (split split) Reset() {
-	panic("implement me")
-}
-
-func (split split) String() string {
-	panic("implement me")
-}
-
-func (split split) ProtoMessage() {
-	panic("implement me")
-}
-
-func (split split) Marshal() ([]byte, error) {
-	panic("implement me")
-}
-
-func (split split) MarshalTo(data []byte) (n int, err error) {
-	panic("implement me")
-}
-
-func (split split) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	panic("implement me")
-}
-
-func (split split) Size() int {
-	panic("implement me")
-}
-
-func (split split) Unmarshal(data []byte) error {
-	panic("implement me")
-}
-
 var _ mappables.Split = (*split)(nil)
 
 func (split split) GetID() types.ID { return split.ID }
-func (split split) GetOwnerID() types.ID {
+func (split split) GetOwnerID() test_types.ID {
 	return key.ReadOwnerID(split.ID)
 }
-func (split split) GetOwnableID() types.ID {
+func (split split) GetOwnableID() test_types.ID {
 	return key.ReadOwnableID(split.ID)
 }
 func (split split) GetValue() sdkTypes.Dec {

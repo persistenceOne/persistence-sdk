@@ -7,6 +7,7 @@ package key
 
 import (
 	"bytes"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -18,8 +19,8 @@ import (
 )
 
 type splitID struct {
-	OwnerID   types.ID `json:"ownerID" valid:"required~required field ownerID missing"`
-	OwnableID types.ID `json:"ownableID" valid:"required~required field ownableID missing"`
+	OwnerID   test_types.ID `json:"ownerID" valid:"required~required field ownerID missing"`
+	OwnableID test_types.ID `json:"ownableID" valid:"required~required field ownableID missing"`
 }
 
 var _ types.ID = (*splitID)(nil)
@@ -53,7 +54,7 @@ func (splitID splitID) Matches(key helpers.Key) bool {
 	return splitID.Equals(splitIDFromInterface(key))
 }
 
-func NewSplitID(ownerID types.ID, ownableID types.ID) types.ID {
+func NewSplitID(ownerID test_types.ID, ownableID test_types.ID) types.ID {
 	return splitID{
 		OwnerID:   ownerID,
 		OwnableID: ownableID,

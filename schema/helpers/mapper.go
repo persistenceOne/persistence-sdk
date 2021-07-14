@@ -8,11 +8,9 @@ package helpers
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
-	"github.com/gogo/protobuf/proto"
 )
 
 type Mapper interface {
-	proto.Message
 	NewCollection(sdkTypes.Context) Collection
 
 	Create(sdkTypes.Context, Mappable)

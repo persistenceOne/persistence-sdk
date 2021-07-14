@@ -9,6 +9,7 @@ import (
 	"github.com/asaskevich/govalidator"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
@@ -33,7 +34,7 @@ func auxiliaryRequestFromInterface(request helpers.AuxiliaryRequest) auxiliaryRe
 	}
 }
 
-func NewAuxiliaryRequest(address sdkTypes.AccAddress, identityID types.ID) helpers.AuxiliaryRequest {
+func NewAuxiliaryRequest(address sdkTypes.AccAddress, identityID test_types.ID) helpers.AuxiliaryRequest {
 	return auxiliaryRequest{
 		Address:    address,
 		IdentityID: identityID,

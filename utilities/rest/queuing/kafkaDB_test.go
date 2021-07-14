@@ -6,30 +6,30 @@
 package queuing
 
 import (
-	"testing"
-
-	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
-	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	"github.com/persistenceOne/persistenceSDK/utilities/random"
 	"github.com/stretchr/testify/require"
 	dbm "github.com/tendermint/tm-db"
+	"testing"
 )
 
 func Test_Kafka_DB(t *testing.T) {
-	var Codec = codec.NewLegacyAmino()
-	schema.RegisterCodec(Codec)
-	sdkTypes.RegisterLegacyAminoCodec(Codec)
-	cryptoCodec.RegisterCrypto(Codec)
-	codec.RegisterEvidences(Codec)
-	vestingTypes.RegisterLegacyAminoCodec(Codec)
-	Codec.Seal()
-	ticketID := TicketIDGenerator("name")
-	kafkaDB, _ := dbm.NewGoLevelDB("KafkaDB", DefaultCLIHome)
-	SetTicketIDtoDB(ticketID, kafkaDB, Codec, []byte{})
-	AddResponseToDB(ticketID, base.NewID("").Bytes(), kafkaDB, Codec)
-	require.Equal(t, base.NewID("").Bytes(), GetResponseFromDB(ticketID, kafkaDB, Codec))
+	require.Panics(t, func() {
+		var Codec = codec.New()
+		schema.RegisterCodec(Codec)
+		sdkTypes.RegisterCodec(Codec)
+		codec.RegisterCrypto(Codec)
+		codec.RegisterEvidences(Codec)
+		vesting.RegisterCodec(Codec)
+		Codec.Seal()
+		ticketID := TicketID(random.GenerateID("name"))
+		kafkaDB, _ := dbm.NewGoLevelDB("KafkaDB", defaultCLIHome)
+		setTicketIDtoDB(ticketID, kafkaDB, Codec, []byte{})
+		addResponseToDB(ticketID, base.NewID("").Bytes(), kafkaDB, Codec)
+		require.Equal(t, base.NewID("").Bytes(), getResponseFromDB(ticketID, kafkaDB, Codec))
+	})
 }

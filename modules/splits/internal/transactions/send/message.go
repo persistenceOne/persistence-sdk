@@ -6,6 +6,7 @@
 package send
 
 import (
+	"encoding/json"
 	"github.com/asaskevich/govalidator"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
@@ -13,29 +14,11 @@ import (
 	xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+
+	//"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
-	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
-
-//type message struct {
-//	From      sdkTypes.AccAddress `json:"from" valid:"required~required field from missing"`
-//	FromID    types.ID            `json:"fromID" valid:"required~required field fromID missing"`
-//	ToID      types.ID            `json:"toID" valid:"required~required field toID missing"`
-//	OwnableID types.ID            `json:"ownableID" valid:"required~required field ownableID missing"`
-//	Value     sdkTypes.Dec        `json:"value" valid:"required~required field value missing"`
-//}
-
-//func (message message) Reset() {
-//	panic("implement me")
-//}
-//
-//func (message message) String() string {
-//	panic("implement me")
-//}
-//
-//func (message message) ProtoMessage() {
-//	panic("implement me")
-//}
 
 var _ sdkTypes.Msg = (*Message)(nil)
 
@@ -50,7 +33,9 @@ func (message Message) ValidateBasic() error {
 	return nil
 }
 func (message Message) GetSignBytes() []byte {
-	return sdkTypes.MustSortJSON(transaction.RegisterCodec(messagePrototype).MustMarshalJSON(message))
+	js, _ := json.Marshal(message)
+
+	return sdkTypes.MustSortJSON(js)
 }
 func (message Message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{sdkTypes.AccAddress(message.From)}
@@ -67,15 +52,17 @@ func messageFromInterface(msg sdkTypes.Msg) *Message {
 	}
 }
 func messagePrototype() helpers.Message {
-	return &Message{}
+	return Message{}
 }
 
-//func newMessage(from sdkTypes.AccAddress, fromID types.ID, toID types.ID, ownableID types.ID, value sdkTypes.Dec) sdkTypes.Msg {
-//	return &Message{
-//		From:      from,
-//		FromID:    fromID,
-//		ToID:      toID,
-//		OwnableID: ownableID,
-//		Value:     value,
-//	}
-//}
+//TODO:types mismatch
+
+func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, ownableID test_types.ID, value sdkTypes.Dec) *Message {
+	return &Message{
+		From:      from,
+		FromID:    fromID,
+		ToID:      toID,
+		OwnableID: ownableID,
+		Value:     value,
+	}
+}

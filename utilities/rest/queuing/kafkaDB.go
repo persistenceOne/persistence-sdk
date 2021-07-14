@@ -7,17 +7,15 @@ package queuing
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/gorilla/mux"
-
 	dbm "github.com/tendermint/tm-db"
+	"net/http"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 )
 
-// SetTicketIDtoDB : initiates ticketID in Database
-func SetTicketIDtoDB(ticket Ticket, kafkaDB *dbm.GoLevelDB, cdc *codec.LegacyAmino, msg []byte) {
+// setTicketIDtoDB : initiates TicketID in Database
+func setTicketIDtoDB(ticket TicketID, kafkaDB *dbm.GoLevelDB, cdc *codec.LegacyAmino, msg []byte) {
 	ticketID, Error := cdc.MarshalJSON(ticket)
 	if Error != nil {
 		panic(Error)
@@ -28,8 +26,8 @@ func SetTicketIDtoDB(ticket Ticket, kafkaDB *dbm.GoLevelDB, cdc *codec.LegacyAmi
 	}
 }
 
-// AddResponseToDB : Updates response to DB
-func AddResponseToDB(ticket Ticket, response []byte, kafkaDB *dbm.GoLevelDB, cdc *codec.LegacyAmino) {
+// addResponseToDB : Updates response to DB
+func addResponseToDB(ticket TicketID, response []byte, kafkaDB *dbm.GoLevelDB, cdc *codec.LegacyAmino) {
 	ticketID, err := cdc.MarshalJSON(ticket)
 	if err != nil {
 		panic(err)
@@ -41,8 +39,8 @@ func AddResponseToDB(ticket Ticket, response []byte, kafkaDB *dbm.GoLevelDB, cdc
 	}
 }
 
-// GetResponseFromDB : gives the response from DB
-func GetResponseFromDB(ticket Ticket, kafkaDB *dbm.GoLevelDB, cdc *codec.LegacyAmino) []byte {
+// getResponseFromDB : gives the response from DB
+func getResponseFromDB(ticket TicketID, kafkaDB *dbm.GoLevelDB, cdc *codec.LegacyAmino) []byte {
 	ticketID, err := cdc.MarshalJSON(ticket)
 	if err != nil {
 		panic(err)
@@ -53,23 +51,23 @@ func GetResponseFromDB(ticket Ticket, kafkaDB *dbm.GoLevelDB, cdc *codec.LegacyA
 	return val
 }
 
-// QueryDB : REST outputs info from DB
-func QueryDB(cdc *codec.LegacyAmino, kafkaDB *dbm.GoLevelDB) http.HandlerFunc {
+// queryDB : REST outputs info from DB
+func queryDB(cdc *codec.LegacyAmino) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
 		vars := mux.Vars(r)
 
-		iDByte, err := cdc.MarshalJSON(vars["ticketID"])
+		ticketIDBytes, err := cdc.MarshalJSON(vars["TicketID"])
 		if err != nil {
 			panic(err)
 		}
 
 		var response []byte
 
-		check, _ := kafkaDB.Has(iDByte)
+		check, _ := KafkaState.KafkaDB.Has(ticketIDBytes)
 		if check {
-			response = GetResponseFromDB(Ticket(vars["ticketID"]), kafkaDB, cdc)
+			response = getResponseFromDB(TicketID(vars["TicketID"]), KafkaState.KafkaDB, cdc)
 		} else {
 			output, err := cdc.MarshalJSON("The ticket ID does not exist, it must have been deleted, Query the chain to know")
 			if err != nil {

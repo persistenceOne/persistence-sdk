@@ -10,8 +10,6 @@ import (
 )
 
 type Mappable interface {
-	codec.ProtoMarshaler
-
 	GetKey() Key
 	RegisterCodec(*codec.LegacyAmino)
 }

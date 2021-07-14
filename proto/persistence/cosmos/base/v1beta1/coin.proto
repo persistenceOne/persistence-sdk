@@ -1,5 +1,5 @@
 syntax = "proto3";
-package cosmos.base.v1beta1;
+package persistence.cosmos.base.v1beta1;
 
 import "third_party/proto/gogoproto/gogo.proto";
 

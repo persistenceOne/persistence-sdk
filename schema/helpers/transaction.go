@@ -7,22 +7,20 @@ package helpers
 
 import (
 	"encoding/json"
-	"github.com/gogo/protobuf/proto"
+	"github.com/cosmos/cosmos-sdk/client"
 	"net/http"
 
-	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 )
 
 type Transaction interface {
-	proto.Message
 	GetName() string
-	Command() *cobra.Command
+	Command(protoCodec *codec.ProtoCodec) *cobra.Command
 	HandleMessage(sdkTypes.Context, sdkTypes.Msg) (*sdkTypes.Result, error)
 	RESTRequestHandler(client.Context) http.HandlerFunc
-	RegisterCodec(*codec.LegacyAmino)
+	RegisterCodec(protoCodec *codec.LegacyAmino)
 	DecodeTransactionRequest(json.RawMessage) (sdkTypes.Msg, error)
 	InitializeKeeper(Mapper, Parameters, ...interface{}) Transaction
 }

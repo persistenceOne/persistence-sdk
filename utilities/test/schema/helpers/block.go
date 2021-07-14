@@ -16,18 +16,6 @@ type block struct {
 	parameters helpers.Parameters
 }
 
-func (b block) Reset() {
-	panic("implement me")
-}
-
-func (b block) String() string {
-	panic("implement me")
-}
-
-func (b block) ProtoMessage() {
-	panic("implement me")
-}
-
 var _ helpers.Block = (*block)(nil)
 
 func (b block) Begin(_ sdkTypes.Context, _ abci.RequestBeginBlock) {

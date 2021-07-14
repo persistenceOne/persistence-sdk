@@ -6,31 +6,34 @@
 package queuing
 
 import (
-	"crypto/rand"
-	"math/big"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	"strconv"
-	"sync/atomic"
-	"time"
+
+	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/types/rest"
+	"github.com/pkg/errors"
 )
 
-// TicketIDAtomicCounter is a counter that adds when each time a function is called
-var TicketIDAtomicCounter int64
-
-// TicketIDGenerator is a random unique ticket ID generator, output is a string
-func TicketIDGenerator(prefix string) Ticket {
-	now := 10000000 + int(time.Now().UnixNano())%89999999
-
-	atomic.AddInt64(&TicketIDAtomicCounter, 1)
-	atomicCounter := 10000 + int(TicketIDAtomicCounter)%89999
-
-	random, Error := rand.Int(rand.Reader, big.NewInt(89999))
-	if Error != nil {
-		panic(Error)
+func parseGasAdjustment(s string) (float64, error) {
+	if len(s) == 0 {
+		return flags.DefaultGasAdjustment, nil
 	}
 
-	randomNumber := 10000 + random.Int64()
-	trulyRandNumber := prefix + strconv.Itoa(atomicCounter) + strconv.Itoa(now) + strconv.FormatInt(randomNumber, 10)
-	ticket := Ticket(trulyRandNumber)
+	n, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		return n, err
+	}
 
-	return ticket
+	return n, nil
+}
+
+func simulationResponse(cdc *codec.LegacyAmino, gas uint64) ([]byte, error) {
+	gasEst := rest.GasEstimateResponse{GasEstimate: gas}
+	resp, err := cdc.MarshalJSON(gasEst)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	return resp, nil
 }

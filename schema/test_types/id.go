@@ -2,10 +2,9 @@ package test_types
 
 import (
 	"bytes"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-var _ types.ID = (*ID)(nil)
+var _ = (*ID)(nil)
 
 func (id ID) String() string {
 	return id.IdString
@@ -14,10 +13,10 @@ func (id ID) String() string {
 func (id ID) Bytes() []byte {
 	return []byte(id.IdString)
 }
-func (id ID) Equals(compareID types.ID) bool {
+func (id ID) Equals(compareID ID) bool {
 	return bytes.Equal(id.Bytes(), compareID.Bytes())
 }
 
-func NewID(idString string) types.ID {
+func NewID(idString string) ID {
 	return ID{IdString: idString}
 }

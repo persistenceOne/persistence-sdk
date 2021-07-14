@@ -7,43 +7,43 @@ package add
 
 import (
 	"bytes"
-	"net/http"
-	"net/http/httptest"
-	"strings"
-	"testing"
-
-	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/codec"
-	cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keyring"
+	"github.com/cosmos/cosmos-sdk/crypto/keys"
+	cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keys"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
 )
 
 func TestHandler(t *testing.T) {
-	Codec := codec.NewLegacyAmino()
+	Codec := codec.New()
 	schema.RegisterCodec(Codec)
 	Codec.RegisterConcrete(request{}, "request", nil)
 	Codec.RegisterConcrete(response{}, "response", nil)
-	clientContext := client.Context{}.WithLegacyAmino(Codec)
+	clientContext := context.NewCLIContext().WithCodec(Codec)
 	handler := handler(clientContext)
-	viper.Set(flags.FlagKeyringBackend, cryptoKeys.BackendTest)
+	viper.Set(flags.FlagKeyringBackend, keys.BackendTest)
 	viper.Set(flags.FlagHome, t.TempDir())
 
-	keyring, Error := cryptoKeys.New(sdk.KeyringServiceName(), cryptoKeys.BackendTest, t.TempDir(), strings.NewReader(""))
+	keyring, Error := cryptoKeys.NewKeyring(sdk.KeyringServiceName(), keys.BackendTest, t.TempDir(), strings.NewReader(""))
 	require.NoError(t, Error)
 
 	router := mux.NewRouter()
 	RegisterRESTRoutes(clientContext, router)
 
 	t.Cleanup(func() {
-		_ = keyring.Delete("keyName1")
-		_ = keyring.Delete("keyName2")
-		_ = keyring.Delete("keyName3")
+		_ = keyring.Delete("keyName1", "", true)
+		_ = keyring.Delete("keyName2", "", true)
+		_ = keyring.Delete("keyName3", "", true)
 	})
 
 	getResponse := func(responseBytes []byte) response {
@@ -121,6 +121,6 @@ func TestHandler(t *testing.T) {
 	responseRecorder = httptest.NewRecorder()
 	handler.ServeHTTP(responseRecorder, testRequest5)
 	require.Equal(t, http.StatusInternalServerError, responseRecorder.Code)
-	require.Equal(t, `{"error":"Account for keyName testKey1 already exists"}`, responseRecorder.Body.String())
+	require.Equal(t, `{"error":"Account for keyname testKey1 already exists"}`, responseRecorder.Body.String())
 
 }

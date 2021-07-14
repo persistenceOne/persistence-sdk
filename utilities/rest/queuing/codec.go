@@ -13,8 +13,8 @@ import (
 const moduleName = "queuing"
 
 func RegisterCodec(codec *codec.LegacyAmino) {
-	codecUtilities.RegisterXPRTConcrete(codec, moduleName, KafkaCliCtx{})
-	codecUtilities.RegisterXPRTConcrete(codec, moduleName, KafkaMsg{})
+	codecUtilities.RegisterXPRTConcrete(codec, moduleName, kafkaCliCtx{})
+	codecUtilities.RegisterXPRTConcrete(codec, moduleName, kafkaMsg{})
 }
 
 var ModuleCdc *codec.LegacyAmino

@@ -10,11 +10,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 )
 
-// NewConsumer : is a consumer which is needed to create child consumers to consume topics
-func NewConsumer(kafkaPorts []string) sarama.Consumer {
+// newConsumer : is a consumer which is needed to create child consumers to consume topics
+func newConsumer(kafkaNodes []string) sarama.Consumer {
 	config := sarama.NewConfig()
 
-	consumer, Error := sarama.NewConsumer(kafkaPorts, config)
+	consumer, Error := sarama.NewConsumer(kafkaNodes, config)
 	if Error != nil {
 		panic(Error)
 	}
@@ -22,9 +22,9 @@ func NewConsumer(kafkaPorts []string) sarama.Consumer {
 	return consumer
 }
 
-// PartitionConsumers : is a child consumer
-func PartitionConsumers(consumer sarama.Consumer, topic string) sarama.PartitionConsumer {
-	// partition and offset defined in CONSTANTS.go
+// partitionConsumers : is a child consumer
+func partitionConsumers(consumer sarama.Consumer, topic string) sarama.PartitionConsumer {
+	// partition and offset defined in configurations.go
 	partitionConsumer, Error := consumer.ConsumePartition(topic, partition, offset)
 	if Error != nil {
 		panic(Error)
@@ -33,23 +33,20 @@ func PartitionConsumers(consumer sarama.Consumer, topic string) sarama.Partition
 	return partitionConsumer
 }
 
-// KafkaTopicConsumer : Takes a consumer and makes it consume a topic message at a time
-func KafkaTopicConsumer(topic string, consumers map[string]sarama.PartitionConsumer, cdc *codec.LegacyAmino) KafkaMsg {
+// kafkaTopicConsumer : Takes a consumer and makes it consume a topic message at a time
+func kafkaTopicConsumer(topic string, consumers map[string]sarama.PartitionConsumer, cdc *codec.LegacyAmino) kafkaMsg {
 	partitionConsumer := consumers[topic]
 
 	if len(partitionConsumer.Messages()) == 0 {
-		var kafkaStore = KafkaMsg{Msg: nil}
-		return kafkaStore
+		return kafkaMsg{Msg: nil}
 	}
 
-	kafkaMsg := <-partitionConsumer.Messages()
-
-	var kafkaStore KafkaMsg
-	err := cdc.UnmarshalJSON(kafkaMsg.Value, &kafkaStore)
+	var consumedKafkaMsg kafkaMsg
+	err := cdc.UnmarshalJSON((<-partitionConsumer.Messages()).Value, &consumedKafkaMsg)
 
 	if err != nil {
 		panic(err)
 	}
 
-	return kafkaStore
+	return consumedKafkaMsg
 }

@@ -7,7 +7,6 @@ package send
 
 import (
 	"encoding/json"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -17,17 +16,9 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
-
-//type transactionRequest struct {
-//	BaseReq   rest.BaseReq `json:"baseReq"`
-//	FromID    string       `json:"fromID" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
-//	ToID      string       `json:"toID" valid:"required~required field toID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field toID"`
-//	OwnableID string       `json:"ownableID" valid:"required~required field ownableID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field ownableID"`
-//	Value     string       `json:"value" valid:"required~required field value missing, matches(^[0-9.]+$)~invalid field value"`
-//}
 
 var _ helpers.TransactionRequest = (*TransactionRequest)(nil)
 
@@ -51,9 +42,11 @@ func (transactionRequest TransactionRequest) FromJSON(rawMessage json.RawMessage
 
 	return transactionRequest, nil
 }
+
 func (transactionRequest TransactionRequest) GetBaseReq() test_types.BaseReq {
-	return *transactionRequest.BaseReq
+	return transactionRequest.BaseReq
 }
+
 func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 	from, Error := sdkTypes.AccAddressFromBech32(transactionRequest.GetBaseReq().From)
 	if Error != nil {
@@ -67,9 +60,9 @@ func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 
 	return newMessage(
 		from,
-		base.NewID(transactionRequest.FromID),
-		base.NewID(transactionRequest.ToID),
-		base.NewID(transactionRequest.OwnableID),
+		test_types.NewID(transactionRequest.FromID),
+		test_types.NewID(transactionRequest.ToID),
+		test_types.NewID(transactionRequest.OwnableID),
 		value,
 	), nil
 }
@@ -79,9 +72,9 @@ func (TransactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
 func requestPrototype() helpers.TransactionRequest {
 	return TransactionRequest{}
 }
-func newTransactionRequest(baseReq test_types.BaseReq, fromID string, toID string, ownableID string, value string) helpers.TransactionRequest {
-	return TransactionRequest{
-		BaseReq:   &baseReq,
+func newTransactionRequest(baseReq test_types.BaseReq, fromID string, toID string, ownableID string, value string) *TransactionRequest {
+	return &TransactionRequest{
+		BaseReq:   baseReq,
 		FromID:    fromID,
 		ToID:      toID,
 		OwnableID: ownableID,
