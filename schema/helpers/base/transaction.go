@@ -43,7 +43,7 @@ type transaction struct {
 var _ helpers.Transaction = (*transaction)(nil)
 
 func (transaction transaction) GetName() string { return transaction.name }
-func (transaction transaction) Command(codec *codec.ProtoCodec) *cobra.Command {
+func (transaction transaction) Command() *cobra.Command {
 	runE := func(command *cobra.Command, args []string) error {
 		//var cliContext client.Context
 		//cliContext,err := client.GetClientTxContext(command)

@@ -11,5 +11,5 @@ import (
 
 type Mappable interface {
 	GetKey() Key
-	RegisterCodec(protoCodec *codec.ProtoCodec)
+	RegisterCodec(protoCodec *codec.LegacyAmino)
 }

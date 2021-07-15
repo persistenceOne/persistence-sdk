@@ -42,14 +42,14 @@ func Test_Kafka_Types(t *testing.T) {
 		HomeDir:       cliContext.HomeDir,
 		NodeURI:       cliContext.NodeURI,
 		From:          cliContext.From,
-		TrustNode:     cliContext.TrustNode,
+		//TrustNode:     cliContext.TrustNode,
 		UseLedger:     cliContext.UseLedger,
 		BroadcastMode: cliContext.BroadcastMode,
 		Simulate:      cliContext.Simulate,
 		GenerateOnly:  cliContext.GenerateOnly,
 		FromAddress:   cliContext.FromAddress,
 		FromName:      cliContext.FromName,
-		Indent:        cliContext.Indent,
+		//Indent:        cliContext.Indent,
 		SkipConfirm:   cliContext.SkipConfirm,
 	}
 	require.Equal(t, KafkaMsg{Msg: testMessage, TicketID: ticketID, BaseRequest: testBaseReq, KafkaCli: kafkaCli}, testKafkaMsg)

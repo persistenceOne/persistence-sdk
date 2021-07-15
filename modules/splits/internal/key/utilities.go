@@ -12,7 +12,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	//"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
 
 func readSplitID(splitIDString string) types.ID {
@@ -38,11 +38,11 @@ func splitIDFromInterface(i interface{}) splitID {
 	}
 }
 
-func ReadOwnableID(id types.ID) types.ID {
+func ReadOwnableID(id types.ID) test_types.ID {
 	return splitIDFromInterface(id).OwnableID
 }
 
-func ReadOwnerID(id types.ID) types.ID {
+func ReadOwnerID(id types.ID) test_types.ID {
 	return splitIDFromInterface(id).OwnerID
 }
 

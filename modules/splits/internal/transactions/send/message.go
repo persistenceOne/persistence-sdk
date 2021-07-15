@@ -59,8 +59,8 @@ func messagePrototype() helpers.Message {
 
 //TODO:types mismatch
 
-func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, ownableID test_types.ID, value sdkTypes.Dec) *Message {
-	return &Message{
+func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, ownableID test_types.ID, value sdkTypes.Dec) Message {
+	return Message{
 		From: from,
 		FromID:    fromID,
 		ToID:      toID,

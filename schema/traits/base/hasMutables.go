@@ -10,13 +10,13 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
+type HasMutables struct {
+	Properties types.Properties `json:"properties"`
+}
+
 var _ traits.HasMutables = (*HasMutables)(nil)
 
-
-
-
 func (mutables HasMutables) GetMutableProperties() types.Properties {
-
 	return mutables.Properties
 }
 func (mutables HasMutables) Mutate(propertyList ...types.Property) traits.HasMutables {
@@ -26,28 +26,3 @@ func (mutables HasMutables) Mutate(propertyList ...types.Property) traits.HasMut
 
 	return mutables
 }
-
-
-
-
-
-
-
-
-
-//type HasMutables struct {
-//	Properties types.Properties `json:"properties"`
-//}
-//
-//var _ traits.HasMutables = (*HasMutables)(nil)
-//
-//func (mutables HasMutables) GetMutableProperties() types.Properties {
-//	return mutables.Properties
-//}
-//func (mutables HasMutables) Mutate(propertyList ...types.Property) traits.HasMutables {
-//	for _, property := range propertyList {
-//		mutables.Properties = mutables.Properties.Mutate(property)
-//	}
-//
-//	return mutables
-//}

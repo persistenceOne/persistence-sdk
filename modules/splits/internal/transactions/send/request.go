@@ -74,8 +74,8 @@ func (TransactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
 func requestPrototype() helpers.TransactionRequest {
 	return TransactionRequest{}
 }
-func newTransactionRequest(baseReq test_types.BaseReq, fromID string, toID string, ownableID string, value string) *TransactionRequest {
-	return &TransactionRequest{
+func newTransactionRequest(baseReq test_types.BaseReq, fromID string, toID string, ownableID string, value string) TransactionRequest {
+	return TransactionRequest{
 		BaseReq:   baseReq,
 		FromID:    fromID,
 		ToID:      toID,

@@ -9,7 +9,6 @@ import (
 	"net/http"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
@@ -31,9 +30,9 @@ type query struct {
 var _ helpers.Query = (*query)(nil)
 
 func (query query) GetName() string { return query.name }
-func (query query) Command(codec *codec.Codec) *cobra.Command {
+func (query query) Command() *cobra.Command {
 	runE := func(command *cobra.Command, args []string) error {
-		cliContext := context.NewCLIContext().WithCodec(codec)
+		cliContext,Error := client.GetClientQueryContext(command)
 
 		queryRequest := query.requestPrototype().FromCLI(query.cliCommand, cliContext)
 		responseBytes, _, Error := query.query(queryRequest, cliContext)
@@ -42,12 +41,12 @@ func (query query) Command(codec *codec.Codec) *cobra.Command {
 			return Error
 		}
 
-		response, Error := query.responsePrototype().Decode(responseBytes)
-		if Error != nil {
-			return Error
-		}
+		//response, Error := query.responsePrototype().Decode(responseBytes)
+		//if Error != nil {
+		//	return Error
+		//}
 
-		return cliContext.PrintOutput(response)
+		return cliContext.PrintBytes(responseBytes)
 	}
 
 	return query.cliCommand.CreateCommand(runE)
@@ -87,7 +86,7 @@ func (query query) Initialize(mapper helpers.Mapper, parameters helpers.Paramete
 	return query
 }
 
-func (query query) query(queryRequest helpers.QueryRequest, cliContext context.CLIContext) ([]byte, int64, error) {
+func (query query) query(queryRequest helpers.QueryRequest, cliContext client.Context) ([]byte, int64, error) {
 	bytes, Error := queryRequest.Encode()
 	if Error != nil {
 		return nil, 0, Error

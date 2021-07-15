@@ -7,6 +7,7 @@ package key
 
 import (
 	"bytes"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"strings"
 
 	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
@@ -20,8 +21,8 @@ import (
 )
 
 type identityID struct {
-	ClassificationID types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
-	HashID           types.ID `json:"hashID" valid:"required~required field hashID missing"`
+	ClassificationID test_types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
+	HashID           test_types.ID `json:"hashID" valid:"required~required field hashID missing"`
 }
 
 var _ types.ID = (*identityID)(nil)
@@ -46,7 +47,7 @@ func (identityID identityID) Equals(id types.ID) bool {
 func (identityID identityID) GenerateStoreKeyBytes() []byte {
 	return module.StoreKeyPrefix.GenerateStoreKey(identityID.Bytes())
 }
-func (identityID) RegisterCodec(codec *codec.ProtoCodec) {
+func (identityID) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, identityID{})
 }
 func (identityID identityID) IsPartial() bool {
@@ -56,7 +57,7 @@ func (identityID identityID) Matches(key helpers.Key) bool {
 	return identityID.Equals(identityIDFromInterface(key))
 }
 
-func NewIdentityID(classificationID types.ID, immutableProperties types.Properties) types.ID {
+func NewIdentityID(classificationID test_types.ID, immutableProperties types.Properties) types.ID {
 	return identityID{
 		ClassificationID: classificationID,
 		HashID:           baseTraits.HasImmutables{Properties: immutableProperties}.GenerateHashID(),
