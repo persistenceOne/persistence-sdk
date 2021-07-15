@@ -8,20 +8,20 @@ package queuing
 import (
 	"strings"
 
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
-	cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keys"
+
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	authClient "github.com/cosmos/cosmos-sdk/x/auth/client/utils"
+	//authClient "github.com/cosmos/cosmos-sdk/x/auth/client/utils"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
 
-func SignAndBroadcastMultiple(brs []rest.BaseReq, cliContextList []context.CLIContext, msgList []sdkTypes.Msg) ([]byte, error) {
+func SignAndBroadcastMultiple(brs []rest.BaseReq, cliContextList []client.Context, msgList []sdkTypes.Msg) ([]byte, error) {
 	var stdTxs types.StdTx
 
 	var txBytes []byte

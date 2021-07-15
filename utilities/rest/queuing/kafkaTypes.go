@@ -33,14 +33,14 @@ func NewKafkaMsgFromRest(msg sdk.Msg, ticketID TicketID, baseRequest rest.BaseRe
 		HomeDir:       cliCtx.HomeDir,
 		NodeURI:       cliCtx.NodeURI,
 		From:          cliCtx.From,
-		TrustNode:     cliCtx.TrustNode,
+		//TrustNode:     cliCtx.TrustNode,
 		UseLedger:     cliCtx.UseLedger,
 		BroadcastMode: cliCtx.BroadcastMode,
 		Simulate:      cliCtx.Simulate,
 		GenerateOnly:  cliCtx.GenerateOnly,
 		FromAddress:   cliCtx.FromAddress,
 		FromName:      cliCtx.FromName,
-		Indent:        cliCtx.Indent,
+		//Indent:        cliCtx.Indent,
 		SkipConfirm:   cliCtx.SkipConfirm,
 	}
 
@@ -60,14 +60,14 @@ func CliCtxFromKafkaMsg(kafkaMsg KafkaMsg, cliContext client.Context) client.Con
 	cliContext.HomeDir = kafkaMsg.KafkaCli.HomeDir
 	cliContext.NodeURI = kafkaMsg.KafkaCli.NodeURI
 	cliContext.From = kafkaMsg.KafkaCli.From
-	cliContext.TrustNode = kafkaMsg.KafkaCli.TrustNode
+	//cliContext.TrustNode = kafkaMsg.KafkaCli.TrustNode
 	cliContext.UseLedger = kafkaMsg.KafkaCli.UseLedger
 	cliContext.BroadcastMode = kafkaMsg.KafkaCli.BroadcastMode
 	cliContext.Simulate = kafkaMsg.KafkaCli.Simulate
 	cliContext.GenerateOnly = kafkaMsg.KafkaCli.GenerateOnly
 	cliContext.FromAddress = kafkaMsg.KafkaCli.FromAddress
 	cliContext.FromName = kafkaMsg.KafkaCli.FromName
-	cliContext.Indent = kafkaMsg.KafkaCli.Indent
+	//cliContext.Indent = kafkaMsg.KafkaCli.Indent
 	cliContext.SkipConfirm = kafkaMsg.KafkaCli.SkipConfirm
 
 	return cliContext
@@ -84,12 +84,12 @@ type KafkaCliCtx struct {
 	BroadcastMode string
 	FromName      string
 	Height        int64
-	TrustNode     bool
+	//TrustNode     bool
 	UseLedger     bool
 	Simulate      bool
 	GenerateOnly  bool
 	Offline       bool
-	Indent        bool
+	//Indent        bool
 	SkipConfirm   bool
 }
 

@@ -7,11 +7,10 @@ package sign
 
 import (
 	"bytes"
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/codec"
-	cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keys"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
@@ -35,7 +34,7 @@ func TestHandler(t *testing.T) {
 	Codec.RegisterConcrete(response{}, "response", nil)
 	base.TestMessagePrototype().RegisterCodec(Codec)
 
-	clientContext := context.NewCLIContext().WithCodec(Codec)
+	clientContext := client.Context{}.WithCodec(Codec)
 
 	handler := handler(clientContext)
 	viper.Set(flags.FlagKeyringBackend, cryptoKeys.BackendTest)

@@ -10,7 +10,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/utilities/test/schema/helpers/base"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/tendermint/libs/kv"
+	//"github.com/tendermint/tendermint/libs/kv"
 	"reflect"
 	"testing"
 )

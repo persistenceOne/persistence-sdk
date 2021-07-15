@@ -11,17 +11,17 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/types/rest"
-	authClient "github.com/cosmos/cosmos-sdk/x/auth/client/utils"
+	//authClient "github.com/cosmos/cosmos-sdk/x/auth/client/utils"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
 )
 
-func handler(cliContext context.CLIContext) http.HandlerFunc {
+func handler(cliContext client.Context) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, httpRequest *http.Request) {
 		var request request
 		if !rest.ReadRESTReq(responseWriter, httpRequest, cliContext.Codec, &request) {

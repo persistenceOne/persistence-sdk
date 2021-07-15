@@ -6,7 +6,7 @@
 package base
 
 import (
-	clientContext "github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/persistenceOne/persistenceSDK/utilities/test/schema/helpers/base"
 	"github.com/stretchr/testify/require"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
@@ -49,7 +49,7 @@ func TestQuery(t *testing.T) {
 		command.ExecuteContext(context.Context()).Error())
 
 	// RESTQueryHandler
-	cliContext := clientContext.NewCLIContext().WithCodec(codec).WithChainID("test")
+	cliContext := client.Context{}.WithCodec(codec).WithChainID("test")
 	Query.RESTQueryHandler(cliContext)
 
 	//RPC ERROR

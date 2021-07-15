@@ -22,7 +22,7 @@ func NewProducer(kafkaNodes []string) sarama.SyncProducer {
 }
 
 // KafkaProducerDeliverMessage : delivers messages to kafka
-func KafkaProducerDeliverMessage(kafkaMsg KafkaMsg, topic string, producer sarama.SyncProducer, Codec *codec.Codec) error {
+func KafkaProducerDeliverMessage(kafkaMsg KafkaMsg, topic string, producer sarama.SyncProducer, Codec *codec.LegacyAmino) error {
 	kafkaStoreBytes, err := Codec.MarshalJSON(kafkaMsg)
 	if err != nil {
 		panic(err)
@@ -42,7 +42,7 @@ func KafkaProducerDeliverMessage(kafkaMsg KafkaMsg, topic string, producer saram
 }
 
 // SendToKafka : handles sending message to kafka
-func SendToKafka(kafkaMsg KafkaMsg, kafkaState kafkaState, Codec *codec.Codec) []byte {
+func SendToKafka(kafkaMsg KafkaMsg, kafkaState kafkaState, Codec *codec.LegacyAmino) []byte {
 	Error := KafkaProducerDeliverMessage(kafkaMsg, "Topic", kafkaState.Producer, Codec)
 	if Error != nil {
 		jsonResponse, Error := Codec.MarshalJSON(struct {

@@ -8,7 +8,7 @@ package base
 import (
 	"bytes"
 	"encoding/json"
-	clientContext "github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
@@ -50,7 +50,7 @@ func TestTransaction(t *testing.T) {
 	require.Nil(t, Error)
 
 	// RESTRequestHandler : No Panics
-	cliContext := clientContext.NewCLIContext().WithCodec(codec).WithChainID("test")
+	cliContext := .NewCLIContext().WithCodec(codec).WithChainID("test")
 
 	//RPC ERROR
 	request1 := codec.MustMarshalJSON(base.TransactionRequest{

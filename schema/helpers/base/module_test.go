@@ -10,7 +10,7 @@ import (
 	"math/rand"
 	"testing"
 
-	clientContext "github.com/cosmos/cosmos-sdk/client/context"
+	 "github.com/cosmos/cosmos-sdk/client"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	sdkModule "github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/params"
@@ -73,7 +73,7 @@ func TestModule(t *testing.T) {
 	require.Nil(t, Module.ValidateGenesis(Module.DefaultGenesis()))
 
 	// RegisterRESTRoutes
-	cliContext := clientContext.NewCLIContext().WithCodec(codec).WithChainID("test")
+	cliContext := client.Context{}.WithCodec(codec).WithChainID("test")
 	router := mux.NewRouter()
 	require.NotPanics(t, func() {
 		Module.RegisterRESTRoutes(cliContext, router)

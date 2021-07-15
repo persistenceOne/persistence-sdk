@@ -8,7 +8,7 @@ package base
 import (
 	"net/http"
 
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
@@ -61,7 +61,7 @@ func (query query) HandleMessage(context sdkTypes.Context, requestQuery abciType
 	return query.queryKeeper.Enquire(context, request).Encode()
 }
 
-func (query query) RESTQueryHandler(cliContext context.CLIContext) http.HandlerFunc {
+func (query query) RESTQueryHandler(cliContext client.Context) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, httpRequest *http.Request) {
 		responseWriter.Header().Set("Content-Type", "application/json")
 		cliContext, ok := rest.ParseQueryHeightOrReturnBadRequest(responseWriter, cliContext, httpRequest)

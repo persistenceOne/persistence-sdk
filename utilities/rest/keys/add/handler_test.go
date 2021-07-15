@@ -7,11 +7,11 @@ package add
 
 import (
 	"bytes"
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/crypto/keys"
-	cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keys"
+	//"github.com/cosmos/cosmos-sdk/crypto/keys"
+	//cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keys"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
@@ -29,7 +29,7 @@ func TestHandler(t *testing.T) {
 	schema.RegisterCodec(Codec)
 	Codec.RegisterConcrete(request{}, "request", nil)
 	Codec.RegisterConcrete(response{}, "response", nil)
-	clientContext := context.NewCLIContext().WithCodec(Codec)
+	clientContext := client.Context{}.WithCodec(Codec)
 	handler := handler(clientContext)
 	viper.Set(flags.FlagKeyringBackend, keys.BackendTest)
 	viper.Set(flags.FlagHome, t.TempDir())
