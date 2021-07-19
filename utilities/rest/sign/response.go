@@ -6,14 +6,14 @@
 package sign
 
 import (
-	authTypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	clientContext "github.com/cosmos/cosmos-sdk/client"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 )
 
 type response struct {
-	Success bool            `json:"success"`
-	Error   error           `json:"error"`
-	StdTx   authTypes.StdTx `json:"tx"`
+	Success bool                    `json:"success"`
+	Error   error                   `json:"error"`
+	StdTx   clientContext.TxBuilder `json:"tx"`
 }
 
 var _ helpers.Response = response{}
@@ -25,7 +25,7 @@ func (response response) GetError() error {
 	return response.Error
 }
 
-func newResponse(stdTx authTypes.StdTx, error error) helpers.Response {
+func newResponse(stdTx clientContext.TxBuilder, error error) helpers.Response {
 	success := true
 	if error != nil {
 		success = false

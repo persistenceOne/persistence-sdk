@@ -29,7 +29,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tendermintProto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -68,16 +68,16 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
 	storeKey := sdkTypes.NewKVStoreKey("test")
 	paramsStoreKey := sdkTypes.NewKVStoreKey("testParams")
 	authStoreKey := sdkTypes.NewKVStoreKey("testAuth")
-	bankStoreKey := sdkTypes.NewKVStoreKey("testbank")
+	bankStoreKey := sdkTypes.NewKVStoreKey("testBank")
 	paramsTransientStoreKeys := sdkTypes.NewTransientStoreKey("testParamsTransient")
 	Mapper := baseHelpers.NewMapper(key.Prototype, mappable.Prototype).Initialize(storeKey)
-	paramsKeeper := paramsKeeper.NewKeeper(
+	paramskeeper := paramsKeeper.NewKeeper(
 		encodingConfig.Marshaler,
 		encodingConfig.Amino,
 		paramsStoreKey,
 		paramsTransientStoreKeys,
 	)
-	Parameters := parameters.Prototype().Initialize(paramsKeeper.Subspace("test"))
+	Parameters := parameters.Prototype().Initialize(paramskeeper.Subspace("test"))
 
 	memDB := tendermintDB.NewMemDB()
 	commitMultiStore := store.NewCommitMultiStore(memDB)
@@ -93,15 +93,15 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 
-	accountKeeper := authKeeper.NewAccountKeeper(encodingConfig.Marshaler, authStoreKey, paramsKeeper.Subspace(authTypes.ModuleName), authTypes.ProtoBaseAccount, make(map[string][]string))
+	accountKeeper := authKeeper.NewAccountKeeper(encodingConfig.Marshaler, authStoreKey, paramskeeper.Subspace(authTypes.ModuleName), authTypes.ProtoBaseAccount, make(map[string][]string))
 
-	bankKeeper := bankKeeper.NewBaseKeeper(encodingConfig.Marshaler, bankStoreKey, accountKeeper, paramsKeeper.Subspace(bankTypes.ModuleName), make(map[string]bool))
+	bankkeeper := bankKeeper.NewBaseKeeper(encodingConfig.Marshaler, bankStoreKey, accountKeeper, paramskeeper.Subspace(bankTypes.ModuleName), make(map[string]bool))
 	verifyAuxiliary := verify.AuxiliaryMock.Initialize(Mapper, Parameters)
 	keepers := TestKeepers{
 		SplitsKeeper: keeperPrototype().Initialize(Mapper, Parameters,
 			[]interface{}{verifyAuxiliary}).(helpers.TransactionKeeper),
 		AccountKeeper: accountKeeper,
-		BankKeeper:    bankKeeper,
+		BankKeeper:    bankkeeper,
 	}
 
 	return context, keepers
@@ -112,13 +112,14 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	context, keepers := CreateTestInput(t)
 	defaultAddr := sdkTypes.AccAddress("addr")
 	verifyMockErrorAddress := sdkTypes.AccAddress("verifyError")
-	ownableID := base.NewID("stake")
-	fromID := base.NewID("fromID")
+	ownableID := test_types.NewID("stake")
+	fromID := test_types.NewID("fromID")
 	coins := func(amount int64) sdkTypes.Coins {
 		return sdkTypes.NewCoins(sdkTypes.NewCoin("stake", sdkTypes.NewInt(amount)))
 	}
 	Error := keepers.BankKeeper.SetBalances(context, defaultAddr, coins(1000))
 	require.Equal(t, nil, Error)
+
 	Error = keepers.BankKeeper.SendCoinsFromAccountToModule(context, defaultAddr, module.Name, coins(1000))
 	require.Equal(t, nil, Error)
 	keepers.SplitsKeeper.(transactionKeeper).mapper.NewCollection(context).Add(mappable.NewSplit(key.NewSplitID(fromID, ownableID), sdkTypes.NewDec(1000)))
@@ -168,7 +169,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	t.Run("NegativeCase-Value Not found", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.EntityNotFound)
-		if got := keepers.SplitsKeeper.Transact(context, newMessage(defaultAddr, base.NewID("id"), ownableID, sdkTypes.NewInt(10))); !reflect.DeepEqual(got, want) {
+		if got := keepers.SplitsKeeper.Transact(context, newMessage(defaultAddr, test_types.NewID("id"), ownableID, sdkTypes.NewInt(10))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})

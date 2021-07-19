@@ -10,11 +10,11 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/key"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/mappables"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
 
-func GetOwnableTotalSplitsValue(collection helpers.Collection, ownableID types.ID) sdkTypes.Dec {
+func GetOwnableTotalSplitsValue(collection helpers.Collection, ownableID test_types.ID) sdkTypes.Dec {
 	value := sdkTypes.ZeroDec()
 	accumulator := func(mappable helpers.Mappable) bool {
 		if key.ReadOwnableID(key.ToID(mappable.GetKey())).Equals(ownableID) {

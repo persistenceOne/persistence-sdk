@@ -6,7 +6,6 @@
 package send
 
 import (
-	"encoding/json"
 	"github.com/asaskevich/govalidator"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
@@ -15,6 +14,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 
 	//"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
@@ -33,9 +33,7 @@ func (message Message) ValidateBasic() error {
 	return nil
 }
 func (message Message) GetSignBytes() []byte {
-	js, _ := json.Marshal(message)
-
-	return sdkTypes.MustSortJSON(js)
+	return sdkTypes.MustSortJSON(transaction.RegisterCodec(messagePrototype).MustMarshalJSON(message))
 }
 func (message Message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{sdkTypes.AccAddress(message.From)}
@@ -43,12 +41,12 @@ func (message Message) GetSigners() []sdkTypes.AccAddress {
 func (Message) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, Message{})
 }
-func messageFromInterface(msg sdkTypes.Msg) *Message {
+func messageFromInterface(msg sdkTypes.Msg) Message {
 	switch value := msg.(type) {
-	case *Message:
+	case Message:
 		return value
 	default:
-		return &Message{}
+		return Message{}
 	}
 }
 func messagePrototype() helpers.Message {
@@ -57,8 +55,8 @@ func messagePrototype() helpers.Message {
 
 //TODO:types mismatch
 
-func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, ownableID test_types.ID, value sdkTypes.Dec) *Message {
-	return &Message{
+func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, ownableID test_types.ID, value sdkTypes.Dec) Message {
+	return Message{
 		From:      from,
 		FromID:    fromID,
 		ToID:      toID,

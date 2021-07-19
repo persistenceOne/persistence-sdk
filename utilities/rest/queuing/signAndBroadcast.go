@@ -6,40 +6,30 @@
 package queuing
 
 import (
-	clientContext "github.com/cosmos/cosmos-sdk/client"
-	"strings"
-
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
-	//cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keys"
+	"github.com/cosmos/cosmos-sdk/client/tx"
 	cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/auth"
-	authClient "github.com/cosmos/cosmos-sdk/x/auth/client"
-	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
-	"github.com/pkg/errors"
+	"github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/spf13/viper"
+	"strings"
 )
 
-func signAndBroadcastMultiple(kafkaMsgList []kafkaMsg, cliContext clientContext.Context) ([]byte, error) {
-	var stdTxs legacytx.StdTx
+func SignAndBroadcastMultiple(brs []rest.BaseReq, cliContextList []client.Context, msgList []sdkTypes.Msg) ([]byte, error) {
+	var stdTxs client.TxBuilder
 
 	var txBytes []byte
 
-	var msgList []sdkTypes.Msg
-	for _, kafkaMsg := range kafkaMsgList {
-		msgList = append(msgList, kafkaMsg.Msg)
-	}
-
-	for i, kafkaMsg := range kafkaMsgList {
-		msgCLIContext := cliCtxFromKafkaMsg(kafkaMsg, cliContext)
-
-		gasAdj, Error := parseGasAdjustment(kafkaMsg.BaseRequest.GasAdjustment)
+	for i := range brs {
+		gasAdj, _, Error := ParseFloat64OrReturnBadRequest(brs[i].GasAdjustment, flags.DefaultGasAdjustment)
 		if Error != nil {
 			return nil, Error
 		}
 
-		gas, Error := flags.ParseGasSetting(kafkaMsg.BaseRequest.Gas)
+		gasSetting, Error := flags.ParseGasSetting(brs[0].Gas)
 		if Error != nil {
 			return nil, Error
 		}
@@ -49,84 +39,97 @@ func signAndBroadcastMultiple(kafkaMsgList []kafkaMsg, cliContext clientContext.
 			return nil, Error
 		}
 
-		//TODO: Find similar
-		accountNumber, sequence, Error := types.NewAccountRetriever(cliContext).GetAccountNumberSequence(msgCLIContext.FromAddress)
+		accountNumber, sequence, Error := cliContextList[i].AccountRetriever.GetAccountNumberSequence(cliContextList[i], cliContextList[i].FromAddress)
 		if Error != nil {
 			return nil, Error
 		}
-		kafkaMsg.BaseRequest.AccountNumber = accountNumber
-
+		brs[i].AccountNumber = accountNumber
 		var count = uint64(0)
-
 		for j := 0; j < i; j++ {
-			if accountNumber == kafkaMsgList[j].BaseRequest.AccountNumber {
+			if accountNumber == brs[j].AccountNumber {
 				count++
+				break
 			}
 		}
+		if count > 0 {
+			continue
+		}
 
-		sequence += count
-		//TODO : Find the alterantive
-		txBuilder := types.NewTxBuilder(
-			authClient.GetTxEncoder(cliContext.LegacyAmino), accountNumber, sequence, gas, gasAdj,
-			kafkaMsg.BaseRequest.Simulate, kafkaMsg.BaseRequest.ChainID, kafkaMsg.BaseRequest.Memo, kafkaMsg.BaseRequest.Fees, kafkaMsg.BaseRequest.GasPrices,
-		)
+		txf := tx.Factory{}.
+			WithAccountNumber(accountNumber).
+			WithSequence(sequence).
+			WithGas(gasSetting.Gas).
+			WithGasAdjustment(gasAdj).
+			WithMemo(brs[i].Memo).
+			WithChainID(brs[i].ChainID).
+			WithSimulateAndExecute(brs[i].Simulate).
+			WithTxConfig(cliContextList[i].TxConfig).
+			WithTimeoutHeight(brs[i].TimeoutHeight).
+			WithFees(brs[i].Fees.String()).
+			WithGasPrices(brs[i].GasPrices.String()).
+			WithKeybase(keyBase)
 
-		txBuilder = txBuilder.WithKeybase(keyBase)
-
-		if kafkaMsg.BaseRequest.Simulate {
+		if brs[i].Simulate || gasSetting.Simulate {
 			if gasAdj < 0 {
-				return nil, errors.New("Error invalid gas adjustment")
+				return nil, errors.ErrorInvalidGasAdjustment
 			}
 
-			txBuilder, Error = authClient.EnrichWithGas(txBuilder, cliContext, []sdkTypes.Msg{kafkaMsg.Msg})
-			if Error != nil {
-				return nil, Error
-			}
+			_, adjusted, err := tx.CalculateGas(cliContextList[i].QueryWithData, txf, msgList...)
+			return nil, err
 
-			if kafkaMsg.BaseRequest.Simulate {
-				val, _ := simulationResponse(cliContext.Codec, txBuilder.Gas())
-				return val, nil
+			txf = txf.WithGas(adjusted)
+
+			if brs[i].Simulate {
+				val, Error := SimulationResponse(cliContextList[i].LegacyAmino, txf.Gas())
+				return val, Error
 			}
 		}
 
-		stdMsg, Error := txBuilder.BuildSignMsg(msgList)
-		if Error != nil {
-			return nil, Error
+		txBuilder, err := tx.BuildUnsignedTx(txf, msgList...)
+		if err != nil {
+			return nil, err
 		}
-
-		stdTx := auth.NewStdTx(stdMsg.Msgs, stdMsg.Fee, nil, stdMsg.Memo)
-
-		stdTx, Error = txBuilder.SignStdTx(msgCLIContext.FromName, keys.DefaultKeyPass, stdTx, true)
-		if Error != nil {
-			return nil, Error
+		err = tx.Sign(txf, cliContextList[i].FromName, txBuilder, false)
+		if err != nil {
+			return nil, err
 		}
 
 		if i == 0 {
-			stdTxs.Msgs = stdTx.Msgs
-			stdTxs.Fee = stdTx.Fee
-			stdTxs.Memo = stdTx.Memo
+			stdTxs.SetMsgs(txBuilder.GetTx().GetMsgs()...)
+			stdTxs.SetGasLimit(txBuilder.GetTx().GetGas())
+			stdTxs.SetFeeAmount(txBuilder.GetTx().GetFee())
+			stdTxs.SetMemo(txBuilder.GetTx().GetMemo())
+			stdTxs.SetTimeoutHeight(txBuilder.GetTx().GetTimeoutHeight())
 		}
-
-		if count == 0 {
-			stdTxs.Signatures = append(stdTxs.Signatures, stdTx.Signatures...)
+		signaturesV2, Error := txBuilder.GetTx().GetSignaturesV2()
+		if err != nil {
+			return nil, err
 		}
+		stdTxs.SetSignatures(signaturesV2...)
 
-		if i == len(kafkaMsgList)-1 {
-			txBytes, Error = txBuilder.TxEncoder()(stdTxs)
-			if Error != nil {
-				return nil, Error
+		if i == len(brs)-1 {
+			txBytes, err = cliContextList[i].TxConfig.TxEncoder()(stdTxs.GetTx())
+			if err != nil {
+				return txBytes, err
 			}
 		}
 	}
 
-	response, Error := cliCtxFromKafkaMsg(kafkaMsgList[0], cliContext).BroadcastTx(txBytes)
+	response, Error := cliContextList[0].BroadcastTx(txBytes)
 	if Error != nil {
 		return nil, Error
 	}
 
-	output, Error := cliCtxFromKafkaMsg(kafkaMsgList[0], cliContext).Codec.MarshalJSON(response)
+	responseBytes, Error := cliContextList[0].LegacyAmino.MarshalJSON(response)
 	if Error != nil {
-		return nil, Error
+		return responseBytes, Error
+	}
+
+	wrappedResponse := rest.NewResponseWithHeight(cliContextList[0].Height, responseBytes)
+
+	output, Error := cliContextList[0].LegacyAmino.MarshalJSON(wrappedResponse)
+	if Error != nil {
+		return output, Error
 	}
 
 	return output, nil

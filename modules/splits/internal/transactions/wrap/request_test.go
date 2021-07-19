@@ -7,6 +7,7 @@ package wrap
 
 import (
 	"encoding/json"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"testing"
 
 	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
@@ -15,12 +16,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 )
 
@@ -39,32 +38,32 @@ func Test_Unwrap_Request(t *testing.T) {
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)
 	require.Nil(t, Error)
 
-	testBaseReq := rest.BaseReq{From: fromAddress, ChainID: "test", Fees: sdkTypes.NewCoins()}
+	testBaseReq := test_types.BaseReq{From: fromAddress, ChainId: "test", Fees: sdkTypes.NewCoins()}
 	testTransactionRequest := newTransactionRequest(testBaseReq, "fromID", "2 stake")
 
-	require.Equal(t, transactionRequest{BaseReq: testBaseReq, FromID: "fromID", Coins: "2 stake"}, testTransactionRequest)
+	require.Equal(t, TransactionRequest{BaseReq: testBaseReq, FromID: "fromID", Coins: "2 stake"}, testTransactionRequest)
 	require.Equal(t, nil, testTransactionRequest.Validate())
 
-	requestFromCLI, Error := transactionRequest{}.FromCLI(cliCommand, cliContext)
+	requestFromCLI, Error := TransactionRequest{}.FromCLI(cliCommand, cliContext)
 	require.Equal(t, nil, Error)
-	require.Equal(t, transactionRequest{BaseReq: rest.BaseReq{From: cliContext.GetFromAddress().String(), ChainID: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", Coins: ""}, requestFromCLI)
+	require.Equal(t, TransactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", Coins: ""}, requestFromCLI)
 
 	jsonMessage, _ := json.Marshal(testTransactionRequest)
-	transactionRequestUnmarshalled, Error := transactionRequest{}.FromJSON(jsonMessage)
+	transactionRequestUnmarshalled, Error := TransactionRequest{}.FromJSON(jsonMessage)
 	require.Equal(t, nil, Error)
 	require.Equal(t, testTransactionRequest, transactionRequestUnmarshalled)
 
-	randomUnmarshall, Error := transactionRequest{}.FromJSON([]byte{})
+	randomUnmarshall, Error := TransactionRequest{}.FromJSON([]byte{})
 	require.Equal(t, nil, randomUnmarshall)
 	require.NotNil(t, Error)
 
 	require.Equal(t, testBaseReq, testTransactionRequest.GetBaseReq())
 
 	msg, Error := testTransactionRequest.MakeMsg()
-	require.Equal(t, newMessage(fromAccAddress, base.NewID("fromID"), sdkTypes.NewCoins(sdkTypes.NewCoin("stake", sdkTypes.NewInt(2)))), msg)
+	require.Equal(t, newMessage(fromAccAddress, test_types.NewID("fromID"), sdkTypes.NewCoins(sdkTypes.NewCoin("stake", sdkTypes.NewInt(2)))), msg)
 	require.Nil(t, Error)
 
-	msg2, Error := newTransactionRequest(rest.BaseReq{From: "randomFromAddress", ChainID: "test"}, "fromID", "2 stake").MakeMsg()
+	msg2, Error := newTransactionRequest(test_types.BaseReq{From: "randomFromAddress", ChainId: "test"}, "fromID", "2 stake").MakeMsg()
 	require.NotNil(t, Error)
 	require.Nil(t, msg2)
 
@@ -72,7 +71,7 @@ func Test_Unwrap_Request(t *testing.T) {
 	require.NotNil(t, Error)
 	require.Nil(t, msg2)
 
-	require.Equal(t, transactionRequest{}, requestPrototype())
+	require.Equal(t, TransactionRequest{}, requestPrototype())
 	require.NotPanics(t, func() {
 		requestPrototype().RegisterCodec(codec.NewLegacyAmino())
 	})

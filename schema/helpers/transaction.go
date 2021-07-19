@@ -17,7 +17,7 @@ import (
 
 type Transaction interface {
 	GetName() string
-	Command(protoCodec *codec.ProtoCodec) *cobra.Command
+	Command() *cobra.Command
 	HandleMessage(sdkTypes.Context, sdkTypes.Msg) (*sdkTypes.Result, error)
 	RESTRequestHandler(client.Context) http.HandlerFunc
 	RegisterCodec(protoCodec *codec.LegacyAmino)

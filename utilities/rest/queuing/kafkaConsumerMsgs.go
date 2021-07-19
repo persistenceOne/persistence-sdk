@@ -9,13 +9,21 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
+	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/rest"
 )
 
-// kafkaConsumerMessages : messages to consume 5 second delay
-func kafkaConsumerMessages(cliCtx client.Context) {
+// KafkaConsumerMessages : messages to consume 5 second delay
+func KafkaConsumerMessages(cliCtx client.Context, kafkaState kafkaState) {
 	quit := make(chan bool)
 
-	var kafkaMsgList []kafkaMsg
+	var cliContextList []client.Context
+
+	var baseRequestList []rest.BaseReq
+
+	var ticketIDList []TicketID
+
+	var msgList []sdkTypes.Msg
 
 	go func() {
 		for {
@@ -23,22 +31,25 @@ func kafkaConsumerMessages(cliCtx client.Context) {
 			case <-quit:
 				return
 			default:
-				kafkaMsg := kafkaTopicConsumer("Topic", KafkaState.Consumers, cliCtx.LegacyAmino)
+				kafkaMsg := KafkaTopicConsumer("Topic", kafkaState.Consumers, cliCtx.LegacyAmino)
 				if kafkaMsg.Msg != nil {
-					kafkaMsgList = append(kafkaMsgList, kafkaMsg)
+					cliContextList = append(cliContextList, CliCtxFromKafkaMsg(kafkaMsg, cliCtx))
+					baseRequestList = append(baseRequestList, kafkaMsg.BaseRequest)
+					ticketIDList = append(ticketIDList, kafkaMsg.TicketID)
+					msgList = append(msgList, kafkaMsg.Msg)
 				}
 			}
 		}
 	}()
 
-	time.Sleep(sleepTimer)
+	time.Sleep(SleepTimer)
 	quit <- true
 
-	if len(kafkaMsgList) == 0 {
+	if len(msgList) == 0 {
 		return
 	}
 
-	output, err := signAndBroadcastMultiple(kafkaMsgList, cliCtx)
+	output, err := SignAndBroadcastMultiple(baseRequestList, cliContextList, msgList)
 	if err != nil {
 		jsonError, e := cliCtx.LegacyAmino.MarshalJSON(struct {
 			Error string `json:"error"`
@@ -47,14 +58,14 @@ func kafkaConsumerMessages(cliCtx client.Context) {
 			panic(err)
 		}
 
-		for _, kafkaMsg := range kafkaMsgList {
-			addResponseToDB(kafkaMsg.TicketID, jsonError, KafkaState.KafkaDB, cliCtx.LegacyAmino)
+		for _, ticketID := range ticketIDList {
+			AddResponseToDB(ticketID, jsonError, kafkaState.KafkaDB, cliCtx.LegacyAmino)
 		}
 
 		return
 	}
 
-	for _, kafkaMsg := range kafkaMsgList {
-		addResponseToDB(kafkaMsg.TicketID, output, KafkaState.KafkaDB, cliCtx.LegacyAmino)
+	for _, ticketID := range ticketIDList {
+		AddResponseToDB(ticketID, output, kafkaState.KafkaDB, cliCtx.LegacyAmino)
 	}
 }

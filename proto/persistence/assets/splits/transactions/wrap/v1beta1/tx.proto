@@ -1,12 +1,12 @@
 syntax ="proto3";
 
-package persistence.assets.splits.transactions.unwrap.v1beta1;
+package persistence.assets.splits.transactions.wrap.v1beta1;
 
-import "gogoproto/gogo.proto";
+import "third_party/proto/gogoproto/gogo.proto";
 //import "proto/schema/base/v1beta1/id.proto";
 
 
-option go_package = "modules/splits/internal/transactions/unwrap";
+option go_package = "modules/splits/internal/transactions/wrap";
 
 message message {
   option (gogoproto.goproto_getters) = false;
@@ -15,7 +15,6 @@ message message {
 
   string from =1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.AccAddress", (gogoproto.nullable) = false] ;
   string from_iD =2 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false] ;
-  string ownable_iD =4 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false];
-  string value =5 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  string coins =5 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coins", (gogoproto.nullable) = false];
 
 }

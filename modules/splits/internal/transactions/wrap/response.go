@@ -9,17 +9,17 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 )
 
-type transactionResponse struct {
-	Success bool
-	Error   error
-}
+//type transactionResponse struct {
+//	Success bool
+//	Error   error
+//}
 
-var _ helpers.TransactionResponse = (*transactionResponse)(nil)
+var _ helpers.TransactionResponse = (*TransactionResponse)(nil)
 
-func (transactionResponse transactionResponse) IsSuccessful() bool {
+func (transactionResponse TransactionResponse) IsSuccessful() bool {
 	return transactionResponse.Success
 }
-func (transactionResponse transactionResponse) GetError() error {
+func (transactionResponse TransactionResponse) GetError() error {
 	return transactionResponse.Error
 }
 func newTransactionResponse(error error) helpers.TransactionResponse {
@@ -28,7 +28,7 @@ func newTransactionResponse(error error) helpers.TransactionResponse {
 		success = false
 	}
 
-	return transactionResponse{
+	return TransactionResponse{
 		Success: success,
 		Error:   error,
 	}

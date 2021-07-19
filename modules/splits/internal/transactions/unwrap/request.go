@@ -57,8 +57,8 @@ func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 		return nil, Error
 	}
 
-	value, err := sdkTypes.NewDecFromStr(transactionRequest.Value)
-	if err != nil {
+	value, ok := sdkTypes.NewIntFromString(transactionRequest.Value)
+	if !ok {
 		return nil, xprtErrors.InvalidRequest
 	}
 
@@ -72,7 +72,7 @@ func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 func (TransactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, TransactionRequest{})
 }
-func requestPrototype() TransactionRequest {
+func requestPrototype() helpers.TransactionRequest {
 	return TransactionRequest{}
 }
 func newTransactionRequest(baseReq test_types.BaseReq, fromID string, ownableID string, value string) TransactionRequest {
