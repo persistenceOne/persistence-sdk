@@ -23,6 +23,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/identities/auxiliaries/verify"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/key"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/mappable"
+	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/parameters"
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
@@ -56,6 +57,7 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
 	txCfg := tx.NewTxConfig(marshaler, tx.DefaultSignModes)
 	std.RegisterLegacyAminoCodec(Codec)
 	std.RegisterInterfaces(interfaceRegistry)
+	authTypes.RegisterInterfaces(interfaceRegistry)
 
 	encodingConfig := applications.EncodingConfig{
 		InterfaceRegistry: interfaceRegistry,
@@ -69,14 +71,14 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
 	paramsTransientStoreKeys := sdkTypes.NewTransientStoreKey("testParamsTransient")
 	authStoreKey := sdkTypes.NewKVStoreKey("testAuth")
 	bankStoreKey := sdkTypes.NewKVStoreKey("testBank")
-	mapper := baseHelpers.NewMapper(key.Prototype, mappable.Prototype).Initialize(storeKey)
-	paramsKeeper := paramsKeeper.NewKeeper(
+	Mapper := baseHelpers.NewMapper(key.Prototype, mappable.Prototype).Initialize(storeKey)
+	paramskeeper := paramsKeeper.NewKeeper(
 		encodingConfig.Marshaler,
 		encodingConfig.Amino,
 		paramsStoreKey,
 		paramsTransientStoreKeys,
 	)
-	Parameters := parameters.Prototype().Initialize(paramsKeeper.Subspace("test"))
+	Parameters := parameters.Prototype().Initialize(paramskeeper.Subspace("test"))
 
 	memDB := tendermintDB.NewMemDB()
 	commitMultiStore := store.NewCommitMultiStore(memDB)
@@ -92,15 +94,19 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 
-	accountKeeper := authKeeper.NewAccountKeeper(encodingConfig.Marshaler, authStoreKey, paramsKeeper.Subspace(authTypes.ModuleName), authTypes.ProtoBaseAccount, make(map[string][]string))
+	var ModuleAccountPermissions = map[string][]string{
+		module.Name: nil,
+	}
 
-	bankKeeper := bankKeeper.NewBaseKeeper(encodingConfig.Marshaler, bankStoreKey, accountKeeper, paramsKeeper.Subspace(bankTypes.ModuleName), make(map[string]bool))
-	verifyAuxiliary := verify.AuxiliaryMock.Initialize(mapper, Parameters)
+	accountKeeper := authKeeper.NewAccountKeeper(encodingConfig.Marshaler, authStoreKey, paramskeeper.Subspace(authTypes.ModuleName), authTypes.ProtoBaseAccount, ModuleAccountPermissions)
+
+	bankkeeper := bankKeeper.NewBaseKeeper(encodingConfig.Marshaler, bankStoreKey, accountKeeper, paramskeeper.Subspace(bankTypes.ModuleName), make(map[string]bool))
+	verifyAuxiliary := verify.AuxiliaryMock.Initialize(Mapper, Parameters)
 	keepers := TestKeepers{
-		SplitsKeeper: keeperPrototype().Initialize(mapper, Parameters,
-			[]interface{}{verifyAuxiliary}).(helpers.TransactionKeeper),
+		SplitsKeeper: keeperPrototype().Initialize(Mapper, Parameters,
+			[]interface{}{verifyAuxiliary, bankkeeper}).(helpers.TransactionKeeper),
 		AccountKeeper: accountKeeper,
-		BankKeeper:    bankKeeper,
+		BankKeeper:    bankkeeper,
 	}
 
 	return context, keepers
@@ -137,7 +143,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	t.Run("NegativeCase-Verify Identity Failure", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
-		if got := keepers.SplitsKeeper.Transact(ctx, newMessage(verifyMockErrorAddress, fromID, coins(100))); !reflect.DeepEqual(got, want) {
+		if got := keepers.SplitsKeeper.Transact(ctx, newMessage(verifyMockErrorAddress, fromID, coins(10))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})

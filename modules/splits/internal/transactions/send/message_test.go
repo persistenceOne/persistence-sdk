@@ -6,6 +6,7 @@
 package send
 
 import (
+	"fmt"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"testing"
 
@@ -31,6 +32,7 @@ func Test_Send_Message(t *testing.T) {
 	require.Equal(t, module.Name, testMessage.Route())
 	require.Equal(t, Transaction.GetName(), testMessage.Type())
 	require.Equal(t, nil, testMessage.ValidateBasic())
+	fmt.Println(Message{}.ValidateBasic())
 	require.NotNil(t, Message{}.ValidateBasic())
 	require.Equal(t, sdkTypes.MustSortJSON(transaction.RegisterCodec(messagePrototype).MustMarshalJSON(testMessage)), testMessage.GetSignBytes())
 	require.Equal(t, []sdkTypes.AccAddress{fromAccAddress}, testMessage.GetSigners())

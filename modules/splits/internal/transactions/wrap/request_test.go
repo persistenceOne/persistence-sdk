@@ -23,7 +23,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_Unwrap_Request(t *testing.T) {
+func Test_Wrap_Request(t *testing.T) {
 	var Codec = codec.NewLegacyAmino()
 	schema.RegisterCodec(Codec)
 	sdkTypes.RegisterLegacyAminoCodec(Codec)

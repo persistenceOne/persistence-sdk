@@ -5,6 +5,7 @@ package wrap
 
 import (
 	fmt "fmt"
+	cosmos_types "github.com/cosmos/cosmos-sdk/types"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
@@ -26,14 +27,14 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Message struct {
-	From   github_com_cosmos_cosmos_sdk_types.AccAddress                 `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from"`
-	FromID github_com_persistenceOne_persistenceSDK_schema_test_types.ID `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"from_iD"`
-	Coins  github_com_cosmos_cosmos_sdk_types.Coins                      `protobuf:"bytes,5,opt,name=coins,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Coins" json:"coins"`
+	From   github_com_cosmos_cosmos_sdk_types.AccAddress                 `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from" valid:"required~required field from missing"`
+	FromID github_com_persistenceOne_persistenceSDK_schema_test_types.ID `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"from_iD" valid:"required~required field from missing"`
+	Coins  github_com_cosmos_cosmos_sdk_types.Coins                      `protobuf:"bytes,5,opt,name=coins,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Coins" json:"coins" valid:"required~required field from missing"`
 }
 
-func (m *Message) Reset()         { *m = Message{} }
-func (m *Message) String() string { return proto.CompactTextString(m) }
-func (*Message) ProtoMessage()    {}
+func (m Message) Reset()         { m = Message{} }
+func (m Message) String() string { return proto.CompactTextString(&m) }
+func (Message) ProtoMessage()    {}
 func (*Message) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ee00789b187b8ba4, []int{0}
 }
@@ -119,19 +120,43 @@ func (m *Message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	var l int
 	_ = l
 	if len(m.Coins) > 0 {
-		i -= len(m.Coins)
-		copy(dAtA[i:], m.Coins)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Coins)))
-		i--
-		dAtA[i] = 0x2a
+		for iNdEx := len(m.Coins) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Coins[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintTx(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x2a
+		}
 	}
-	if len(m.FromID) > 0 {
-		i -= len(m.FromID)
-		copy(dAtA[i:], m.FromID)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.FromID)))
-		i--
-		dAtA[i] = 0x12
+	//if len(m.Coins) > 0 {
+	//	i -= len(m.Coins)
+	//	copy(dAtA[i:], m.Coins.String())
+	//	i = encodeVarintTx(dAtA, i, uint64(len(m.Coins)))
+	//	i--
+	//	dAtA[i] = 0x2a
+	//}
+	{
+		size := m.FromID.Size()
+		i -= size
+		if _, err := m.FromID.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
 	}
+	i--
+	dAtA[i] = 0x12
+	//if len(m.FromID) > 0 {
+	//	i -= len(m.FromID)
+	//	copy(dAtA[i:], m.FromID)
+	//	i = encodeVarintTx(dAtA, i, uint64(len(m.FromID)))
+	//	i--
+	//	dAtA[i] = 0x12
+	//}
 	if len(m.From) > 0 {
 		i -= len(m.From)
 		copy(dAtA[i:], m.From)
@@ -163,7 +188,7 @@ func (m *Message) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.FromID)
+	l = m.FromID.Size()
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -271,7 +296,10 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.FromID = github_com_persistenceOne_persistenceSDK_schema_test_types.ID(dAtA[iNdEx:postIndex])
+			if err := m.FromID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			//m.FromID = github_com_persistenceOne_persistenceSDK_schema_test_types.ID(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -303,7 +331,11 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Coins = github_com_cosmos_cosmos_sdk_types.Coins(dAtA[iNdEx:postIndex])
+			m.Coins = append(m.Coins, cosmos_types.Coin{})
+			if err := m.Coins[len(m.Coins)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			//m.Coins = github_com_cosmos_cosmos_sdk_types.Coins(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

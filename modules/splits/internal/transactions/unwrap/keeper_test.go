@@ -6,6 +6,7 @@
 package unwrap
 
 import (
+	"fmt"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/std"
@@ -57,6 +58,7 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
 	txCfg := tx.NewTxConfig(marshaler, tx.DefaultSignModes)
 	std.RegisterLegacyAminoCodec(Codec)
 	std.RegisterInterfaces(interfaceRegistry)
+	authTypes.RegisterInterfaces(interfaceRegistry)
 
 	encodingConfig := applications.EncodingConfig{
 		InterfaceRegistry: interfaceRegistry,
@@ -93,13 +95,16 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 
-	accountKeeper := authKeeper.NewAccountKeeper(encodingConfig.Marshaler, authStoreKey, paramskeeper.Subspace(authTypes.ModuleName), authTypes.ProtoBaseAccount, make(map[string][]string))
+	var ModuleAccountPermissions = map[string][]string{
+		module.Name: nil,
+	}
+	accountKeeper := authKeeper.NewAccountKeeper(encodingConfig.Marshaler, authStoreKey, paramskeeper.Subspace(authTypes.ModuleName), authTypes.ProtoBaseAccount, ModuleAccountPermissions)
 
 	bankkeeper := bankKeeper.NewBaseKeeper(encodingConfig.Marshaler, bankStoreKey, accountKeeper, paramskeeper.Subspace(bankTypes.ModuleName), make(map[string]bool))
 	verifyAuxiliary := verify.AuxiliaryMock.Initialize(Mapper, Parameters)
 	keepers := TestKeepers{
 		SplitsKeeper: keeperPrototype().Initialize(Mapper, Parameters,
-			[]interface{}{verifyAuxiliary}).(helpers.TransactionKeeper),
+			[]interface{}{verifyAuxiliary, bankkeeper}).(helpers.TransactionKeeper),
 		AccountKeeper: accountKeeper,
 		BankKeeper:    bankkeeper,
 	}
@@ -119,21 +124,24 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	}
 	Error := keepers.BankKeeper.SetBalances(context, defaultAddr, coins(1000))
 	require.Equal(t, nil, Error)
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
 
 	Error = keepers.BankKeeper.SendCoinsFromAccountToModule(context, defaultAddr, module.Name, coins(1000))
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
 	require.Equal(t, nil, Error)
 	keepers.SplitsKeeper.(transactionKeeper).mapper.NewCollection(context).Add(mappable.NewSplit(key.NewSplitID(fromID, ownableID), sdkTypes.NewDec(1000)))
-
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
 	t.Run("PositiveCase- Send All", func(t *testing.T) {
 		want := newTransactionResponse(nil)
 		if got := keepers.SplitsKeeper.Transact(context, newMessage(defaultAddr, fromID, ownableID, sdkTypes.NewInt(1000))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
-
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
 	Error = keepers.BankKeeper.SendCoinsFromAccountToModule(context, defaultAddr, module.Name, coins(1000))
 	require.Equal(t, nil, Error)
 	keepers.SplitsKeeper.(transactionKeeper).mapper.NewCollection(context).Add(mappable.NewSplit(key.NewSplitID(fromID, ownableID), sdkTypes.NewDec(1000)))
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
 
 	t.Run("PositiveCase", func(t *testing.T) {
 		want := newTransactionResponse(nil)
@@ -141,6 +149,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
 
 	t.Run("NegativeCase-Verify Identity Failure", func(t *testing.T) {
 		t.Parallel()
@@ -149,6 +158,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
 
 	t.Run("NegativeCase-Send Negative Balance", func(t *testing.T) {
 		t.Parallel()
@@ -157,14 +167,16 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
 
 	t.Run("NegativeCase-Send More than own Balance", func(t *testing.T) {
 		t.Parallel()
-		want := newTransactionResponse(errors.InsufficientBalance)
+		want := newTransactionResponse(errors.NotAuthorized)
 		if got := keepers.SplitsKeeper.Transact(context, newMessage(defaultAddr, fromID, ownableID, sdkTypes.NewInt(10000))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
 
 	t.Run("NegativeCase-Value Not found", func(t *testing.T) {
 		t.Parallel()
@@ -173,14 +185,18 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
 
 	Error = keepers.BankKeeper.SendCoinsFromModuleToAccount(context, module.Name, defaultAddr, coins(900))
 	require.Equal(t, nil, Error)
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
+
 	t.Run("NegativeCase-Module does not have enough coins", func(t *testing.T) {
 		want := newTransactionResponse(errors.InsufficientBalance)
 		if got := keepers.SplitsKeeper.Transact(context, newMessage(defaultAddr, fromID, ownableID, sdkTypes.NewInt(200))); !reflect.DeepEqual(got.IsSuccessful(), want.IsSuccessful()) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
+	fmt.Println(keepers.BankKeeper.GetBalance(context, defaultAddr, "stake"))
 
 }

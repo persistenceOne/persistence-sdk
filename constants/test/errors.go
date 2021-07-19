@@ -11,5 +11,6 @@ import (
 )
 
 var (
-	MockError = errors.Register(constants.ProjectRoute, 999, "MockError")
+	MockError  = errors.Register(constants.ProjectRoute, 999, "MockError")
+	Anothererr = errors.Register(constants.ProjectRoute, 20000, "<nil>")
 )

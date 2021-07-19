@@ -119,10 +119,16 @@ func (m *TransactionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Error) > 0 {
-		i -= len(m.Error)
-		copy(dAtA[i:], m.Error)
-		i = encodeVarintResponse(dAtA, i, uint64(len(m.Error)))
+	if m.Error != nil {
+		{
+			size := len(m.Error.Error())
+			i -= size
+			//str := m.Error.Error()
+			if _, err := m.MarshalTo(dAtA[i:]); err != nil {
+				return 0, err
+			}
+			i = encodeVarintResponse(dAtA, i, uint64(size))
+		}
 		i--
 		dAtA[i] = 0x12
 	}
@@ -159,8 +165,8 @@ func (m *TransactionResponse) Size() (n int) {
 	if m.Success {
 		n += 2
 	}
-	l = len(m.Error)
-	if l > 0 {
+	if m.Error != nil {
+		l = len(m.Error.Error())
 		n += 1 + l + sovResponse(uint64(l))
 	}
 	return n
@@ -251,7 +257,10 @@ func (m *TransactionResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Error = error(dAtA[iNdEx:postIndex])
+			if err := m.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			//m.Error = error(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

@@ -14,16 +14,15 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
 
-type message struct {
-	From   sdkTypes.AccAddress `json:"from" valid:"required~required field from missing"`
-	FromID types.ID            `json:"fromID" valid:"required~required field fromID missing"`
-	Coins  sdkTypes.Coins      `json:"coins" valid:"required~required field coins missing"`
-}
+//type message struct {
+//	From   sdkTypes.AccAddress `json:"from" valid:"required~required field from missing"`
+//	FromID types.ID            `json:"fromID" valid:"required~required field fromID missing"`
+//	Coins  sdkTypes.Coins      `json:"coins" valid:"required~required field coins missing"`
+//}
 
 var _ sdkTypes.Msg = Message{}
 
