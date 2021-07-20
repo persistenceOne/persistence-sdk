@@ -8,6 +8,7 @@ package base
 import (
 	"encoding/json"
 	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmKeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -24,6 +25,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	bankKeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	bankTypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilityTypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	crisisKeeper "github.com/cosmos/cosmos-sdk/x/crisis/keeper"
@@ -40,6 +42,10 @@ import (
 	govKeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govTypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	ibctransferTypes "github.com/cosmos/cosmos-sdk/x/ibc/applications/transfer/types"
+	clientkeeper "github.com/cosmos/cosmos-sdk/x/ibc/core/02-client/keeper"
+	connectionkeeper "github.com/cosmos/cosmos-sdk/x/ibc/core/03-connection/keeper"
+	channelkeeper "github.com/cosmos/cosmos-sdk/x/ibc/core/04-channel/keeper"
+	portkeeper "github.com/cosmos/cosmos-sdk/x/ibc/core/05-port/keeper"
 	ibchost "github.com/cosmos/cosmos-sdk/x/ibc/core/24-host"
 	"github.com/cosmos/cosmos-sdk/x/mint"
 	mintKeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
@@ -79,7 +85,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/splits/auxiliaries/renumerate"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/auxiliaries/transfer"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
-	wasmUtilities "github.com/persistenceOne/persistenceSDK/utilities/wasm"
+	//wasmUtilities "github.com/persistenceOne/persistenceSDK/utilities/wasm"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
 	tendermintLog "github.com/tendermint/tendermint/libs/log"
 	tendermintOS "github.com/tendermint/tendermint/libs/os"
@@ -97,13 +103,21 @@ type application struct {
 	applicationCodec  codec.Marshaler
 	interfaceRegistry types.InterfaceRegistry
 
-	keys map[string]*sdkTypes.KVStoreKey
+	keys    map[string]*sdkTypes.KVStoreKey
+	memKeys map[string]*sdkTypes.MemoryStoreKey
 
+	accountKeeper      authKeeper.AccountKeeper
+	bankKeeper         bankKeeper.Keeper
 	stakingKeeper      stakingKeeper.Keeper
 	slashingKeeper     slashingKeeper.Keeper
 	distributionKeeper distributionKeeper.Keeper
 	crisisKeeper       crisisKeeper.Keeper
 	paramsKeeper       paramsKeeper.Keeper
+	capabilityKeeper   *capabilitykeeper.Keeper
+	mintKeeper         mintKeeper.Keeper
+	upgradeKeeper      upgradeKeeper.Keeper
+	evidenceKeeper     evidenceKeeper.Keeper
+	govKeeper          govKeeper.Keeper
 
 	moduleManager *sdkTypesModule.Manager
 }
@@ -368,17 +382,17 @@ func (application application) Initialize(applicationName string, encodingConfig
 	application.keys = keys
 	application.baseApp.SetParamStore(application.paramsKeeper.Subspace(baseapp.Paramspace).WithKeyTable(paramsKeeper.ConsensusParamsKeyTable()))
 
-	paramsKeeper := paramsKeeper.NewKeeper(
+	application.paramsKeeper = paramsKeeper.NewKeeper(
 		applicationCodec,
 		legacyAmino,
 		keys[paramsTypes.StoreKey],
 		transientStoreKeys[paramsTypes.TStoreKey],
 	)
 
-	accountKeeper := authKeeper.NewAccountKeeper(
+	application.accountKeeper = authKeeper.NewAccountKeeper(
 		applicationCodec,
 		keys[authTypes.StoreKey],
-		paramsKeeper.Subspace(authTypes.ModuleName),
+		application.paramsKeeper.Subspace(authTypes.ModuleName),
 		authTypes.ProtoBaseAccount,
 		moduleAccountPermissions,
 	)
@@ -388,29 +402,29 @@ func (application application) Initialize(applicationName string, encodingConfig
 		blacklistedAddresses[authTypes.NewModuleAddress(account).String()] = !tokenReceiveAllowedModules[account]
 	}
 
-	bankKeeper := bankKeeper.NewBaseKeeper(
+	application.bankKeeper = bankKeeper.NewBaseKeeper(
 		applicationCodec,
 		keys[bankTypes.StoreKey],
-		accountKeeper,
-		paramsKeeper.Subspace(bankTypes.ModuleName),
+		application.accountKeeper,
+		application.paramsKeeper.Subspace(bankTypes.ModuleName),
 		blacklistedAddresses,
 	)
 
 	stakingKeeper := stakingKeeper.NewKeeper(
 		applicationCodec,
 		keys[stakingTypes.StoreKey],
-		accountKeeper,
-		bankKeeper,
-		paramsKeeper.Subspace(stakingTypes.ModuleName),
+		application.accountKeeper,
+		application.bankKeeper,
+		application.paramsKeeper.Subspace(stakingTypes.ModuleName),
 	)
 
-	mintKeeper := mintKeeper.NewKeeper(
+	application.mintKeeper = mintKeeper.NewKeeper(
 		applicationCodec,
 		keys[mintTypes.StoreKey],
-		paramsKeeper.Subspace(mintTypes.ModuleName),
+		application.paramsKeeper.Subspace(mintTypes.ModuleName),
 		&stakingKeeper,
-		accountKeeper,
-		bankKeeper,
+		application.accountKeeper,
+		application.bankKeeper,
 		authTypes.FeeCollectorName,
 	)
 
@@ -422,9 +436,9 @@ func (application application) Initialize(applicationName string, encodingConfig
 	application.distributionKeeper = distributionKeeper.NewKeeper(
 		applicationCodec,
 		keys[distributionTypes.StoreKey],
-		paramsKeeper.Subspace(distributionTypes.ModuleName),
-		accountKeeper,
-		bankKeeper,
+		application.paramsKeeper.Subspace(distributionTypes.ModuleName),
+		application.accountKeeper,
+		application.bankKeeper,
 		&stakingKeeper,
 		authTypes.FeeCollectorName,
 		blackListedModuleAddresses,
@@ -433,15 +447,15 @@ func (application application) Initialize(applicationName string, encodingConfig
 		applicationCodec,
 		keys[slashingTypes.StoreKey],
 		&stakingKeeper,
-		paramsKeeper.Subspace(slashingTypes.ModuleName),
+		application.paramsKeeper.Subspace(slashingTypes.ModuleName),
 	)
 	application.crisisKeeper = crisisKeeper.NewKeeper(
-		paramsKeeper.Subspace(crisisTypes.ModuleName),
+		application.paramsKeeper.Subspace(crisisTypes.ModuleName),
 		invCheckPeriod,
-		bankKeeper,
+		application.bankKeeper,
 		authTypes.FeeCollectorName,
 	)
-	upgradeKeeper := upgradeKeeper.NewKeeper(
+	application.upgradeKeeper = upgradeKeeper.NewKeeper(
 		skipUpgradeHeights,
 		keys[upgradeTypes.StoreKey],
 		applicationCodec,
@@ -454,6 +468,20 @@ func (application application) Initialize(applicationName string, encodingConfig
 		&stakingKeeper,
 		application.slashingKeeper,
 	)
+	application.evidenceKeeper = *evidenceKeeper
+	capabilityKeeper := capabilitykeeper.NewKeeper(applicationCodec, keys[capabilityTypes.StoreKey], memoryKeys[capabilityTypes.MemStoreKey])
+	scopedKeeper := capabilityKeeper.ScopeToModule(ibchost.ModuleName)
+	portKeeper := portkeeper.NewKeeper(scopedKeeper)
+	clientKeeper := clientkeeper.NewKeeper(applicationCodec, keys[ibchost.StoreKey], application.paramsKeeper.Subspace(ibchost.ModuleName), stakingKeeper)
+	connectionKeeper := connectionkeeper.NewKeeper(applicationCodec, keys[ibchost.StoreKey], clientKeeper)
+	channelKeeper := channelkeeper.NewKeeper(
+		applicationCodec,
+		keys[ibchost.StoreKey],
+		clientKeeper,
+		connectionKeeper,
+		portKeeper,
+		scopedKeeper,
+	)
 
 	govRouter := govTypes.NewRouter()
 	govRouter.AddRoute(
@@ -461,13 +489,13 @@ func (application application) Initialize(applicationName string, encodingConfig
 		govTypes.ProposalHandler,
 	).AddRoute(
 		paramsProposal.RouterKey,
-		params.NewParamChangeProposalHandler(paramsKeeper),
+		params.NewParamChangeProposalHandler(application.paramsKeeper),
 	).AddRoute(
 		distributionTypes.RouterKey,
 		distribution.NewCommunityPoolSpendProposalHandler(application.distributionKeeper),
 	).AddRoute(
 		upgradeTypes.RouterKey,
-		upgrade.NewSoftwareUpgradeProposalHandler(upgradeKeeper),
+		upgrade.NewSoftwareUpgradeProposalHandler(application.upgradeKeeper),
 	)
 
 	application.stakingKeeper = *stakingKeeper.SetHooks(
@@ -476,21 +504,21 @@ func (application application) Initialize(applicationName string, encodingConfig
 
 	metasModule := metas.Prototype().Initialize(
 		keys[metas.Prototype().Name()],
-		paramsKeeper.Subspace(metas.Prototype().Name()),
+		application.paramsKeeper.Subspace(metas.Prototype().Name()),
 	)
 	classificationsModule := classifications.Prototype().Initialize(
 		keys[classifications.Prototype().Name()],
-		paramsKeeper.Subspace(classifications.Prototype().Name()),
+		application.paramsKeeper.Subspace(classifications.Prototype().Name()),
 		metasModule.GetAuxiliary(scrub.Auxiliary.GetName()),
 	)
 	maintainersModule := maintainers.Prototype().Initialize(
 		keys[metas.Prototype().Name()],
-		paramsKeeper.Subspace(maintainers.Prototype().Name()),
+		application.paramsKeeper.Subspace(maintainers.Prototype().Name()),
 		classificationsModule.GetAuxiliary(conform.Auxiliary.GetName()),
 	)
 	identitiesModule := identities.Prototype().Initialize(
 		keys[identities.Prototype().Name()],
-		paramsKeeper.Subspace(identities.Prototype().Name()),
+		application.paramsKeeper.Subspace(identities.Prototype().Name()),
 		classificationsModule.GetAuxiliary(conform.Auxiliary.GetName()),
 		classificationsModule.GetAuxiliary(define.Auxiliary.GetName()),
 		maintainersModule.GetAuxiliary(deputize.Auxiliary.GetName()),
@@ -502,13 +530,13 @@ func (application application) Initialize(applicationName string, encodingConfig
 	)
 	splitsModule := splits.Prototype().Initialize(
 		keys[splits.Prototype().Name()],
-		paramsKeeper.Subspace(splits.Prototype().Name()),
-		bankKeeper,
+		application.paramsKeeper.Subspace(splits.Prototype().Name()),
+		application.bankKeeper,
 		identitiesModule.GetAuxiliary(verify.Auxiliary.GetName()),
 	)
 	assetsModule := assets.Prototype().Initialize(
 		keys[assets.Prototype().Name()],
-		paramsKeeper.Subspace(assets.Prototype().Name()),
+		application.paramsKeeper.Subspace(assets.Prototype().Name()),
 		classificationsModule.GetAuxiliary(conform.Auxiliary.GetName()),
 		classificationsModule.GetAuxiliary(define.Auxiliary.GetName()),
 		identitiesModule.GetAuxiliary(verify.Auxiliary.GetName()),
@@ -524,7 +552,7 @@ func (application application) Initialize(applicationName string, encodingConfig
 	)
 	ordersModule := orders.Prototype().Initialize(
 		keys[orders.Prototype().Name()],
-		paramsKeeper.Subspace(orders.Prototype().Name()),
+		application.paramsKeeper.Subspace(orders.Prototype().Name()),
 		classificationsModule.GetAuxiliary(conform.Auxiliary.GetName()),
 		classificationsModule.GetAuxiliary(define.Auxiliary.GetName()),
 		identitiesModule.GetAuxiliary(verify.Auxiliary.GetName()),
@@ -544,31 +572,50 @@ func (application application) Initialize(applicationName string, encodingConfig
 		panic("error while reading wasm config: " + err.Error())
 	}
 
-	wasmKeeper := wasm.NewKeeper(
+	wasmKeeper := wasmKeeper.NewKeeper(
 		applicationCodec,
 		keys[wasm.StoreKey],
-		paramsKeeper.Subspace(wasm.DefaultParamspace),
-		accountKeeper,
-		bankKeeper,
-		application.stakingKeeper,
+		application.paramsKeeper.Subspace(wasm.DefaultParamspace),
+		application.accountKeeper,
+		application.bankKeeper,
+		&stakingKeeper,
 		application.distributionKeeper,
+		channelKeeper,
+		nil,
+		nil,
+		nil,
 		wasmRouter,
+		nil,
 		wasmDir,
 		wasmConfig,
 		stakingTypes.ModuleName,
-		&wasm.MessageEncoders{Custom: wasmUtilities.CustomEncoder(assets.Prototype(), classifications.Prototype(), identities.Prototype(), maintainers.Prototype(), metas.Prototype(), orders.Prototype(), splits.Prototype())},
-		nil)
+	//&wasm.MessageEncoders{Custom: wasmUtilities.CustomEncoder(assets.Prototype(), classifications.Prototype(), identities.Prototype(), maintainers.Prototype(), metas.Prototype(), orders.Prototype(), splits.Prototype())},
+	)
+
+	//applicationCodec,
+	//		keys[wasm.StoreKey],
+	//		paramsKeeper.Subspace(wasm.DefaultParamspace),
+	//		accountKeeper,
+	//		bankKeeper,
+	//		application.stakingKeeper,
+	//		application.distributionKeeper,
+	//		wasmRouter,
+	//		wasmDir,
+	//		wasmConfig,
+	//		stakingTypes.ModuleName,
+	//		&wasm.MessageEncoders{Custom: wasmUtilities.CustomEncoder(assets.Prototype(), classifications.Prototype(), identities.Prototype(), maintainers.Prototype(), metas.Prototype(), orders.Prototype(), splits.Prototype())},
+	//		nil
 
 	if len(enabledProposals) != 0 {
 		govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(wasmKeeper, enabledProposals))
 	}
 
-	govKeeper := govKeeper.NewKeeper(
+	application.govKeeper = govKeeper.NewKeeper(
 		applicationCodec,
 		keys[govTypes.StoreKey],
-		paramsKeeper.Subspace(govTypes.ModuleName).WithKeyTable(govTypes.ParamKeyTable()),
-		accountKeeper,
-		bankKeeper,
+		application.paramsKeeper.Subspace(govTypes.ModuleName).WithKeyTable(govTypes.ParamKeyTable()),
+		application.accountKeeper,
+		application.bankKeeper,
 		&stakingKeeper,
 		govRouter,
 	)
@@ -579,17 +626,17 @@ func (application application) Initialize(applicationName string, encodingConfig
 		skipGenesisInvariants = opt
 	}
 	application.moduleManager = sdkTypesModule.NewManager(
-		genutil.NewAppModule(accountKeeper, application.stakingKeeper, application.baseApp.DeliverTx, encodingConfig.TxConfig),
-		auth.NewAppModule(applicationCodec, accountKeeper, nil),
-		bank.NewAppModule(applicationCodec, bankKeeper, accountKeeper),
+		genutil.NewAppModule(application.accountKeeper, application.stakingKeeper, application.baseApp.DeliverTx, encodingConfig.TxConfig),
+		auth.NewAppModule(applicationCodec, application.accountKeeper, nil),
+		bank.NewAppModule(applicationCodec, application.bankKeeper, application.accountKeeper),
 		crisis.NewAppModule(&application.crisisKeeper, skipGenesisInvariants),
-		gov.NewAppModule(applicationCodec, govKeeper, accountKeeper, bankKeeper),
-		mint.NewAppModule(applicationCodec, mintKeeper, accountKeeper),
-		slashing.NewAppModule(applicationCodec, application.slashingKeeper, accountKeeper, bankKeeper, application.stakingKeeper),
-		distribution.NewAppModule(applicationCodec, application.distributionKeeper, accountKeeper, bankKeeper, application.stakingKeeper),
-		staking.NewAppModule(applicationCodec, application.stakingKeeper, accountKeeper, bankKeeper),
-		upgrade.NewAppModule(upgradeKeeper),
-		wasm.NewAppModule(&wasmKeeper, stakingKeeper),
+		gov.NewAppModule(applicationCodec, application.govKeeper, application.accountKeeper, application.bankKeeper),
+		mint.NewAppModule(applicationCodec, application.mintKeeper, application.accountKeeper),
+		slashing.NewAppModule(applicationCodec, application.slashingKeeper, application.accountKeeper, application.bankKeeper, application.stakingKeeper),
+		distribution.NewAppModule(applicationCodec, application.distributionKeeper, application.accountKeeper, application.bankKeeper, application.stakingKeeper),
+		staking.NewAppModule(applicationCodec, application.stakingKeeper, application.accountKeeper, application.bankKeeper),
+		upgrade.NewAppModule(application.upgradeKeeper),
+		wasm.NewAppModule(applicationCodec, &wasmKeeper, application.stakingKeeper),
 		evidence.NewAppModule(*evidenceKeeper),
 
 		assetsModule,
@@ -637,14 +684,14 @@ func (application application) Initialize(applicationName string, encodingConfig
 	application.moduleManager.RegisterRoutes(application.baseApp.Router(), application.baseApp.QueryRouter(), legacyAmino)
 
 	simulationManager := sdkTypesModule.NewSimulationManager(
-		auth.NewAppModule(applicationCodec, accountKeeper, nil),
-		bank.NewAppModule(applicationCodec, bankKeeper, accountKeeper),
-		gov.NewAppModule(applicationCodec, govKeeper, accountKeeper, bankKeeper),
-		mint.NewAppModule(applicationCodec, mintKeeper, accountKeeper),
-		staking.NewAppModule(applicationCodec, application.stakingKeeper, accountKeeper, bankKeeper),
-		distribution.NewAppModule(applicationCodec, application.distributionKeeper, accountKeeper, bankKeeper, application.stakingKeeper),
-		slashing.NewAppModule(applicationCodec, application.slashingKeeper, accountKeeper, bankKeeper, application.stakingKeeper),
-		params.NewAppModule(paramsKeeper),
+		auth.NewAppModule(applicationCodec, application.accountKeeper, nil),
+		bank.NewAppModule(applicationCodec, application.bankKeeper, application.accountKeeper),
+		gov.NewAppModule(applicationCodec, application.govKeeper, application.accountKeeper, application.bankKeeper),
+		mint.NewAppModule(applicationCodec, application.mintKeeper, application.accountKeeper),
+		staking.NewAppModule(applicationCodec, application.stakingKeeper, application.accountKeeper, application.bankKeeper),
+		distribution.NewAppModule(applicationCodec, application.distributionKeeper, application.accountKeeper, application.bankKeeper, application.stakingKeeper),
+		slashing.NewAppModule(applicationCodec, application.slashingKeeper, application.accountKeeper, application.bankKeeper, application.stakingKeeper),
+		params.NewAppModule(application.paramsKeeper),
 		assets.Prototype(),
 		classifications.Prototype(),
 		identities.Prototype(),
@@ -667,7 +714,7 @@ func (application application) Initialize(applicationName string, encodingConfig
 		legacyAmino.MustUnmarshalJSON(requestInitChain.AppStateBytes, &genesisState)
 		return application.moduleManager.InitGenesis(context, applicationCodec, genesisState)
 	})
-	application.baseApp.SetAnteHandler(ante.NewAnteHandler(accountKeeper, bankKeeper, ante.DefaultSigVerificationGasConsumer, encodingConfig.TxConfig.SignModeHandler()))
+	application.baseApp.SetAnteHandler(ante.NewAnteHandler(application.accountKeeper, application.bankKeeper, ante.DefaultSigVerificationGasConsumer, encodingConfig.TxConfig.SignModeHandler()))
 
 	if loadLatest {
 		err := application.baseApp.LoadLatestVersion()
