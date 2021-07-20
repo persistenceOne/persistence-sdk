@@ -23,6 +23,18 @@ type message struct {
 	NubID types.ID            `json:"nubID" valid:"required~required field nubID missing"`
 }
 
+func (message message) Reset() {
+	panic("implement me")
+}
+
+func (message message) String() string {
+	panic("implement me")
+}
+
+func (message message) ProtoMessage() {
+	panic("implement me")
+}
+
 var _ sdkTypes.Msg = message{}
 
 func (message message) Route() string { return module.Name }

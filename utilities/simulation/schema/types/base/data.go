@@ -1,0 +1,33 @@
+/*
+ Copyright [2019] - [2021], PERSISTENCE TECHNOLOGIES PTE. LTD. and the persistenceSDK contributors
+ SPDX-License-Identifier: Apache-2.0
+*/
+
+package base
+
+import (
+	"math"
+	"math/rand"
+
+	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	simulationTypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/persistenceOne/persistenceSDK/schema/types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+)
+
+func GenerateRandomData(r *rand.Rand) types.Data {
+	randomPositiveInt := int(math.Abs(float64(r.Int())))
+
+	switch randomPositiveInt % 4 {
+	case 0:
+		return base.NewIDData(GenerateRandomID(r))
+	case 1:
+		return base.NewStringData(simulationTypes.RandStringOfLength(r, r.Intn(99)))
+	case 2:
+		return base.NewDecData(simulationTypes.RandomDecAmount(r, sdkTypes.NewDec(99)))
+	case 3:
+		return base.NewHeightData(base.NewHeight(r.Int63()))
+	default:
+		return nil
+	}
+}

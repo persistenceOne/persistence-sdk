@@ -19,6 +19,18 @@ type TestMessage struct {
 	ID   string
 }
 
+func (message TestMessage) Reset() {
+	panic("implement me")
+}
+
+func (message TestMessage) String() string {
+	panic("implement me")
+}
+
+func (message TestMessage) ProtoMessage() {
+	panic("implement me")
+}
+
 var _ helpers.Message = (*TestMessage)(nil)
 
 func NewTestMessage(addr sdkTypes.AccAddress, id string) sdkTypes.Msg {
@@ -41,7 +53,7 @@ func (message TestMessage) ValidateBasic() error { return nil }
 func (message TestMessage) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{message.From}
 }
-func (message TestMessage) RegisterCodec(codec *codec.Codec) {
+func (message TestMessage) RegisterCodec(codec *codec.LegacyAmino) {
 	codec.RegisterConcrete(TestMessage{}, "test/TestMessage", nil)
 }
 

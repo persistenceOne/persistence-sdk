@@ -8,7 +8,6 @@ package sign
 import (
 	"bytes"
 	"fmt"
-	authClient "github.com/cosmos/cosmos-sdk/x/auth/client"
 	"net/http"
 	"strings"
 
@@ -25,7 +24,7 @@ import (
 func handler(cliContext client.Context) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, httpRequest *http.Request) {
 		var request request
-		if !rest.ReadRESTReq(responseWriter, httpRequest, cliContext.Codec, &request) {
+		if !rest.ReadRESTReq(responseWriter, httpRequest, cliContext.LegacyAmino, &request) {
 			rest.WriteErrorResponse(responseWriter, http.StatusBadRequest, "")
 			return
 		}
@@ -38,7 +37,7 @@ func handler(cliContext client.Context) http.HandlerFunc {
 			}
 		}
 
-		fromAddress, fromName, Error := context.GetFromFields(strings.NewReader(keys.DefaultKeyPass), request.BaseRequest.From, false)
+		fromAddress, fromName, _, Error := client.GetFromFields(strings.NewReader(keys.DefaultKeyPass), request.BaseRequest.From, false)
 		if Error != nil {
 			rest.WriteErrorResponse(responseWriter, http.StatusBadRequest, Error.Error())
 			return

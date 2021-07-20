@@ -12,7 +12,7 @@ import (
 )
 
 func RegisterCodec(keyPrototype func() helpers.Key, mappablePrototype func() helpers.Mappable) *codec.Codec {
-	Codec := codec.New()
+	Codec := codec.NewLegacyAmino()
 	keyPrototype().RegisterCodec(Codec)
 	mappablePrototype().RegisterCodec(Codec)
 	schema.RegisterCodec(Codec)

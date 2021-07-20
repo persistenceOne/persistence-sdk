@@ -26,6 +26,18 @@ type message struct {
 	MutableProperties     types.Properties     `json:"mutableProperties" valid:"required~required field mutableProperties missing"`
 }
 
+func (message message) Reset() {
+	panic("implement me")
+}
+
+func (message message) String() string {
+	panic("implement me")
+}
+
+func (message message) ProtoMessage() {
+	panic("implement me")
+}
+
 var _ helpers.Message = message{}
 
 func (message message) Route() string { return module.Name }
@@ -44,7 +56,7 @@ func (message message) GetSignBytes() []byte {
 func (message message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{message.From}
 }
-func (message) RegisterCodec(codec *codec.Codec) {
+func (message) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
 }
 func messageFromInterface(msg sdkTypes.Msg) message {

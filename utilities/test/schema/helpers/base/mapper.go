@@ -42,7 +42,7 @@ func SetupTest(t *testing.T) (sdkTypes.Context, *sdkTypes.KVStoreKey, *sdkTypes.
 }
 
 func MakeCodec() *codec.Codec {
-	var Codec = codec.New()
+	var Codec = codec.NewLegacyAmino()
 
 	schema.RegisterCodec(Codec)
 	sdkTypes.RegisterCodec(Codec)
@@ -64,7 +64,7 @@ func (t testKey) GenerateStoreKeyBytes() []byte {
 	return append([]byte{0x11}, []byte(t.ID)...)
 }
 
-func (t testKey) RegisterCodec(codec *codec.Codec) {
+func (t testKey) RegisterCodec(codec *codec.LegacyAmino) {
 	codec.RegisterConcrete(testKey{}, "test/testKey", nil)
 }
 

@@ -29,6 +29,18 @@ type message struct {
 	MutateMaintainer     bool                `json:"mutateMaintainer" valid:"required~required field mutateMaintainer missing"`
 }
 
+func (message message) Reset() {
+	panic("implement me")
+}
+
+func (message message) String() string {
+	panic("implement me")
+}
+
+func (message message) ProtoMessage() {
+	panic("implement me")
+}
+
 var _ sdkTypes.Msg = message{}
 
 func (message message) Route() string { return module.Name }
