@@ -473,7 +473,7 @@ func (simulationApplication SimulationApplication) Initialize(applicationName st
 		distribution.NewAppModule(applicationCodec, simulationApplication.application.distributionKeeper, simulationApplication.AccountKeeper, simulationApplication.BankKeeper, simulationApplication.application.stakingKeeper),
 		staking.NewAppModule(applicationCodec, simulationApplication.application.stakingKeeper, simulationApplication.AccountKeeper, simulationApplication.BankKeeper),
 		upgrade.NewAppModule(simulationApplication.UpgradeKeeper),
-		wasm.NewAppModule(&wasmKeeper, simulationApplication.application.stakingKeeper),
+		wasm.NewAppModule(applicationCodec, &wasmKeeper, simulationApplication.application.stakingKeeper),
 		evidence.NewAppModule(*evidenceKeeper),
 
 		assetsModule,
