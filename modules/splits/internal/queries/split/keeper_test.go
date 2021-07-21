@@ -6,6 +6,7 @@
 package split
 
 import (
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/codec/types"
@@ -25,7 +26,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tendermintProto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -85,8 +85,8 @@ func Test_Query_Keeper_Split(t *testing.T) {
 
 	context, keepers := CreateTestInput2(t)
 
-	ownerID := base.NewID("ownerID")
-	ownableID := base.NewID("ownableID")
+	ownerID := test_types.NewID("ownerID")
+	ownableID := test_types.NewID("ownableID")
 	splitID := key.NewSplitID(ownerID, ownableID)
 	keepers.(queryKeeper).mapper.NewCollection(context).Add(mappable.NewSplit(splitID, sdkTypes.NewDec(123)))
 

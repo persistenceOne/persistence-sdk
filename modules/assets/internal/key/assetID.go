@@ -61,5 +61,6 @@ func NewAssetID(classificationID types.ID, immutableProperties types.Properties)
 	return assetID{
 		ClassificationID: classificationID,
 		HashID:           base.HasImmutables{Properties: immutableProperties}.GenerateHashID(),
+		//TODO : Change the types of HasID
 	}
 }

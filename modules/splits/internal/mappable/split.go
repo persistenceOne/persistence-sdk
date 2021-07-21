@@ -23,6 +23,8 @@ type split struct {
 	Value sdkTypes.Dec `json:"value" valid:"required~required field value missing, matches(^[0-9]$)~invalid field value"`
 }
 
+//TODO : see if types.ID affects the functionality or not
+
 var _ mappables.Split = (*split)(nil)
 
 func (split split) GetID() types.ID { return split.ID }

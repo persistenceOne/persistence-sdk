@@ -6,6 +6,7 @@
 package base
 
 import (
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"math/rand"
@@ -16,8 +17,8 @@ import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 )
 
-func GenerateRandomID(r *rand.Rand) types.ID {
-	return base.NewID(simulationTypes.RandStringOfLength(r, r.Intn(99)))
+func GenerateRandomID(r *rand.Rand) test_types.ID {
+	return test_types.NewID(simulationTypes.RandStringOfLength(r, r.Intn(99)))
 }
 
 func GenerateRandomIDWithDec(r *rand.Rand) types.ID {

@@ -38,6 +38,7 @@ func (simulator) RandomizedGenesisState(simulationState *module.SimulationState)
 	mappableList := make([]helpers.Mappable, simulationState.Rand.Intn(99))
 
 	for i := range mappableList {
+		//TODO : Find similar to RandomDecAmount
 		mappableList[i] = mappable.NewSplit(key.NewSplitID(baseSimulation.GenerateRandomID(simulationState.Rand), baseSimulation.GenerateRandomID(simulationState.Rand)), simulation.RandomDecAmount(simulationState.Rand, sdkTypes.NewDec(9999999999)))
 	}
 

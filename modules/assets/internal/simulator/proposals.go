@@ -13,6 +13,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 )
 
+//TODO : Find replacement
 func (simulator) WeightedProposalContentList() []simulation.WeightedProposalContent {
 	return []simulation.WeightedProposalContent{
 		{

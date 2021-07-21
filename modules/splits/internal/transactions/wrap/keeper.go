@@ -27,24 +27,19 @@ var _ helpers.TransactionKeeper = (*transactionKeeper)(nil)
 
 func (transactionKeeper transactionKeeper) Transact(context sdkTypes.Context, msg sdkTypes.Msg) helpers.TransactionResponse {
 	message := messageFromInterface(msg)
-	//fmt.Println("1")
 	if auxiliaryResponse := transactionKeeper.verifyAuxiliary.GetKeeper().Help(context, verify.NewAuxiliaryRequest(message.From, message.FromID)); !auxiliaryResponse.IsSuccessful() {
-		//fmt.Println("2")
 		return newTransactionResponse(auxiliaryResponse.GetError())
 	}
 
 	if Error := transactionKeeper.bankKeeper.SendCoinsFromAccountToModule(context, message.From, module.Name, message.Coins); Error != nil {
-		//fmt.Println("3")
 		return newTransactionResponse(Error)
 	}
 
 	for _, coin := range message.Coins {
-		//fmt.Println("4")
 		if _, Error := utilities.AddSplits(transactionKeeper.mapper.NewCollection(context), message.FromID, test_types.NewID(coin.Denom), sdkTypes.NewDecFromInt(coin.Amount)); Error != nil {
 			return newTransactionResponse(Error)
 		}
 	}
-	//fmt.Println("5")
 	return newTransactionResponse(nil)
 }
 

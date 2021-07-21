@@ -18,13 +18,9 @@ type block struct {
 
 var _ helpers.Block = (*block)(nil)
 
-func (block block) Begin(_ sdkTypes.Context, _ abciTypes.RequestBeginBlock) {
+func (block block) Begin(_ sdkTypes.Context, _ abciTypes.RequestBeginBlock) {}
 
-}
-
-func (block block) End(_ sdkTypes.Context, _ abciTypes.RequestEndBlock) {
-
-}
+func (block block) End(_ sdkTypes.Context, _ abciTypes.RequestEndBlock) {}
 
 func (block block) Initialize(mapper helpers.Mapper, parameters helpers.Parameters, _ ...interface{}) helpers.Block {
 	block.mapper, block.parameters = mapper, parameters

@@ -34,6 +34,7 @@ func (transactionRequest transactionRequest) Validate() error {
 }
 func (transactionRequest transactionRequest) FromCLI(cliCommand helpers.CLICommand, cliContext client.Context) (helpers.TransactionRequest, error) {
 	return newTransactionRequest(
+		//TODO : change import of baseREq from rest to test_types
 		cliCommand.ReadBaseReq(cliContext),
 		cliCommand.ReadString(flags.FromID),
 		cliCommand.ReadString(flags.AssetID),
