@@ -6,23 +6,16 @@
 package burn
 
 import (
-	"reflect"
-	"testing"
-
-	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
-
+	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/std"
+	"github.com/cosmos/cosmos-sdk/store"
+	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
-
-	"github.com/persistenceOne/persistenceSDK/constants/test"
-
-	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/store"
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
+	"github.com/persistenceOne/persistenceSDK/constants/test"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/key"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/mappable"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/parameters"
@@ -36,7 +29,10 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
+	"reflect"
+	"testing"
 )
 
 type TestKeepers struct {

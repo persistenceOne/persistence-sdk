@@ -7,16 +7,14 @@ package key
 
 import (
 	"bytes"
-	"strings"
-
-	"github.com/persistenceOne/persistenceSDK/schema/traits/base"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/traits/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
+	"strings"
 )
 
 type assetID struct {

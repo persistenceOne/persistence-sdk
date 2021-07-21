@@ -34,7 +34,6 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
-
 	"reflect"
 	"testing"
 )

@@ -7,21 +7,19 @@ package provision
 
 import (
 	"encoding/json"
-	"testing"
-
-	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
-	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
+	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
+	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func Test_Provision_Request(t *testing.T) {

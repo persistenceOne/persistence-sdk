@@ -6,14 +6,12 @@
 package key
 
 import (
-	"strings"
-	"testing"
-
-	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
-
 	"github.com/persistenceOne/persistenceSDK/constants"
+	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
+	"strings"
+	"testing"
 )
 
 func Test_AssetID_Methods(t *testing.T) {

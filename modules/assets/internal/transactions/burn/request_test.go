@@ -7,8 +7,6 @@ package burn
 
 import (
 	"encoding/json"
-	"testing"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
@@ -21,6 +19,7 @@ import (
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func Test_Burn_Request(t *testing.T) {

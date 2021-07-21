@@ -12,7 +12,6 @@ import (
 	io "io"
 	math "math"
 	math_bits "math/bits"
-	//test_types "schema/test_types"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.

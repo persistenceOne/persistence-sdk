@@ -6,15 +6,13 @@
 package simulator
 
 import (
-	"math/rand"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/common"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/module"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/parameters/dummy"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
-
-	"github.com/cosmos/cosmos-sdk/x/simulation"
+	"math/rand"
 )
 
 func (simulator) ParamChangeList(_ *rand.Rand) []simulation.ParamChange {

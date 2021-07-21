@@ -6,14 +6,12 @@
 package simulator
 
 import (
-	"math/rand"
-
-	simulationTypes "github.com/cosmos/cosmos-sdk/types/simulation"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	simulationTypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	"math/rand"
 )
 
 func (simulator) WeightedOperations(appParams simulationTypes.AppParams, codec codec.JSONMarshaler) simulation.WeightedOperations {

@@ -6,13 +6,12 @@
 package mutate
 
 import (
-	"testing"
-
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func Test_Mutate_Message(t *testing.T) {

@@ -6,15 +6,11 @@
 package block
 
 import (
-	"testing"
-
-	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
-	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
-	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
-
 	"github.com/cosmos/cosmos-sdk/codec"
+	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/mapper"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/parameters"
 	"github.com/persistenceOne/persistenceSDK/schema"
@@ -22,7 +18,9 @@ import (
 	"github.com/stretchr/testify/require"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
+	"testing"
 )
 
 func CreateTestInput(t *testing.T) sdkTypes.Context {

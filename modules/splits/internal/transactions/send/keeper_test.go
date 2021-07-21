@@ -6,32 +6,31 @@
 package send
 
 import (
+	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/std"
+	"github.com/cosmos/cosmos-sdk/store"
+	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	parKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
-	"github.com/persistenceOne/persistenceSDK/constants/test"
-	"github.com/persistenceOne/persistenceSDK/schema/applications"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
-	"reflect"
-	"testing"
-
-	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/store"
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
+	"github.com/persistenceOne/persistenceSDK/constants/test"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/auxiliaries/verify"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/key"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/mappable"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/parameters"
 	"github.com/persistenceOne/persistenceSDK/schema"
+	"github.com/persistenceOne/persistenceSDK/schema/applications"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
+	"reflect"
+	"testing"
 )
 
 type TestKeepers struct {
