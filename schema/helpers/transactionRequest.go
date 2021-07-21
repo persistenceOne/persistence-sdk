@@ -11,7 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-F )
+)
 
 type TransactionRequest interface {
 	GetBaseReq() test_types.BaseReq
