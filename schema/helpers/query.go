@@ -6,13 +6,11 @@
 package helpers
 
 import (
-	"net/http"
-
 	"github.com/cosmos/cosmos-sdk/client"
-
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
+	"net/http"
 )
 
 type Query interface {

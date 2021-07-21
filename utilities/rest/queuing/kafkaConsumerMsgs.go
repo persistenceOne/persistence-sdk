@@ -6,11 +6,10 @@
 package queuing
 
 import (
-	"time"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
+	"time"
 )
 
 // KafkaConsumerMessages : messages to consume 5 second delay

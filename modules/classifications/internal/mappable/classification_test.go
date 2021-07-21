@@ -6,13 +6,11 @@
 package mappable
 
 import (
-	"testing"
-
-	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
-
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/key"
+	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func Test_Classification_Methods(t *testing.T) {

@@ -6,13 +6,11 @@
 package base
 
 import (
-	"strings"
-
-	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
-
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
+	"strings"
 )
 
 type parameters struct {

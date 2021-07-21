@@ -7,13 +7,12 @@ package send
 
 import (
 	"fmt"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	"testing"
-
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func Test_Send_Message(t *testing.T) {

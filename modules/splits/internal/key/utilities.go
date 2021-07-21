@@ -6,12 +6,11 @@
 package key
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	"strings"
-
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
+	"strings"
 )
 
 func readSplitID(splitIDString string) types.ID {

@@ -6,10 +6,9 @@
 package base
 
 import (
-	"testing"
-
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func Test_MetaProperty(t *testing.T) {

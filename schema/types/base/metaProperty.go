@@ -6,11 +6,10 @@
 package base
 
 import (
-	"strings"
-
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
+	"strings"
 )
 
 type metaProperty struct {

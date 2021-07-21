@@ -2,10 +2,9 @@ package test_types
 
 import (
 	"fmt"
+	"github.com/pkg/errors"
 	"sort"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 // ----------------------------------------------------------------------------

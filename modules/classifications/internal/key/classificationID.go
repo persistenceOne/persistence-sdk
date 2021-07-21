@@ -7,8 +7,6 @@ package key
 
 import (
 	"bytes"
-	"strings"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/module"
@@ -17,6 +15,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 	metaUtilities "github.com/persistenceOne/persistenceSDK/utilities/meta"
+	"strings"
 )
 
 type classificationID struct {

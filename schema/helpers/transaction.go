@@ -8,11 +8,10 @@ package helpers
 import (
 	"encoding/json"
 	"github.com/cosmos/cosmos-sdk/client"
-	"net/http"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
+	"net/http"
 )
 
 type Transaction interface {

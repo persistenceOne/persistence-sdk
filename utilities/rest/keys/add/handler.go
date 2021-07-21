@@ -7,21 +7,17 @@ package add
 
 import (
 	"fmt"
-	cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keyring"
-
 	"github.com/bartekn/go-bip39"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
-
-	"net/http"
-	"strings"
-
-	//cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keys"
+	cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
+	"net/http"
+	"strings"
 )
 
 func handler(cliContext client.Context) http.HandlerFunc {

@@ -6,12 +6,11 @@
 package mappable
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	"testing"
-
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/key"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func Test_Split_Methods(t *testing.T) {

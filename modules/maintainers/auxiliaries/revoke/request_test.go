@@ -6,10 +6,9 @@
 package revoke
 
 import (
-	"testing"
-
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func Test_Revoke_Request(t *testing.T) {

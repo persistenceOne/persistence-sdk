@@ -5,10 +5,8 @@ package send
 
 import (
 	fmt "fmt"
-	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
-	_ "github.com/regen-network/cosmos-proto"
 	io "io"
 	math "math"
 	math_bits "math/bits"

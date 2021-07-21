@@ -6,17 +6,15 @@
 package deputize
 
 import (
-	"reflect"
-	"testing"
-
-	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
-
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/std"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
+	"reflect"
+	"testing"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store"

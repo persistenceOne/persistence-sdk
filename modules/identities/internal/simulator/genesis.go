@@ -6,8 +6,6 @@
 package simulator
 
 import (
-	"math/rand"
-
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/common"
@@ -21,6 +19,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	baseSimulation "github.com/persistenceOne/persistenceSDK/utilities/simulation/schema/types/base"
+	"math/rand"
 )
 
 func (simulator) RandomizedGenesisState(simulationState *module.SimulationState) {

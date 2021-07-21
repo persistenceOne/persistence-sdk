@@ -6,12 +6,11 @@
 package queuing
 
 import (
-	"net/http"
-	"strconv"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/pkg/errors"
+	"net/http"
+	"strconv"
 )
 
 func ParseFloat64OrReturnBadRequest(s string, defaultIfEmpty float64) (float64, int, error) {

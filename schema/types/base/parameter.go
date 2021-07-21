@@ -7,7 +7,6 @@ package base
 
 import (
 	"encoding/json"
-
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
