@@ -38,6 +38,7 @@ func (transactionRequest transactionRequest) Validate() error {
 }
 func (transactionRequest transactionRequest) FromCLI(cliCommand helpers.CLICommand, cliContext client.Context) (helpers.TransactionRequest, error) {
 	return newTransactionRequest(
+		//TODO : Similar to burn
 		cliCommand.ReadBaseReq(cliContext),
 		cliCommand.ReadString(flags.FromID),
 		cliCommand.ReadString(flags.ImmutableMetaProperties),
