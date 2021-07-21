@@ -85,11 +85,10 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/splits/auxiliaries/renumerate"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/auxiliaries/transfer"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
-	//wasmUtilities "github.com/persistenceOne/persistenceSDK/utilities/wasm"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
 	tendermintLog "github.com/tendermint/tendermint/libs/log"
 	tendermintOS "github.com/tendermint/tendermint/libs/os"
-	tendermintProto "github.com/tendermint/tendermint/proto/tendermint/types"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
 	"honnef.co/go/tools/version"
 	"io"
@@ -196,7 +195,7 @@ func (application application) LoadHeight(height int64) error {
 	return application.baseApp.LoadVersion(height)
 }
 func (application application) ExportApplicationStateAndValidators(forZeroHeight bool, jailWhiteList []string) (serverTypes.ExportedApp, error) {
-	context := application.baseApp.NewContext(true, tendermintProto.Header{Height: application.baseApp.LastBlockHeight()})
+	context := application.baseApp.NewContext(true, tendermintTypes.Header{Height: application.baseApp.LastBlockHeight()})
 
 	height := application.baseApp.LastBlockHeight() + 1
 	if forZeroHeight {

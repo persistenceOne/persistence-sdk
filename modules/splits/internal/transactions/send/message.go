@@ -16,15 +16,14 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 
-	//"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-var _ sdkTypes.Msg = (*Message)(nil)
+var _ sdkTypes.Msg = (*message)(nil)
 
-func (message Message) Route() string { return module.Name }
-func (message Message) Type() string  { return Transaction.GetName() }
-func (message Message) ValidateBasic() error {
+func (message message) Route() string { return module.Name }
+func (message message) Type() string  { return Transaction.GetName() }
+func (message message) ValidateBasic() error {
 	var _, Error = govalidator.ValidateStruct(message)
 	if Error != nil {
 		return errors.Wrap(xprtErrors.IncorrectMessage, Error.Error())
@@ -32,31 +31,31 @@ func (message Message) ValidateBasic() error {
 
 	return nil
 }
-func (message Message) GetSignBytes() []byte {
+func (message message) GetSignBytes() []byte {
 	return sdkTypes.MustSortJSON(transaction.RegisterCodec(messagePrototype).MustMarshalJSON(message))
 }
-func (message Message) GetSigners() []sdkTypes.AccAddress {
+func (message message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{sdkTypes.AccAddress(message.From)}
 }
-func (Message) RegisterCodec(codec *codec.LegacyAmino) {
-	codecUtilities.RegisterXPRTConcrete(codec, module.Name, Message{})
+func (message) RegisterCodec(codec *codec.LegacyAmino) {
+	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
 }
-func messageFromInterface(msg sdkTypes.Msg) Message {
+func messageFromInterface(msg sdkTypes.Msg) message {
 	switch value := msg.(type) {
-	case Message:
+	case message:
 		return value
 	default:
-		return Message{}
+		return message{}
 	}
 }
 func messagePrototype() helpers.Message {
-	return Message{}
+	return message{}
 }
 
 //TODO:types mismatch
 
-func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, ownableID test_types.ID, value sdkTypes.Dec) Message {
-	return Message{
+func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, ownableID test_types.ID, value sdkTypes.Dec) message {
+	return message{
 		From:      from,
 		FromID:    fromID,
 		ToID:      toID,

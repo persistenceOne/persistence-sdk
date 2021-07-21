@@ -9,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 
-	//"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/spf13/cobra"
 )
 

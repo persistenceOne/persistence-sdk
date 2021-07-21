@@ -27,7 +27,7 @@ import (
 	"github.com/stretchr/testify/require"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
-	tendermintProto "github.com/tendermint/tendermint/proto/tendermint/types"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
 	"testing"
 )
@@ -74,7 +74,7 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, helpers.Mapper, helpers.Au
 	transferAuxiliary := transfer.AuxiliaryMock.Initialize(Mapper, Parameters)
 	supplementAuxiliary := supplement.AuxiliaryMock.Initialize(Mapper, Parameters)
 
-	context := sdkTypes.NewContext(commitMultiStore, tendermintProto.Header{
+	context := sdkTypes.NewContext(commitMultiStore, tendermintTypes.Header{
 		ChainID: "test",
 		Height:  1000,
 	}, false, log.NewNopLogger())

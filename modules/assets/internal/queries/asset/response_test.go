@@ -14,7 +14,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/common"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/mapper"
-	tendermintProto "github.com/tendermint/tendermint/proto/tendermint/types"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"testing"
 
@@ -45,7 +45,7 @@ func CreateTestInput(t *testing.T) sdkTypes.Context {
 	Error := commitMultiStore.LoadLatestVersion()
 	require.Nil(t, Error)
 
-	context := sdkTypes.NewContext(commitMultiStore, tendermintProto.Header{
+	context := sdkTypes.NewContext(commitMultiStore, tendermintTypes.Header{
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 

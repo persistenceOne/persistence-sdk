@@ -24,21 +24,21 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type TransactionResponse struct {
+type transactionResponse struct {
 	Success bool  `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	Error   error `protobuf:"bytes,2,opt,name=error,proto3,customtype=error" json:"error"`
 }
 
-func (m *TransactionResponse) Reset()         { *m = TransactionResponse{} }
-func (m *TransactionResponse) String() string { return proto.CompactTextString(m) }
-func (*TransactionResponse) ProtoMessage()    {}
-func (*TransactionResponse) Descriptor() ([]byte, []int) {
+func (m *transactionResponse) Reset()         { *m = transactionResponse{} }
+func (m *transactionResponse) String() string { return proto.CompactTextString(m) }
+func (*transactionResponse) ProtoMessage()    {}
+func (*transactionResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_9782dfbbe5a79684, []int{0}
 }
-func (m *TransactionResponse) XXX_Unmarshal(b []byte) error {
+func (m *transactionResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *TransactionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *transactionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_TransactionResponse.Marshal(b, m, deterministic)
 	} else {
@@ -50,19 +50,19 @@ func (m *TransactionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-func (m *TransactionResponse) XXX_Merge(src proto.Message) {
+func (m *transactionResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_TransactionResponse.Merge(m, src)
 }
-func (m *TransactionResponse) XXX_Size() int {
+func (m *transactionResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *TransactionResponse) XXX_DiscardUnknown() {
+func (m *transactionResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_TransactionResponse.DiscardUnknown(m)
 }
 
 var xxx_messageInfo_TransactionResponse proto.InternalMessageInfo
 
-func (m *TransactionResponse) GetSuccess() bool {
+func (m *transactionResponse) GetSuccess() bool {
 	if m != nil {
 		return m.Success
 	}
@@ -70,7 +70,7 @@ func (m *TransactionResponse) GetSuccess() bool {
 }
 
 func init() {
-	proto.RegisterType((*TransactionResponse)(nil), "persistence.assets.splits.transactions.wrap.v1beta1.transactionResponse")
+	proto.RegisterType((*transactionResponse)(nil), "persistence.assets.splits.transactions.wrap.v1beta1.transactionResponse")
 }
 
 func init() {
@@ -99,7 +99,7 @@ var fileDescriptor_9782dfbbe5a79684 = []byte{
 	0x5b, 0xb7, 0x13, 0x70, 0x94, 0x01, 0x00, 0x00,
 }
 
-func (m *TransactionResponse) Marshal() (dAtA []byte, err error) {
+func (m *transactionResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -109,12 +109,12 @@ func (m *TransactionResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *TransactionResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *transactionResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *TransactionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *transactionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -156,7 +156,7 @@ func encodeVarintResponse(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *TransactionResponse) Size() (n int) {
+func (m *transactionResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -178,7 +178,7 @@ func sovResponse(x uint64) (n int) {
 func sozResponse(x uint64) (n int) {
 	return sovResponse(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *TransactionResponse) Unmarshal(dAtA []byte) error {
+func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {

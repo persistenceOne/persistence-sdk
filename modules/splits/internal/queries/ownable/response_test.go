@@ -8,7 +8,7 @@ package ownable
 import (
 	"testing"
 
-	tendermintProto "github.com/tendermint/tendermint/proto/tendermint/types"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
@@ -45,7 +45,7 @@ func CreateTestInput(t *testing.T) sdkTypes.Context {
 	Error := commitMultiStore.LoadLatestVersion()
 	require.Nil(t, Error)
 
-	context := sdkTypes.NewContext(commitMultiStore, tendermintProto.Header{
+	context := sdkTypes.NewContext(commitMultiStore, tendermintTypes.Header{
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 

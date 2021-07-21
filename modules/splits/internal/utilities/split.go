@@ -11,7 +11,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/mappable"
 	"github.com/persistenceOne/persistenceSDK/schema/mappables"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	//"github.com/persistenceOne/persistenceSDK/schema/types"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"

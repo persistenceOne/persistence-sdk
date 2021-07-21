@@ -6,12 +6,9 @@ package block
 import (
 	fmt "fmt"
 	types "github.com/cosmos/cosmos-sdk/codec/types"
-	//sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	//"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	_ "github.com/regen-network/cosmos-proto"
-	//abciTypes "github.com/tendermint/tendermint/abci/types"
 	io "io"
 	math "math"
 	math_bits "math/bits"

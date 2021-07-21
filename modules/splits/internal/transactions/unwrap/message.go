@@ -18,18 +18,11 @@ import (
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
 
-//type message struct {
-//	From      sdkTypes.AccAddress `json:"from" valid:"required~required field from missing" valid:"required~required field from missing"`
-//	FromID    types.ID            `json:"fromID" valid:"required~required field fromID missing" valid:"required~required field from missing"`
-//	OwnableID types.ID            `json:"ownableID" valid:"required~required field ownableID missing" valid:"required~required field from missing"`
-//	Value     sdkTypes.Int        `json:"value" valid:"required~required field value missing" valid:"required~required field from missing"`
-//}
+var _ sdkTypes.Msg = (*message)(nil)
 
-var _ sdkTypes.Msg = (*Message)(nil)
-
-func (message Message) Route() string { return module.Name }
-func (message Message) Type() string  { return Transaction.GetName() }
-func (message Message) ValidateBasic() error {
+func (message message) Route() string { return module.Name }
+func (message message) Type() string  { return Transaction.GetName() }
+func (message message) ValidateBasic() error {
 	var _, Error = govalidator.ValidateStruct(message)
 	if Error != nil {
 		return errors.Wrap(xprtErrors.IncorrectMessage, Error.Error())
@@ -37,29 +30,29 @@ func (message Message) ValidateBasic() error {
 
 	return nil
 }
-func (message Message) GetSignBytes() []byte {
+func (message message) GetSignBytes() []byte {
 	return sdkTypes.MustSortJSON(transaction.RegisterCodec(messagePrototype).MustMarshalJSON(message))
 }
-func (message Message) GetSigners() []sdkTypes.AccAddress {
+func (message message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{message.From}
 }
-func (Message) RegisterCodec(codec *codec.LegacyAmino) {
-	codecUtilities.RegisterXPRTConcrete(codec, module.Name, Message{})
+func (message) RegisterCodec(codec *codec.LegacyAmino) {
+	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
 }
-func messageFromInterface(msg sdkTypes.Msg) Message {
+func messageFromInterface(msg sdkTypes.Msg) message {
 	switch value := msg.(type) {
-	case Message:
+	case message:
 		return value
 	default:
-		return Message{}
+		return message{}
 	}
 }
 func messagePrototype() helpers.Message {
-	return Message{}
+	return message{}
 }
 
-func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, ownableID test_types.ID, value sdkTypes.Int) Message {
-	return Message{
+func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, ownableID test_types.ID, value sdkTypes.Int) message {
+	return message{
 		From:      from,
 		FromID:    fromID,
 		OwnableID: ownableID,

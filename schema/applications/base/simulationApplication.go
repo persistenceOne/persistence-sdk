@@ -94,7 +94,7 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tendermintLog "github.com/tendermint/tendermint/libs/log"
 	tendermintOS "github.com/tendermint/tendermint/libs/os"
-	tendermintProto "github.com/tendermint/tendermint/proto/tendermint/types"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
 	"io"
 	"os"
@@ -632,7 +632,7 @@ func (simulationApplication SimulationApplication) GetBlackListedAddresses() map
 }
 
 func (simulationApplication SimulationApplication) CheckBalance(t *testing.T, address sdkTypes.AccAddress, coins sdkTypes.Coins) {
-	ctxCheck := simulationApplication.application.baseApp.NewContext(true, tendermintProto.Header{})
+	ctxCheck := simulationApplication.application.baseApp.NewContext(true, tendermintTypes.Header{})
 	res := simulationApplication.BankKeeper.GetAllBalances(ctxCheck, address)
 
 	require.True(t, coins.IsEqual(res))
@@ -712,14 +712,14 @@ func (simulationApplication SimulationApplication) SetupWithGenesisAccounts(acco
 	)
 
 	simulationApplication.Commit()
-	simulationApplication.BeginBlock(abciTypes.RequestBeginBlock{Header: tendermintProto.Header{Height: simulationApplication.application.baseApp.LastBlockHeight() + 1}})
+	simulationApplication.BeginBlock(abciTypes.RequestBeginBlock{Header: tendermintTypes.Header{Height: simulationApplication.application.baseApp.LastBlockHeight() + 1}})
 
 	return app.(SimulationApplication)
 }
 
 func (simulationApplication SimulationApplication) NewTestApplication(isCheckTx bool) (applications.SimulationApplication, sdkTypes.Context) {
 	app := simulationApplication.Setup(isCheckTx)
-	ctx := simulationApplication.GetBaseApp().NewContext(isCheckTx, tendermintProto.Header{})
+	ctx := simulationApplication.GetBaseApp().NewContext(isCheckTx, tendermintTypes.Header{})
 
 	return app, ctx
 }

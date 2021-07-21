@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 
 	"github.com/asaskevich/govalidator"
-	//"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"

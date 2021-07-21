@@ -9,8 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/gogo/protobuf/proto"
-
-	//"github.com/gogo/protobuf/proto"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
 )

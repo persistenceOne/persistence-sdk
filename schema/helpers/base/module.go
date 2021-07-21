@@ -19,8 +19,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	sdkTypesModule "github.com/cosmos/cosmos-sdk/types/module"
-	//"github.com/cosmos/cosmos-sdk/x/params"
-	//"github.com/cosmos/cosmos-sdk/x/simulation"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/gorilla/mux"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"

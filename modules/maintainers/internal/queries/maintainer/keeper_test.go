@@ -28,7 +28,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
-	tendermintProto "github.com/tendermint/tendermint/proto/tendermint/types"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
 )
 
@@ -62,7 +62,7 @@ func CreateTestInput2(t *testing.T) (sdkTypes.Context, helpers.Keeper) {
 	Error := commitMultiStore.LoadLatestVersion()
 	require.Nil(t, Error)
 
-	context := sdkTypes.NewContext(commitMultiStore, tendermintProto.Header{
+	context := sdkTypes.NewContext(commitMultiStore, tendermintTypes.Header{
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 

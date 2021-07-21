@@ -20,12 +20,10 @@ message BaseReq {
   repeated Coin fees = 7 [
     (gogoproto.nullable)     = false,
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
-//    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
   repeated DecCoin gas_prices = 8 [
     (gogoproto.nullable)     = false,
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins"
-//    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.DecCoins"
   ];
   string gas = 9;
   string gas_adjustment = 10;

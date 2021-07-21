@@ -26,7 +26,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
-	"github.com/cosmos/cosmos-sdk/x/supply"
 	"github.com/persistenceOne/persistenceSDK/modules/assets"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications"
 	"github.com/persistenceOne/persistenceSDK/modules/identities"

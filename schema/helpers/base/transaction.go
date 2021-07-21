@@ -15,7 +15,6 @@ import (
 	"reflect"
 	"strings"
 
-	//"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -23,9 +22,6 @@ import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/rest"
-	//"github.com/cosmos/cosmos-sdk/x/auth"
-	//authClient "github.com/cosmos/cosmos-sdk/x/auth/client/utils"
-	//"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/utilities/rest/queuing"
 	"github.com/spf13/cobra"

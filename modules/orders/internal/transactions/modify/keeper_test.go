@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"testing"
 
-	tendermintProto "github.com/tendermint/tendermint/proto/tendermint/types"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 
@@ -86,7 +86,7 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
 	Error := commitMultiStore.LoadLatestVersion()
 	require.Nil(t, Error)
 
-	context := sdkTypes.NewContext(commitMultiStore, tendermintProto.Header{
+	context := sdkTypes.NewContext(commitMultiStore, tendermintTypes.Header{
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 

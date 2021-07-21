@@ -42,19 +42,19 @@ func Test_Unwrap_Request(t *testing.T) {
 	testBaseReq := test_types.BaseReq{From: fromAddress, ChainId: "test", Fees: sdkTypes.NewCoins()}
 	testTransactionRequest := newTransactionRequest(testBaseReq, "fromID", "ownableID", "2")
 
-	require.Equal(t, TransactionRequest{BaseReq: testBaseReq, FromID: "fromID", OwnableID: "ownableID", Value: "2"}, testTransactionRequest)
+	require.Equal(t, transactionRequest{BaseReq: testBaseReq, FromID: "fromID", OwnableID: "ownableID", Value: "2"}, testTransactionRequest)
 	require.Equal(t, nil, testTransactionRequest.Validate())
 
-	requestFromCLI, Error := TransactionRequest{}.FromCLI(cliCommand, cliContext)
+	requestFromCLI, Error := transactionRequest{}.FromCLI(cliCommand, cliContext)
 	require.Equal(t, nil, Error)
-	require.Equal(t, TransactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", OwnableID: "", Value: ""}, requestFromCLI)
+	require.Equal(t, transactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", OwnableID: "", Value: ""}, requestFromCLI)
 
 	jsonMessage, _ := json.Marshal(testTransactionRequest)
-	transactionRequestUnmarshalled, Error := TransactionRequest{}.FromJSON(jsonMessage)
+	transactionRequestUnmarshalled, Error := transactionRequest{}.FromJSON(jsonMessage)
 	require.Equal(t, nil, Error)
 	require.Equal(t, testTransactionRequest, transactionRequestUnmarshalled)
 
-	randomUnmarshall, Error := TransactionRequest{}.FromJSON([]byte{})
+	randomUnmarshall, Error := transactionRequest{}.FromJSON([]byte{})
 	require.Equal(t, nil, randomUnmarshall)
 	require.NotNil(t, Error)
 
@@ -76,7 +76,7 @@ func Test_Unwrap_Request(t *testing.T) {
 	require.NotNil(t, Error)
 	require.Nil(t, msg2)
 
-	require.Equal(t, TransactionRequest{}, requestPrototype())
+	require.Equal(t, transactionRequest{}, requestPrototype())
 	require.NotPanics(t, func() {
 		requestPrototype().RegisterCodec(codec.NewLegacyAmino())
 	})

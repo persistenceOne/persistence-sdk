@@ -7,7 +7,6 @@ import (
 	_ "errors"
 	"strings"
 
-	//"github.com/persistenceOne/persistenceSDK/utilities/cuckoo"
 	"math"
 	"math/rand"
 )

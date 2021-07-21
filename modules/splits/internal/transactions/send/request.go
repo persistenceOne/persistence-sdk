@@ -12,21 +12,20 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	//"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-var _ helpers.TransactionRequest = (*TransactionRequest)(nil)
+var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 
-func (transactionRequest TransactionRequest) Validate() error {
+func (transactionRequest transactionRequest) Validate() error {
 	_, Error := govalidator.ValidateStruct(transactionRequest)
 	return Error
 }
-func (transactionRequest TransactionRequest) FromCLI(cliCommand helpers.CLICommand, cliContext client.Context) (helpers.TransactionRequest, error) {
+func (transactionRequest transactionRequest) FromCLI(cliCommand helpers.CLICommand, cliContext client.Context) (helpers.TransactionRequest, error) {
 	return newTransactionRequest(
 		cliCommand.ReadBaseReq(cliContext),
 		cliCommand.ReadString(flags.FromID),
@@ -35,7 +34,7 @@ func (transactionRequest TransactionRequest) FromCLI(cliCommand helpers.CLIComma
 		cliCommand.ReadString(flags.Value),
 	), nil
 }
-func (transactionRequest TransactionRequest) FromJSON(rawMessage json.RawMessage) (helpers.TransactionRequest, error) {
+func (transactionRequest transactionRequest) FromJSON(rawMessage json.RawMessage) (helpers.TransactionRequest, error) {
 	if Error := json.Unmarshal(rawMessage, &transactionRequest); Error != nil {
 		return nil, Error
 	}
@@ -43,11 +42,11 @@ func (transactionRequest TransactionRequest) FromJSON(rawMessage json.RawMessage
 	return transactionRequest, nil
 }
 
-func (transactionRequest TransactionRequest) GetBaseReq() test_types.BaseReq {
+func (transactionRequest transactionRequest) GetBaseReq() test_types.BaseReq {
 	return transactionRequest.BaseReq
 }
 
-func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
+func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 	from, Error := sdkTypes.AccAddressFromBech32(transactionRequest.GetBaseReq().From)
 	if Error != nil {
 		return nil, Error
@@ -66,14 +65,14 @@ func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 		value,
 	), nil
 }
-func (TransactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
-	codecUtilities.RegisterXPRTConcrete(codec, module.Name, TransactionRequest{})
+func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
+	codecUtilities.RegisterXPRTConcrete(codec, module.Name, transactionRequest{})
 }
 func requestPrototype() helpers.TransactionRequest {
-	return TransactionRequest{}
+	return transactionRequest{}
 }
-func newTransactionRequest(baseReq test_types.BaseReq, fromID string, toID string, ownableID string, value string) *TransactionRequest {
-	return &TransactionRequest{
+func newTransactionRequest(baseReq test_types.BaseReq, fromID string, toID string, ownableID string, value string) transactionRequest {
+	return transactionRequest{
 		BaseReq:   baseReq,
 		FromID:    fromID,
 		ToID:      toID,

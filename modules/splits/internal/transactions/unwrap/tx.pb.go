@@ -25,23 +25,23 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type Message struct {
+type message struct {
 	From      github_com_cosmos_cosmos_sdk_types.AccAddress                 `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from" valid:"required~required field from missing"`
 	FromID    github_com_persistenceOne_persistenceSDK_schema_test_types.ID `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"from_iD" valid:"required~required field from missing"`
 	OwnableID github_com_persistenceOne_persistenceSDK_schema_test_types.ID `protobuf:"bytes,4,opt,name=ownable_iD,json=ownableID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"ownable_iD" valid:"required~required field from missing"`
 	Value     github_com_cosmos_cosmos_sdk_types.Int                        `protobuf:"bytes,5,opt,name=value,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"value" valid:"required~required field from missing"`
 }
 
-func (m Message) Reset()         { m = Message{} }
-func (m Message) String() string { return proto.CompactTextString(&m) }
-func (Message) ProtoMessage()    {}
-func (*Message) Descriptor() ([]byte, []int) {
+func (m message) Reset()         { m = message{} }
+func (m message) String() string { return proto.CompactTextString(&m) }
+func (message) ProtoMessage()    {}
+func (*message) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a37634917e8f2aa5, []int{0}
 }
-func (m *Message) XXX_Unmarshal(b []byte) error {
+func (m *message) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *Message) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *message) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_Message.Marshal(b, m, deterministic)
 	} else {
@@ -53,20 +53,20 @@ func (m *Message) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-func (m *Message) XXX_Merge(src proto.Message) {
+func (m *message) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Message.Merge(m, src)
 }
-func (m *Message) XXX_Size() int {
+func (m *message) XXX_Size() int {
 	return m.Size()
 }
-func (m *Message) XXX_DiscardUnknown() {
+func (m *message) XXX_DiscardUnknown() {
 	xxx_messageInfo_Message.DiscardUnknown(m)
 }
 
 var xxx_messageInfo_Message proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*Message)(nil), "persistence.assets.splits.transactions.unwrap.v1beta1.message")
+	proto.RegisterType((*message)(nil), "persistence.assets.splits.transactions.unwrap.v1beta1.message")
 }
 
 func init() {
@@ -100,7 +100,7 @@ var fileDescriptor_a37634917e8f2aa5 = []byte{
 	0x00,
 }
 
-func (m *Message) Marshal() (dAtA []byte, err error) {
+func (m *message) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -110,12 +110,12 @@ func (m *Message) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *Message) MarshalTo(dAtA []byte) (int, error) {
+func (m *message) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *Message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -192,7 +192,7 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *Message) Size() (n int) {
+func (m *message) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -223,7 +223,7 @@ func sovTx(x uint64) (n int) {
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *Message) Unmarshal(dAtA []byte) error {
+func (m *message) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {

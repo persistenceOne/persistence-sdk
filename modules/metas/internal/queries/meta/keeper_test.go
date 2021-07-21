@@ -13,7 +13,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
-	tendermintProto "github.com/tendermint/tendermint/proto/tendermint/types"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store"
@@ -61,7 +61,7 @@ func CreateTestInput2(t *testing.T) (sdkTypes.Context, helpers.Keeper) {
 	Error := commitMultiStore.LoadLatestVersion()
 	require.Nil(t, Error)
 
-	context := sdkTypes.NewContext(commitMultiStore, tendermintProto.Header{
+	context := sdkTypes.NewContext(commitMultiStore, tendermintTypes.Header{
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 

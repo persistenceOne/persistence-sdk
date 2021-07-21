@@ -3,7 +3,6 @@ syntax ="proto3";
 package persistence.assets.splits.transactions.wrap.v1beta1;
 
 import "third_party/proto/gogoproto/gogo.proto";
-//import "proto/schema/base/v1beta1/id.proto";
 
 
 option go_package = "modules/splits/internal/transactions/wrap";

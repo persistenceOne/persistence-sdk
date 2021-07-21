@@ -19,36 +19,30 @@ import (
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-//type transactionRequest struct {
-//	BaseReq rest.BaseReq `json:"baseReq"`
-//	FromID  string       `json:"fromID" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
-//	Coins   string       `json:"coins" valid:"required~required field coins missing, matches(^.*$)~invalid field coins"`
-//}
+var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 
-var _ helpers.TransactionRequest = (*TransactionRequest)(nil)
-
-func (transactionRequest TransactionRequest) Validate() error {
+func (transactionRequest transactionRequest) Validate() error {
 	_, Error := govalidator.ValidateStruct(transactionRequest)
 	return Error
 }
-func (transactionRequest TransactionRequest) FromCLI(cliCommand helpers.CLICommand, cliContext client.Context) (helpers.TransactionRequest, error) {
+func (transactionRequest transactionRequest) FromCLI(cliCommand helpers.CLICommand, cliContext client.Context) (helpers.TransactionRequest, error) {
 	return newTransactionRequest(
 		cliCommand.ReadBaseReq(cliContext),
 		cliCommand.ReadString(flags.FromID),
 		cliCommand.ReadString(flags.Coins),
 	), nil
 }
-func (transactionRequest TransactionRequest) FromJSON(rawMessage json.RawMessage) (helpers.TransactionRequest, error) {
+func (transactionRequest transactionRequest) FromJSON(rawMessage json.RawMessage) (helpers.TransactionRequest, error) {
 	if Error := json.Unmarshal(rawMessage, &transactionRequest); Error != nil {
 		return nil, Error
 	}
 
 	return transactionRequest, nil
 }
-func (transactionRequest TransactionRequest) GetBaseReq() test_types.BaseReq {
+func (transactionRequest transactionRequest) GetBaseReq() test_types.BaseReq {
 	return transactionRequest.BaseReq
 }
-func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
+func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 	from, Error := sdkTypes.AccAddressFromBech32(transactionRequest.GetBaseReq().From)
 	if Error != nil {
 		return nil, Error
@@ -65,14 +59,14 @@ func (transactionRequest TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 		coins,
 	), nil
 }
-func (TransactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
-	codecUtilities.RegisterXPRTConcrete(codec, module.Name, TransactionRequest{})
+func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
+	codecUtilities.RegisterXPRTConcrete(codec, module.Name, transactionRequest{})
 }
 func requestPrototype() helpers.TransactionRequest {
-	return TransactionRequest{}
+	return transactionRequest{}
 }
-func newTransactionRequest(baseReq test_types.BaseReq, fromID string, coins string) TransactionRequest {
-	return TransactionRequest{
+func newTransactionRequest(baseReq test_types.BaseReq, fromID string, coins string) transactionRequest {
+	return transactionRequest{
 		BaseReq: baseReq,
 		FromID:  fromID,
 		Coins:   coins,
