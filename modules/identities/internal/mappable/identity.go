@@ -24,38 +24,6 @@ type identity struct {
 	baseTraits.HasMutables //nolint:govet
 }
 
-func (identity identity) Reset() {
-	panic("implement me")
-}
-
-func (identity identity) String() string {
-	panic("implement me")
-}
-
-func (identity identity) ProtoMessage() {
-	panic("implement me")
-}
-
-func (identity identity) Marshal() ([]byte, error) {
-	panic("implement me")
-}
-
-func (identity identity) MarshalTo(data []byte) (n int, err error) {
-	panic("implement me")
-}
-
-func (identity identity) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	panic("implement me")
-}
-
-func (identity identity) Size() int {
-	panic("implement me")
-}
-
-func (identity identity) Unmarshal(data []byte) error {
-	panic("implement me")
-}
-
 var _ mappables.InterIdentity = (*identity)(nil)
 
 func (identity identity) GetID() types.ID { return identity.ID }

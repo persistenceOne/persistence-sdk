@@ -7,13 +7,10 @@ package burn
 
 import (
 	"fmt"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-
 	"github.com/asaskevich/govalidator"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 )
 
 type auxiliaryRequest struct {
@@ -40,8 +37,8 @@ func auxiliaryRequestFromInterface(request helpers.AuxiliaryRequest) auxiliaryRe
 
 func NewAuxiliaryRequest(ownerID fmt.Stringer, ownableID fmt.Stringer, value sdkTypes.Dec) helpers.AuxiliaryRequest {
 	return auxiliaryRequest{
-		OwnerID:   base.NewID(ownerID.String()),
-		OwnableID: base.NewID(ownableID.String()),
+		OwnerID:   test_types.NewID(ownerID.String()),
+		OwnableID: test_types.NewID(ownableID.String()),
 		Value:     value,
 	}
 }
