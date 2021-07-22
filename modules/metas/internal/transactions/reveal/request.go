@@ -7,12 +7,12 @@ package reveal
 
 import (
 	"encoding/json"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/metas/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
@@ -21,7 +21,7 @@ import (
 )
 
 type transactionRequest struct {
-	BaseReq  rest.BaseReq `json:"baseReq"`
+	BaseReq  test_types.BaseReq `json:"baseReq"`
 	MetaFact string       `json:"metaFact" valid:"required~required field metaFact missing, matches(^[DHIS]{1}[|]{1}.*$)"`
 }
 
@@ -44,7 +44,7 @@ func (transactionRequest transactionRequest) FromJSON(rawMessage json.RawMessage
 
 	return transactionRequest, nil
 }
-func (transactionRequest transactionRequest) GetBaseReq() rest.BaseReq {
+func (transactionRequest transactionRequest) GetBaseReq() test_types.BaseReq {
 	return transactionRequest.BaseReq
 }
 func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
@@ -63,13 +63,13 @@ func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 		metaFact,
 	), nil
 }
-func (transactionRequest) RegisterCodec(codec *codec.Codec) {
+func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, transactionRequest{})
 }
 func requestPrototype() helpers.TransactionRequest {
 	return transactionRequest{}
 }
-func newTransactionRequest(baseReq rest.BaseReq, metaFact string) helpers.TransactionRequest {
+func newTransactionRequest(baseReq test_types.BaseReq, metaFact string) helpers.TransactionRequest {
 	return transactionRequest{
 		BaseReq:  baseReq,
 		MetaFact: metaFact,

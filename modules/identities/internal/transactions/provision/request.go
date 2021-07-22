@@ -7,21 +7,20 @@ package provision
 
 import (
 	"encoding/json"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
 type transactionRequest struct {
-	BaseReq    rest.BaseReq `json:"baseReq"`
+	BaseReq    test_types.BaseReq `json:"baseReq"`
 	To         string       `json:"to" valid:"required~required field to missing, matches(^[a-z0-9]+$)~invalid field to"`
 	IdentityID string       `json:"identityID" valid:"required~required field identityID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field identityID"`
 }
@@ -46,7 +45,7 @@ func (transactionRequest transactionRequest) FromJSON(rawMessage json.RawMessage
 
 	return transactionRequest, nil
 }
-func (transactionRequest transactionRequest) GetBaseReq() rest.BaseReq {
+func (transactionRequest transactionRequest) GetBaseReq() test_types.BaseReq {
 	return transactionRequest.BaseReq
 }
 func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
@@ -63,16 +62,16 @@ func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 	return newMessage(
 		from,
 		to,
-		base.NewID(transactionRequest.IdentityID),
+		test_types.NewID(transactionRequest.IdentityID),
 	), nil
 }
-func (transactionRequest) RegisterCodec(codec *codec.Codec) {
+func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, transactionRequest{})
 }
 func requestPrototype() helpers.TransactionRequest {
 	return transactionRequest{}
 }
-func newTransactionRequest(baseReq rest.BaseReq, to string, identityID string) helpers.TransactionRequest {
+func newTransactionRequest(baseReq test_types.BaseReq, to string, identityID string) helpers.TransactionRequest {
 	return transactionRequest{
 		BaseReq:    baseReq,
 		To:         to,

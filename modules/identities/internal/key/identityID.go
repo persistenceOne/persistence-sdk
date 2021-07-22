@@ -21,7 +21,7 @@ import (
 )
 
 type identityID struct {
-	ClassificationID test_types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
+	ClassificationID types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
 	HashID           test_types.ID `json:"hashID" valid:"required~required field hashID missing"`
 }
 
@@ -57,7 +57,7 @@ func (identityID identityID) Matches(key helpers.Key) bool {
 	return identityID.Equals(identityIDFromInterface(key))
 }
 
-func NewIdentityID(classificationID test_types.ID, immutableProperties types.Properties) types.ID {
+func NewIdentityID(classificationID types.ID, immutableProperties types.Properties) types.ID {
 	return identityID{
 		ClassificationID: classificationID,
 		HashID:           baseTraits.HasImmutables{Properties: immutableProperties}.GenerateHashID(),

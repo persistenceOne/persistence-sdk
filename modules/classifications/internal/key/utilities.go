@@ -6,6 +6,7 @@
 package key
 
 import (
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"strings"
 
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
@@ -37,6 +38,6 @@ func classificationIDFromInterface(i interface{}) classificationID {
 	}
 }
 
-func FromID(id types.ID) helpers.Key {
+func FromID(id test_types.ID) helpers.Key {
 	return classificationIDFromInterface(id)
 }

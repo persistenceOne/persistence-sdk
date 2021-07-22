@@ -7,6 +7,7 @@ package key
 
 import (
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"strings"
 
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
@@ -19,19 +20,19 @@ func readIdentityID(identityIDString string) types.ID {
 	idList := strings.Split(identityIDString, constants.FirstOrderCompositeIDSeparator)
 	if len(idList) == 2 {
 		return identityID{
-			ClassificationID: test_types.NewID(idList[0]),
+			ClassificationID: base.NewID(idList[0]),
 			HashID:           test_types.NewID(idList[1]),
 		}
 	}
 
-	return identityID{ClassificationID: test_types.NewID(""), HashID: test_types.NewID("")}
+	return identityID{ClassificationID: base.NewID(""), HashID: test_types.NewID("")}
 }
 
 func identityIDFromInterface(i interface{}) identityID {
 	switch value := i.(type) {
 	case identityID:
 		return value
-	case types.ID:
+	case test_types.ID:
 		return identityIDFromInterface(readIdentityID(value.String()))
 	default:
 		panic(i)

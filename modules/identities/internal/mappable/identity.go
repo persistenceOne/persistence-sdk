@@ -14,6 +14,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/mappables"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
@@ -21,14 +22,14 @@ import (
 )
 
 type identity struct {
-	ID types.ID `json:"id" valid:"required~required field id missing"`
+	ID test_types.ID `json:"id" valid:"required~required field id missing"`
 	baseTraits.HasImmutables
 	baseTraits.HasMutables //nolint:govet
 }
 
 var _ mappables.InterIdentity = (*identity)(nil)
 
-func (identity identity) GetID() types.ID { return identity.ID }
+func (identity identity) GetID() test_types.ID { return identity.ID }
 func (identity identity) GetExpiry() types.Property {
 	if property := identity.HasImmutables.GetImmutableProperties().Get(base.NewID(properties.Expiry)); property != nil {
 		return property
@@ -50,10 +51,10 @@ func (identity identity) GetAuthentication() types.Property {
 func (identity identity) GetKey() helpers.Key {
 	return key.FromID(identity.ID)
 }
-func (identity) RegisterCodec(codec *codec.Codec) {
+func (identity) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, identity{})
 }
-func NewIdentity(id types.ID, immutableProperties types.Properties, mutableProperties types.Properties) mappables.InterIdentity {
+func NewIdentity(id test_types.ID, immutableProperties types.Properties, mutableProperties types.Properties) mappables.InterIdentity {
 	return identity{
 		ID:            id,
 		HasImmutables: baseTraits.HasImmutables{Properties: immutableProperties},

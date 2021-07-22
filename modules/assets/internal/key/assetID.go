@@ -7,6 +7,7 @@ package key
 
 import (
 	"bytes"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"strings"
 
 	"github.com/persistenceOne/persistenceSDK/schema/traits/base"
@@ -20,8 +21,8 @@ import (
 )
 
 type assetID struct {
-	ClassificationID types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
-	HashID           types.ID `json:"hashID" valid:"required~required field hashID missing"`
+	ClassificationID test_types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
+	HashID           test_types.ID `json:"hashID" valid:"required~required field hashID missing"`
 }
 
 var _ types.ID = (*assetID)(nil)
@@ -57,7 +58,7 @@ func (assetID assetID) Matches(key helpers.Key) bool {
 	return assetID.Equals(assetIDFromInterface(key))
 }
 
-func NewAssetID(classificationID types.ID, immutableProperties types.Properties) types.ID {
+func NewAssetID(classificationID test_types.ID, immutableProperties types.Properties) types.ID {
 	return assetID{
 		ClassificationID: classificationID,
 		HashID:           base.HasImmutables{Properties: immutableProperties}.GenerateHashID(),

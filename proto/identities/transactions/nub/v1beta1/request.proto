@@ -3,7 +3,7 @@ syntax="proto3";
 package base;
 
 import "third_party/proto/gogoproto/gogo.proto";
-import "proto/comos/v1beta1/basereq.proto";
+import "proto/cosmos/v1beta1/basereq.proto";
 
 option go_package= "modules/identities/internal/transactions/nub";
 

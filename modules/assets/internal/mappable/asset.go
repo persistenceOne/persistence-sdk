@@ -13,6 +13,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/mappables"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
@@ -20,17 +21,17 @@ import (
 )
 
 type asset struct {
-	ID types.ID `json:"id" valid:"required~required field id missing"`
+	ID test_types.ID `json:"id" valid:"required~required field id missing"`
 	baseTraits.HasImmutables
 	baseTraits.HasMutables //nolint:govet
 }
 
 var _ mappables.InterNFT = (*asset)(nil)
 
-func (asset asset) GetID() types.ID {
+func (asset asset) GetID() test_types.ID {
 	return asset.ID
 }
-func (asset asset) GetClassificationID() types.ID {
+func (asset asset) GetClassificationID() test_types.ID {
 	return key.ReadClassificationID(asset.ID)
 }
 func (asset asset) GetBurn() types.Property {
@@ -67,7 +68,7 @@ func (asset) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, asset{})
 }
 
-func NewAsset(assetID types.ID, immutableProperties types.Properties, mutableProperties types.Properties) mappables.InterNFT {
+func NewAsset(assetID test_types.ID, immutableProperties types.Properties, mutableProperties types.Properties) mappables.InterNFT {
 	return asset{
 		ID:            assetID,
 		HasImmutables: baseTraits.HasImmutables{Properties: immutableProperties},

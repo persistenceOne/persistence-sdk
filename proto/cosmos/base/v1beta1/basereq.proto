@@ -3,7 +3,7 @@ syntax="proto3";
 package cosmos.base.v1beta1;
 
  import "third_party/proto/gogoproto/gogo.proto";
- import "proto/comos/base/v1beta1/coin.proto";
+ import "proto/cosmos/base/v1beta1/coin.proto";
 // import "github.com/cosmos/cosmos-sdk/third_party/proto/gogoproto/gogo.proto";
 
 option go_package = "schema/test_types";

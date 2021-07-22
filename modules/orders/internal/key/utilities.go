@@ -6,6 +6,7 @@
 package key
 
 import (
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"strconv"
 	"strings"
 
@@ -13,7 +14,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	//"github.com/persistenceOne/persistenceSDK/schema/test_types"
 )
 
 func readOrderID(orderIDString string) types.ID {
@@ -22,26 +23,26 @@ func readOrderID(orderIDString string) types.ID {
 	if len(idList) == 7 {
 		exchangeRate, Error := sdkTypes.NewDecFromStr(idList[3])
 		if Error != nil {
-			return orderID{ClassificationID: base.NewID(""), MakerOwnableID: base.NewID(""), TakerOwnableID: base.NewID(""), RateID: base.NewID(""), CreationID: base.NewID(""), MakerID: base.NewID(""), HashID: base.NewID("")}
+			return orderID{ClassificationID: test_types.NewID(""), MakerOwnableID: test_types.NewID(""), TakerOwnableID: test_types.NewID(""), RateID: test_types.NewID(""), CreationID: test_types.NewID(""), MakerID: test_types.NewID(""), HashID: test_types.NewID("")}
 		}
 
 		height, Error := strconv.ParseInt(idList[4], 10, 64)
 		if Error != nil {
-			return orderID{ClassificationID: base.NewID(""), MakerOwnableID: base.NewID(""), TakerOwnableID: base.NewID(""), RateID: base.NewID(""), CreationID: base.NewID(""), MakerID: base.NewID(""), HashID: base.NewID("")}
+			return orderID{ClassificationID: test_types.NewID(""), MakerOwnableID: test_types.NewID(""), TakerOwnableID: test_types.NewID(""), RateID: test_types.NewID(""), CreationID: test_types.NewID(""), MakerID: test_types.NewID(""), HashID: test_types.NewID("")}
 		}
 
 		return orderID{
-			ClassificationID: base.NewID(idList[0]),
-			MakerOwnableID:   base.NewID(idList[1]),
-			TakerOwnableID:   base.NewID(idList[2]),
-			RateID:           base.NewID(exchangeRate.String()),
-			CreationID:       base.NewID(strconv.FormatInt(height, 10)),
-			MakerID:          base.NewID(idList[5]),
-			HashID:           base.NewID(idList[6]),
+			ClassificationID: test_types.NewID(idList[0]),
+			MakerOwnableID:   test_types.NewID(idList[1]),
+			TakerOwnableID:   test_types.NewID(idList[2]),
+			RateID:           test_types.NewID(exchangeRate.String()),
+			CreationID:       test_types.NewID(strconv.FormatInt(height, 10)),
+			MakerID:          test_types.NewID(idList[5]),
+			HashID:           test_types.NewID(idList[6]),
 		}
 	}
 
-	return orderID{ClassificationID: base.NewID(""), MakerOwnableID: base.NewID(""), TakerOwnableID: base.NewID(""), RateID: base.NewID(""), CreationID: base.NewID(""), MakerID: base.NewID(""), HashID: base.NewID("")}
+	return orderID{ClassificationID: test_types.NewID(""), MakerOwnableID: test_types.NewID(""), TakerOwnableID: test_types.NewID(""), RateID: test_types.NewID(""), CreationID: test_types.NewID(""), MakerID: test_types.NewID(""), HashID: test_types.NewID("")}
 }
 func orderIDFromInterface(i interface{}) orderID {
 	switch value := i.(type) {
@@ -54,30 +55,30 @@ func orderIDFromInterface(i interface{}) orderID {
 	}
 }
 
-func ReadClassificationID(orderID types.ID) types.ID {
+func ReadClassificationID(orderID test_types.ID) test_types.ID {
 	return orderIDFromInterface(orderID).ClassificationID
 }
 
-func ReadRateID(orderID types.ID) types.ID {
+func ReadRateID(orderID test_types.ID) test_types.ID {
 	return orderIDFromInterface(orderID).RateID
 }
 
-func ReadCreationID(orderID types.ID) types.ID {
+func ReadCreationID(orderID test_types.ID) test_types.ID {
 	return orderIDFromInterface(orderID).CreationID
 }
 
-func ReadMakerOwnableID(orderID types.ID) types.ID {
+func ReadMakerOwnableID(orderID test_types.ID) test_types.ID {
 	return orderIDFromInterface(orderID).MakerOwnableID
 }
 
-func ReadTakerOwnableID(orderID types.ID) types.ID {
+func ReadTakerOwnableID(orderID test_types.ID) test_types.ID {
 	return orderIDFromInterface(orderID).TakerOwnableID
 }
 
-func ReadMakerID(orderID types.ID) types.ID {
+func ReadMakerID(orderID test_types.ID) test_types.ID {
 	return orderIDFromInterface(orderID).MakerID
 }
 
-func FromID(id types.ID) helpers.Key {
+func FromID(id test_types.ID) helpers.Key {
 	return orderIDFromInterface(id)
 }

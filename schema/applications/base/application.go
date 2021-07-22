@@ -16,16 +16,17 @@ import (
 	"github.com/cosmos/cosmos-sdk/server/config"
 	serverTypes "github.com/cosmos/cosmos-sdk/server/types"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
 	sdkTypesModule "github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authKeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authTypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	bankKeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	bankTypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilityTypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	"github.com/cosmos/cosmos-sdk/x/crisis"
 	crisisKeeper "github.com/cosmos/cosmos-sdk/x/crisis/keeper"
 	crisisTypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	"github.com/cosmos/cosmos-sdk/x/distribution"
@@ -78,8 +79,8 @@ import (
 	splitsMint "github.com/persistenceOne/persistenceSDK/modules/splits/auxiliaries/mint"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/auxiliaries/renumerate"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/auxiliaries/transfer"
+	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
-	wasmUtilities "github.com/persistenceOne/persistenceSDK/utilities/wasm"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
 	tendermintLog "github.com/tendermint/tendermint/libs/log"
 	tendermintOS "github.com/tendermint/tendermint/libs/os"
@@ -88,16 +89,21 @@ import (
 	"honnef.co/go/tools/version"
 	"io"
 	"log"
-	"path/filepath"
+	"os"
 )
 
 type application struct {
-	baseApp           *baseapp.BaseApp
-	legacyAmino       *codec.LegacyAmino
-	applicationCodec  codec.Marshaler
-	interfaceRegistry types.InterfaceRegistry
+	name string
+	//baseApp           *baseapp.BaseApp
+	codec              *codec.LegacyAmino
+	applicationCodec   codec.Marshaler
+	interfaceRegistry  types.InterfaceRegistry
+	moduleBasicManager module.BasicManager
 
-	keys map[string]*sdkTypes.KVStoreKey
+	keys                        map[string]*sdkTypes.KVStoreKey
+	enabledWasmProposalTypeList []wasm.ProposalType
+	moduleAccountPermissions    map[string][]string
+	tokenReceiveAllowedModules  map[string]bool
 
 	stakingKeeper      stakingKeeper.Keeper
 	slashingKeeper     slashingKeeper.Keeper
@@ -105,9 +111,21 @@ type application struct {
 	crisisKeeper       crisisKeeper.Keeper
 	paramsKeeper       paramsKeeper.Keeper
 
-	moduleManager *sdkTypesModule.Manager
+	moduleManager *module.Manager
 
 	baseapp.BaseApp
+}
+
+func (application application) MountStoreWithDB(key sdkTypes.StoreKey, typ sdkTypes.StoreType, db tendermintDB.DB) {
+	panic("implement me")
+}
+
+func (application application) GetDefaultNodeHome() string {
+	return os.ExpandEnv("$HOME/." + application.name + "/Node")
+}
+
+func (application application) GetModuleBasicManager() module.BasicManager {
+	return application.moduleBasicManager
 }
 
 func (application application) RegisterAPIRoutes(server *api.Server, config config.APIConfig) {
@@ -145,48 +163,48 @@ func (application application) ApplySnapshotChunk(chunk abciTypes.RequestApplySn
 var _ applications.Application = (*application)(nil)
 
 func (application application) Info(requestInfo abciTypes.RequestInfo) abciTypes.ResponseInfo {
-	return application.baseApp.Info(requestInfo)
+	return application.Info(requestInfo)
 }
 
 func (application application) SetOption(requestSetOption abciTypes.RequestSetOption) abciTypes.ResponseSetOption {
-	return application.baseApp.SetOption(requestSetOption)
+	return application.SetOption(requestSetOption)
 }
 
 func (application application) Query(requestQuery abciTypes.RequestQuery) abciTypes.ResponseQuery {
-	return application.baseApp.Query(requestQuery)
+	return application.Query(requestQuery)
 }
 
 func (application application) CheckTx(requestCheckTx abciTypes.RequestCheckTx) abciTypes.ResponseCheckTx {
-	return application.baseApp.CheckTx(requestCheckTx)
+	return application.CheckTx(requestCheckTx)
 }
 
 func (application application) InitChain(requestInitChain abciTypes.RequestInitChain) abciTypes.ResponseInitChain {
-	return application.baseApp.InitChain(requestInitChain)
+	return application.InitChain(requestInitChain)
 }
 
 func (application application) BeginBlock(requestBeginBlock abciTypes.RequestBeginBlock) abciTypes.ResponseBeginBlock {
-	return application.baseApp.BeginBlock(requestBeginBlock)
+	return application.BeginBlock(requestBeginBlock)
 }
 
 func (application application) DeliverTx(requestDeliverTx abciTypes.RequestDeliverTx) abciTypes.ResponseDeliverTx {
-	return application.baseApp.DeliverTx(requestDeliverTx)
+	return application.DeliverTx(requestDeliverTx)
 }
 
 func (application application) EndBlock(requestEndBlock abciTypes.RequestEndBlock) abciTypes.ResponseEndBlock {
-	return application.baseApp.EndBlock(requestEndBlock)
+	return application.EndBlock(requestEndBlock)
 }
 
 func (application application) Commit() abciTypes.ResponseCommit {
-	return application.baseApp.Commit()
+	return application.Commit()
 }
 
 func (application application) LoadHeight(height int64) error {
-	return application.baseApp.LoadVersion(height)
+	return application.LoadVersion(height)
 }
 func (application application) ExportApplicationStateAndValidators(forZeroHeight bool, jailWhiteList []string) (serverTypes.ExportedApp, error) {
-	context := application.baseApp.NewContext(true, tendermintProto.Header{Height: application.baseApp.LastBlockHeight()})
+	context := application.NewContext(true, tendermintProto.Header{Height: application.LastBlockHeight()})
 
-	height := application.baseApp.LastBlockHeight() + 1
+	height := application.LastBlockHeight() + 1
 	if forZeroHeight {
 		height = 0
 		applyWhiteList := false
@@ -314,7 +332,7 @@ func (application application) ExportApplicationStateAndValidators(forZeroHeight
 	}
 
 	genesisState := application.moduleManager.ExportGenesis(context, application.applicationCodec)
-	applicationState, Error := codec.MarshalJSONIndent(application.legacyAmino, genesisState)
+	applicationState, Error := codec.MarshalJSONIndent(application.codec, genesisState)
 
 	if Error != nil {
 		return serverTypes.ExportedApp{}, Error
@@ -325,11 +343,15 @@ func (application application) ExportApplicationStateAndValidators(forZeroHeight
 		AppState:        applicationState,
 		Validators:      validators,
 		Height:          height,
-		ConsensusParams: application.baseApp.GetConsensusParams(context),
+		ConsensusParams: application.GetConsensusParams(context),
 	}, err
 }
 
-func (application application) Initialize(applicationName string, encodingConfig applications.EncodingConfig, enabledProposals []wasm.ProposalType, moduleAccountPermissions map[string][]string, tokenReceiveAllowedModules map[string]bool, logger tendermintLog.Logger, db tendermintDB.DB, traceStore io.Writer, loadLatest bool, invCheckPeriod uint, skipUpgradeHeights map[int64]bool, home string, applicationOptions serverTypes.AppOptions, baseAppOptions ...func(*baseapp.BaseApp)) applications.Application {
+func (application application) GetCodec() *codec.LegacyAmino {
+	return application.codec
+}
+
+func (application application) Initialize(applicationName string, encodingConfig applications.EncodingConfig, logger tendermintLog.Logger, db tendermintDB.DB, traceStore io.Writer, loadLatest bool, invCheckPeriod uint, skipUpgradeHeights map[int64]bool, home string, baseAppOptions ...func(*baseapp.BaseApp)) applications.Application {
 	applicationCodec := encodingConfig.Marshaler
 	legacyAmino := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -363,12 +385,12 @@ func (application application) Initialize(applicationName string, encodingConfig
 	transientStoreKeys := sdkTypes.NewTransientStoreKeys(paramsTypes.TStoreKey)
 	memoryKeys := sdkTypes.NewMemoryStoreKeys(capabilityTypes.MemStoreKey)
 
-	application.baseApp = baseApp
-	application.legacyAmino = legacyAmino
+	//application.ba = baseApp
+	application.codec = legacyAmino
 	application.applicationCodec = applicationCodec
 	application.interfaceRegistry = interfaceRegistry
 	application.keys = keys
-	application.baseApp.SetParamStore(application.paramsKeeper.Subspace(baseapp.Paramspace).WithKeyTable(paramsKeeper.ConsensusParamsKeyTable()))
+	application.SetParamStore(application.paramsKeeper.Subspace(baseapp.Paramspace).WithKeyTable(paramsKeeper.ConsensusParamsKeyTable()))
 
 	paramsKeeper := paramsKeeper.NewKeeper(
 		applicationCodec,
@@ -382,12 +404,12 @@ func (application application) Initialize(applicationName string, encodingConfig
 		keys[authTypes.StoreKey],
 		paramsKeeper.Subspace(authTypes.ModuleName),
 		authTypes.ProtoBaseAccount,
-		moduleAccountPermissions,
+		application.moduleAccountPermissions,
 	)
 
 	blacklistedAddresses := make(map[string]bool)
-	for account := range moduleAccountPermissions {
-		blacklistedAddresses[authTypes.NewModuleAddress(account).String()] = !tokenReceiveAllowedModules[account]
+	for account := range application.moduleAccountPermissions {
+		blacklistedAddresses[authTypes.NewModuleAddress(account).String()] = !application.tokenReceiveAllowedModules[account]
 	}
 
 	bankKeeper := bankKeeper.NewBaseKeeper(
@@ -417,7 +439,7 @@ func (application application) Initialize(applicationName string, encodingConfig
 	)
 
 	blackListedModuleAddresses := make(map[string]bool)
-	for moduleAccount := range moduleAccountPermissions {
+	for moduleAccount := range application.moduleAccountPermissions {
 		blackListedModuleAddresses[authTypes.NewModuleAddress(moduleAccount).String()] = true
 	}
 
@@ -537,33 +559,51 @@ func (application application) Initialize(applicationName string, encodingConfig
 		splitsModule.GetAuxiliary(transfer.Auxiliary.GetName()),
 	)
 
-	var wasmRouter = baseApp.Router()
+	//var wasmRouter = baseApp.Router()
 
-	wasmDir := filepath.Join(home, wasm.ModuleName)
+	//wasmDir := filepath.Join(home, wasm.ModuleName)
 
-	wasmConfig, err := wasm.ReadWasmConfig(applicationOptions)
-	if err != nil {
-		panic("error while reading wasm config: " + err.Error())
-	}
+	//wasmConfig, err := wasm.ReadWasmConfig(applicationOptions)
+	//if err != nil {
+	//	panic("error while reading wasm config: " + err.Error())
+	//}
+	//
+	//wasmKeeper := wasm.NewKeeper(
+	//	applicationCodec,
+	//	keys[wasm.StoreKey],
+	//	paramsKeeper.Subspace(wasm.DefaultParamspace),
+	//	accountKeeper,
+	//	bankKeeper,
+	//	application.stakingKeeper,
+	//	application.distributionKeeper,
+	//	nil,
+	//	nil,
+	//	nil,
+	//	nil,
+	//	wasmRouter,
+	//	nil,
+	//	wasmDir,
+	//	wasmConfig,
+	//	&wasm.MessageEncoders{Custom: wasmUtilities.CustomEncoder(assets.Prototype(), classifications.Prototype(), identities.Prototype(), maintainers.Prototype(), metas.Prototype(), orders.Prototype(), splits.Prototype())},
+	//	nil)
 
-	wasmKeeper := wasm.NewKeeper(
-		applicationCodec,
-		keys[wasm.StoreKey],
-		paramsKeeper.Subspace(wasm.DefaultParamspace),
-		accountKeeper,
-		bankKeeper,
-		application.stakingKeeper,
-		application.distributionKeeper,
-		wasmRouter,
-		wasmDir,
-		wasmConfig,
-		stakingTypes.ModuleName,
-		&wasm.MessageEncoders{Custom: wasmUtilities.CustomEncoder(assets.Prototype(), classifications.Prototype(), identities.Prototype(), maintainers.Prototype(), metas.Prototype(), orders.Prototype(), splits.Prototype())},
-		nil)
+	//govRouter := gov.NewRouter().AddRoute(
+	//	gov.RouterKey,
+	//	gov.ProposalHandler,
+	//).AddRoute(
+	//	params.RouterKey,
+	//	params.NewParamChangeProposalHandler(paramsKeeper),
+	//).AddRoute(
+	//	distribution.RouterKey,
+	//	distribution.NewCommunityPoolSpendProposalHandler(application.distributionKeeper),
+	//).AddRoute(
+	//	upgrade.RouterKey,
+	//	upgrade.NewSoftwareUpgradeProposalHandler(upgradeKeeper),
+	//)
 
-	if len(enabledProposals) != 0 {
-		govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(wasmKeeper, enabledProposals))
-	}
+	//if len(application.enabledWasmProposalTypeList) != 0 {
+	//	govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(wasmKeeper, application.enabledWasmProposalTypeList))
+	//}
 
 	govKeeper := govKeeper.NewKeeper(
 		applicationCodec,
@@ -575,23 +615,23 @@ func (application application) Initialize(applicationName string, encodingConfig
 		govRouter,
 	)
 	/****  Module Options ****/
-	var skipGenesisInvariants = false
-	opt := applicationOptions.Get(crisis.FlagSkipGenesisInvariants)
-	if opt, ok := opt.(bool); ok {
-		skipGenesisInvariants = opt
-	}
+	//var skipGenesisInvariants = false
+	//opt := applicationOptions.Get(crisis.FlagSkipGenesisInvariants)
+	//if opt, ok := opt.(bool); ok {
+	//	skipGenesisInvariants = opt
+	//}
 	application.moduleManager = sdkTypesModule.NewManager(
-		genutil.NewAppModule(accountKeeper, application.stakingKeeper, application.baseApp.DeliverTx, encodingConfig.TxConfig),
+		genutil.NewAppModule(accountKeeper, application.stakingKeeper, application.DeliverTx, encodingConfig.TxConfig),
 		auth.NewAppModule(applicationCodec, accountKeeper, nil),
 		bank.NewAppModule(applicationCodec, bankKeeper, accountKeeper),
-		crisis.NewAppModule(&application.crisisKeeper, skipGenesisInvariants),
+		//crisis.NewAppModule(&application.crisisKeeper, skipGenesisInvariants),
 		gov.NewAppModule(applicationCodec, govKeeper, accountKeeper, bankKeeper),
 		mint.NewAppModule(applicationCodec, mintKeeper, accountKeeper),
 		slashing.NewAppModule(applicationCodec, application.slashingKeeper, accountKeeper, bankKeeper, application.stakingKeeper),
 		distribution.NewAppModule(applicationCodec, application.distributionKeeper, accountKeeper, bankKeeper, application.stakingKeeper),
 		staking.NewAppModule(applicationCodec, application.stakingKeeper, accountKeeper, bankKeeper),
 		upgrade.NewAppModule(upgradeKeeper),
-		wasm.NewAppModule(&wasmKeeper, stakingKeeper),
+		//wasm.NewAppModule(applicationCodec,&wasmKeeper, stakingKeeper),
 		evidence.NewAppModule(*evidenceKeeper),
 
 		assetsModule,
@@ -636,7 +676,7 @@ func (application application) Initialize(applicationName string, encodingConfig
 		splits.Prototype().Name(),
 	)
 	application.moduleManager.RegisterInvariants(&application.crisisKeeper)
-	application.moduleManager.RegisterRoutes(application.baseApp.Router(), application.baseApp.QueryRouter(), legacyAmino)
+	application.moduleManager.RegisterRoutes(application.Router(), application.QueryRouter(), legacyAmino)
 
 	simulationManager := sdkTypesModule.NewSimulationManager(
 		auth.NewAppModule(applicationCodec, accountKeeper, nil),
@@ -658,29 +698,49 @@ func (application application) Initialize(applicationName string, encodingConfig
 
 	simulationManager.RegisterStoreDecoders()
 
-	application.baseApp.MountKVStores(keys)
-	application.baseApp.MountTransientStores(transientStoreKeys)
-	application.baseApp.MountMemoryStores(memoryKeys)
+	application.MountKVStores(keys)
+	application.MountTransientStores(transientStoreKeys)
+	application.MountMemoryStores(memoryKeys)
 
-	application.baseApp.SetBeginBlocker(application.moduleManager.BeginBlock)
-	application.baseApp.SetEndBlocker(application.moduleManager.EndBlock)
-	application.baseApp.SetInitChainer(func(context sdkTypes.Context, requestInitChain abciTypes.RequestInitChain) abciTypes.ResponseInitChain {
+	application.SetBeginBlocker(application.moduleManager.BeginBlock)
+	application.SetEndBlocker(application.moduleManager.EndBlock)
+	application.SetInitChainer(func(context sdkTypes.Context, requestInitChain abciTypes.RequestInitChain) abciTypes.ResponseInitChain {
 		var genesisState map[string]json.RawMessage
 		legacyAmino.MustUnmarshalJSON(requestInitChain.AppStateBytes, &genesisState)
 		return application.moduleManager.InitGenesis(context, applicationCodec, genesisState)
 	})
-	application.baseApp.SetAnteHandler(ante.NewAnteHandler(accountKeeper, bankKeeper, ante.DefaultSigVerificationGasConsumer, encodingConfig.TxConfig.SignModeHandler()))
+	application.SetAnteHandler(ante.NewAnteHandler(accountKeeper, bankKeeper, ante.DefaultSigVerificationGasConsumer, encodingConfig.TxConfig.SignModeHandler()))
 
 	if loadLatest {
-		err := application.baseApp.LoadLatestVersion()
+		err := application.LoadLatestVersion()
 		if err != nil {
 			tendermintOS.Exit(err.Error())
 		}
 	}
 
-	return application
+	return &application
 }
 
-func NewApplication() applications.Application {
-	return &application{}
+func makeCodec(moduleBasicManager module.BasicManager) *codec.LegacyAmino {
+	Codec := codec.NewLegacyAmino()
+	moduleBasicManager.RegisterLegacyAminoCodec(Codec)
+	schema.RegisterCodec(Codec)
+	sdkTypes.RegisterLegacyAminoCodec(Codec)
+	codec.RegisterEvidences(Codec)
+	vestingTypes.RegisterLegacyAminoCodec(Codec)
+	Codec.Seal()
+
+	return Codec
+}
+
+func NewApplication(name string, moduleBasicManager module.BasicManager, enabledWasmProposalTypeList []wasm.ProposalType, moduleAccountPermissions map[string][]string, tokenReceiveAllowedModules map[string]bool) applications.Application {
+
+	return &application{
+		name:                        name,
+		moduleBasicManager:          moduleBasicManager,
+		codec:                       makeCodec(moduleBasicManager),
+		enabledWasmProposalTypeList: enabledWasmProposalTypeList,
+		moduleAccountPermissions:    moduleAccountPermissions,
+		tokenReceiveAllowedModules:  tokenReceiveAllowedModules,
+	}
 }

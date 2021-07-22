@@ -7,6 +7,8 @@ package unwrap
 
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	bank "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+
 	//"github.com/cosmos/cosmos-sdk/x/supply"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/auxiliaries/verify"
@@ -18,7 +20,7 @@ import (
 type transactionKeeper struct {
 	mapper          helpers.Mapper
 	parameters      helpers.Parameters
-	supplyKeeper    supply.Keeper
+	supplyKeeper    bank.Keeper
 	verifyAuxiliary helpers.Auxiliary
 }
 
@@ -47,7 +49,7 @@ func (transactionKeeper transactionKeeper) Initialize(mapper helpers.Mapper, par
 
 	for _, auxiliary := range auxiliaries {
 		switch value := auxiliary.(type) {
-		case supply.Keeper:
+		case bank.Keeper:
 			transactionKeeper.supplyKeeper = value
 		case helpers.Auxiliary:
 			switch value.GetName() {

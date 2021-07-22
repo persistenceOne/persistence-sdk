@@ -7,6 +7,7 @@ package key
 
 import (
 	"bytes"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"strconv"
 	"strings"
 
@@ -21,13 +22,13 @@ import (
 )
 
 type orderID struct {
-	ClassificationID types.ID `json:"classificationID"`
-	MakerOwnableID   types.ID `json:"makerOwnableID"`
-	TakerOwnableID   types.ID `json:"takerOwnableID"`
-	RateID           types.ID `json:"rateID"`
-	CreationID       types.ID `json:"creationID"`
-	MakerID          types.ID `json:"makerID"`
-	HashID           types.ID `json:"hashID"`
+	ClassificationID test_types.ID `json:"classificationID"`
+	MakerOwnableID   test_types.ID `json:"makerOwnableID"`
+	TakerOwnableID   test_types.ID `json:"takerOwnableID"`
+	RateID           test_types.ID `json:"rateID"`
+	CreationID       test_types.ID `json:"creationID"`
+	MakerID          test_types.ID `json:"makerID"`
+	HashID           test_types.ID `json:"hashID"`
 }
 
 var _ types.ID = (*orderID)(nil)
@@ -74,7 +75,7 @@ func (orderID orderID) Equals(id types.ID) bool {
 func (orderID orderID) GenerateStoreKeyBytes() []byte {
 	return module.StoreKeyPrefix.GenerateStoreKey(orderID.Bytes())
 }
-func (orderID) RegisterCodec(codec *codec.Codec) {
+func (orderID) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, orderID{})
 }
 func (orderID orderID) IsPartial() bool {
@@ -120,7 +121,7 @@ func (orderID orderID) getCreationHeightBytes() ([]byte, error) {
 	return Bytes, Error
 }
 
-func NewOrderID(classificationID types.ID, makerOwnableID types.ID, takerOwnableID types.ID, rateID types.ID, creationID types.ID, makerID types.ID, immutableProperties types.Properties) types.ID {
+func NewOrderID(classificationID test_types.ID, makerOwnableID test_types.ID, takerOwnableID test_types.ID, rateID test_types.ID, creationID test_types.ID, makerID test_types.ID, immutableProperties types.Properties) types.ID {
 	return orderID{
 		ClassificationID: classificationID,
 		MakerOwnableID:   makerOwnableID,

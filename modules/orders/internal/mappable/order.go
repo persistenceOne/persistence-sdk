@@ -6,6 +6,7 @@
 package mappable
 
 import (
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -23,32 +24,32 @@ import (
 )
 
 type order struct {
-	ID types.ID `json:"id" valid:"required~required field key missing"`
+	ID test_types.ID `json:"id" valid:"required~required field key missing"`
 	traits.HasMutables
 	traits.HasImmutables
 }
 
 var _ mappables.Order = (*order)(nil)
 
-func (order order) GetID() types.ID {
+func (order order) GetID() test_types.ID {
 	return order.ID
 }
-func (order order) GetClassificationID() types.ID {
+func (order order) GetClassificationID() test_types.ID {
 	return key.ReadClassificationID(order.ID)
 }
-func (order order) GetRateID() types.ID {
+func (order order) GetRateID() test_types.ID {
 	return key.ReadRateID(order.ID)
 }
-func (order order) GetCreationID() types.ID {
+func (order order) GetCreationID() test_types.ID {
 	return key.ReadCreationID(order.ID)
 }
-func (order order) GetMakerOwnableID() types.ID {
+func (order order) GetMakerOwnableID() test_types.ID {
 	return key.ReadMakerOwnableID(order.ID)
 }
-func (order order) GetTakerOwnableID() types.ID {
+func (order order) GetTakerOwnableID() test_types.ID {
 	return key.ReadTakerOwnableID(order.ID)
 }
-func (order order) GetMakerID() types.ID {
+func (order order) GetMakerID() test_types.ID {
 	return key.ReadMakerID(order.ID)
 }
 func (order order) GetCreation() types.MetaProperty {
@@ -99,11 +100,11 @@ func (order order) GetMakerOwnableSplit() types.Property {
 func (order order) GetKey() helpers.Key {
 	return key.FromID(order.ID)
 }
-func (order) RegisterCodec(codec *codec.Codec) {
+func (order) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, order{})
 }
 
-func NewOrder(orderID types.ID, immutableProperties types.Properties, mutableProperties types.Properties) mappables.Order {
+func NewOrder(orderID test_types.ID, immutableProperties types.Properties, mutableProperties types.Properties) mappables.Order {
 	return order{
 		ID:            orderID,
 		HasImmutables: baseTraits.HasImmutables{Properties: immutableProperties},

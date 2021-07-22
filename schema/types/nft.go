@@ -5,7 +5,9 @@
 
 package types
 
+import "github.com/persistenceOne/persistenceSDK/schema/test_types"
+
 type NFT interface {
-	GetID() ID
-	GetClassificationID() ID
+	//GetID() ID
+	GetClassificationID() test_types.ID
 }

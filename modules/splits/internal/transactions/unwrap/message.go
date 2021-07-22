@@ -13,16 +13,28 @@ import (
 	xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
 
 type message struct {
 	From      sdkTypes.AccAddress `json:"from" valid:"required~required field from missing"`
-	FromID    types.ID            `json:"fromID" valid:"required~required field fromID missing"`
-	OwnableID types.ID            `json:"ownableID" valid:"required~required field ownableID missing"`
+	FromID    test_types.ID            `json:"fromID" valid:"required~required field fromID missing"`
+	OwnableID test_types.ID            `json:"ownableID" valid:"required~required field ownableID missing"`
 	Value     sdkTypes.Int        `json:"value" valid:"required~required field value missing"`
+}
+
+func (message message) Reset() {
+	panic("implement me")
+}
+
+func (message message) String() string {
+	panic("implement me")
+}
+
+func (message message) ProtoMessage() {
+	panic("implement me")
 }
 
 var _ sdkTypes.Msg = message{}
@@ -43,7 +55,7 @@ func (message message) GetSignBytes() []byte {
 func (message message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{message.From}
 }
-func (message) RegisterCodec(codec *codec.Codec) {
+func (message) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
 }
 func messageFromInterface(msg sdkTypes.Msg) message {
@@ -58,7 +70,7 @@ func messagePrototype() helpers.Message {
 	return message{}
 }
 
-func newMessage(from sdkTypes.AccAddress, fromID types.ID, ownableID types.ID, value sdkTypes.Int) sdkTypes.Msg {
+func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, ownableID test_types.ID, value sdkTypes.Int) sdkTypes.Msg {
 	return message{
 		From:      from,
 		FromID:    fromID,

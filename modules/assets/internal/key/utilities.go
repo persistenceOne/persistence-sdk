@@ -6,25 +6,25 @@
 package key
 
 import (
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"strings"
 
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
 
 func readAssetID(assetIDString string) types.ID {
 	idList := strings.Split(assetIDString, constants.FirstOrderCompositeIDSeparator)
 	if len(idList) == 2 {
 		return assetID{
-			ClassificationID: base.NewID(idList[0]),
-			HashID:           base.NewID(idList[1]),
+			ClassificationID: test_types.NewID(idList[0]),
+			HashID:           test_types.NewID(idList[1]),
 		}
 	}
 
-	return assetID{ClassificationID: base.NewID(""), HashID: base.NewID("")}
+	return assetID{ClassificationID: test_types.NewID(""), HashID: test_types.NewID("")}
 }
 func assetIDFromInterface(i interface{}) assetID {
 	switch value := i.(type) {
@@ -37,10 +37,10 @@ func assetIDFromInterface(i interface{}) assetID {
 	}
 }
 
-func ReadClassificationID(assetID types.ID) types.ID {
+func ReadClassificationID(assetID test_types.ID) test_types.ID {
 	return assetIDFromInterface(assetID).ClassificationID
 }
 
-func FromID(id types.ID) helpers.Key {
+func FromID(id test_types.ID) helpers.Key {
 	return assetIDFromInterface(id)
 }

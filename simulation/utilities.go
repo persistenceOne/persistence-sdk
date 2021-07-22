@@ -9,7 +9,8 @@ import (
 	"math/rand"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
+	//"github.com/cosmos/cosmos-sdk/x/simulation"
+	simulationTypes"github.com/cosmos/cosmos-sdk/types/simulation"
 )
 
 func RandomBool(r *rand.Rand) bool {
@@ -17,7 +18,7 @@ func RandomBool(r *rand.Rand) bool {
 }
 
 func GenerateRandomAddresses(r *rand.Rand) []sdkTypes.AccAddress {
-	randomAccounts := simulation.RandomAccounts(r, r.Intn(99))
+	randomAccounts := simulationTypes.RandomAccounts(r, r.Intn(99))
 	addresses := make([]sdkTypes.AccAddress, len(randomAccounts))
 
 	for i, account := range randomAccounts {
