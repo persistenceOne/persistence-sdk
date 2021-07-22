@@ -7,7 +7,7 @@ package send
 
 import (
 	"fmt"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
@@ -18,30 +18,26 @@ import (
 
 func Test_Send_Message(t *testing.T) {
 
-	testToID := test_types.NewID("toID")
-	testFromID := test_types.NewID("fromID")
-	testOwnableID := test_types.NewID("ownableID")
+	testToID := base.NewID("toID")
+	testFromID := base.NewID("fromID")
+	testOwnableID := base.NewID("ownableID")
 	testSplit := sdkTypes.NewDec(2)
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)
 	require.Nil(t, Error)
 	testMessage := newMessage(fromAccAddress, testFromID, testToID, testOwnableID, testSplit)
-	//fmt.Println(testMessage)
-	require.Equal(t, Message{From: fromAccAddress, FromID: testFromID, ToID: testToID, OwnableID: testOwnableID, Value: testSplit}, testMessage)
-	//fmt.Println(module.Name)
-	//fmt.Println(testMessage.Route())
+	require.Equal(t, message{from: fromAccAddress, fromID: testFromID, toID: testToID, ownableID: testOwnableID, value: testSplit}, testMessage)
 	require.Equal(t, module.Name, testMessage.Route())
 	require.Equal(t, Transaction.GetName(), testMessage.Type())
-	//fmt.Println(Transaction.GetName())
 	require.Equal(t, nil, testMessage.ValidateBasic())
-	require.NotNil(t, Message{}.ValidateBasic())
+	require.NotNil(t, message{}.ValidateBasic())
 	fmt.Println(string(sdkTypes.MustSortJSON(transaction.RegisterCodec(messagePrototype).MustMarshalJSON(testMessage))))
 	require.Equal(t, sdkTypes.MustSortJSON(transaction.RegisterCodec(messagePrototype).MustMarshalJSON(testMessage)), testMessage.GetSignBytes())
 
 	require.Equal(t, []sdkTypes.AccAddress{fromAccAddress}, testMessage.GetSigners())
 	require.Equal(t, testMessage, messageFromInterface(testMessage))
-	require.Equal(t, Message{}, messageFromInterface(nil))
-	require.Equal(t, Message{}, messagePrototype())
+	require.Equal(t, message{}, messageFromInterface(nil))
+	require.Equal(t, message{}, messagePrototype())
 
 }

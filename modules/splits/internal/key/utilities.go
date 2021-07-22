@@ -11,45 +11,44 @@ import (
 
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
-	//"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 )
 
-func readSplitID(splitIDString string) types.ID {
+func readSplitID(splitIDString string) test_types.ID {
 	idList := strings.Split(splitIDString, constants.SecondOrderCompositeIDSeparator)
 	if len(idList) == 2 {
 		return splitID{
-			OwnerID:   test_types.NewID(idList[0]),
-			OwnableID: test_types.NewID(idList[1]),
+			OwnerID:   testBase.NewID(idList[0]),
+			OwnableID: testBase.NewID(idList[1]),
 		}
 	}
 
-	return splitID{OwnerID: test_types.NewID(""), OwnableID: test_types.NewID("")}
+	return splitID{OwnerID: testBase.NewID(""), OwnableID: testBase.NewID("")}
 }
 
 func splitIDFromInterface(i interface{}) splitID {
 	switch value := i.(type) {
 	case splitID:
 		return value
-	case types.ID:
+	case test_types.ID:
 		return splitIDFromInterface(readSplitID(value.String()))
 	default:
 		panic(i)
 	}
 }
 
-func ReadOwnableID(id types.ID) test_types.ID {
+func ReadOwnableID(id test_types.ID) test_types.ID {
 	return splitIDFromInterface(id).OwnableID
 }
 
-func ReadOwnerID(id types.ID) test_types.ID {
+func ReadOwnerID(id test_types.ID) test_types.ID {
 	return splitIDFromInterface(id).OwnerID
 }
 
-func FromID(id types.ID) helpers.Key {
+func FromID(id test_types.ID) helpers.Key {
 	return splitIDFromInterface(id)
 }
 
-func ToID(key helpers.Key) types.ID {
+func ToID(key helpers.Key) test_types.ID {
 	return splitIDFromInterface(key)
 }

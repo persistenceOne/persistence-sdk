@@ -1,33 +1,28 @@
- /*
+/*
  Copyright [2019] - [2021], PERSISTENCE TECHNOLOGIES PTE. LTD. and the persistenceSDK contributors
  SPDX-License-Identifier: Apache-2.0
 */
 
 package send
 
- import (
-	 "github.com/asaskevich/govalidator"
-	 "github.com/cosmos/cosmos-sdk/codec"
-	 sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	 "github.com/cosmos/cosmos-sdk/types/errors"
-	 xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
-	 "github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
-	 "github.com/persistenceOne/persistenceSDK/schema/helpers"
-	 "github.com/persistenceOne/persistenceSDK/schema/test_types"
-	 "github.com/persistenceOne/persistenceSDK/utilities/transaction"
+import (
+	"github.com/asaskevich/govalidator"
+	"github.com/cosmos/cosmos-sdk/codec"
+	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/errors"
+	xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
+	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
+	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
+	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
+)
 
-	 //"github.com/persistenceOne/persistenceSDK/schema/types"
-	 codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
- )
+var _ sdkTypes.Msg = (*message)(nil)
 
-
-
-
-var _ sdkTypes.Msg = (*Message)(nil)
-
-func (message Message) Route() string { return module.Name }
-func (message Message) Type() string  { return Transaction.GetName() }
-func (message Message) ValidateBasic() error {
+func (message message) Route() string { return module.Name }
+func (message message) Type() string  { return Transaction.GetName() }
+func (message message) ValidateBasic() error {
 	var _, Error = govalidator.ValidateStruct(message)
 	if Error != nil {
 		return errors.Wrap(xprtErrors.IncorrectMessage, Error.Error())
@@ -35,35 +30,33 @@ func (message Message) ValidateBasic() error {
 
 	return nil
 }
-func (message Message) GetSignBytes() []byte {
+func (message message) GetSignBytes() []byte {
 	return sdkTypes.MustSortJSON(transaction.RegisterCodec(messagePrototype).MustMarshalJSON(message))
 }
-func (message Message) GetSigners() []sdkTypes.AccAddress {
-	return []sdkTypes.AccAddress{sdkTypes.AccAddress(message.From)}
+func (message message) GetSigners() []sdkTypes.AccAddress {
+	return []sdkTypes.AccAddress{message.from}
 }
-func (Message) RegisterCodec(codec *codec.LegacyAmino) {
-	codecUtilities.RegisterXPRTConcrete(codec, module.Name, Message{})
+func (message) RegisterCodec(codec *codec.LegacyAmino) {
+	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
 }
-func messageFromInterface(msg sdkTypes.Msg) Message {
+func messageFromInterface(msg sdkTypes.Msg) message {
 	switch value := msg.(type) {
-	case Message:
+	case message:
 		return value
 	default:
-		return Message{}
+		return message{}
 	}
 }
 func messagePrototype() helpers.Message {
-	return Message{}
+	return message{}
 }
 
-//TODO:types mismatch
-
-func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, ownableID test_types.ID, value sdkTypes.Dec) Message {
-	return Message{
-		From: from,
-		FromID:    fromID,
-		ToID:      toID,
-		OwnableID: ownableID,
-		Value:     value,
+func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, ownableID test_types.ID, value sdkTypes.Dec) sdkTypes.Msg {
+	return message{
+		from:      from,
+		fromID:    fromID,
+		toID:      toID,
+		ownableID: ownableID,
+		value:     value,
 	}
 }

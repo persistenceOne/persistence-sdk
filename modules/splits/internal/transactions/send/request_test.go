@@ -21,6 +21,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
 	"github.com/stretchr/testify/require"
+	testBase"github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 )
 
 func Test_Send_Request(t *testing.T) {
@@ -41,26 +42,26 @@ func Test_Send_Request(t *testing.T) {
 	testBaseReq := test_types.BaseReq{From: fromAddress, ChainId: "test", Fees: sdkTypes.NewCoins()}
 	testTransactionRequest := newTransactionRequest(testBaseReq, "fromID", "toID", "ownableID", "2")
 
-	require.Equal(t, TransactionRequest{BaseReq: testBaseReq, FromID: "fromID", ToID: "toID", OwnableID: "ownableID", Value: "2"}, testTransactionRequest)
+	require.Equal(t, transactionRequest{BaseReq: testBaseReq, FromID: "fromID", ToID: "toID", OwnableID: "ownableID", Value: "2"}, testTransactionRequest)
 	require.Equal(t, nil, testTransactionRequest.Validate())
 
-	requestFromCLI, Error := TransactionRequest{}.FromCLI(cliCommand, cliContext)
+	requestFromCLI, Error := transactionRequest{}.FromCLI(cliCommand, cliContext)
 	require.Equal(t, nil, Error)
-	require.Equal(t, TransactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", ToID: "", OwnableID: "", Value: ""}, requestFromCLI)
+	require.Equal(t, transactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", ToID: "", OwnableID: "", Value: ""}, requestFromCLI)
 
 	jsonMessage, _ := json.Marshal(testTransactionRequest)
-	transactionRequestUnmarshalled, Error := TransactionRequest{}.FromJSON(jsonMessage)
+	transactionRequestUnmarshalled, Error := transactionRequest{}.FromJSON(jsonMessage)
 	require.Equal(t, nil, Error)
 	require.Equal(t, testTransactionRequest, transactionRequestUnmarshalled)
 
-	randomUnmarshall, Error := TransactionRequest{}.FromJSON([]byte{})
+	randomUnmarshall, Error := transactionRequest{}.FromJSON([]byte{})
 	require.Equal(t, nil, randomUnmarshall)
 	require.NotNil(t, Error)
 
 	require.Equal(t, testBaseReq, testTransactionRequest.GetBaseReq())
 
 	msg, Error := testTransactionRequest.MakeMsg()
-	require.Equal(t, newMessage(fromAccAddress, test_types.NewID("fromID"), test_types.NewID("toID"), test_types.NewID("ownableID"), sdkTypes.NewDec(2)), msg)
+	require.Equal(t, newMessage(fromAccAddress, testBase.NewID("fromID"), testBase.NewID("toID"), testBase.NewID("ownableID"), sdkTypes.NewDec(2)), msg)
 	require.Nil(t, Error)
 
 	msg2, Error := newTransactionRequest(test_types.BaseReq{From: "randomFromAddress", ChainId: "test"}, "fromID", "toID", "ownableID", "2").MakeMsg()
@@ -71,7 +72,7 @@ func Test_Send_Request(t *testing.T) {
 	require.NotNil(t, Error)
 	require.Nil(t, msg2)
 
-	require.Equal(t, TransactionRequest{}, requestPrototype())
+	require.Equal(t, transactionRequest{}, requestPrototype())
 	require.NotPanics(t, func() {
 		requestPrototype().RegisterCodec(codec.NewLegacyAmino())
 	})

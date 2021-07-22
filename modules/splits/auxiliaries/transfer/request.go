@@ -13,10 +13,10 @@ import (
 )
 
 type auxiliaryRequest struct {
-	FromID    test_types.ID     `json:"fromID" valid:"required~required field fromID missing"`
-	ToID      test_types.ID     `json:"toID" valid:"required~required field toID missing"`
-	OwnableID test_types.ID     `json:"ownableID" valid:"required~required field ownableID missing"`
-	Value     sdkTypes.Dec `json:"value" valid:"required~required field value missing"`
+	FromID    test_types.ID `json:"fromID" valid:"required~required field fromID missing"`
+	ToID      test_types.ID `json:"toID" valid:"required~required field toID missing"`
+	OwnableID test_types.ID `json:"ownableID" valid:"required~required field ownableID missing"`
+	Value     sdkTypes.Dec  `json:"value" valid:"required~required field value missing"`
 }
 
 var _ helpers.AuxiliaryRequest = (*auxiliaryRequest)(nil)

@@ -7,16 +7,16 @@ package asset
 
 import (
 	"github.com/asaskevich/govalidator"
-	cliContext"github.com/cosmos/cosmos-sdk/client"
+	cliContext "github.com/cosmos/cosmos-sdk/client"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/common"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 )
 
 type queryRequest struct {
-	AssetID types.ID `json:"assetID" valid:"required~required field assetID missing"`
+	AssetID test_types.ID `json:"assetID" valid:"required~required field assetID missing"`
 }
 
 var _ helpers.QueryRequest = (*queryRequest)(nil)
@@ -26,10 +26,10 @@ func (queryRequest queryRequest) Validate() error {
 	return Error
 }
 func (queryRequest queryRequest) FromCLI(cliCommand helpers.CLICommand, _ cliContext.Context) helpers.QueryRequest {
-	return newQueryRequest(base.NewID(cliCommand.ReadString(flags.AssetID)))
+	return newQueryRequest(testBase.NewID(cliCommand.ReadString(flags.AssetID)))
 }
 func (queryRequest queryRequest) FromMap(vars map[string]string) helpers.QueryRequest {
-	return newQueryRequest(base.NewID(vars[Query.GetName()]))
+	return newQueryRequest(testBase.NewID(vars[Query.GetName()]))
 }
 func (queryRequest queryRequest) Encode() ([]byte, error) {
 	return common.Codec.MarshalJSON(queryRequest)
@@ -53,6 +53,6 @@ func queryRequestFromInterface(request helpers.QueryRequest) queryRequest {
 		return queryRequest{}
 	}
 }
-func newQueryRequest(assetID types.ID) helpers.QueryRequest {
+func newQueryRequest(assetID test_types.ID) helpers.QueryRequest {
 	return queryRequest{AssetID: assetID}
 }

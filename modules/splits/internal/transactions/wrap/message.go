@@ -20,7 +20,7 @@ import (
 
 type message struct {
 	From   sdkTypes.AccAddress `json:"from" valid:"required~required field from missing"`
-	FromID test_types.ID            `json:"fromID" valid:"required~required field fromID missing"`
+	FromID test_types.ID       `json:"fromID" valid:"required~required field fromID missing"`
 	Coins  sdkTypes.Coins      `json:"coins" valid:"required~required field coins missing"`
 }
 

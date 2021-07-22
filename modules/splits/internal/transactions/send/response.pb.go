@@ -25,8 +25,8 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionResponse struct {
-	Success bool   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Error   error `protobuf:"bytes,2,opt,name=error,proto3,customtype=error" json:"error,omitempty"`
+	success bool  `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	error   error `protobuf:"bytes,2,opt,name=error,proto3,customtype=error" json:"error,omitempty"`
 }
 
 func (m *transactionResponse) Reset()         { *m = transactionResponse{} }
@@ -64,7 +64,7 @@ var xxx_messageInfo_TransactionResponse proto.InternalMessageInfo
 
 func (m *transactionResponse) GetSuccess() bool {
 	if m != nil {
-		return m.Success
+		return m.success
 	}
 	return false
 }
@@ -117,11 +117,10 @@ func (m *transactionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Error != nil {
+	if m.error != nil {
 		{
-			size := len(m.Error.Error())
+			size := len(m.error.Error())
 			i -= size
-			//str := m.Error.Error()
 			if _, err := m.MarshalTo(dAtA[i:]); err != nil {
 				return 0, err
 			}
@@ -130,9 +129,9 @@ func (m *transactionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.Success {
+	if m.success {
 		i--
-		if m.Success {
+		if m.success {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -160,11 +159,11 @@ func (m *transactionResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Success {
+	if m.success {
 		n += 2
 	}
-	if m.Error != nil {
-		l = len(m.Error.Error())
+	if m.error != nil {
+		l = len(m.error.Error())
 		n += 1 + l + sovResponse(uint64(l))
 	}
 	return n
@@ -207,7 +206,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Success", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field success", wireType)
 			}
 			var v int
 			for shift := uint(0); ; shift += 7 {
@@ -224,10 +223,10 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			m.Success = bool(v != 0)
+			m.success = bool(v != 0)
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Error", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field error", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -256,7 +255,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			var v error
-			m.Error = v
+			m.error = v
 
 			if err := m.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err

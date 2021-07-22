@@ -6,19 +6,20 @@
 package base
 
 import (
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
 var _ types.Property = (*property)(nil)
 
 type property struct {
-	ID   types.ID   `json:"id"`
+	ID   test_types.ID   `json:"id"`
 	Fact types.Fact `json:"fact"`
 }
 
-func (property property) GetID() types.ID     { return property.ID }
+func (property property) GetID() test_types.ID     { return property.ID }
 func (property property) GetFact() types.Fact { return property.Fact }
-func NewProperty(id types.ID, fact types.Fact) types.Property {
+func NewProperty(id test_types.ID, fact types.Fact) types.Property {
 	return property{
 		ID:   id,
 		Fact: fact,

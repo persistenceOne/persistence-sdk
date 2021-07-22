@@ -14,6 +14,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/mappables"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	testBase"github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
@@ -40,7 +41,7 @@ func (asset asset) GetBurn() types.Property {
 	} else if burnProperty := asset.HasMutables.GetMutableProperties().Get(base.NewID(properties.Burn)); burnProperty != nil {
 		return burnProperty
 	} else {
-		return base.NewProperty(base.NewID(properties.Burn), base.NewFact(base.NewHeightData(base.NewHeight(-1))))
+		return base.NewProperty(testBase.NewID(properties.Burn), base.NewFact(base.NewHeightData(base.NewHeight(-1))))
 	}
 }
 func (asset asset) GetLock() types.Property {
@@ -49,7 +50,7 @@ func (asset asset) GetLock() types.Property {
 	} else if lockProperty := asset.HasMutables.GetMutableProperties().Get(base.NewID(properties.Lock)); lockProperty != nil {
 		return lockProperty
 	} else {
-		return base.NewProperty(base.NewID(properties.Lock), base.NewFact(base.NewHeightData(base.NewHeight(-1))))
+		return base.NewProperty(testBase.NewID(properties.Lock), base.NewFact(base.NewHeightData(base.NewHeight(-1))))
 	}
 }
 func (asset asset) GetValue() types.Property {
@@ -58,7 +59,7 @@ func (asset asset) GetValue() types.Property {
 	} else if splitProperty := asset.HasMutables.GetMutableProperties().Get(base.NewID(properties.Value)); splitProperty != nil {
 		return splitProperty
 	} else {
-		return base.NewProperty(base.NewID(properties.Value), base.NewFact(base.NewDecData(sdkTypes.SmallestDec())))
+		return base.NewProperty(testBase.NewID(properties.Value), base.NewFact(base.NewDecData(sdkTypes.SmallestDec())))
 	}
 }
 func (asset asset) GetKey() helpers.Key {

@@ -8,13 +8,15 @@ package ownable
 import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
+	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
+	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/common"
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -22,28 +24,28 @@ import (
 
 func Test_Split_Request(t *testing.T) {
 
-	var Codec = codec.New()
+	var Codec = codec.NewLegacyAmino()
 	schema.RegisterCodec(Codec)
-	sdkTypes.RegisterCodec(Codec)
-	codec.RegisterCrypto(Codec)
+	sdkTypes.RegisterLegacyAminoCodec(Codec)
+	cryptoCodec.RegisterCrypto(Codec)
 	codec.RegisterEvidences(Codec)
-	vesting.RegisterCodec(Codec)
+	vestingTypes.RegisterLegacyAminoCodec(Codec)
 	Codec.Seal()
 
-	testSplitID := base.NewID("OwnableID")
+	testSplitID := testBase.NewID("ownableID")
 	testQueryRequest := newQueryRequest(testSplitID)
 	require.Equal(t, nil, testQueryRequest.Validate())
 	require.Equal(t, queryRequest{}, requestPrototype())
 
 	cliCommand := baseHelpers.NewCLICommand("", "", "", []helpers.CLIFlag{flags.SplitID})
-	cliContext := client.Context{}.WithCodec(Codec)
+	cliContext := client.Context{}.WithLegacyAmino(Codec)
 	require.Panics(t, func() {
-		require.Equal(t, newQueryRequest(base.NewID("")), queryRequest{}.FromCLI(cliCommand, cliContext))
+		require.Equal(t, newQueryRequest(testBase.NewID("")), queryRequest{}.FromCLI(cliCommand, cliContext))
 	})
 
 	vars := make(map[string]string)
 	vars["ownables"] = "randomString"
-	require.Equal(t, newQueryRequest(base.NewID("randomString")), queryRequest{}.FromMap(vars))
+	require.Equal(t, newQueryRequest(testBase.NewID("randomString")), queryRequest{}.FromMap(vars))
 
 	encodedRequest, Error := testQueryRequest.Encode()
 	encodedResult, _ := common.Codec.MarshalJSON(testQueryRequest)

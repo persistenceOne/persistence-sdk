@@ -8,13 +8,11 @@ package wrap
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	bank "github.com/cosmos/cosmos-sdk/x/bank/keeper"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-
-	//"github.com/cosmos/cosmos-sdk/x/supply"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/auxiliaries/verify"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/utilities"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 )
 
 type transactionKeeper struct {
@@ -37,7 +35,7 @@ func (transactionKeeper transactionKeeper) Transact(context sdkTypes.Context, ms
 	}
 
 	for _, coin := range message.Coins {
-		if _, Error := utilities.AddSplits(transactionKeeper.mapper.NewCollection(context), message.FromID, test_types.NewID(coin.Denom), sdkTypes.NewDecFromInt(coin.Amount)); Error != nil {
+		if _, Error := utilities.AddSplits(transactionKeeper.mapper.NewCollection(context), message.FromID, testBase.NewID(coin.Denom), sdkTypes.NewDecFromInt(coin.Amount)); Error != nil {
 			return newTransactionResponse(Error)
 		}
 	}

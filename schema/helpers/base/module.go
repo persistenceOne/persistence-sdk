@@ -13,15 +13,11 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"math/rand"
 
-	//abciTypes"github.com/tendermint/tendermint/abci/types"
-	//"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	sdkTypesModule "github.com/cosmos/cosmos-sdk/types/module"
 	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	//"github.com/cosmos/cosmos-sdk/x/params"
-	//"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/gorilla/mux"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
@@ -49,6 +45,8 @@ type module struct {
 	transactions helpers.Transactions
 	block        helpers.Block
 }
+
+//TODO: implement below methods
 
 func (module module) RegisterLegacyAminoCodec(amino *codec.LegacyAmino) {
 	panic("implement me")

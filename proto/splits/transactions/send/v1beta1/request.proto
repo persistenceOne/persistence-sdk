@@ -9,8 +9,6 @@ import "proto/cosmos/base/v1beta1/basereq.proto";
 option go_package = "modules/splits/internal/transactions/send";
 
 message transactionRequest {
-//    option (gogoproto.goproto_getters) = false;
-    // option (gogoproto.goproto_stringer) = false;
     option (gogoproto.equal)            = false;
     option (cosmos_proto.implements_interface) = "TransactionResponse";
 

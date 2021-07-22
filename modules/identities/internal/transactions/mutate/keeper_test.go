@@ -152,7 +152,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 			}
 		})
 	})
-	t.Run("NegativeCase - maintain Error", func(t *testing.T) {
+	t.Run("NegativeCase - maintain error", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
 		require.Panics(t, func() {

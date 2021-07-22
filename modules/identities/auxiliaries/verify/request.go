@@ -14,7 +14,7 @@ import (
 
 type auxiliaryRequest struct {
 	Address    sdkTypes.AccAddress `json:"address" valid:"required~required field address missing, matches(^[a-z0-9]*$)~field address is invalid"`
-	IdentityID test_types.ID            `json:"identityID" valid:"required~required field identityID missing"`
+	IdentityID test_types.ID       `json:"identityID" valid:"required~required field identityID missing"`
 }
 
 var _ helpers.AuxiliaryRequest = (*auxiliaryRequest)(nil)

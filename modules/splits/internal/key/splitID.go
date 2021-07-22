@@ -14,7 +14,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
@@ -23,7 +22,20 @@ type splitID struct {
 	OwnableID test_types.ID `json:"ownableID" valid:"required~required field ownableID missing"`
 }
 
-var _ types.ID = (*splitID)(nil)
+//TODO: would be generated via proto file
+func (splitID splitID) Size() int {
+	panic("implement me")
+}
+
+func (splitID splitID) MarshalTo(i []byte) (int, error) {
+	panic("implement me")
+}
+
+func (splitID splitID) Unmarshal(i []byte) error {
+	panic("implement me")
+}
+
+var _ test_types.ID = (*splitID)(nil)
 var _ helpers.Key = (*splitID)(nil)
 
 func (splitID splitID) Bytes() []byte {
@@ -38,7 +50,7 @@ func (splitID splitID) String() string {
 
 	return strings.Join(values, constants.SecondOrderCompositeIDSeparator)
 }
-func (splitID splitID) Equals(id types.ID) bool {
+func (splitID splitID) Equals(id test_types.ID) bool {
 	return bytes.Equal(splitID.Bytes(), id.Bytes())
 }
 func (splitID splitID) GenerateStoreKeyBytes() []byte {
@@ -54,7 +66,7 @@ func (splitID splitID) Matches(key helpers.Key) bool {
 	return splitID.Equals(splitIDFromInterface(key))
 }
 
-func NewSplitID(ownerID test_types.ID, ownableID test_types.ID) types.ID {
+func NewSplitID(ownerID test_types.ID, ownableID test_types.ID) test_types.ID {
 	return splitID{
 		OwnerID:   ownerID,
 		OwnableID: ownableID,

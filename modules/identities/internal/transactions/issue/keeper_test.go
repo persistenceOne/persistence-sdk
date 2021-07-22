@@ -118,7 +118,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase-ImmutableScrub Error", func(t *testing.T) {
+	t.Run("NegativeCase-ImmutableScrub error", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
 		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, defaultAddr, defaultIdentityID, defaultClassificationID,

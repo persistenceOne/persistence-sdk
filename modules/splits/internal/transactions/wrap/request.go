@@ -7,8 +7,6 @@ package wrap
 
 import (
 	"encoding/json"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-
 	"github.com/asaskevich/govalidator"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -16,7 +14,9 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 )
 
 type transactionRequest struct {
@@ -61,7 +61,7 @@ func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 
 	return newMessage(
 		from,
-		test_types.NewID(transactionRequest.FromID),
+		testBase.NewID(transactionRequest.FromID),
 		coins,
 	), nil
 }

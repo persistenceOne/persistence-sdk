@@ -14,7 +14,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
-//TODO: Query service amd proto
+//TODO: Query service and proto
 
 type queryRequest struct {
 	IdentityID types.ID `json:"identityID" valid:"required~required field identityID missing"`

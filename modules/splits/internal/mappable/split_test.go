@@ -10,14 +10,14 @@ import (
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/key"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_Split_Methods(t *testing.T) {
 
-	ownerID := base.NewID("ownerID")
-	ownableID := base.NewID("ownableID")
+	ownerID := testBase.NewID("ownerID")
+	ownableID := testBase.NewID("ownableID")
 
 	testSplitID := key.NewSplitID(ownerID, ownableID)
 	testValue := sdkTypes.NewDec(12)

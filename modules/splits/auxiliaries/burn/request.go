@@ -7,17 +7,16 @@ package burn
 
 import (
 	"fmt"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-
 	"github.com/asaskevich/govalidator"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 )
 
 type auxiliaryRequest struct {
-	OwnerID   test_types.ID     `json:"ownerID" valid:"required~required field ownerID missing"`
-	OwnableID test_types.ID     `json:"ownableID" valid:"required~required field ownableID missing"`
-	Value     sdkTypes.Dec `json:"value" valid:"required~required field value missing"`
+	OwnerID   test_types.ID `json:"ownerID" valid:"required~required field ownerID missing"`
+	OwnableID test_types.ID `json:"ownableID" valid:"required~required field ownableID missing"`
+	Value     sdkTypes.Dec  `json:"value" valid:"required~required field value missing"`
 }
 
 var _ helpers.AuxiliaryRequest = (*auxiliaryRequest)(nil)

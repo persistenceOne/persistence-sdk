@@ -22,9 +22,6 @@ import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/rest"
-	//"github.com/cosmos/cosmos-sdk/x/auth"
-	//authClient "github.com/cosmos/cosmos-sdk/x/auth/client/utils"
-	//"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/utilities/rest/queuing"
 	"github.com/spf13/cobra"
@@ -45,15 +42,7 @@ var _ helpers.Transaction = (*transaction)(nil)
 func (transaction transaction) GetName() string { return transaction.name }
 func (transaction transaction) Command() *cobra.Command {
 	runE := func(command *cobra.Command, args []string) error {
-		//var cliContext client.Context
-		//cliContext,err := client.GetClientTxContext(command)
-		//if err!=nil{
-		//	return err
-		//}
-		//txCfg:=cliContext.TxConfig
-		//bufioReader := bufio.NewReader(command.InOrStdin())
-		//txBuilder,err := txCfg.WrapTxBuilder()
-		//transactionBuilder := auth.NewTxBuilderFromCLI(bufioReader).WithTxEncoder(authClient.GetTxEncoder(codec))
+
 
 		cliContext,Error := client.GetClientTxContext(command)
 		if Error != nil {
@@ -179,17 +168,6 @@ func (transaction transaction) RESTRequestHandler(cliContext client.Context) htt
 			return
 		}
 
-		//simAndExec, gas, Error := flags.ParseGas(baseReq.Gas)
-		//if Error != nil {
-		//	rest.WriteErrorResponse(responseWriter, http.StatusBadRequest, Error.Error())
-		//	return
-		//}
-
-		//txBuilder := types.NewTxBuilder(
-		//	authClient.GetTxEncoder(cliContext.Codec), baseReq.AccountNumber, baseReq.Sequence, gas, gasAdj,
-		//	baseReq.Simulate, baseReq.ChainID, baseReq.Memo, baseReq.Fees, baseReq.GasPrices,
-		//)
-		//msgList := []sdkTypes.Msg{msg}
 
 		if baseReq.Simulate || gasSetting.Simulate {
 			if gasAdj < 0 {
@@ -204,11 +182,6 @@ func (transaction transaction) RESTRequestHandler(cliContext client.Context) htt
 
 			txf = txf.WithGas(adjusted)
 
-			//txBuilder, Error = authClient.EnrichWithGas(txBuilder, cliContext, msgList)
-			//if Error != nil {
-			//	rest.WriteErrorResponse(responseWriter, http.StatusBadRequest, Error.Error())
-			//	return
-			//}
 
 			if baseReq.Simulate {
 				rest.WriteSimulationResponse(responseWriter, cliContext.LegacyAmino, txf.Gas())
@@ -219,15 +192,6 @@ func (transaction transaction) RESTRequestHandler(cliContext client.Context) htt
 
 
 
-		//fromAddress, fromName, Error := cliContext.
-		//if Error != nil {
-		//	rest.WriteErrorResponse(responseWriter, http.StatusBadRequest, Error.Error())
-		//	return
-		//}
-		//
-		//cliContext = cliContext.WithFromAddress(fromAddress)
-		//cliContext = cliContext.WithFromName(fromName)
-		//cliContext = cliContext.WithBroadcastMode(viper.GetString(flags.FlagBroadcastMode))
 
 		if queuing.KafkaState.IsEnabled {
 			ticketID := queuing.TicketID(random.GenerateID(transaction.name))
@@ -236,20 +200,7 @@ func (transaction transaction) RESTRequestHandler(cliContext client.Context) htt
 			responseWriter.WriteHeader(http.StatusAccepted)
 			_, _ = responseWriter.Write(jsonResponse)
 		} else {
-			//accountNumber, sequence, Error := types.NewAccountRetriever(cliContext).GetAccountNumberSequence(fromAddress)
-			//if Error != nil {
-			//	rest.WriteErrorResponse(responseWriter, http.StatusBadRequest, Error.Error())
-			//	return
-			//}
-			//
-			//txBuilder = txBuilder.WithAccountNumber(accountNumber)
-			//txBuilder = txBuilder.WithSequence(sequence)
-			//
-			//stdMsg, Error := txBuilder.BuildAndSign(fromName, keys.DefaultKeyPass, msgList)
-			//if Error != nil {
-			//	rest.WriteErrorResponse(responseWriter, http.StatusBadRequest, Error.Error())
-			//	return
-			//}
+
 			txBuilder, err := tx.BuildUnsignedTx(txf,msg)
 			if rest.CheckBadRequestError(responseWriter, err) {
 				return

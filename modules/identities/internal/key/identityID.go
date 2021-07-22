@@ -21,7 +21,7 @@ import (
 )
 
 type identityID struct {
-	ClassificationID types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
+	ClassificationID types.ID      `json:"classificationID" valid:"required~required field classificationID missing"`
 	HashID           test_types.ID `json:"hashID" valid:"required~required field hashID missing"`
 }
 

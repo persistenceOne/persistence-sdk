@@ -21,17 +21,17 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type TransactionResponse struct {
+type transactionResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Success bool   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Error   string `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	success bool  `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	error   error `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
 }
 
-func (x *TransactionResponse) Reset() {
-	*x = TransactionResponse{}
+func (x *transactionResponse) Reset() {
+	*x = transactionResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_identities_transactions_nub_v1beta1_response_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -39,13 +39,13 @@ func (x *TransactionResponse) Reset() {
 	}
 }
 
-func (x *TransactionResponse) String() string {
+func (x *transactionResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TransactionResponse) ProtoMessage() {}
+func (*transactionResponse) ProtoMessage() {}
 
-func (x *TransactionResponse) ProtoReflect() protoreflect.Message {
+func (x *transactionResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_identities_transactions_nub_v1beta1_response_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -57,24 +57,18 @@ func (x *TransactionResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TransactionResponse.ProtoReflect.Descriptor instead.
-func (*TransactionResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use transactionResponse.ProtoReflect.Descriptor instead.
+func (*transactionResponse) Descriptor() ([]byte, []int) {
 	return file_proto_identities_transactions_nub_v1beta1_response_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *TransactionResponse) GetSuccess() bool {
+func (x *transactionResponse) GetSuccess() bool {
 	if x != nil {
-		return x.Success
+		return x.success
 	}
 	return false
 }
 
-func (x *TransactionResponse) GetError() string {
-	if x != nil {
-		return x.Error
-	}
-	return ""
-}
 
 var File_proto_identities_transactions_nub_v1beta1_response_proto protoreflect.FileDescriptor
 
@@ -113,7 +107,7 @@ func file_proto_identities_transactions_nub_v1beta1_response_proto_rawDescGZIP()
 
 var file_proto_identities_transactions_nub_v1beta1_response_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_proto_identities_transactions_nub_v1beta1_response_proto_goTypes = []interface{}{
-	(*TransactionResponse)(nil), // 0: identities.transactions.nub.v1beta1.transactionResponse
+	(*transactionResponse)(nil), // 0: identities.transactions.nub.v1beta1.transactionResponse
 }
 var file_proto_identities_transactions_nub_v1beta1_response_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -130,7 +124,7 @@ func file_proto_identities_transactions_nub_v1beta1_response_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_proto_identities_transactions_nub_v1beta1_response_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TransactionResponse); i {
+			switch v := v.(*transactionResponse); i {
 			case 0:
 				return &v.state
 			case 1:

@@ -559,6 +559,8 @@ func (application application) Initialize(applicationName string, encodingConfig
 		splitsModule.GetAuxiliary(transfer.Auxiliary.GetName()),
 	)
 
+	//TODO:wasmkeeper changed commented for now
+
 	//var wasmRouter = baseApp.Router()
 
 	//wasmDir := filepath.Join(home, wasm.ModuleName)

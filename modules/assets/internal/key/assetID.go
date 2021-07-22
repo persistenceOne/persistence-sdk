@@ -25,7 +25,21 @@ type assetID struct {
 	HashID           test_types.ID `json:"hashID" valid:"required~required field hashID missing"`
 }
 
-var _ types.ID = (*assetID)(nil)
+//TODO:generate via proto below methods would be generated
+
+func (assetID assetID) Size() int {
+	panic("implement me")
+}
+
+func (assetID assetID) MarshalTo(i []byte) (int, error) {
+	panic("implement me")
+}
+
+func (assetID assetID) Unmarshal(i []byte) error {
+	panic("implement me")
+}
+
+var _ test_types.ID = (*assetID)(nil)
 var _ helpers.Key = (*assetID)(nil)
 
 func (assetID assetID) Bytes() []byte {
@@ -42,7 +56,7 @@ func (assetID assetID) String() string {
 
 	return strings.Join(values, constants.FirstOrderCompositeIDSeparator)
 }
-func (assetID assetID) Equals(id types.ID) bool {
+func (assetID assetID) Equals(id test_types.ID) bool {
 	return bytes.Equal(assetID.Bytes(), id.Bytes())
 }
 func (assetID assetID) GenerateStoreKeyBytes() []byte {
@@ -58,7 +72,7 @@ func (assetID assetID) Matches(key helpers.Key) bool {
 	return assetID.Equals(assetIDFromInterface(key))
 }
 
-func NewAssetID(classificationID test_types.ID, immutableProperties types.Properties) types.ID {
+func NewAssetID(classificationID test_types.ID, immutableProperties types.Properties) test_types.ID {
 	return assetID{
 		ClassificationID: classificationID,
 		HashID:           base.HasImmutables{Properties: immutableProperties}.GenerateHashID(),

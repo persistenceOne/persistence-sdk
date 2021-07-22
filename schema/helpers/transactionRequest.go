@@ -21,6 +21,6 @@ type TransactionRequest interface {
 	FromJSON(json.RawMessage) (TransactionRequest, error)
 	MakeMsg() (sdkTypes.Msg, error)
 	//TODO: how to use protocodec
-	RegisterCodec(codec *codec.LegacyAmino)
+	RegisterCodec(*codec.LegacyAmino)
 	Request
 }

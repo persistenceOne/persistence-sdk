@@ -22,17 +22,17 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type TransactionRequest struct {
+type transactionRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	BaseReq *test_types.BaseReq `protobuf:"bytes,1,opt,name=BaseReq,proto3" json:"BaseReq,omitempty"`
-	NubId   string              `protobuf:"bytes,2,opt,name=nub_id,json=nubId,proto3" json:"nub_id,omitempty"`
+	BaseReq test_types.BaseReq `protobuf:"bytes,1,opt,name=BaseReq,proto3" json:"BaseReq,omitempty"`
+	NubID  string              `protobuf:"bytes,2,opt,name=nub_id,json=nubId,proto3" json:"nub_id,omitempty"`
 }
 
-func (x *TransactionRequest) Reset() {
-	*x = TransactionRequest{}
+func (x *transactionRequest) Reset() {
+	*x = transactionRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_identities_transactions_nub_v1beta1_request_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -40,13 +40,13 @@ func (x *TransactionRequest) Reset() {
 	}
 }
 
-func (x *TransactionRequest) String() string {
+func (x *transactionRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TransactionRequest) ProtoMessage() {}
+func (*transactionRequest) ProtoMessage() {}
 
-func (x *TransactionRequest) ProtoReflect() protoreflect.Message {
+func (x *transactionRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_identities_transactions_nub_v1beta1_request_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -58,21 +58,15 @@ func (x *TransactionRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TransactionRequest.ProtoReflect.Descriptor instead.
-func (*TransactionRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use transactionRequest.ProtoReflect.Descriptor instead.
+func (*transactionRequest) Descriptor() ([]byte, []int) {
 	return file_proto_identities_transactions_nub_v1beta1_request_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *TransactionRequest) GetBaseReq() *test_types.BaseReq {
-	if x != nil {
-		return x.BaseReq
-	}
-	return nil
-}
 
-func (x *TransactionRequest) GetNubId() string {
+func (x *transactionRequest) GetNubId() string {
 	if x != nil {
-		return x.NubId
+		return x.NubID
 	}
 	return ""
 }
@@ -115,7 +109,7 @@ func file_proto_identities_transactions_nub_v1beta1_request_proto_rawDescGZIP() 
 
 var file_proto_identities_transactions_nub_v1beta1_request_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_proto_identities_transactions_nub_v1beta1_request_proto_goTypes = []interface{}{
-	(*TransactionRequest)(nil), // 0: base.transactionRequest
+	(*transactionRequest)(nil), // 0: base.transactionRequest
 	(*test_types.BaseReq)(nil), // 1: base.BaseReq
 }
 var file_proto_identities_transactions_nub_v1beta1_request_proto_depIdxs = []int32{
@@ -134,7 +128,7 @@ func file_proto_identities_transactions_nub_v1beta1_request_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_proto_identities_transactions_nub_v1beta1_request_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TransactionRequest); i {
+			switch v := v.(*transactionRequest); i {
 			case 0:
 				return &v.state
 			case 1:

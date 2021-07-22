@@ -20,8 +20,8 @@ import (
 
 type message struct {
 	From      sdkTypes.AccAddress `json:"from" valid:"required~required field from missing"`
-	FromID    test_types.ID            `json:"fromID" valid:"required~required field fromID missing"`
-	OwnableID test_types.ID            `json:"ownableID" valid:"required~required field ownableID missing"`
+	FromID    test_types.ID       `json:"fromID" valid:"required~required field fromID missing"`
+	OwnableID test_types.ID       `json:"ownableID" valid:"required~required field ownableID missing"`
 	Value     sdkTypes.Int        `json:"value" valid:"required~required field value missing"`
 }
 

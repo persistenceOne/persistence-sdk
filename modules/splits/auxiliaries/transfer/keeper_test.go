@@ -83,35 +83,35 @@ func Test_Transfer_Aux_Keeper_Help(t *testing.T) {
 	splits := sdkTypes.NewDec(123)
 	keepers.SplitsKeeper.(auxiliaryKeeper).mapper.NewCollection(context).Add(mappable.NewSplit(defaultSplitID, splits))
 
-	t.Run("Positive case-  Value transfer", func(t *testing.T) {
+	t.Run("Positive case-  value transfer", func(t *testing.T) {
 		want := newAuxiliaryResponse(nil)
 		if got := keepers.SplitsKeeper.Help(context, NewAuxiliaryRequest(ownerID, toID, ownableID, sdkTypes.NewDec(1))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
 
-	t.Run("Positive case-  Value transfer", func(t *testing.T) {
+	t.Run("Positive case-  value transfer", func(t *testing.T) {
 		want := newAuxiliaryResponse(nil)
 		if got := keepers.SplitsKeeper.Help(context, NewAuxiliaryRequest(ownerID, toID, ownableID, sdkTypes.NewDec(1))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
 
-	t.Run("Positive case-  Value transfer", func(t *testing.T) {
+	t.Run("Positive case-  value transfer", func(t *testing.T) {
 		want := newAuxiliaryResponse(nil)
 		if got := keepers.SplitsKeeper.Help(context, NewAuxiliaryRequest(toID, ownerID, ownableID, sdkTypes.NewDec(2))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
 
-	t.Run("NegativeCase-0 Value transfer", func(t *testing.T) {
+	t.Run("NegativeCase-0 value transfer", func(t *testing.T) {
 		want := newAuxiliaryResponse(errors.NotAuthorized)
 		if got := keepers.SplitsKeeper.Help(context, NewAuxiliaryRequest(ownerID, toID, ownableID, sdkTypes.NewDec(0))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
 
-	t.Run("NegativeCase-No Value Present", func(t *testing.T) {
+	t.Run("NegativeCase-No value Present", func(t *testing.T) {
 		t.Parallel()
 		want := newAuxiliaryResponse(errors.EntityNotFound)
 		if got := keepers.SplitsKeeper.Help(context, NewAuxiliaryRequest(ownerID, toID, base.NewID("ownableIDNotPresent"), sdkTypes.NewDec(1))); !reflect.DeepEqual(got, want) {

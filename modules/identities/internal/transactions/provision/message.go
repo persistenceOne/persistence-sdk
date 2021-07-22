@@ -21,7 +21,7 @@ import (
 type message struct {
 	From       sdkTypes.AccAddress `json:"from" valid:"required~required field from missing, matches(^[a-z0-9]*$)~field from is invalid"`
 	To         sdkTypes.AccAddress `json:"to" valid:"required~required field to missing, matches(^[a-z0-9]*$)~field to is invalid"`
-	IdentityID test_types.ID            `json:"identityID" valid:"required~required field identityID missing"`
+	IdentityID test_types.ID       `json:"identityID" valid:"required~required field identityID missing"`
 }
 
 func (message message) Reset() {

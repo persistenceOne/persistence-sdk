@@ -7,6 +7,7 @@ package key
 
 import (
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"strings"
 
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
@@ -15,16 +16,16 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-func readAssetID(assetIDString string) types.ID {
+func readAssetID(assetIDString string) test_types.ID {
 	idList := strings.Split(assetIDString, constants.FirstOrderCompositeIDSeparator)
 	if len(idList) == 2 {
 		return assetID{
-			ClassificationID: test_types.NewID(idList[0]),
-			HashID:           test_types.NewID(idList[1]),
+			ClassificationID: base.NewID(idList[0]),
+			HashID:           base.NewID(idList[1]),
 		}
 	}
 
-	return assetID{ClassificationID: test_types.NewID(""), HashID: test_types.NewID("")}
+	return assetID{ClassificationID: base.NewID(""), HashID: base.NewID("")}
 }
 func assetIDFromInterface(i interface{}) assetID {
 	switch value := i.(type) {

@@ -5,7 +5,9 @@
 
 package types
 
+import "github.com/persistenceOne/persistenceSDK/schema/test_types"
+
 type Property interface {
-	GetID() ID
+	GetID() test_types.ID
 	GetFact() Fact
 }
