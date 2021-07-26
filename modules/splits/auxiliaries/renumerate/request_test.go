@@ -6,17 +6,17 @@
 package renumerate
 
 import (
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_Burn_Request(t *testing.T) {
 
-	ownerID := base.NewID("ownerID")
-	ownableID := base.NewID("ownableID")
+	ownerID := testBase.NewID("ownerID")
+	ownableID := testBase.NewID("ownableID")
 	testValue := sdkTypes.NewDec(10)
 	testAuxiliaryRequest := NewAuxiliaryRequest(ownerID, ownableID, testValue)
 

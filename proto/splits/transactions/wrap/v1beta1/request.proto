@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package base;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "third_party/proto/cosmos_proto/cosmos.proto";
+import "proto/cosmos/base/v1beta1/basereq.proto";
+
+option go_package = "modules/splits/internal/transactions/wrap";
+
+message transactionRequest {
+  option (gogoproto.equal)            = false;
+  option (cosmos_proto.implements_interface) = "TransactionRequest";
+
+  cosmos.base.v1beta1.BaseReq base_req =1 [(gogoproto.nullable) = false];
+  string from_iD  = 2;
+  string coins = 3;
+}

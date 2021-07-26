@@ -6,17 +6,17 @@
 package transfer
 
 import (
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_Transfer_Request(t *testing.T) {
-	fromID := base.NewID("fromID")
-	toID := base.NewID("toID")
-	ownableID := base.NewID("ownableID")
+	fromID := testBase.NewID("fromID")
+	toID := testBase.NewID("toID")
+	ownableID := testBase.NewID("ownableID")
 	splits := sdkTypes.NewDec(10)
 	testAuxiliaryRequest := NewAuxiliaryRequest(fromID, toID, ownableID, splits)
 

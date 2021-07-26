@@ -4,28 +4,31 @@
 */
 
 package burn
-
 import (
-	"reflect"
-	"testing"
-
 	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/cosmos/cosmos-sdk/std"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
-	"github.com/cosmos/cosmos-sdk/x/params"
+	"github.com/cosmos/cosmos-sdk/x/auth/tx"
+	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/key"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/mappable"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/parameters"
 	"github.com/persistenceOne/persistenceSDK/schema"
+	"github.com/persistenceOne/persistenceSDK/schema/applications"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
-	abciTypes "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
+	"reflect"
+	"testing"
 )
 
 type TestKeepers struct {
@@ -33,20 +36,31 @@ type TestKeepers struct {
 }
 
 func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
-	var Codec = codec.New()
+	var Codec = codec.NewLegacyAmino()
 	schema.RegisterCodec(Codec)
-	sdkTypes.RegisterCodec(Codec)
-	codec.RegisterCrypto(Codec)
 	codec.RegisterEvidences(Codec)
-	vesting.RegisterCodec(Codec)
-	Codec.Seal()
+	vestingTypes.RegisterLegacyAminoCodec(Codec)
+
+	interfaceRegistry := types.NewInterfaceRegistry()
+	marshaler := codec.NewProtoCodec(interfaceRegistry)
+	txCfg := tx.NewTxConfig(marshaler, tx.DefaultSignModes)
+	std.RegisterLegacyAminoCodec(Codec)
+	std.RegisterInterfaces(interfaceRegistry)
+
+	encodingConfig := applications.EncodingConfig{
+		InterfaceRegistry: interfaceRegistry,
+		Marshaler:         marshaler,
+		TxConfig:          txCfg,
+		Amino:             Codec,
+	}
 
 	storeKey := sdkTypes.NewKVStoreKey("test")
 	paramsStoreKey := sdkTypes.NewKVStoreKey("testParams")
 	paramsTransientStoreKeys := sdkTypes.NewTransientStoreKey("testParamsTransient")
 	Mapper := baseHelpers.NewMapper(key.Prototype, mappable.Prototype).Initialize(storeKey)
-	paramsKeeper := params.NewKeeper(
-		Codec,
+	paramsKeeper := paramsKeeper.NewKeeper(
+		encodingConfig.Marshaler,
+		encodingConfig.Amino,
 		paramsStoreKey,
 		paramsTransientStoreKeys,
 	)
@@ -60,7 +74,7 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
 	Error := commitMultiStore.LoadLatestVersion()
 	require.Nil(t, Error)
 
-	context := sdkTypes.NewContext(commitMultiStore, abciTypes.Header{
+	context := sdkTypes.NewContext(commitMultiStore, tendermintTypes.Header{
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 
@@ -76,11 +90,11 @@ func Test_Burn_Aux_Keeper_Help(t *testing.T) {
 
 	context, keepers := CreateTestInput(t)
 
-	ownerID := base.NewID("ownerID")
-	ownableID := base.NewID("ownableID")
+	ownerID := testBase.NewID("ownerID")
+	ownableID := testBase.NewID("ownableID")
 
-	ownerID2 := base.NewID("ownerID2")
-	ownableID2 := base.NewID("ownableID2")
+	ownerID2 := testBase.NewID("ownerID2")
+	ownableID2 := testBase.NewID("ownableID2")
 
 	splitID := key.NewSplitID(ownerID, ownableID)
 	splitID2 := key.NewSplitID(ownerID2, ownableID2)
@@ -102,7 +116,7 @@ func Test_Burn_Aux_Keeper_Help(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase-Nil value", func(t *testing.T) {
+	t.Run("NegativeCase-Nil Value", func(t *testing.T) {
 		t.Parallel()
 		want := newAuxiliaryResponse(errors.EntityNotFound)
 		if got := keepers.SplitsKeeper.Help(context, NewAuxiliaryRequest(base.NewID("negativeTestOwner"), base.NewID("negativeTestOwnable"), sdkTypes.NewDec(1))); !reflect.DeepEqual(got, want) {

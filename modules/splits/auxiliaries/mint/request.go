@@ -11,6 +11,7 @@ import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 )
 
 type auxiliaryRequest struct {
@@ -37,8 +38,8 @@ func auxiliaryRequestFromInterface(request helpers.AuxiliaryRequest) auxiliaryRe
 
 func NewAuxiliaryRequest(ownerID fmt.Stringer, ownableID fmt.Stringer, value sdkTypes.Dec) helpers.AuxiliaryRequest {
 	return auxiliaryRequest{
-		OwnerID:   test_types.NewID(ownerID.String()),
-		OwnableID: test_types.NewID(ownableID.String()),
+		OwnerID:   testBase.NewID(ownerID.String()),
+		OwnableID: testBase.NewID(ownableID.String()),
 		Value:     value,
 	}
 }

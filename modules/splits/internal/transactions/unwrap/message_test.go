@@ -6,19 +6,19 @@
 package unwrap
 
 import (
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_Unwrap_Message(t *testing.T) {
 
-	testFromID := base.NewID("fromID")
-	testOwnableID := base.NewID("ownableID")
+	testFromID := testBase.NewID("fromID")
+	testOwnableID := testBase.NewID("ownableID")
 	testSplit := sdkTypes.NewInt(2)
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
@@ -36,5 +36,6 @@ func Test_Unwrap_Message(t *testing.T) {
 	require.Equal(t, testMessage, messageFromInterface(testMessage))
 	require.Equal(t, message{}, messageFromInterface(nil))
 	require.Equal(t, message{}, messagePrototype())
+
 
 }
