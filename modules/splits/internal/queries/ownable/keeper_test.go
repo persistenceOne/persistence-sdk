@@ -21,7 +21,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -81,8 +81,8 @@ func Test_Query_Keeper_Split(t *testing.T) {
 
 	context, keepers := CreateTestInput2(t)
 
-	ownerID := test_types.NewID("ownerID")
-	ownableID := test_types.NewID("ownableID")
+	ownerID := base.NewID("ownerID")
+	ownableID := base.NewID("ownableID")
 	splitID := key.NewSplitID(ownerID, ownableID)
 	keepers.(queryKeeper).mapper.NewCollection(context).Add(mappable.NewSplit(splitID, sdkTypes.NewDec(123)))
 

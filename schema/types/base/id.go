@@ -11,10 +11,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type id struct {
-	IDString string `json:"idString"`
-}
-
 var _ types.ID = (*id)(nil)
 
 func (id id) String() string {

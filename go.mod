@@ -20,6 +20,7 @@ require (
 	github.com/tendermint/crypto v0.0.0-20191022145703-50d29ede1e15
 	github.com/tendermint/tendermint v0.34.10
 	github.com/tendermint/tm-db v0.6.4
+	google.golang.org/grpc v1.37.0
 	honnef.co/go/tools v0.0.1-2020.1.6
 )
 

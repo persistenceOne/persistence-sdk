@@ -22,6 +22,16 @@ type assetID struct {
 	HashID           types.ID `json:"hashID" valid:"required~required field hashID missing"`
 }
 
+func (assetID assetID) Size() int {
+	panic("implement me")
+}
+func (assetID assetID) MarshalTo(i []byte) (int, error) {
+	panic("implement me")
+}
+func (assetID assetID) Unmarshal(i []byte) error {
+	panic("implement me")
+}
+
 var _ types.ID = (*assetID)(nil)
 var _ helpers.Key = (*assetID)(nil)
 
@@ -59,6 +69,5 @@ func NewAssetID(classificationID types.ID, immutableProperties types.Properties)
 	return assetID{
 		ClassificationID: classificationID,
 		HashID:           base.HasImmutables{Properties: immutableProperties}.GenerateHashID(),
-		//TODO : Change the types of HasID
 	}
 }

@@ -16,6 +16,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
@@ -56,8 +57,8 @@ func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 
 	return newMessage(
 		from,
-		test_types.NewID(transactionRequest.FromID),
-		test_types.NewID(transactionRequest.OwnableID),
+		base.NewID(transactionRequest.FromID),
+		base.NewID(transactionRequest.OwnableID),
 		value,
 	), nil
 }

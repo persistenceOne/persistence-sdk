@@ -65,13 +65,6 @@ func (m *transactionRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_TransactionRequest proto.InternalMessageInfo
 
-//func (m *TransactionRequest) GetBaseReq() test_types.BaseReq {
-//	if m != nil {
-//		return m.BaseReq
-//	}
-//	return test_types.BaseReq{}
-//}
-
 func (m *transactionRequest) GetFromID() string {
 	if m != nil {
 		return m.FromID

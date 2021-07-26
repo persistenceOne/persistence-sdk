@@ -5,11 +5,19 @@
 
 package helpers
 
-import "github.com/cosmos/cosmos-sdk/codec"
+import (
+	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/codec/types"
+)
 
 func RegisterCodec(codec *codec.LegacyAmino) {
 	codec.RegisterInterface((*Mappable)(nil), nil)
 	codec.RegisterInterface((*QueryRequest)(nil), nil)
 	codec.RegisterInterface((*QueryResponse)(nil), nil)
 	codec.RegisterInterface((*TransactionRequest)(nil), nil)
+}
+
+func RegisterInterfaces(registry types.InterfaceRegistry) {
+	registry.RegisterImplementations((*Mappable)(nil))
+
 }

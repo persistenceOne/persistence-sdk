@@ -11,7 +11,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
@@ -19,8 +18,20 @@ import (
 )
 
 type identityID struct {
-	ClassificationID test_types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
-	HashID           test_types.ID `json:"hashID" valid:"required~required field hashID missing"`
+	ClassificationID types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
+	HashID           types.ID `json:"hashID" valid:"required~required field hashID missing"`
+}
+
+func (identityID identityID) Size() int {
+	panic("implement me")
+}
+
+func (identityID identityID) MarshalTo(i []byte) (int, error) {
+	panic("implement me")
+}
+
+func (identityID identityID) Unmarshal(i []byte) error {
+	panic("implement me")
 }
 
 var _ types.ID = (*identityID)(nil)
@@ -55,7 +66,7 @@ func (identityID identityID) Matches(key helpers.Key) bool {
 	return identityID.Equals(identityIDFromInterface(key))
 }
 
-func NewIdentityID(classificationID test_types.ID, immutableProperties types.Properties) types.ID {
+func NewIdentityID(classificationID types.ID, immutableProperties types.Properties) types.ID {
 	return identityID{
 		ClassificationID: classificationID,
 		HashID:           baseTraits.HasImmutables{Properties: immutableProperties}.GenerateHashID(),

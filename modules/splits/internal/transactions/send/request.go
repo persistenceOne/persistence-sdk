@@ -15,6 +15,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
@@ -58,9 +59,9 @@ func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 
 	return newMessage(
 		from,
-		test_types.NewID(transactionRequest.FromID),
-		test_types.NewID(transactionRequest.ToID),
-		test_types.NewID(transactionRequest.OwnableID),
+		base.NewID(transactionRequest.FromID),
+		base.NewID(transactionRequest.ToID),
+		base.NewID(transactionRequest.OwnableID),
 		value,
 	), nil
 }
@@ -70,7 +71,7 @@ func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
 func requestPrototype() helpers.TransactionRequest {
 	return transactionRequest{}
 }
-func newTransactionRequest(baseReq test_types.BaseReq, fromID string, toID string, ownableID string, value string) transactionRequest {
+func newTransactionRequest(baseReq test_types.BaseReq, fromID string, toID string, ownableID string, value string) helpers.TransactionRequest {
 	return transactionRequest{
 		BaseReq:   baseReq,
 		FromID:    fromID,

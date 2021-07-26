@@ -15,4 +15,7 @@ type MetaProperties interface {
 	Mutate(...MetaProperty) MetaProperties
 
 	RemoveData() Properties
+
+	//New addition
+	Size() int
 }

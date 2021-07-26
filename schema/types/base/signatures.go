@@ -9,10 +9,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type signatures struct {
-	SignatureList []types.Signature `json:"signatureList"`
-}
-
 var _ types.Signatures = (*signatures)(nil)
 
 func (signatures signatures) Get(id types.ID) types.Signature {

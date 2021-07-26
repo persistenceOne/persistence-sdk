@@ -8,7 +8,7 @@ package unwrap
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -16,8 +16,8 @@ import (
 
 func Test_Unwrap_Message(t *testing.T) {
 
-	testFromID := test_types.NewID("fromID")
-	testOwnableID := test_types.NewID("ownableID")
+	testFromID := base.NewID("fromID")
+	testOwnableID := base.NewID("ownableID")
 	testSplit := sdkTypes.NewInt(2)
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"

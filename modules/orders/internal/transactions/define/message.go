@@ -18,27 +18,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
 
-type message struct {
-	From                    sdkTypes.AccAddress  `json:"from" valid:"required~required field from missing"`
-	FromID                  types.ID             `json:"fromID" valid:"required~required field fromID missing"`
-	ImmutableMetaProperties types.MetaProperties `json:"immutableMetaProperties" valid:"required~required field immutableMetaProperties missing"`
-	ImmutableProperties     types.Properties     `json:"immutableProperties" valid:"required~required field immutableProperties missing"`
-	MutableMetaProperties   types.MetaProperties `json:"mutableMetaProperties" valid:"required~required field mutableMetaProperties missing"`
-	MutableProperties       types.Properties     `json:"mutableProperties" valid:"required~required field mutableProperties missing"`
-}
-
-func (message message) Reset() {
-	panic("implement me")
-}
-
-func (message message) String() string {
-	panic("implement me")
-}
-
-func (message message) ProtoMessage() {
-	panic("implement me")
-}
-
 var _ sdkTypes.Msg = message{}
 
 func (message message) Route() string { return module.Name }

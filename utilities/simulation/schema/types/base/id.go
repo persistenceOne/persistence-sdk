@@ -6,14 +6,12 @@
 package base
 
 import (
+	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	simulationTypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"math/rand"
 	"strconv"
-
-	simulationTypes "github.com/cosmos/cosmos-sdk/types/simulation"
-
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 )
 
 func GenerateRandomID(r *rand.Rand) types.ID {

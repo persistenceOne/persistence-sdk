@@ -29,12 +29,11 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
-
 	"reflect"
 	"testing"
 )
@@ -116,8 +115,8 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	context, keepers := CreateTestInput(t)
 	defaultAddr := sdkTypes.AccAddress("addr")
 	verifyMockErrorAddress := sdkTypes.AccAddress("verifyError")
-	ownableID := test_types.NewID("stake")
-	fromID := test_types.NewID("fromID")
+	ownableID := base.NewID("stake")
+	fromID := base.NewID("fromID")
 	coins := func(amount int64) sdkTypes.Coins {
 		return sdkTypes.NewCoins(sdkTypes.NewCoin("stake", sdkTypes.NewInt(amount)))
 	}
@@ -171,7 +170,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	t.Run("NegativeCase-Value Not found", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.EntityNotFound)
-		if got := keepers.SplitsKeeper.Transact(context, newMessage(defaultAddr, test_types.NewID("id"), ownableID, sdkTypes.NewInt(10))); !reflect.DeepEqual(got, want) {
+		if got := keepers.SplitsKeeper.Transact(context, newMessage(defaultAddr, base.NewID("id"), ownableID, sdkTypes.NewInt(10))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})

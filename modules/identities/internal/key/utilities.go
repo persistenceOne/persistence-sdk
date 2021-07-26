@@ -8,8 +8,8 @@ package key
 import (
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"strings"
 )
 
@@ -17,12 +17,12 @@ func readIdentityID(identityIDString string) types.ID {
 	idList := strings.Split(identityIDString, constants.FirstOrderCompositeIDSeparator)
 	if len(idList) == 2 {
 		return identityID{
-			ClassificationID: test_types.NewID(idList[0]),
-			HashID:           test_types.NewID(idList[1]),
+			ClassificationID: base.NewID(idList[0]),
+			HashID:           base.NewID(idList[1]),
 		}
 	}
 
-	return identityID{ClassificationID: test_types.NewID(""), HashID: test_types.NewID("")}
+	return identityID{ClassificationID: base.NewID(""), HashID: base.NewID("")}
 }
 
 func identityIDFromInterface(i interface{}) identityID {
@@ -36,6 +36,6 @@ func identityIDFromInterface(i interface{}) identityID {
 	}
 }
 
-func FromID(id test_types.ID) helpers.Key {
+func FromID(id types.ID) helpers.Key {
 	return identityIDFromInterface(id)
 }

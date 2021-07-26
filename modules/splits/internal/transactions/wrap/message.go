@@ -13,7 +13,7 @@ import (
 	xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
@@ -51,7 +51,7 @@ func messagePrototype() helpers.Message {
 	return message{}
 }
 
-func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, coins sdkTypes.Coins) message {
+func newMessage(from sdkTypes.AccAddress, fromID types.ID, coins sdkTypes.Coins) message {
 	return message{
 		From:   from,
 		FromID: fromID,

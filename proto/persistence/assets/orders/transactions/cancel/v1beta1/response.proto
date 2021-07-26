@@ -1,0 +1,15 @@
+syntax="proto3";
+
+package persistence.assets.orders.transactions.cancel.v1beta1;
+
+import "third_party/proto/cosmos_proto/cosmos.proto";
+import "third_party/proto/gogoproto/gogo.proto";
+
+option go_package = "modules/orders/internal/transactions/cancel";
+
+message transactionResponse {
+  option (gogoproto.equal) = false;
+
+  bool success =1;
+  string error =2 [ (gogoproto.customtype) = "error", (gogoproto.nullable) = false];
+}

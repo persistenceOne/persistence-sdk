@@ -12,12 +12,6 @@ import (
 	"github.com/tendermint/tendermint/crypto"
 )
 
-type signature struct {
-	ID             types.ID     `json:"id"`
-	SignatureBytes []byte       `json:"signatureBytes"`
-	ValidityHeight types.Height `json:"validityHeight"`
-}
-
 var _ types.Signature = (*signature)(nil)
 
 func (baseSignature signature) String() string {

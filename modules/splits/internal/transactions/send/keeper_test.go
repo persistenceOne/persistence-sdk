@@ -6,31 +6,32 @@
 package send
 
 import (
-	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/std"
-	"github.com/cosmos/cosmos-sdk/store"
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	parKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
-	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/constants/test"
+	"github.com/persistenceOne/persistenceSDK/schema/applications"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	tendermintProto "github.com/tendermint/tendermint/proto/tendermint/types"
+	"reflect"
+	"testing"
+
+	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/store"
+	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/auxiliaries/verify"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/key"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/mappable"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/parameters"
 	"github.com/persistenceOne/persistenceSDK/schema"
-	"github.com/persistenceOne/persistenceSDK/schema/applications"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
-	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
-	"reflect"
-	"testing"
 )
 
 type TestKeepers struct {
@@ -38,7 +39,6 @@ type TestKeepers struct {
 }
 
 func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
-	//interfaceReg:= types.InterfaceRegistry()
 	var Codec = codec.NewLegacyAmino()
 	schema.RegisterCodec(Codec)
 	codec.RegisterEvidences(Codec)
@@ -77,7 +77,7 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
 	Error := commitMultiStore.LoadLatestVersion()
 	require.Nil(t, Error)
 
-	context := sdkTypes.NewContext(commitMultiStore, tendermintTypes.Header{
+	context := sdkTypes.NewContext(commitMultiStore, tendermintProto.Header{
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 
@@ -95,9 +95,9 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	defaultAddr := sdkTypes.AccAddress("addr")
 	verifyMockErrorAddress := sdkTypes.AccAddress("verifyError")
 
-	fromID := test_types.NewID("fromID")
-	toID := test_types.NewID("toID")
-	ownableID := test_types.NewID("stake")
+	fromID := base.NewID("fromID")
+	toID := base.NewID("toID")
+	ownableID := base.NewID("stake")
 
 	keepers.SplitsKeeper.(transactionKeeper).mapper.NewCollection(context).Add(mappable.NewSplit(key.NewSplitID(fromID, ownableID), sdkTypes.NewDec(100)))
 
@@ -123,7 +123,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase-Negative Value exchange", func(t *testing.T) {
+	t.Run("NegativeCase-Negative value exchange", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.NotAuthorized)
 		if got := keepers.SplitsKeeper.Transact(context, newMessage(defaultAddr, fromID, toID, ownableID, sdkTypes.NewDec(-1))); !reflect.DeepEqual(got, want) {
@@ -131,10 +131,10 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase-Value not found", func(t *testing.T) {
+	t.Run("NegativeCase-value not found", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.EntityNotFound)
-		if got := keepers.SplitsKeeper.Transact(context, newMessage(defaultAddr, test_types.NewID("fakeFromID"), toID, ownableID, sdkTypes.NewDec(1))); !reflect.DeepEqual(got, want) {
+		if got := keepers.SplitsKeeper.Transact(context, newMessage(defaultAddr, base.NewID("fakeFromID"), toID, ownableID, sdkTypes.NewDec(1))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})

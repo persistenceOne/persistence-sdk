@@ -13,7 +13,7 @@ message message {
 
   string from =1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.AccAddress", (gogoproto.nullable) = false] ;
   string from_iD =2 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false] ;
-  string ownable_iD =4 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false];
-  string value =5 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  string ownable_iD =3 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false];
+  string value =4 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
 
 }

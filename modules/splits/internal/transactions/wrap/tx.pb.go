@@ -8,7 +8,7 @@ import (
 	cosmos_types "github.com/cosmos/cosmos-sdk/types"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	proto "github.com/gogo/protobuf/proto"
-	github_com_persistenceOne_persistenceSDK_schema_test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -26,9 +26,9 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type message struct {
-	From   github_com_cosmos_cosmos_sdk_types.AccAddress                 `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from" valid:"required~required field from missing"`
-	FromID github_com_persistenceOne_persistenceSDK_schema_test_types.ID `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"from_iD" valid:"required~required field from missing"`
-	Coins  github_com_cosmos_cosmos_sdk_types.Coins                      `protobuf:"bytes,5,opt,name=coins,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Coins" json:"coins" valid:"required~required field from missing"`
+	From   github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from" valid:"required~required field from missing"`
+	FromID types.ID                                      `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"from_iD" valid:"required~required field from missing"`
+	Coins  github_com_cosmos_cosmos_sdk_types.Coins      `protobuf:"bytes,5,opt,name=coins,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Coins" json:"coins" valid:"required~required field from missing"`
 }
 
 func (m message) Reset()         { m = message{} }
@@ -132,13 +132,6 @@ func (m *message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x2a
 		}
 	}
-	//if len(m.Coins) > 0 {
-	//	i -= len(m.Coins)
-	//	copy(dAtA[i:], m.Coins.String())
-	//	i = encodeVarintTx(dAtA, i, uint64(len(m.Coins)))
-	//	i--
-	//	dAtA[i] = 0x2a
-	//}
 	{
 		size := m.FromID.Size()
 		i -= size
@@ -149,13 +142,6 @@ func (m *message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	}
 	i--
 	dAtA[i] = 0x12
-	//if len(m.FromID) > 0 {
-	//	i -= len(m.FromID)
-	//	copy(dAtA[i:], m.FromID)
-	//	i = encodeVarintTx(dAtA, i, uint64(len(m.FromID)))
-	//	i--
-	//	dAtA[i] = 0x12
-	//}
 	if len(m.From) > 0 {
 		i -= len(m.From)
 		copy(dAtA[i:], m.From)
@@ -298,7 +284,6 @@ func (m *message) Unmarshal(dAtA []byte) error {
 			if err := m.FromID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
-			//m.FromID = github_com_persistenceOne_persistenceSDK_schema_test_types.ID(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {

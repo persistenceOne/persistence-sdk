@@ -12,10 +12,10 @@ import (
 var _ helpers.TransactionResponse = (*transactionResponse)(nil)
 
 func (transactionResponse transactionResponse) IsSuccessful() bool {
-	return transactionResponse.Success
+	return transactionResponse.success
 }
 func (transactionResponse transactionResponse) GetError() error {
-	return transactionResponse.Error
+	return transactionResponse.error
 }
 func newTransactionResponse(error error) helpers.TransactionResponse {
 	success := true
@@ -24,7 +24,7 @@ func newTransactionResponse(error error) helpers.TransactionResponse {
 	}
 
 	return transactionResponse{
-		Success: success,
-		Error:   error,
+		success: success,
+		error:   error,
 	}
 }

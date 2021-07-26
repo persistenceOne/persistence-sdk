@@ -6,12 +6,11 @@
 package traits
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
 type HasImmutables interface {
 	GetImmutableProperties() types.Properties
 
-	GenerateHashID() test_types.ID
+	GenerateHashID() types.ID
 }

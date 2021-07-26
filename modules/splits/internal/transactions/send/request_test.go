@@ -17,6 +17,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
@@ -38,7 +39,6 @@ func Test_Send_Request(t *testing.T) {
 
 	testBaseReq := test_types.BaseReq{From: fromAddress, ChainId: "test", Fees: sdkTypes.NewCoins()}
 	testTransactionRequest := newTransactionRequest(testBaseReq, "fromID", "toID", "ownableID", "2")
-
 	require.Equal(t, transactionRequest{BaseReq: testBaseReq, FromID: "fromID", ToID: "toID", OwnableID: "ownableID", Value: "2"}, testTransactionRequest)
 	require.Equal(t, nil, testTransactionRequest.Validate())
 
@@ -58,7 +58,8 @@ func Test_Send_Request(t *testing.T) {
 	require.Equal(t, testBaseReq, testTransactionRequest.GetBaseReq())
 
 	msg, Error := testTransactionRequest.MakeMsg()
-	require.Equal(t, newMessage(fromAccAddress, test_types.NewID("fromID"), test_types.NewID("toID"), test_types.NewID("ownableID"), sdkTypes.NewDec(2)), msg)
+
+	require.Equal(t, newMessage(fromAccAddress, base.NewID("fromID"), base.NewID("toID"), base.NewID("ownableID"), sdkTypes.NewDec(2)), msg)
 	require.Nil(t, Error)
 
 	msg2, Error := newTransactionRequest(test_types.BaseReq{From: "randomFromAddress", ChainId: "test"}, "fromID", "toID", "ownableID", "2").MakeMsg()

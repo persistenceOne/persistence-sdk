@@ -9,4 +9,9 @@ type Height interface {
 	Get() int64
 	IsGreaterThan(Height) bool
 	Equals(Height) bool
+
+	//New Addition
+	Size() int
+	MarshalTo([]byte) (int, error)
+	Unmarshal([]byte) error
 }

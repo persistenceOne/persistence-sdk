@@ -15,9 +15,9 @@ import (
 func (simulator) WeightedProposalContentList() []simulation.WeightedProposalContent {
 	return []simulation.WeightedProposalContent{
 		{
-			AppParamsKey:       OpWeightSubmitTextProposal,
-			DefaultWeight:      DefaultWeightTextProposal,
-			ContentSimulatorFn: simulateTextProposalContent,
+			appParamsKey:       OpWeightSubmitTextProposal,
+			defaultWeight:      DefaultWeightTextProposal,
+			contentSimulatorFn: simulateTextProposalContent,
 		},
 	}
 }

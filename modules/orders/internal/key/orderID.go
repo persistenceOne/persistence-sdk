@@ -7,9 +7,6 @@ package key
 
 import (
 	"bytes"
-	"strconv"
-	"strings"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/constants"
@@ -18,6 +15,8 @@ import (
 	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
+	"strconv"
+	"strings"
 )
 
 type orderID struct {
@@ -28,6 +27,18 @@ type orderID struct {
 	CreationID       types.ID `json:"creationID"`
 	MakerID          types.ID `json:"makerID"`
 	HashID           types.ID `json:"hashID"`
+}
+
+func (orderID orderID) Size() int {
+	panic("implement me")
+}
+
+func (orderID orderID) MarshalTo(i []byte) (int, error) {
+	panic("implement me")
+}
+
+func (orderID orderID) Unmarshal(i []byte) error {
+	panic("implement me")
 }
 
 var _ types.ID = (*orderID)(nil)

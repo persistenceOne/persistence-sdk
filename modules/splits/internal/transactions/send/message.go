@@ -13,10 +13,9 @@ import (
 	xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
-
+	"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
+	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
 
 var _ sdkTypes.Msg = (*message)(nil)
@@ -35,7 +34,7 @@ func (message message) GetSignBytes() []byte {
 	return sdkTypes.MustSortJSON(transaction.RegisterCodec(messagePrototype).MustMarshalJSON(message))
 }
 func (message message) GetSigners() []sdkTypes.AccAddress {
-	return []sdkTypes.AccAddress{sdkTypes.AccAddress(message.From)}
+	return []sdkTypes.AccAddress{message.from}
 }
 func (message) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
@@ -52,14 +51,12 @@ func messagePrototype() helpers.Message {
 	return message{}
 }
 
-//TODO:types mismatch
-
-func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, ownableID test_types.ID, value sdkTypes.Dec) message {
+func newMessage(from sdkTypes.AccAddress, fromID types.ID, toID types.ID, ownableID types.ID, value sdkTypes.Dec) sdkTypes.Msg {
 	return message{
-		From:      from,
-		FromID:    fromID,
-		ToID:      toID,
-		OwnableID: ownableID,
-		Value:     value,
+		from:      from,
+		fromID:    fromID,
+		toID:      toID,
+		ownableID: ownableID,
+		value:     value,
 	}
 }

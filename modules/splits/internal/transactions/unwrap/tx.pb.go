@@ -6,9 +6,8 @@ package unwrap
 import (
 	fmt "fmt"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
-	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	github_com_persistenceOne_persistenceSDK_schema_test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -26,10 +25,10 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type message struct {
-	From      github_com_cosmos_cosmos_sdk_types.AccAddress                 `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from" valid:"required~required field from missing"`
-	FromID    github_com_persistenceOne_persistenceSDK_schema_test_types.ID `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"from_iD" valid:"required~required field from missing"`
-	OwnableID github_com_persistenceOne_persistenceSDK_schema_test_types.ID `protobuf:"bytes,4,opt,name=ownable_iD,json=ownableID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"ownable_iD" valid:"required~required field from missing"`
-	Value     github_com_cosmos_cosmos_sdk_types.Int                        `protobuf:"bytes,5,opt,name=value,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"value" valid:"required~required field from missing"`
+	From      github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from" valid:"required~required field from missing"`
+	FromID    types.ID                                      `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"from_iD" valid:"required~required field from missing"`
+	OwnableID types.ID                                      `protobuf:"bytes,4,opt,name=ownable_iD,json=ownableID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"ownable_iD" valid:"required~required field from missing"`
+	Value     github_com_cosmos_cosmos_sdk_types.Int        `protobuf:"bytes,5,opt,name=value,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"value" valid:"required~required field from missing"`
 }
 
 func (m message) Reset()         { m = message{} }

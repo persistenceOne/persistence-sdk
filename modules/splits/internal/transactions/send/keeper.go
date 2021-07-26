@@ -24,17 +24,17 @@ var _ helpers.TransactionKeeper = (*transactionKeeper)(nil)
 
 func (transactionKeeper transactionKeeper) Transact(context sdkTypes.Context, msg sdkTypes.Msg) helpers.TransactionResponse {
 	message := messageFromInterface(msg)
-	if auxiliaryResponse := transactionKeeper.verifyAuxiliary.GetKeeper().Help(context, verify.NewAuxiliaryRequest(message.From, message.FromID)); !auxiliaryResponse.IsSuccessful() {
+	if auxiliaryResponse := transactionKeeper.verifyAuxiliary.GetKeeper().Help(context, verify.NewAuxiliaryRequest(message.from, message.fromID)); !auxiliaryResponse.IsSuccessful() {
 		return newTransactionResponse(auxiliaryResponse.GetError())
 	}
 
 	splits := transactionKeeper.mapper.NewCollection(context)
 
-	if _, Error := utilities.SubtractSplits(splits, message.FromID, message.OwnableID, message.Value); Error != nil {
+	if _, Error := utilities.SubtractSplits(splits, message.fromID, message.ownableID, message.value); Error != nil {
 		return newTransactionResponse(Error)
 	}
 
-	if _, Error := utilities.AddSplits(splits, message.ToID, message.OwnableID, message.Value); Error != nil {
+	if _, Error := utilities.AddSplits(splits, message.toID, message.ownableID, message.value); Error != nil {
 		return newTransactionResponse(Error)
 	}
 

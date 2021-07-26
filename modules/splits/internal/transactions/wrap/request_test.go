@@ -17,6 +17,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
@@ -58,7 +59,7 @@ func Test_Wrap_Request(t *testing.T) {
 	require.Equal(t, testBaseReq, testTransactionRequest.GetBaseReq())
 
 	msg, Error := testTransactionRequest.MakeMsg()
-	require.Equal(t, newMessage(fromAccAddress, test_types.NewID("fromID"), sdkTypes.NewCoins(sdkTypes.NewCoin("stake", sdkTypes.NewInt(2)))), msg)
+	require.Equal(t, newMessage(fromAccAddress, base.NewID("fromID"), sdkTypes.NewCoins(sdkTypes.NewCoin("stake", sdkTypes.NewInt(2)))), msg)
 	require.Nil(t, Error)
 
 	msg2, Error := newTransactionRequest(test_types.BaseReq{From: "randomFromAddress", ChainId: "test"}, "fromID", "2 stake").MakeMsg()

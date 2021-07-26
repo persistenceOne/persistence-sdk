@@ -18,4 +18,9 @@ type Signature interface {
 	Verify(crypto.PubKey, []byte) bool
 	GetValidityHeight() Height
 	HasExpired(Height) bool
+
+	//New Addition
+	Size() int
+	MarshalTo([]byte) (int, error)
+	Unmarshal([]byte) error
 }
