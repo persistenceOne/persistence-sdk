@@ -8,13 +8,12 @@ package base
 import (
 	"bufio"
 	"encoding/json"
-	"github.com/persistenceOne/persistenceSDK/utilities/random"
 	"log"
 	"net/http"
 	"reflect"
 	"strings"
 
-	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -25,6 +24,7 @@ import (
 	authClient "github.com/cosmos/cosmos-sdk/x/auth/client/utils"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/utilities/random"
 	"github.com/persistenceOne/persistenceSDK/utilities/rest/queuing"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -83,7 +83,7 @@ func (transaction transaction) HandleMessage(context sdkTypes.Context, message s
 	return &sdkTypes.Result{Events: context.EventManager().Events()}, nil
 }
 
-func (transaction transaction) RESTRequestHandler(cliContext client.Context) http.HandlerFunc {
+func (transaction transaction) RESTRequestHandler(cliContext context.CLIContext) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, httpRequest *http.Request) {
 		transactionRequest := transaction.requestPrototype()
 		if !rest.ReadRESTReq(responseWriter, httpRequest, cliContext.Codec, &transactionRequest) {
@@ -102,6 +102,7 @@ func (transaction transaction) RESTRequestHandler(cliContext client.Context) htt
 		baseReq := transactionRequest.GetBaseReq()
 
 		msg, Error := transactionRequest.MakeMsg()
+		// TODO write one method
 		if Error != nil {
 			rest.WriteErrorResponse(responseWriter, http.StatusBadRequest, Error.Error())
 			return
@@ -169,11 +170,19 @@ func (transaction transaction) RESTRequestHandler(cliContext client.Context) htt
 		cliContext = cliContext.WithBroadcastMode(viper.GetString(flags.FlagBroadcastMode))
 
 		if queuing.KafkaState.IsEnabled {
-			ticketID := queuing.TicketID(random.GenerateID(transaction.name))
-			jsonResponse := queuing.SendToKafka(queuing.NewKafkaMsgFromRest(msg, ticketID, baseReq, cliContext), queuing.KafkaState, cliContext.Codec)
-
 			responseWriter.WriteHeader(http.StatusAccepted)
-			_, _ = responseWriter.Write(jsonResponse)
+
+			output := queuing.SendToKafka(queuing.NewKafkaMsgFromRest(
+				msg,
+				queuing.TicketID(random.GenerateID(transaction.name)),
+				baseReq,
+				cliContext),
+				cliContext.Codec,
+			)
+
+			if _, Error := responseWriter.Write(output); Error != nil {
+				log.Printf("could not write response: %v", Error)
+			}
 		} else {
 			accountNumber, sequence, Error := types.NewAccountRetriever(cliContext).GetAccountNumberSequence(fromAddress)
 			if Error != nil {

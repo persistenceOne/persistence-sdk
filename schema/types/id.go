@@ -5,11 +5,9 @@
 
 package types
 
-import "github.com/gogo/protobuf/proto"
-
 type ID interface {
-	proto.Message
 	String() string
 	Bytes() []byte
-	Equals(ID) bool
+
+	Compare(ID) int
 }

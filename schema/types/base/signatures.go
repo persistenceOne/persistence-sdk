@@ -9,50 +9,42 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-//type signatures struct {
-//	SignatureList []types.Signature `json:"signatureList"`
-//}
+type signatures struct {
+	SignatureList []types.Signature `json:"signatureList"`
+}
 
-var _ types.Signatures = &Signatures{}
+var _ types.Signatures = (*signatures)(nil)
 
-func (signatures *Signatures) Get(id types.ID) types.Signature {
-	for _, signature := range signatures.GetList() {
-		if signature.GetID().Equals(id) {
+func (signatures signatures) Get(id types.ID) types.Signature {
+	for _, signature := range signatures.SignatureList {
+		if signature.GetID().Compare(id) == 0 {
 			return signature
 		}
 	}
 
 	return nil
 }
-func (signatures *Signatures) GetList() []types.Signature {
-	a := make([]types.Signature, len(signatures.SignatureList))
-	for i, listany := range signatures.SignatureList {
-		lis, ok := listany.GetCachedValue().(types.Signature)
-		if !ok {
-			return nil
-		}
-		a[i] = lis
-	}
-	return a
+func (signatures signatures) GetList() []types.Signature {
+	return signatures.SignatureList
 }
-func (signatures *Signatures) Add(signature types.Signature) types.Signatures {
-	signatures.GetList() = append(signatures.GetList(), signature)
+func (signatures signatures) Add(signature types.Signature) types.Signatures {
+	signatures.SignatureList = append(signatures.SignatureList, signature)
 	return signatures
 }
-func (signatures *Signatures) Remove(signature types.Signature) types.Signatures {
+func (signatures signatures) Remove(signature types.Signature) types.Signatures {
 	signatureList := signatures.SignatureList
 	for i, oldSignature := range signatureList {
-		if oldSignature.GetID().Equals(signature.GetID()) {
+		if oldSignature.GetID().Compare(signature.GetID()) == 0 {
 			signatureList = append(signatureList[:i], signatureList[i+1:]...)
 		}
 	}
 
 	return NewSignatures(signatureList)
 }
-func (signatures *Signatures) Mutate(signature types.Signature) types.Signatures {
+func (signatures signatures) Mutate(signature types.Signature) types.Signatures {
 	signatureList := signatures.GetList()
 	for i, oldSignature := range signatureList {
-		if oldSignature.GetID().Equals(signature.GetID()) {
+		if oldSignature.GetID().Compare(signature.GetID()) == 0 {
 			signatureList[i] = signature
 		}
 	}

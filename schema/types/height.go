@@ -5,11 +5,8 @@
 
 package types
 
-import "github.com/gogo/protobuf/proto"
-
 type Height interface {
-	proto.Message
 	Get() int64
-	IsGreaterThan(Height) bool
-	Equals(Height) bool
+
+	Compare(Height) int
 }

@@ -6,7 +6,7 @@
 package base
 
 import (
-	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
@@ -20,7 +20,6 @@ func Test_Fact(t *testing.T) {
 	decData := NewDecData(sdkTypes.NewDec(12))
 	idData := NewIDData(NewID("id"))
 	heightData := NewHeightData(NewHeight(123))
-
 
 	testFact := NewFact(stringData)
 	require.Equal(t, fact{HashID: stringData.GenerateHashID(), TypeID: NewID("S"), Signatures: signatures{}}, testFact)
@@ -43,13 +42,13 @@ func Test_Fact(t *testing.T) {
 	require.Equal(t, nil, readFact2)
 	require.Equal(t, errors.IncorrectFormat, Error)
 
-	clicont := client.Context()
+	cliContext := context.NewCLIContext()
 	require.Panics(t, func() {
-		sign, _, _ := clicont.Keybase.Sign(clicont.FromName, keys.DefaultKeyPass, readFact.GetHashID().Bytes())
+		sign, _, _ := cliContext.Keybase.Sign(cliContext.FromName, keys.DefaultKeyPass, readFact.GetHashID().Bytes())
 		Signature := signature{
 			ID:             id{IDString: readFact.GetHashID().String()},
 			SignatureBytes: sign,
-			ValidityHeight: height{clicont.Height},
+			ValidityHeight: height{cliContext.Height},
 		}
 		readFact.GetSignatures().Add(Signature)
 		require.Equal(t, readFact.GetSignatures().Get(readFact.GetHashID()), readFact.GetHashID().String())

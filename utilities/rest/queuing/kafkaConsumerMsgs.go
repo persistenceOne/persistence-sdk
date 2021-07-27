@@ -8,22 +8,14 @@ package queuing
 import (
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/client"
-	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/rest"
+	"github.com/cosmos/cosmos-sdk/client/context"
 )
 
-// KafkaConsumerMessages : messages to consume 5 second delay
-func KafkaConsumerMessages(cliCtx client.Context, kafkaState kafkaState) {
+// kafkaConsumerMessages : messages to consume 5 second delay
+func kafkaConsumerMessages(cliCtx context.CLIContext) {
 	quit := make(chan bool)
 
-	var cliContextList []client.Context
-
-	var baseRequestList []rest.BaseReq
-
-	var ticketIDList []TicketID
-
-	var msgList []sdkTypes.Msg
+	var kafkaMsgList []kafkaMsg
 
 	go func() {
 		for {
@@ -31,25 +23,22 @@ func KafkaConsumerMessages(cliCtx client.Context, kafkaState kafkaState) {
 			case <-quit:
 				return
 			default:
-				kafkaMsg := KafkaTopicConsumer("Topic", kafkaState.Consumers, cliCtx.Codec)
+				kafkaMsg := kafkaTopicConsumer("Topic", KafkaState.Consumers, cliCtx.Codec)
 				if kafkaMsg.Msg != nil {
-					cliContextList = append(cliContextList, CliCtxFromKafkaMsg(kafkaMsg, cliCtx))
-					baseRequestList = append(baseRequestList, kafkaMsg.BaseRequest)
-					ticketIDList = append(ticketIDList, kafkaMsg.TicketID)
-					msgList = append(msgList, kafkaMsg.Msg)
+					kafkaMsgList = append(kafkaMsgList, kafkaMsg)
 				}
 			}
 		}
 	}()
 
-	time.Sleep(SleepTimer)
+	time.Sleep(sleepTimer)
 	quit <- true
 
-	if len(msgList) == 0 {
+	if len(kafkaMsgList) == 0 {
 		return
 	}
 
-	output, err := SignAndBroadcastMultiple(baseRequestList, cliContextList, msgList)
+	output, err := signAndBroadcastMultiple(kafkaMsgList, cliCtx)
 	if err != nil {
 		jsonError, e := cliCtx.Codec.MarshalJSON(struct {
 			Error string `json:"error"`
@@ -58,14 +47,14 @@ func KafkaConsumerMessages(cliCtx client.Context, kafkaState kafkaState) {
 			panic(err)
 		}
 
-		for _, ticketID := range ticketIDList {
-			AddResponseToDB(ticketID, jsonError, kafkaState.KafkaDB, cliCtx.Codec)
+		for _, kafkaMsg := range kafkaMsgList {
+			addResponseToDB(kafkaMsg.TicketID, jsonError, KafkaState.KafkaDB, cliCtx.Codec)
 		}
 
 		return
 	}
 
-	for _, ticketID := range ticketIDList {
-		AddResponseToDB(ticketID, output, kafkaState.KafkaDB, cliCtx.Codec)
+	for _, kafkaMsg := range kafkaMsgList {
+		addResponseToDB(kafkaMsg.TicketID, output, KafkaState.KafkaDB, cliCtx.Codec)
 	}
 }

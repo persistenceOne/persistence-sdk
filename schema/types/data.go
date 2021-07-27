@@ -7,11 +7,14 @@ package types
 
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/gogo/protobuf/proto"
 )
 
 type Data interface {
-	proto.Message
+	// Compare returns 1 if this > parameter
+	// returns -1 if this < parameter
+	// returns 0 if this = parameter
+	Compare(Data) int
+
 	String() string
 
 	GetTypeID() ID
@@ -21,13 +24,11 @@ type Data interface {
 	GenerateHashID() ID
 
 	AsAccAddress() (sdkTypes.AccAddress, error)
-	AsAccAddressList() ([]sdkTypes.AccAddress, error)
+	AsListData() (ListData, error)
 	AsString() (string, error)
 	AsDec() (sdkTypes.Dec, error)
 	AsHeight() (Height, error)
 	AsID() (ID, error)
 
 	Get() interface{}
-
-	Equal(Data) bool
 }

@@ -24,8 +24,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/evidence"
 	"github.com/cosmos/cosmos-sdk/x/gov"
 	"github.com/cosmos/cosmos-sdk/x/mint"
-	params "github.com/cosmos/cosmos-sdk/x/params/types"
-	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
+	"github.com/cosmos/cosmos-sdk/x/params"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/supply"
@@ -56,7 +55,7 @@ type SimulationApplication struct {
 	GovKeeper          gov.Keeper
 	CrisisKeeper       crisis.Keeper
 	UpgradeKeeper      upgrade.Keeper
-	ParamsKeeper       paramskeeper.Keeper
+	ParamsKeeper       params.Keeper
 	EvidenceKeeper     evidence.Keeper
 }
 

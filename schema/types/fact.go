@@ -7,11 +7,9 @@ package types
 
 import (
 	"github.com/99designs/keyring"
-	"github.com/gogo/protobuf/proto"
 )
 
 type Fact interface {
-	proto.Message
 	GetHashID() ID
 	GetTypeID() ID
 	GetSignatures() Signatures

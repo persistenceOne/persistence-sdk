@@ -6,11 +6,12 @@
 package block
 
 import (
+	"testing"
+
 	"github.com/cosmos/cosmos-sdk/codec"
-	crypto "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/mapper"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/parameters"
 	"github.com/persistenceOne/persistenceSDK/schema"
@@ -18,18 +19,16 @@ import (
 	"github.com/stretchr/testify/require"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
-	tenderProto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
-	"testing"
 )
 
 func CreateTestInput(t *testing.T) sdkTypes.Context {
-	var Codec = codec.NewLegacyAmino()
+	var Codec = codec.New()
 	schema.RegisterCodec(Codec)
-	sdkTypes.RegisterLegacyAminoCodec(Codec)
-	crypto.RegisterCrypto(Codec)
+	sdkTypes.RegisterCodec(Codec)
+	codec.RegisterCrypto(Codec)
 	codec.RegisterEvidences(Codec)
-	types.RegisterLegacyAminoCodec(Codec)
+	vesting.RegisterCodec(Codec)
 	Codec.Seal()
 	storeKey := sdkTypes.NewKVStoreKey("test")
 	paramsStoreKey := sdkTypes.NewKVStoreKey("testParams")
@@ -43,7 +42,7 @@ func CreateTestInput(t *testing.T) sdkTypes.Context {
 	Error := commitMultiStore.LoadLatestVersion()
 	require.Nil(t, Error)
 
-	context := sdkTypes.NewContext(commitMultiStore, tenderProto.Header{
+	context := sdkTypes.NewContext(commitMultiStore, abciTypes.Header{
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 

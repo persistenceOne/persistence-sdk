@@ -13,6 +13,5 @@ import (
 )
 
 func RegisterXPRTConcrete(codec *codec.Codec, moduleName string, o interface{}) {
-	//find alternative for RegisterCncrete
 	codec.RegisterConcrete(o, constants.ProjectRoute+"/"+moduleName+"/"+reflect.TypeOf(o).PkgPath()+"/"+reflect.TypeOf(o).Name(), nil)
 }

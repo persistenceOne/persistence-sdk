@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/types/rest"
@@ -21,7 +21,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func handler(cliContext client.Context) http.HandlerFunc {
+func handler(cliContext context.CLIContext) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, httpRequest *http.Request) {
 		var request request
 		if !rest.ReadRESTReq(responseWriter, httpRequest, cliContext.Codec, &request) {
@@ -37,7 +37,7 @@ func handler(cliContext client.Context) http.HandlerFunc {
 			}
 		}
 
-		fromAddress, fromName, Error := client.GetFromFields(strings.NewReader(keys.DefaultKeyPass), request.BaseRequest.From, false)
+		fromAddress, fromName, Error := context.GetFromFields(strings.NewReader(keys.DefaultKeyPass), request.BaseRequest.From, false)
 		if Error != nil {
 			rest.WriteErrorResponse(responseWriter, http.StatusBadRequest, Error.Error())
 			return
