@@ -6,6 +6,7 @@
 package queuing
 
 import (
+	"github.com/cosmos/cosmos-sdk/client"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client/context"
@@ -21,7 +22,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func SignAndBroadcastMultiple(brs []rest.BaseReq, cliContextList []context.CLIContext, msgList []sdkTypes.Msg) ([]byte, error) {
+func SignAndBroadcastMultiple(brs []rest.BaseReq, cliContextList []client.Context, msgList []sdkTypes.Msg) ([]byte, error) {
 	var stdTxs types.StdTx
 
 	var txBytes []byte

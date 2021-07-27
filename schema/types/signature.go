@@ -6,10 +6,12 @@
 package types
 
 import (
+	"github.com/gogo/protobuf/proto"
 	"github.com/tendermint/tendermint/crypto"
 )
 
 type Signature interface {
+	proto.Message
 	String() string
 	Bytes() []byte
 

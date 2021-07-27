@@ -5,7 +5,10 @@
 
 package types
 
+import "github.com/gogo/protobuf/proto"
+
 type Signatures interface {
+	proto.Message
 	Get(ID) Signature
 
 	GetList() []Signature

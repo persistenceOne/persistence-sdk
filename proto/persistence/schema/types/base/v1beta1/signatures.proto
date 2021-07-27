@@ -1,0 +1,14 @@
+syntax = "proto3";
+package persistence.schema.types.base.v1beta1;
+
+import "third_party/proto/cosmos_proto/cosmos.proto";
+//import "third_party/proto/gogoproto/gogo.proto";
+import "google/protobuf/any.proto";
+//import "proto/persistence/schema/types/base/v1beta1/signature.proto";
+
+option go_package = "schema/types/base";
+
+message Signatures {
+//  option (cosmos_proto.implements_interface) = "Signatures";
+  repeated google.protobuf.Any SignatureList = 1 [(cosmos_proto.accepts_interface) = "Siguture"];
+}

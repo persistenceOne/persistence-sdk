@@ -7,9 +7,11 @@ package types
 
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/gogo/protobuf/proto"
 )
 
 type Data interface {
+	proto.Message
 	String() string
 
 	GetTypeID() ID
