@@ -11,11 +11,6 @@ import (
 
 var _ types.Property = (*property)(nil)
 
-type property struct {
-	ID   types.ID   `json:"id"`
-	Fact types.Fact `json:"fact"`
-}
-
 func (property property) GetID() types.ID     { return property.ID }
 func (property property) GetFact() types.Fact { return property.Fact }
 func NewProperty(id types.ID, fact types.Fact) types.Property {

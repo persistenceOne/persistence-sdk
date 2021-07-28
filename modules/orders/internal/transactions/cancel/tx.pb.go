@@ -21,14 +21,14 @@ var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
-// A compilation error at this line likely means your copy of the
+// A compilation Error at this line likely means your copy of the
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type message struct {
-	From    github_com_cosmos_cosmos_sdk_types.AccAddress            `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from"`
-	FromID  github_com_persistenceOne_persistenceSDK_schema_types.ID `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"from_iD"`
-	OrderID github_com_persistenceOne_persistenceSDK_schema_types.ID `protobuf:"bytes,3,opt,name=orderID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"orderID"`
+	From    github_com_cosmos_cosmos_sdk_types.AccAddress            `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from" valid:"required~required field from missing"`
+	FromID  github_com_persistenceOne_persistenceSDK_schema_types.ID `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"fromID" valid:"required~required field fromID missing"`
+	OrderID github_com_persistenceOne_persistenceSDK_schema_types.ID `protobuf:"bytes,3,opt,name=orderID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"orderID" valid:"required~required field orderID missing"`
 }
 
 func (m message) Reset()         { m = message{} }

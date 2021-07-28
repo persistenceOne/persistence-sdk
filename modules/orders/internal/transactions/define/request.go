@@ -19,15 +19,6 @@ import (
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-type transactionRequest struct {
-	BaseReq                 test_types.BaseReq `json:"baseReq"`
-	FromID                  string             `json:"fromID" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
-	ImmutableMetaProperties string             `json:"immutableMetaProperties" valid:"required~required field immutableMetaProperties missing, matches(^.*$)~invalid field immutableMetaProperties"`
-	ImmutableProperties     string             `json:"immutableProperties" valid:"required~required field immutableProperties missing, matches(^.*$)~invalid field immutableProperties"`
-	MutableMetaProperties   string             `json:"mutableMetaProperties" valid:"required~required field mutableMetaProperties missing, matches(^.*$)~invalid field mutableMetaProperties"`
-	MutableProperties       string             `json:"mutableProperties" valid:"required~required field mutableProperties missing, matches(^.*$)~invalid field mutableProperties"`
-}
-
 var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 
 func (transactionRequest transactionRequest) Validate() error {

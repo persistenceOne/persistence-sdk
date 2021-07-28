@@ -20,14 +20,14 @@ var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
-// A compilation error at this line likely means your copy of the
+// A compilation Error at this line likely means your copy of the
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionRequest struct {
-	BaseReq test_types.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"base_req"`
-	FromID  string             `protobuf:"bytes,2,opt,name=fromID,proto3" json:"fromID,omitempty"`
-	OrderID string             `protobuf:"bytes,3,opt,name=orderID,proto3" json:"orderID,omitempty"`
+	BaseReq test_types.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"baseReq" `
+	FromID  string             `protobuf:"bytes,2,opt,name=fromID,proto3" json:"fromID,omitempty" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
+	OrderID string             `protobuf:"bytes,3,opt,name=orderID,proto3" json:"orderID,omitempty" valid:"required~required field orderID missing, matches(^[A-Za-z0-9-_=.|*]+$)~invalid field orderID"`
 }
 
 func (m *transactionRequest) Reset()         { *m = transactionRequest{} }

@@ -10,12 +10,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type fact struct {
-	HashID     types.ID         `json:"hashID"`
-	TypeID     types.ID         `json:"typeID"`
-	Signatures types.Signatures `json:"signatures"`
-}
-
 var _ types.Fact = (*fact)(nil)
 
 func (fact fact) GetHashID() types.ID             { return fact.HashID }

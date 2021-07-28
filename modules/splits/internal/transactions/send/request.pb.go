@@ -26,11 +26,11 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionRequest struct {
-	BaseReq   test_types.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"base_req"`
-	FromID    string             `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3" json:"from_iD,omitempty"`
-	ToID      string             `protobuf:"bytes,3,opt,name=to_iD,json=toID,proto3" json:"to_iD,omitempty"`
-	OwnableID string             `protobuf:"bytes,4,opt,name=ownable_iD,json=ownableID,proto3" json:"ownable_iD,omitempty"`
-	Value     string             `protobuf:"bytes,5,opt,name=value,proto3" json:"value,omitempty"`
+	BaseReq   test_types.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"baseReq"`
+	FromID    string             `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3" json:"fromID,omitempty" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
+	ToID      string             `protobuf:"bytes,3,opt,name=to_iD,json=toID,proto3" json:"toID,omitempty" valid:"required~required field toID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field toID"`
+	OwnableID string             `protobuf:"bytes,4,opt,name=ownable_iD,json=ownableID,proto3" json:"ownableID,omitempty" valid:"required~required field ownableID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field ownableID"`
+	Value     string             `protobuf:"bytes,5,opt,name=value,proto3" json:"value,omitempty" valid:"required~required field value missing, matches(^[0-9.]+$)~invalid field value"`
 }
 
 func (m transactionRequest) Reset()          { m = transactionRequest{} }

@@ -4,6 +4,7 @@
 package wrap
 
 import (
+	"errors"
 	fmt "fmt"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
@@ -18,13 +19,13 @@ var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
-// A compilation error at this line likely means your copy of the
+// A compilation Error at this line likely means your copy of the
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionResponse struct {
-	Success bool  `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Error   error `protobuf:"bytes,2,opt,name=error,proto3,customtype=error" json:"error"`
+	Success bool  `protobuf:"varint,1,opt,name=Success,proto3" json:"Success,omitempty"`
+	Error   error `protobuf:"bytes,2,opt,name=Error,proto3,customtype=Error" json:"Error"`
 }
 
 func (m *transactionResponse) Reset()         { *m = transactionResponse{} }
@@ -255,10 +256,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			//m.Error = error(dAtA[iNdEx:postIndex])
+			m.Error = errors.New(string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

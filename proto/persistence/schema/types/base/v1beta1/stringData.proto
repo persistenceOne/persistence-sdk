@@ -1,0 +1,8 @@
+syntax = "proto3";
+package persistence.schema.types.base.v1beta1;
+
+option go_package = "schema/types/base";
+
+message stringData {
+  string Value = 1;
+}

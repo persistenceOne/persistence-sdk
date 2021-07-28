@@ -4,6 +4,7 @@
 package cancel
 
 import (
+	"errors"
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
@@ -20,13 +21,13 @@ var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
-// A compilation error at this line likely means your copy of the
+// A compilation Error at this line likely means your copy of the
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionResponse struct {
-	success bool  `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	error   error `protobuf:"bytes,2,opt,name=error,proto3,customtype=error" json:"error"`
+	Success bool  `protobuf:"varint,1,opt,name=Success,proto3" json:"Success,omitempty"`
+	Error   error `protobuf:"bytes,2,opt,name=Error,proto3,customtype=Error" json:"Error"`
 }
 
 func (m *transactionResponse) Reset()         { *m = transactionResponse{} }
@@ -64,7 +65,7 @@ var xxx_messageInfo_TransactionResponse proto.InternalMessageInfo
 
 func (m *transactionResponse) GetSuccess() bool {
 	if m != nil {
-		return m.success
+		return m.Success
 	}
 	return false
 }
@@ -118,9 +119,9 @@ func (m *transactionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.error != nil {
+	if m.Error != nil {
 		{
-			size := len(m.error.Error())
+			size := len(m.Error.Error())
 			i -= size
 			if _, err := m.MarshalTo(dAtA[i:]); err != nil {
 				return 0, err
@@ -130,9 +131,9 @@ func (m *transactionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.success {
+	if m.Success {
 		i--
-		if m.success {
+		if m.Success {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -160,11 +161,11 @@ func (m *transactionResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.success {
+	if m.Success {
 		n += 2
 	}
-	if m.error != nil {
-		l = len(m.error.Error())
+	if m.Error != nil {
+		l = len(m.Error.Error())
 		n += 1 + l + sovResponse(uint64(l))
 	}
 	return n
@@ -224,7 +225,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			m.success = bool(v != 0)
+			m.Success = bool(v != 0)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Error", wireType)
@@ -255,9 +256,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
+			m.Error = errors.New(string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

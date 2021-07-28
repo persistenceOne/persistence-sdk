@@ -4,6 +4,7 @@
 package unwrap
 
 import (
+	"errors"
 	fmt "fmt"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
@@ -23,8 +24,8 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionResponse struct {
-	Success bool  `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Error   error `protobuf:"bytes,2,opt,name=error,proto3,customtype=error" json:"error"`
+	success bool  `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	error   error `protobuf:"bytes,2,opt,name=error,proto3,customtype=error" json:"error"`
 }
 
 func (m *transactionResponse) Reset()         { *m = transactionResponse{} }
@@ -62,7 +63,7 @@ var xxx_messageInfo_TransactionResponse proto.InternalMessageInfo
 
 func (m *transactionResponse) GetSuccess() bool {
 	if m != nil {
-		return m.Success
+		return m.success
 	}
 	return false
 }
@@ -116,16 +117,16 @@ func (m *transactionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Error.Error()) > 0 {
-		i -= len(m.Error.Error())
-		copy(dAtA[i:], m.Error.Error())
-		i = encodeVarintResponse(dAtA, i, uint64(len(m.Error.Error())))
+	if len(m.error.Error()) > 0 {
+		i -= len(m.error.Error())
+		copy(dAtA[i:], m.error.Error())
+		i = encodeVarintResponse(dAtA, i, uint64(len(m.error.Error())))
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.Success {
+	if m.success {
 		i--
-		if m.Success {
+		if m.success {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -153,10 +154,10 @@ func (m *transactionResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Success {
+	if m.success {
 		n += 2
 	}
-	l = len(m.Error.Error())
+	l = len(m.error.Error())
 	if l > 0 {
 		n += 1 + l + sovResponse(uint64(l))
 	}
@@ -217,7 +218,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			m.Success = bool(v != 0)
+			m.success = bool(v != 0)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Error", wireType)
@@ -248,11 +249,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			var v error
-			m.Error = v
-			if err := m.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
+			m.error = errors.New(string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

@@ -98,7 +98,7 @@ func (m *signatures) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *signatures) MarshalTo(dAtA []byte) (int, error) {
+func (m signatures) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
@@ -133,10 +133,7 @@ func encodeVarintSignatures(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *signatures) Size() (n int) {
-	if m == nil {
-		return 0
-	}
+func (m signatures) Size() (n int) {
 	var l int
 	_ = l
 	if len(m.SignatureList) > 0 {
@@ -154,7 +151,7 @@ func sovSignatures(x uint64) (n int) {
 func sozSignatures(x uint64) (n int) {
 	return sovSignatures(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *signatures) Unmarshal(dAtA []byte) error {
+func (m signatures) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {

@@ -134,7 +134,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase - Identity mock error", func(t *testing.T) {
+	t.Run("NegativeCase - Identity mock Error", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
 		if got := keepers.OrdersKeeper.Transact(context, newMessage(verifyMockErrorAddress, defaultIdentityID, immutableMetaProperties,
@@ -143,7 +143,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase - immutable scrub error", func(t *testing.T) {
+	t.Run("NegativeCase - immutable scrub Error", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
 		if got := keepers.OrdersKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, scrubMockErrorProperties,
@@ -152,7 +152,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase - mutable scrub error", func(t *testing.T) {
+	t.Run("NegativeCase - mutable scrub Error", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
 		if got := keepers.OrdersKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, immutableMetaProperties,
@@ -161,7 +161,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase - conform error", func(t *testing.T) {
+	t.Run("NegativeCase - conform Error", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.InvalidRequest)
 		if got := keepers.OrdersKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, immutableMetaProperties,
@@ -170,7 +170,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase - super error", func(t *testing.T) {
+	t.Run("NegativeCase - super Error", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
 		if got := keepers.OrdersKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, immutableMetaProperties,

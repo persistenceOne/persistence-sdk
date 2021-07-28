@@ -9,7 +9,6 @@ import (
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	github_com_persistenceOne_persistenceSDK_schema_types "github.com/persistenceOne/persistenceSDK/schema/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -22,17 +21,17 @@ var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
-// A compilation error at this line likely means your copy of the
+// A compilation Error at this line likely means your copy of the
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type message struct {
-	From                    github_com_cosmos_cosmos_sdk_types.AccAddress                        `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from"`
-	FromID                  github_com_persistenceOne_persistenceSDK_schema_types.ID             `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"from_iD"`
-	ImmutableMetaProperties github_com_persistenceOne_persistenceSDK_schema_types.MetaProperties `protobuf:"bytes,3,opt,name=immutableMetaProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.MetaProperties" json:"immutableMetaProperties"`
-	ImmutableProperties     github_com_persistenceOne_persistenceSDK_schema_types.Properties     `protobuf:"bytes,4,opt,name=immutableProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Properties" json:"immutableProperties"`
-	MutableMetaProperties   github_com_persistenceOne_persistenceSDK_schema_types.MetaProperties `protobuf:"bytes,5,opt,name=mutableMetaProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.MetaProperties" json:"mutableMetaProperties"`
-	MutableProperties       github_com_persistenceOne_persistenceSDK_schema_types.Properties     `protobuf:"bytes,6,opt,name=mutableProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Properties" json:"mutableProperties"`
+	From                    github_com_cosmos_cosmos_sdk_types.AccAddress                        `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from" valid:"required~required field from missing"`
+	FromID                  github_com_persistenceOne_persistenceSDK_schema_types.ID             `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"fromID" valid:"required~required field fromID missing"`
+	ImmutableMetaProperties github_com_persistenceOne_persistenceSDK_schema_types.MetaProperties `protobuf:"bytes,3,opt,name=immutableMetaProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.MetaProperties" json:"immutableMetaProperties" valid:"required~required field immutableMetaProperties missing"`
+	ImmutableProperties     github_com_persistenceOne_persistenceSDK_schema_types.Properties     `protobuf:"bytes,4,opt,name=immutableProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Properties" json:"immutableProperties" valid:"required~required field immutableProperties missing"`
+	MutableMetaProperties   github_com_persistenceOne_persistenceSDK_schema_types.MetaProperties `protobuf:"bytes,5,opt,name=mutableMetaProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.MetaProperties" json:"mutableMetaProperties" valid:"required~required field mutableMetaProperties missing"`
+	MutableProperties       github_com_persistenceOne_persistenceSDK_schema_types.Properties     `protobuf:"bytes,6,opt,name=mutableProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Properties" json:"mutableProperties" valid:"required~required field mutableProperties missing"`
 }
 
 func (m message) Reset()         { m = message{} }
@@ -126,38 +125,48 @@ func (m *message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.MutableProperties) > 0 {
-		i -= len(m.MutableProperties)
-		copy(dAtA[i:], m.MutableProperties)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.MutableProperties)))
+	if m.MutableProperties.Size() > 0 {
+		i -= m.MutableProperties.Size()
+		if _, err := m.MutableProperties.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(m.MutableProperties.Size()))
 		i--
 		dAtA[i] = 0x32
 	}
-	if len(m.MutableMetaProperties) > 0 {
-		i -= len(m.MutableMetaProperties)
-		copy(dAtA[i:], m.MutableMetaProperties)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.MutableMetaProperties)))
+	if m.MutableMetaProperties.Size() > 0 {
+		i -= m.MutableMetaProperties.Size()
+		if _, err := m.MutableMetaProperties.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(m.MutableMetaProperties.Size()))
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.ImmutableProperties) > 0 {
-		i -= len(m.ImmutableProperties)
-		copy(dAtA[i:], m.ImmutableProperties)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ImmutableProperties)))
+	if m.ImmutableProperties.Size() > 0 {
+		i -= m.ImmutableProperties.Size()
+		if _, err := m.ImmutableProperties.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(m.ImmutableProperties.Size()))
 		i--
 		dAtA[i] = 0x22
 	}
-	if len(m.ImmutableMetaProperties) > 0 {
-		i -= len(m.ImmutableMetaProperties)
-		copy(dAtA[i:], m.ImmutableMetaProperties)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ImmutableMetaProperties)))
+	if m.ImmutableMetaProperties.Size() > 0 {
+		i -= m.ImmutableMetaProperties.Size()
+		if _, err := m.ImmutableMetaProperties.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(m.ImmutableMetaProperties.Size()))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.FromID) > 0 {
-		i -= len(m.FromID)
-		copy(dAtA[i:], m.FromID)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.FromID)))
+	if m.FromID.Size() > 0 {
+		i -= m.FromID.Size()
+		if _, err := m.FromID.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(m.FromID.Size()))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -192,23 +201,23 @@ func (m *message) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.FromID)
+	l = m.FromID.Size()
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.ImmutableMetaProperties)
+	l = m.ImmutableMetaProperties.Size()
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.ImmutableProperties)
+	l = m.ImmutableProperties.Size()
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.MutableMetaProperties)
+	l = m.MutableMetaProperties.Size()
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.MutableProperties)
+	l = m.MutableProperties.Size()
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -312,7 +321,9 @@ func (m *message) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.FromID = base.ID(dAtA[iNdEx:postIndex])
+			if err := m.FromID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -344,7 +355,9 @@ func (m *message) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ImmutableMetaProperties = github_com_persistenceOne_persistenceSDK_schema_types.MetaProperties(dAtA[iNdEx:postIndex])
+			if err := m.ImmutableMetaProperties.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -376,7 +389,9 @@ func (m *message) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ImmutableProperties = github_com_persistenceOne_persistenceSDK_schema_types.Properties(dAtA[iNdEx:postIndex])
+			if err := m.ImmutableProperties.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -408,7 +423,9 @@ func (m *message) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.MutableMetaProperties = github_com_persistenceOne_persistenceSDK_schema_types.MetaProperties(dAtA[iNdEx:postIndex])
+			if err := m.MutableMetaProperties.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		case 6:
 			if wireType != 2 {
@@ -440,7 +457,9 @@ func (m *message) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.MutableProperties = github_com_persistenceOne_persistenceSDK_schema_types.Properties(dAtA[iNdEx:postIndex])
+			if err := m.MutableProperties.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

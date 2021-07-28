@@ -26,4 +26,9 @@ type Data interface {
 	Get() interface{}
 
 	Equal(Data) bool
+
+	//New Addition
+	Size() int
+	MarshalTo([]byte) (int, error)
+	Unmarshal([]byte) error
 }
