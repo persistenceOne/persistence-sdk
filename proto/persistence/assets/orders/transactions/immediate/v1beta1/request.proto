@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package persistence.assets.orders.transactions.immediate.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "proto/persistence/cosmos/base/v1beta1/basereq.proto";
+
+option go_package = "modules/orders/internal/transactions/immediate";
+
+message transactionRequest {
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.equal) = false;
+
+  persistence.cosmos.base.v1beta1.BaseReq baseReq =1 [(gogoproto.nullable) = false];
+  string fromID = 2;
+  string classificationID = 3;
+  string makerOwnableID = 4;
+  string takerOwnableID = 5;
+  int64 expiresIn = 6;
+  string makerOwnableSplit = 7;
+  string takerOwnableSplit = 8;
+  string immutableMetaProperties = 9;
+  string immutableProperties = 10;
+  string mutableMetaProperties = 11;
+  string mutableProperties = 12;
+}

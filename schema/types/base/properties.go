@@ -9,10 +9,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type properties struct {
-	PropertyList []types.Property `json:"propertyList,omitempty"`
-}
-
 var _ types.Properties = (*properties)(nil)
 
 func (properties properties) Get(id types.ID) types.Property {

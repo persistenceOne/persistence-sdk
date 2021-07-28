@@ -13,11 +13,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type metaProperty struct {
-	ID       types.ID       `json:"id"`
-	MetaFact types.MetaFact `json:"metaFact"`
-}
-
 var _ types.MetaProperty = (*metaProperty)(nil)
 
 func (metaProperty metaProperty) GetMetaFact() types.MetaFact { return metaProperty.MetaFact }

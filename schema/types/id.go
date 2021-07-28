@@ -10,4 +10,9 @@ type ID interface {
 	Bytes() []byte
 
 	Compare(ID) int
+
+	//New Addition
+	Size() int
+	MarshalTo([]byte) (int, error)
+	Unmarshal([]byte) error
 }

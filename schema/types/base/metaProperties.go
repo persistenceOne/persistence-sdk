@@ -12,10 +12,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type metaProperties struct {
-	MetaPropertyList []types.MetaProperty `json:"metaPropertyList,omitempty"`
-}
-
 var _ types.MetaProperties = (*metaProperties)(nil)
 
 func (metaProperties metaProperties) Get(id types.ID) types.MetaProperty {

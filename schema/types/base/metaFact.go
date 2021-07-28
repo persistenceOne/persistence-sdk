@@ -14,11 +14,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type metaFact struct {
-	Data       types.Data       `json:"data"`
-	Signatures types.Signatures `json:"signatures"`
-}
-
 var _ types.MetaFact = (*metaFact)(nil)
 
 func (metaFact metaFact) GetHashID() types.ID             { return metaFact.Data.GenerateHashID() }

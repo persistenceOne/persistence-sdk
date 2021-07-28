@@ -9,4 +9,9 @@ type Height interface {
 	Get() int64
 
 	Compare(Height) int
+
+	//New Addition
+	Size() int
+	MarshalTo([]byte) (int, error)
+	Unmarshal([]byte) error
 }

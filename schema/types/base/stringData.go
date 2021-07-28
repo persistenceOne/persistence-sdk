@@ -14,9 +14,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/utilities/meta"
 )
 
-type stringData struct {
-	Value string `json:"value"`
-}
 
 var _ types.Data = (*stringData)(nil)
 

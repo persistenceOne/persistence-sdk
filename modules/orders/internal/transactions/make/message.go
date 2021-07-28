@@ -18,21 +18,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
 
-type message struct {
-	From                    sdkTypes.AccAddress  `json:"from" valid:"required~required field from missing"`
-	FromID                  types.ID             `json:"fromID" valid:"required~required field fromID missing"`
-	ClassificationID        types.ID             `json:"classificationID" valid:"required~required field classificationID missing"`
-	MakerOwnableID          types.ID             `json:"makerOwnableID" valid:"required~required field makerOwnableID missing"`
-	TakerOwnableID          types.ID             `json:"takerOwnableID" valid:"required~required field takerOwnableID missing"`
-	ExpiresIn               types.Height         `json:"expiresIn" valid:"required~required field expiresIn missing"`
-	MakerOwnableSplit       sdkTypes.Dec         `json:"makerOwnableSplit" valid:"required~required field makerOwnableSplit missing"`
-	TakerOwnableSplit       sdkTypes.Dec         `json:"takerOwnableSplit" valid:"required~required field takerOwnableSplit missing"`
-	ImmutableMetaProperties types.MetaProperties `json:"immutableMetaProperties" valid:"required~required field immutableMetaProperties missing"`
-	ImmutableProperties     types.Properties     `json:"immutableProperties" valid:"required~required field immutableProperties missing"`
-	MutableMetaProperties   types.MetaProperties `json:"mutableMetaProperties" valid:"required~required field mutableMetaProperties missing"`
-	MutableProperties       types.Properties     `json:"mutableProperties" valid:"required~required field mutableProperties missing"`
-}
-
 var _ sdkTypes.Msg = message{}
 
 func (message message) Route() string { return module.Name }
@@ -59,7 +44,7 @@ func (message message) GetSignBytes() []byte {
 func (message message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{message.From}
 }
-func (message) RegisterCodec(codec *codec.Codec) {
+func (message) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
 }
 func messageFromInterface(msg sdkTypes.Msg) message {

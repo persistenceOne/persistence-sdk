@@ -18,13 +18,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
 
-type message struct {
-	From      sdkTypes.AccAddress `json:"from" valid:"required~required field from missing"`
-	FromID    types.ID            `json:"fromID" valid:"required~required field fromID missing"`
-	ToID      types.ID            `json:"toID" valid:"required~required field toID missing"`
-	OwnableID types.ID            `json:"ownableID" valid:"required~required field ownableID missing"`
-	Value     sdkTypes.Dec        `json:"value" valid:"required~required field value missing"`
-}
 
 var _ sdkTypes.Msg = message{}
 
@@ -44,7 +37,7 @@ func (message message) GetSignBytes() []byte {
 func (message message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{message.From}
 }
-func (message) RegisterCodec(codec *codec.Codec) {
+func (message) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
 }
 func messageFromInterface(msg sdkTypes.Msg) message {

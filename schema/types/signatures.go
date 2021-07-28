@@ -13,4 +13,9 @@ type Signatures interface {
 	Add(Signature) Signatures
 	Remove(Signature) Signatures
 	Mutate(Signature) Signatures
+
+	//New Addition
+	Size() int
+	MarshalTo([]byte) (int, error)
+	Unmarshal([]byte) error
 }

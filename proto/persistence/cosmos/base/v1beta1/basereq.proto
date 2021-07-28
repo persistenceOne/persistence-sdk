@@ -1,0 +1,32 @@
+syntax="proto3";
+
+package persistence.cosmos.base.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "proto/persistence/cosmos/base/v1beta1/coin.proto";
+
+option go_package = "schema/test_types";
+
+message BaseReq {
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  string from =1;
+  string memo =2;
+  string chain_id =3;
+  uint64 account_number=4;
+  uint64 sequence =5;
+  uint64 timeout_height =6;
+  repeated Coin fees = 7 [
+    (gogoproto.nullable)     = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+  repeated DecCoin gas_prices = 8 [
+    (gogoproto.nullable)     = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins"
+  ];
+  string gas = 9;
+  string gas_adjustment = 10;
+  bool simulate = 11;
+
+}

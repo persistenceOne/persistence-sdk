@@ -7,6 +7,8 @@ package applications
 
 import (
 	"encoding/json"
+	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/codec/types"
 	"io"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -25,7 +27,7 @@ type Application interface {
 	GetDefaultNodeHome() string
 	GetDefaultClientHome() string
 	GetModuleBasicManager() module.BasicManager
-	GetCodec() *codec.Codec
+	GetCodec() *codec.LegacyAmino
 
 	LoadHeight(int64) error
 	ExportApplicationStateAndValidators(bool, []string) (json.RawMessage, []tendermintTypes.GenesisValidator, error)
@@ -48,4 +50,13 @@ type Application interface {
 	IsSealed() bool
 
 	Initialize(logger log.Logger, db tendermintDB.DB, traceStore io.Writer, loadLatest bool, invCheckPeriod uint, skipUpgradeHeights map[int64]bool, home string, baseAppOptions ...func(*baseapp.BaseApp)) Application
+}
+
+// EncodingConfig specifies the concrete encoding types to use for a given app.
+// This is provided for compatibility between protobuf and amino implementations.
+type EncodingConfig struct {
+	InterfaceRegistry types.InterfaceRegistry
+	Marshaler         codec.Marshaler
+	TxConfig          client.TxConfig
+	Amino             *codec.LegacyAmino
 }

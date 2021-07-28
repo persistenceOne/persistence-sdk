@@ -17,9 +17,9 @@ import (
 
 func Test_Send_Message(t *testing.T) {
 
-	testToID := base.NewID("toID")
-	testFromID := base.NewID("fromID")
-	testOwnableID := base.NewID("ownableID")
+	testToID := base.NewID("ToID")
+	testFromID := base.NewID("FromID")
+	testOwnableID := base.NewID("OwnableID")
 	testSplit := sdkTypes.NewDec(2)
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
