@@ -7,11 +7,6 @@ package deputize
 
 import "github.com/persistenceOne/persistenceSDK/schema/helpers"
 
-type auxiliaryResponse struct {
-	Success bool  `json:"success"`
-	Error   error `json:"error"`
-}
-
 var _ helpers.AuxiliaryResponse = (*auxiliaryResponse)(nil)
 
 func (auxiliaryResponse auxiliaryResponse) IsSuccessful() bool {

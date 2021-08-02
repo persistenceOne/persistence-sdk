@@ -11,12 +11,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type auxiliaryResponse struct {
-	Success        bool                 `json:"success"`
-	Error          error                `json:"error"`
-	MetaProperties types.MetaProperties `json:"metaProperties"`
-}
-
 var _ helpers.AuxiliaryResponse = (*auxiliaryResponse)(nil)
 
 func (auxiliaryResponse auxiliaryResponse) IsSuccessful() bool {

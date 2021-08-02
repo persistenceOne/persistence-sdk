@@ -8,12 +8,7 @@ package base
 import (
 	"bufio"
 	"encoding/json"
-	"log"
-	"net/http"
-	"reflect"
-	"strings"
-
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -21,13 +16,16 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	authClient "github.com/cosmos/cosmos-sdk/x/auth/client/utils"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/utilities/random"
 	"github.com/persistenceOne/persistenceSDK/utilities/rest/queuing"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"log"
+	"net/http"
+	"reflect"
+	"strings"
 )
 
 type transaction struct {
@@ -42,7 +40,7 @@ type transaction struct {
 var _ helpers.Transaction = (*transaction)(nil)
 
 func (transaction transaction) GetName() string { return transaction.name }
-func (transaction transaction) Command(codec *codec.Codec) *cobra.Command {
+func (transaction transaction) Command(codec *codec.LegacyAmino) *cobra.Command {
 	runE := func(command *cobra.Command, args []string) error {
 		bufioReader := bufio.NewReader(command.InOrStdin())
 		transactionBuilder := auth.NewTxBuilderFromCLI(bufioReader).WithTxEncoder(authClient.GetTxEncoder(codec))
@@ -83,10 +81,10 @@ func (transaction transaction) HandleMessage(context sdkTypes.Context, message s
 	return &sdkTypes.Result{Events: context.EventManager().Events()}, nil
 }
 
-func (transaction transaction) RESTRequestHandler(cliContext context.CLIContext) http.HandlerFunc {
+func (transaction transaction) RESTRequestHandler(cliContext client.Context) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, httpRequest *http.Request) {
 		transactionRequest := transaction.requestPrototype()
-		if !rest.ReadRESTReq(responseWriter, httpRequest, cliContext.Codec, &transactionRequest) {
+		if !rest.ReadRESTReq(responseWriter, httpRequest, cliContext.LegacyAmino, &transactionRequest) {
 			return
 		} else if reflect.TypeOf(transaction.requestPrototype()) != reflect.TypeOf(transactionRequest) {
 			rest.WriteErrorResponse(responseWriter, http.StatusBadRequest, "")
@@ -220,7 +218,7 @@ func (transaction transaction) RESTRequestHandler(cliContext context.CLIContext)
 	}
 }
 
-func (transaction transaction) RegisterCodec(codec *codec.Codec) {
+func (transaction transaction) RegisterCodec(codec *codec.LegacyAmino) {
 	transaction.messagePrototype().RegisterCodec(codec)
 	transaction.requestPrototype().RegisterCodec(codec)
 }

@@ -17,7 +17,6 @@ import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	"github.com/cosmos/cosmos-sdk/x/auth/exported"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	"github.com/cosmos/cosmos-sdk/x/distribution"
@@ -61,7 +60,7 @@ type SimulationApplication struct {
 
 var _ applications.SimulationApplication = (*SimulationApplication)(nil)
 
-func (simulationApplication SimulationApplication) Codec() *codec.Codec {
+func (simulationApplication SimulationApplication) Codec() *codec.LegacyAmino {
 	return simulationApplication.application.codec
 }
 

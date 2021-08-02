@@ -12,7 +12,7 @@ import (
 
 const moduleName = "types"
 
-func RegisterCodec(codec *codec.Codec) {
+func RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, moduleName, accAddressData{})
 	codecUtilities.RegisterXPRTConcrete(codec, moduleName, listData{})
 	codecUtilities.RegisterXPRTConcrete(codec, moduleName, decData{})

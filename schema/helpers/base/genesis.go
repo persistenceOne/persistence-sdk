@@ -16,7 +16,7 @@ import (
 )
 
 type genesis struct {
-	codec *codec.Codec
+	codec *codec.LegacyAmino
 
 	keyPrototype      func() helpers.Key
 	mappablePrototype func() helpers.Mappable

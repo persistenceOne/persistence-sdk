@@ -1,12 +1,11 @@
 package queuing
 
 import (
+	"github.com/cosmos/cosmos-sdk/client"
 	"time"
-
-	"github.com/cosmos/cosmos-sdk/client/context"
 )
 
-func InitializeKafka(nodeList []string, cliContext context.CLIContext) {
+func InitializeKafka(nodeList []string, cliContext client.Context) {
 	KafkaState = *NewKafkaState(nodeList)
 	if KafkaState.IsEnabled {
 		go func() {

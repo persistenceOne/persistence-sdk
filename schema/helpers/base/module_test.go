@@ -7,10 +7,6 @@ package base
 
 import (
 	"encoding/json"
-	"math/rand"
-	"testing"
-
-	clientContext "github.com/cosmos/cosmos-sdk/client/context"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	sdkModule "github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/params"
@@ -22,6 +18,8 @@ import (
 	baseTestUtilities "github.com/persistenceOne/persistenceSDK/utilities/test/schema/helpers/base"
 	"github.com/stretchr/testify/require"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
+	"math/rand"
+	"testing"
 )
 
 var auxiliariesPrototype = func() helpers.Auxiliaries {

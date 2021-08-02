@@ -6,17 +6,12 @@
 package applications
 
 import (
-	"testing"
-
-	"github.com/cosmos/cosmos-sdk/types/module"
-
-	"github.com/cosmos/cosmos-sdk/x/auth/exported"
-
-	"github.com/cosmos/cosmos-sdk/simapp"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/params"
+	"testing"
 )
 
 type SimulationApplication interface {

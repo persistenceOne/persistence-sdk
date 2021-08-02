@@ -68,7 +68,7 @@ type application struct {
 
 	moduleBasicManager module.BasicManager
 
-	codec *codec.Codec
+	codec *codec.LegacyAmino
 
 	enabledWasmProposalTypeList []wasm.ProposalType
 	moduleAccountPermissions    map[string][]string
@@ -97,7 +97,7 @@ func (application application) GetDefaultClientHome() string {
 func (application application) GetModuleBasicManager() module.BasicManager {
 	return application.moduleBasicManager
 }
-func (application application) GetCodec() *codec.Codec {
+func (application application) GetCodec() *codec.LegacyAmino {
 	return application.codec
 }
 func (application application) LoadHeight(height int64) error {
@@ -572,7 +572,7 @@ func (application application) Initialize(logger log.Logger, db tendermintDB.DB,
 
 	return &application
 }
-func makeCodec(moduleBasicManager module.BasicManager) *codec.Codec {
+func makeCodec(moduleBasicManager module.BasicManager) *codec.LegacyAmino {
 	Codec := codec.New()
 	moduleBasicManager.RegisterCodec(Codec)
 	schema.RegisterCodec(Codec)

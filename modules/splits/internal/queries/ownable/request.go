@@ -15,10 +15,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
 
-type queryRequest struct {
-	OwnableID types.ID `json:"ownableID" valid:"required~required field ownableID missing"`
-}
-
 var _ helpers.QueryRequest = (*queryRequest)(nil)
 
 func (queryRequest queryRequest) Validate() error {

@@ -53,7 +53,7 @@ func (identity identity) GetAuthentication() types.Property {
 func (identity identity) GetKey() helpers.Key {
 	return key.FromID(identity.ID)
 }
-func (identity) RegisterCodec(codec *codec.Codec) {
+func (identity) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, identity{})
 }
 func NewIdentity(id types.ID, immutableProperties types.Properties, mutableProperties types.Properties) mappables.InterIdentity {

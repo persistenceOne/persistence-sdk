@@ -8,10 +8,7 @@ package base
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
-
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	sdkTypesModule "github.com/cosmos/cosmos-sdk/types/module"
@@ -22,6 +19,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/spf13/cobra"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
+	"math/rand"
 )
 
 type module struct {
@@ -70,7 +68,7 @@ func (module module) WeightedOperations(_ sdkTypesModule.SimulationState) []simu
 func (module module) Name() string {
 	return module.name
 }
-func (module module) RegisterCodec(codec *codec.Codec) {
+func (module module) RegisterCodec(codec *codec.LegacyAmino) {
 	for _, transaction := range module.transactionsPrototype().GetList() {
 		transaction.RegisterCodec(codec)
 	}
@@ -82,7 +80,7 @@ func (module module) ValidateGenesis(rawMessage json.RawMessage) error {
 	genesisState := module.genesisPrototype().Decode(rawMessage)
 	return genesisState.Validate()
 }
-func (module module) RegisterRESTRoutes(cliContext context.CLIContext, router *mux.Router) {
+func (module module) RegisterRESTRoutes(cliContext client.Context, router *mux.Router) {
 	for _, query := range module.queriesPrototype().GetList() {
 		router.HandleFunc("/"+module.Name()+"/"+query.GetName()+fmt.Sprintf("/{%s}", query.GetName()), query.RESTQueryHandler(cliContext)).Methods("GET")
 	}
@@ -91,7 +89,7 @@ func (module module) RegisterRESTRoutes(cliContext context.CLIContext, router *m
 		router.HandleFunc("/"+module.Name()+"/"+transaction.GetName(), transaction.RESTRequestHandler(cliContext)).Methods("POST")
 	}
 }
-func (module module) GetTxCmd(codec *codec.Codec) *cobra.Command {
+func (module module) GetTxCmd(codec *codec.LegacyAmino) *cobra.Command {
 	rootTransactionCommand := &cobra.Command{
 		Use:                        module.name,
 		Short:                      "Get root transaction command.",
@@ -111,7 +109,7 @@ func (module module) GetTxCmd(codec *codec.Codec) *cobra.Command {
 
 	return rootTransactionCommand
 }
-func (module module) GetQueryCmd(codec *codec.Codec) *cobra.Command {
+func (module module) GetQueryCmd(codec *codec.LegacyAmino) *cobra.Command {
 	rootQueryCommand := &cobra.Command{
 		Use:                        module.name,
 		Short:                      "Get root query command.",

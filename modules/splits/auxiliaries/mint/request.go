@@ -11,15 +11,8 @@ import (
 	"github.com/asaskevich/govalidator"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
-
-type auxiliaryRequest struct {
-	OwnerID   types.ID     `json:"ownerID" valid:"required~required field ownerID missing"`
-	OwnableID types.ID     `json:"ownableID" valid:"required~required field ownableID missing"`
-	Value     sdkTypes.Dec `json:"value" valid:"required~required field value missing"`
-}
 
 var _ helpers.AuxiliaryRequest = (*auxiliaryRequest)(nil)
 

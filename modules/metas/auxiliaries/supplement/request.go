@@ -11,10 +11,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type auxiliaryRequest struct {
-	PropertyList []types.Property `json:"propertyList"`
-}
-
 var _ helpers.AuxiliaryRequest = (*auxiliaryRequest)(nil)
 
 func (auxiliaryRequest auxiliaryRequest) Validate() error {

@@ -4,12 +4,12 @@
 package unwrap
 
 import (
+	"errors"
 	fmt "fmt"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
 	math_bits "math/bits"
-	"errors"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -249,7 +249,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Error = errors.New(string(dAtA[iNdEx:postIndex]))
+			m.Error = error(errors.New(string(dAtA[iNdEx:postIndex])))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

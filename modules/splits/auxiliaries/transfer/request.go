@@ -12,13 +12,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type auxiliaryRequest struct {
-	FromID    types.ID     `json:"fromID" valid:"required~required field fromID missing"`
-	ToID      types.ID     `json:"toID" valid:"required~required field toID missing"`
-	OwnableID types.ID     `json:"ownableID" valid:"required~required field ownableID missing"`
-	Value     sdkTypes.Dec `json:"value" valid:"required~required field value missing"`
-}
-
 var _ helpers.AuxiliaryRequest = (*auxiliaryRequest)(nil)
 
 func (auxiliaryRequest auxiliaryRequest) Validate() error {

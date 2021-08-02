@@ -15,10 +15,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
 
-type queryRequest struct {
-	SplitID types.ID `json:"splitID" valid:"required~required field splitID missing"`
-}
-
 var _ helpers.QueryRequest = (*queryRequest)(nil)
 
 func (queryRequest queryRequest) Validate() error {

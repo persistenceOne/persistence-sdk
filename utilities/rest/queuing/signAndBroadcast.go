@@ -6,22 +6,20 @@
 package queuing
 
 import (
-	"strings"
-
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
-	cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keys"
+	cryptoKeys "github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	authClient "github.com/cosmos/cosmos-sdk/x/auth/client/utils"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
+	"strings"
 )
 
-func signAndBroadcastMultiple(kafkaMsgList []kafkaMsg, cliContext context.CLIContext) ([]byte, error) {
-	var stdTxs types.StdTx
+func signAndBroadcastMultiple(kafkaMsgList []kafkaMsg, cliContext client.Context) ([]byte, error) {
+	var stdTxs client.TxBuilder
 
 	var txBytes []byte
 
@@ -38,17 +36,17 @@ func signAndBroadcastMultiple(kafkaMsgList []kafkaMsg, cliContext context.CLICon
 			return nil, Error
 		}
 
-		simAndExec, gas, Error := flags.ParseGas(kafkaMsg.BaseRequest.Gas)
+		gasSetting, Error := flags.ParseGasSetting(kafkaMsg.BaseRequest.Gas)
 		if Error != nil {
 			return nil, Error
 		}
 
-		keyBase, Error := cryptoKeys.NewKeyring(sdkTypes.KeyringServiceName(), viper.GetString(flags.FlagKeyringBackend), viper.GetString(flags.FlagHome), strings.NewReader(keys.DefaultKeyPass))
+		keyBase, Error := cryptoKeys.New(sdkTypes.KeyringServiceName(), viper.GetString(flags.FlagKeyringBackend), viper.GetString(flags.FlagHome), strings.NewReader(keys.DefaultKeyPass))
 		if Error != nil {
 			return nil, Error
 		}
 
-		accountNumber, sequence, Error := types.NewAccountRetriever(cliContext).GetAccountNumberSequence(msgCLIContext.FromAddress)
+		accountNumber, sequence, Error := cliContext.AccountRetriever.GetAccountNumberSequence(cliContext, msgCLIContext.FromAddress)
 		if Error != nil {
 			return nil, Error
 		}

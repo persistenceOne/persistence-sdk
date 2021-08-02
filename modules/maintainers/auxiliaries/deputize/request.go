@@ -11,16 +11,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-type auxiliaryRequest struct {
-	FromID               types.ID         `json:"fromID" valid:"required~required field fromID missing"`
-	ToID                 types.ID         `json:"toID" valid:"required~required field toID missing"`
-	ClassificationID     types.ID         `json:"classificationID" valid:"required~required field classificationID missing"`
-	MaintainedProperties types.Properties `json:"maintainedProperties" valid:"required~required field maintainedProperties missing"`
-	AddMaintainer        bool             `json:"addMaintainer" valid:"required~required field addMaintainer missing"`
-	RemoveMaintainer     bool             `json:"removeMaintainer" valid:"required~required field removeMaintainer missing"`
-	MutateMaintainer     bool             `json:"mutateMaintainer" valid:"required~required field mutateMaintainer missing"`
-}
-
 var _ helpers.AuxiliaryRequest = (*auxiliaryRequest)(nil)
 
 func (auxiliaryRequest auxiliaryRequest) Validate() error {

@@ -6,7 +6,6 @@
 package base
 
 import (
-	clientContext "github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/persistenceOne/persistenceSDK/utilities/test/schema/helpers/base"
 	"github.com/stretchr/testify/require"
 	abciTypes "github.com/tendermint/tendermint/abci/types"

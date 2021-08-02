@@ -4,13 +4,13 @@
 package make
 
 import (
+	"errors"
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
 	math_bits "math/bits"
-	"errors"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -117,15 +117,10 @@ func (m *transactionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Error != nil {
-		{
-			size := len(m.Error.Error())
-			i -= size
-			if _, err := m.MarshalTo(dAtA[i:]); err != nil {
-				return 0, err
-			}
-			i = encodeVarintResponse(dAtA, i, uint64(size))
-		}
+	if len(m.Error.Error()) > 0 {
+		i -= len(m.Error.Error())
+		copy(dAtA[i:], m.Error.Error())
+		i = encodeVarintResponse(dAtA, i, uint64(len(m.Error.Error())))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -162,8 +157,8 @@ func (m *transactionResponse) Size() (n int) {
 	if m.Success {
 		n += 2
 	}
-	if m.Error != nil {
-		l = len(m.Error.Error())
+	l = len(m.Error.Error())
+	if l > 0 {
 		n += 1 + l + sovResponse(uint64(l))
 	}
 	return n
@@ -254,7 +249,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Error = errors.New(string(dAtA[iNdEx:postIndex]))
+			m.Error = error(errors.New(string(dAtA[iNdEx:postIndex])))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

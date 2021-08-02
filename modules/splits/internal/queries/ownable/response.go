@@ -11,12 +11,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 )
 
-type queryResponse struct {
-	Success bool         `json:"success"`
-	Error   error        `json:"error"`
-	Value   sdkTypes.Dec `json:"value"`
-}
-
 var _ helpers.QueryResponse = (*queryResponse)(nil)
 
 func (queryResponse queryResponse) IsSuccessful() bool {
