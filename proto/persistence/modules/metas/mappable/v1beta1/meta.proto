@@ -1,0 +1,15 @@
+syntax ="proto3";
+
+package persistence.modules.metas.mappable.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+
+option go_package = "modules/metas/internal/mappable";
+
+message meta {
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.equal) = false;
+
+  string id = 1 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
+  string data = 2 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.Data", (gogoproto.nullable) = false];
+}

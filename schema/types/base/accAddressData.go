@@ -18,6 +18,18 @@ type accAddressData struct {
 	Value sdkTypes.AccAddress `json:"value"`
 }
 
+func (accAddressData accAddressData) Size() int {
+	panic("implement me")
+}
+
+func (accAddressData accAddressData) MarshalTo(i []byte) (int, error) {
+	panic("implement me")
+}
+
+func (accAddressData accAddressData) Unmarshal(i []byte) error {
+	panic("implement me")
+}
+
 var _ types.Data = (*accAddressData)(nil)
 
 func (accAddressData accAddressData) Compare(sortable types.Data) int {

@@ -6,28 +6,28 @@
 package queuing
 
 import (
+	"net/http"
 	"strconv"
 
-	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/pkg/errors"
 )
 
-func parseGasAdjustment(s string) (float64, error) {
+func ParseFloat64OrReturnBadRequest(s string, defaultIfEmpty float64) (float64, int, error) {
 	if len(s) == 0 {
-		return flags.DefaultGasAdjustment, nil
+		return defaultIfEmpty, http.StatusAccepted, nil
 	}
 
 	n, err := strconv.ParseFloat(s, 64)
 	if err != nil {
-		return n, err
+		return n, http.StatusBadRequest, err
 	}
 
-	return n, nil
+	return n, http.StatusAccepted, nil
 }
 
-func simulationResponse(cdc *codec.LegacyAmino, gas uint64) ([]byte, error) {
+func SimulationResponse(cdc *codec.LegacyAmino, gas uint64) ([]byte, error) {
 	gasEst := rest.GasEstimateResponse{GasEstimate: gas}
 	resp, err := cdc.MarshalJSON(gasEst)
 

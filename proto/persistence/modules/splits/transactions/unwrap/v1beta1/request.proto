@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package persistence.modules.splits.transactions.unwrap.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "third_party/proto/cosmos_proto/cosmos.proto";
+import "proto/persistence/cosmos/base/v1beta1/basereq.proto";
+
+option go_package = "modules/splits/internal/transactions/unwrap";
+
+message transactionRequest {
+    option (gogoproto.equal)            = false;
+    option (cosmos_proto.implements_interface) = "TransactionRequest";
+
+    persistence.cosmos.base.v1beta1.BaseReq basReq =1 [(gogoproto.nullable) = false];
+    string fromID  = 2;
+    string ownableID = 4;
+    string value =5;
+}

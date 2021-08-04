@@ -10,8 +10,8 @@ func InitializeKafka(nodeList []string, cliContext client.Context) {
 	if KafkaState.IsEnabled {
 		go func() {
 			for {
-				kafkaConsumerMessages(cliContext)
-				time.Sleep(sleepRoutine)
+				KafkaConsumerMessages(cliContext, KafkaState)
+				time.Sleep(SleepRoutine)
 			}
 		}()
 	}

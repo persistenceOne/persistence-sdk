@@ -16,6 +16,18 @@ type decData struct {
 	Value sdkTypes.Dec `json:"value"`
 }
 
+func (decData decData) Size() int {
+	panic("implement me")
+}
+
+func (decData decData) MarshalTo(bytes []byte) (int, error) {
+	panic("implement me")
+}
+
+func (decData decData) Unmarshal(bytes []byte) error {
+	panic("implement me")
+}
+
 var _ types.Data = (*decData)(nil)
 
 func (decData decData) Compare(data types.Data) int {

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package persistence.modules.orders.transactions.make.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+
+option go_package = "modules/orders/internal/transactions/make";
+
+message transactionResponse {
+  option (gogoproto.equal) = false;
+
+  bool success = 1;
+  string error = 2 [(gogoproto.customtype) = "error", (gogoproto.nullable) = false];
+}

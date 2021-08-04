@@ -30,6 +30,18 @@ type orderID struct {
 	HashID           types.ID `json:"hashID"`
 }
 
+func (orderID orderID) Size() int {
+	panic("implement me")
+}
+
+func (orderID orderID) MarshalTo(i []byte) (int, error) {
+	panic("implement me")
+}
+
+func (orderID orderID) Unmarshal(i []byte) error {
+	panic("implement me")
+}
+
 var _ types.ID = (*orderID)(nil)
 var _ helpers.Key = (*orderID)(nil)
 

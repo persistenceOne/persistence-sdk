@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package persistence.modules.metas.queries.meta.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+
+option go_package = "modules/metas/internal/queries/meta";
+
+message queryRequest {
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.equal) = false;
+
+  string metaID = 1 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
+}

@@ -18,6 +18,18 @@ type idData struct {
 	Value types.ID `json:"value"`
 }
 
+func (idData idData) Size() int {
+	panic("implement me")
+}
+
+func (idData idData) MarshalTo(i []byte) (int, error) {
+	panic("implement me")
+}
+
+func (idData idData) Unmarshal(i []byte) error {
+	panic("implement me")
+}
+
 var _ types.Data = (*idData)(nil)
 
 func (idData idData) Compare(data types.Data) int {

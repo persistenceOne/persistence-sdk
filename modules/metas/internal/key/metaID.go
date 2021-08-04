@@ -22,6 +22,18 @@ type metaID struct {
 	HashID types.ID `json:"hashID" valid:"required~required field hashID missing"`
 }
 
+func (metaID metaID) Size() int {
+	panic("implement me")
+}
+
+func (metaID metaID) MarshalTo(i []byte) (int, error) {
+	panic("implement me")
+}
+
+func (metaID metaID) Unmarshal(i []byte) error {
+	panic("implement me")
+}
+
 var _ types.ID = (*metaID)(nil)
 var _ helpers.Key = (*metaID)(nil)
 

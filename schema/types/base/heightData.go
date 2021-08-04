@@ -18,6 +18,18 @@ type heightData struct {
 	Value types.Height `json:"value"`
 }
 
+func (heightData heightData) Size() int {
+	panic("implement me")
+}
+
+func (heightData heightData) MarshalTo(bytes []byte) (int, error) {
+	panic("implement me")
+}
+
+func (heightData heightData) Unmarshal(bytes []byte) error {
+	panic("implement me")
+}
+
 var _ types.Data = (*heightData)(nil)
 
 func (heightData heightData) Compare(data types.Data) int {

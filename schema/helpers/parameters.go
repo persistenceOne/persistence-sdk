@@ -7,7 +7,7 @@ package helpers
 
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/params"
+	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
@@ -23,8 +23,8 @@ type Parameters interface {
 	Fetch(sdkTypes.Context, types.ID) Parameters
 	Mutate(sdkTypes.Context, types.Parameter) Parameters
 
-	GetKeyTable() subspace.KeyTable
-	subspace.ParamSet
+	GetKeyTable() paramsTypes.KeyTable
+	paramsTypes.ParamSet
 
-	Initialize(params.Subspace) Parameters
+	Initialize(paramsTypes.Subspace) Parameters
 }

@@ -19,6 +19,18 @@ type listData struct {
 	Value sortedDataList `json:"value"`
 }
 
+func (listData listData) Size() int {
+	panic("implement me")
+}
+
+func (listData listData) MarshalTo(bytes []byte) (int, error) {
+	panic("implement me")
+}
+
+func (listData listData) Unmarshal(bytes []byte) error {
+	panic("implement me")
+}
+
 var _ types.ListData = (*listData)(nil)
 
 func (listData listData) Compare(data types.Data) int {

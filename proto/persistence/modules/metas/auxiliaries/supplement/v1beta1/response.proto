@@ -1,0 +1,15 @@
+syntax="proto3";
+
+package persistence.modules.metas.auxiliaries.supplement.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+
+option go_package = "modules/metas/auxiliaries/supplement";
+
+message auxiliaryResponse {
+  option (gogoproto.equal) = false;
+
+  bool success =1;
+  string error = 2 [(gogoproto.customtype) = "error", (gogoproto.nullable) = false];
+  string metaProperties = 3 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.MetaProperties", (gogoproto.nullable) = false] ;
+}
