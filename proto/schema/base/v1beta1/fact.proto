@@ -1,0 +1,20 @@
+syntax="proto3";
+
+package schema.base.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "proto/schema/base/v1beta1/id.proto";
+import "proto/schema/base/v1beta1/signatures.proto";
+
+option go_package = "schema/test_types/base";
+
+message fact {
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.equal)            = false;
+
+  schema.base.v1beta1.ID hashID =1 [(gogoproto.nullable) = false];
+  schema.base.v1beta1.ID typeID = 2 [(gogoproto.nullable) = false];
+  schema.base.v1beta1.signatures signatures =3[(gogoproto.nullable) = false];
+
+
+}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package schema.base.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+
+
+option go_package = "schema/test_types/base";
+
+message accAddressListData {
+
+    option (gogoproto.goproto_getters) = false;
+    option (gogoproto.equal)            = false;
+
+    string value =1 [(gogoproto.customtype) = "schema/test_types/base.SortedAccAddresses",(gogoproto.nullable) = false];
+}

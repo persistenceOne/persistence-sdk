@@ -7,14 +7,14 @@ package define
 
 import (
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
 
 func Test_Define_Response(t *testing.T) {
 
-	classificationID := base.NewID("classificationID")
+	classificationID := testBase.NewID("classificationID")
 
 	testAuxiliaryResponse := newAuxiliaryResponse(classificationID, nil)
 	require.Equal(t, auxiliaryResponse{Success: true, Error: nil, ClassificationID: classificationID}, testAuxiliaryResponse)

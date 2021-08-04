@@ -13,18 +13,12 @@ import (
 	xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
 
-type message struct {
-	From                  sdkTypes.AccAddress  `json:"from" valid:"required~required field from missing"`
-	FromID                types.ID             `json:"fromID" valid:"required~required field fromID missing"`
-	IdentityID            types.ID             `json:"identityID" valid:"required~required field identityID missing"`
-	MutableMetaProperties types.MetaProperties `json:"mutableMetaProperties" valid:"required~required field mutableMetaProperties missing"`
-	MutableProperties     types.Properties     `json:"mutableProperties" valid:"required~required field mutableProperties missing"`
-}
 
 var _ helpers.Message = message{}
 
@@ -44,7 +38,7 @@ func (message message) GetSignBytes() []byte {
 func (message message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{message.From}
 }
-func (message) RegisterCodec(codec *codec.Codec) {
+func (message) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
 }
 func messageFromInterface(msg sdkTypes.Msg) message {
@@ -58,7 +52,7 @@ func messageFromInterface(msg sdkTypes.Msg) message {
 func messagePrototype() helpers.Message {
 	return message{}
 }
-func newMessage(from sdkTypes.AccAddress, fromID types.ID, identityID types.ID, mutableMetaProperties types.MetaProperties, mutableProperties types.Properties) sdkTypes.Msg {
+func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, identityID test_types.ID, mutableMetaProperties types.MetaProperties, mutableProperties types.Properties) sdkTypes.Msg {
 	return message{
 		From:                  from,
 		FromID:                fromID,

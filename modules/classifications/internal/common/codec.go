@@ -12,7 +12,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/utilities/module"
 )
 
-var Codec *codec.ProtoCodec
+var Codec *codec.LegacyAmino
 
 func init() {
 	Codec = module.RegisterCodec(key.Prototype, mappable.Prototype)

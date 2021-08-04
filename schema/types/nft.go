@@ -10,6 +10,6 @@ import (
 )
 
 type NFT interface {
-	//GetID() ID
+	ID() ID
 	GetClassificationID() test_types.ID
 }

@@ -13,16 +13,11 @@ import (
 	xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
 
-type message struct {
-	From    sdkTypes.AccAddress `json:"from" valid:"required~required field from missing"`
-	FromID  types.ID            `json:"fromID" valid:"required~required field fromID missing"`
-	AssetID types.ID            `json:"assetID" valid:"required~required field assetID missing"`
-}
 //TODO: message.proto --> grpc routes
 var _ helpers.Message = message{}
 
@@ -42,7 +37,7 @@ func (message message) GetSignBytes() []byte {
 func (message message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{message.From}
 }
-func (message) RegisterCodec(codec *codec.ProtoCodec) {
+func (message) RegisterCodec(codec *codec.LegacyAmino) {
 	//TODO: concrete
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
 }
@@ -57,7 +52,7 @@ func messageFromInterface(msg sdkTypes.Msg) message {
 func messagePrototype() helpers.Message {
 	return message{}
 }
-func newMessage(from sdkTypes.AccAddress, fromID types.ID, assetID types.ID) sdkTypes.Msg {
+func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, assetID test_types.ID) sdkTypes.Msg {
 	return message{
 		From:    from,
 		FromID:  fromID,

@@ -6,45 +6,45 @@
 package key
 
 import (
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"strings"
 
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 
 	"github.com/persistenceOne/persistenceSDK/constants"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
 
-func readMaintainerID(maintainerIDString string) types.ID {
+func readMaintainerID(maintainerIDString string) test_types.ID {
 	idList := strings.Split(maintainerIDString, constants.SecondOrderCompositeIDSeparator)
 	if len(idList) == 2 {
 		return maintainerID{
-			ClassificationID: base.NewID(idList[0]),
-			IdentityID:       base.NewID(idList[1]),
+			ClassificationID: testBase.NewID(idList[0]),
+			IdentityID:       testBase.NewID(idList[1]),
 		}
 	}
 
-	return maintainerID{IdentityID: base.NewID(""), ClassificationID: base.NewID("")}
+	return maintainerID{IdentityID: testBase.NewID(""), ClassificationID: testBase.NewID("")}
 }
 func maintainerIDFromInterface(i interface{}) maintainerID {
 	switch value := i.(type) {
 	case maintainerID:
 		return value
-	case types.ID:
+	case test_types.ID:
 		return maintainerIDFromInterface(readMaintainerID(value.String()))
 	default:
 		panic(i)
 	}
 }
 
-func ReadClassificationID(assetID types.ID) types.ID {
+func ReadClassificationID(assetID test_types.ID) test_types.ID {
 	return maintainerIDFromInterface(assetID).ClassificationID
 }
 
-func ReadIdentityID(assetID types.ID) types.ID {
+func ReadIdentityID(assetID test_types.ID) test_types.ID {
 	return maintainerIDFromInterface(assetID).IdentityID
 }
 
-func FromID(id types.ID) helpers.Key {
+func FromID(id test_types.ID) helpers.Key {
 	return maintainerIDFromInterface(id)
 }

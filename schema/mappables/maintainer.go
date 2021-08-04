@@ -7,6 +7,7 @@ package mappables
 
 import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
@@ -19,6 +20,6 @@ type Maintainer interface {
 	CanRemoveMaintainer() bool
 	CanMutateMaintainer() bool
 
-	MaintainsProperty(types.ID) bool
+	MaintainsProperty(test_types.ID) bool
 	helpers.Mappable
 }

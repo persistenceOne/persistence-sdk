@@ -1,0 +1,16 @@
+syntax="proto3";
+
+package schema.base.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "proto/schema/base/v1beta1/signature.proto";
+
+option go_package = "schema/test_types/base";
+
+message signatures {
+    option (gogoproto.goproto_getters) = false;
+    option (gogoproto.equal)            = false;
+
+    repeated schema.base.v1beta1.signature signature_list =1 [(gogoproto.nullable) = false];
+
+}

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package base;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "third_party/proto/cosmos_proto/cosmos.proto";
+
+
+option go_package = "modules/classifications/internal/queries/classification";
+
+message queryRequest {
+  option (gogoproto.equal)            = false;
+  option (cosmos_proto.implements_interface) = "QueryRequest";
+
+  string classificationID =1 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false] ;
+
+
+}

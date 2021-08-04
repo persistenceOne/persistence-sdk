@@ -28,6 +28,7 @@ func (accAddressListData accAddressListData) String() string {
 		accAddressDataStringList[i] = accAddress.String()
 	}
 
+
 	return strings.Join(accAddressDataStringList, constants.ListDataStringSeparator)
 }
 func (accAddressListData accAddressListData) GetTypeID() types.ID {

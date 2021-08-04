@@ -7,65 +7,43 @@ package burn
 
 import (
 	"encoding/json"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+
 	"github.com/asaskevich/govalidator"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-var _ helpers.TransactionRequest = (*TransactionRequest)(nil)
+var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 
-func newTransactionRequest(baseReq rest.BaseReq, fromID string, assetID string) *TransactionRequest {
-	transReq := &TransactionRequest{
-		FromID:  fromID,
-		AssetID: assetID,
-	}
-	var bReq rest.BaseReq
-
-	bReq = baseReq
-
-	bReqAny, err := codectypes.NewAnyWithValue(bReq)
-
-	if err != nil {
-		panic(err)
-	}
-	transReq.BaseReq = bReqAny
-	return transReq
-}
-
-//var _ helpers.TransactionRequest = (*TransactionRequest)(nil)
-
-//Implementing the helpers.TransactionRequest interface for Base Req
-
-
-
-func (transactionRequest *TransactionRequest) Validate() error {
+func (transactionRequest transactionRequest) Validate() error {
 	_, Error := govalidator.ValidateStruct(transactionRequest)
 	return Error
 }
-func (transactionRequest *TransactionRequest) FromCLI(cliCommand helpers.CLICommand, cliContext client.Context) (helpers.TransactionRequest, error) {
+func (transactionRequest transactionRequest) FromCLI(cliCommand helpers.CLICommand, cliContext client.Context) (helpers.TransactionRequest, error) {
 	return newTransactionRequest(
 		cliCommand.ReadBaseReq(cliContext),
 		cliCommand.ReadString(flags.FromID),
 		cliCommand.ReadString(flags.AssetID),
 	), nil
 }
-func (transactionRequest *TransactionRequest) FromJSON(rawMessage json.RawMessage) (helpers.TransactionRequest, error) {
+func (transactionRequest transactionRequest) FromJSON(rawMessage json.RawMessage) (helpers.TransactionRequest, error) {
 	if Error := json.Unmarshal(rawMessage, &transactionRequest); Error != nil {
 		return nil, Error
 	}
 
 	return transactionRequest, nil
 }
-
-func (transactionRequest *TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
+func (transactionRequest transactionRequest) GetBaseReq() test_types.BaseReq {
+	return transactionRequest.BaseReq
+}
+func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 	from, Error := sdkTypes.AccAddressFromBech32(transactionRequest.GetBaseReq().From)
 	if Error != nil {
 		return nil, Error
@@ -73,14 +51,20 @@ func (transactionRequest *TransactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 
 	return newMessage(
 		from,
-		base.NewID(transactionRequest.FromID),
-		base.NewID(transactionRequest.AssetID),
+		testBase.NewID(transactionRequest.FromID),
+		testBase.NewID(transactionRequest.AssetID),
 	), nil
 }
-func (*TransactionRequest) RegisterCodec(codec *codec.ProtoCodec) {
-	codecUtilities.RegisterXPRTConcrete(codec, module.Name, TransactionRequest{})
+func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
+	codecUtilities.RegisterXPRTConcrete(codec, module.Name, transactionRequest{})
 }
 func requestPrototype() helpers.TransactionRequest {
-	return (*TransactionRequest){}
+	return transactionRequest{}
 }
-
+func newTransactionRequest(baseReq test_types.BaseReq, fromID string, assetID string) helpers.TransactionRequest {
+	return transactionRequest{
+		BaseReq: baseReq,
+		FromID:  fromID,
+		AssetID: assetID,
+	}
+}

@@ -7,22 +7,39 @@ package key
 
 import (
 	"bytes"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/modules/maintainers/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
 type maintainerID struct {
-	ClassificationID types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
-	IdentityID       types.ID `json:"identityID" valid:"required~required field identityID missing"`
+	ClassificationID test_types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
+	IdentityID       test_types.ID `json:"identityID" valid:"required~required field identityID missing"`
 }
 
-var _ types.ID = (*maintainerID)(nil)
+
+func (maintainerID maintainerID) Size() int {
+	panic("implement me")
+}
+
+func (maintainerID maintainerID) MarshalTo(i []byte) (int, error) {
+	panic("implement me")
+}
+
+func (maintainerID maintainerID) Unmarshal(i []byte) error {
+	panic("implement me")
+}
+
+func (maintainerID maintainerID) MarshalToSizedBuffer(i []byte) (int, error) {
+	panic("implement me")
+}
+
+var _ test_types.ID = (*maintainerID)(nil)
 var _ helpers.Key = (*maintainerID)(nil)
 
 func (maintainerID maintainerID) Bytes() []byte {
@@ -37,7 +54,7 @@ func (maintainerID maintainerID) String() string {
 
 	return strings.Join(values, constants.SecondOrderCompositeIDSeparator)
 }
-func (maintainerID maintainerID) Equals(id types.ID) bool {
+func (maintainerID maintainerID) Equals(id test_types.ID) bool {
 	return bytes.Equal(maintainerID.Bytes(), id.Bytes())
 }
 func (maintainerID maintainerID) GenerateStoreKeyBytes() []byte {
@@ -53,7 +70,7 @@ func (maintainerID maintainerID) Matches(key helpers.Key) bool {
 	return maintainerID.Equals(maintainerIDFromInterface(key))
 }
 
-func NewMaintainerID(classificationID types.ID, identityID types.ID) types.ID {
+func NewMaintainerID(classificationID test_types.ID, identityID test_types.ID) test_types.ID {
 	return maintainerID{
 		ClassificationID: classificationID,
 		IdentityID:       identityID,

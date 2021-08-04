@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package base;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "third_party/proto/cosmos_proto/cosmos.proto";
+import "proto/cosmos/base/v1beta1/basereq.proto";
+
+option go_package = "modules/assets/internal/transactions/define";
+
+message transactionRequest {
+    option (gogoproto.equal)            = false;
+    option (cosmos_proto.implements_interface) = "TransactionResponse";
+
+    cosmos.base.v1beta1.BaseReq base_req =1 [(gogoproto.nullable) = false];
+    string from_iD  = 2;
+    string immutableMetaProperties =3;
+    string immutableProperties =4;
+    string mutableMetaProperties =5;
+    string mutableProperties =6;
+    
+}

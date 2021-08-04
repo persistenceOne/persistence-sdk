@@ -6,6 +6,7 @@
 package define
 
 import (
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
@@ -17,7 +18,7 @@ import (
 
 func Test_Define_Message(t *testing.T) {
 
-	testFromID := base.NewID("fromID")
+	testFromID := testBase.NewID("fromID")
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)

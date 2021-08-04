@@ -98,7 +98,7 @@ func (m ID) MarshalTo(dAtA []byte) (int, error) {
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ID) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m ID) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int

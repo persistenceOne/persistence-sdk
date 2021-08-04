@@ -8,13 +8,13 @@ package define
 import (
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 )
 
 type auxiliaryResponse struct {
 	Success          bool     `json:"success"`
 	Error            error    `json:"error"`
-	ClassificationID types.ID `json:"classificationID"`
+	ClassificationID test_types.ID `json:"classificationID"`
 }
 
 var _ helpers.AuxiliaryResponse = (*auxiliaryResponse)(nil)
@@ -26,7 +26,7 @@ func (auxiliaryResponse auxiliaryResponse) GetError() error {
 	return auxiliaryResponse.Error
 }
 
-func newAuxiliaryResponse(classificationID types.ID, error error) helpers.AuxiliaryResponse {
+func newAuxiliaryResponse(classificationID test_types.ID, error error) helpers.AuxiliaryResponse {
 	if error != nil {
 		return auxiliaryResponse{
 			Success:          false,
@@ -41,7 +41,7 @@ func newAuxiliaryResponse(classificationID types.ID, error error) helpers.Auxili
 	}
 }
 
-func GetClassificationIDFromResponse(response helpers.AuxiliaryResponse) (types.ID, error) {
+func GetClassificationIDFromResponse(response helpers.AuxiliaryResponse) (test_types.ID, error) {
 	switch value := response.(type) {
 	case auxiliaryResponse:
 		if value.IsSuccessful() {

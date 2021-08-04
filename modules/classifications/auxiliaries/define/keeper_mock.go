@@ -11,7 +11,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/key"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 )
 
 type auxiliaryKeeperMock struct {
@@ -27,9 +27,9 @@ func (auxiliaryKeeper auxiliaryKeeperMock) Help(context sdkTypes.Context, reques
 		return newAuxiliaryResponse(nil, errors.InvalidRequest)
 	}
 
-	classificationID := key.NewClassificationID(base.NewID(context.ChainID()), auxiliaryRequest.ImmutableProperties, auxiliaryRequest.MutableProperties)
+	classificationID := key.NewClassificationID(testBase.NewID(context.ChainID()), auxiliaryRequest.ImmutableProperties, auxiliaryRequest.MutableProperties)
 
-	return newAuxiliaryResponse(base.NewID(classificationID.String()), nil)
+	return newAuxiliaryResponse(testBase.NewID(classificationID.String()), nil)
 }
 
 func (auxiliaryKeeperMock) Initialize(mapper helpers.Mapper, _ helpers.Parameters, _ []interface{}) helpers.Keeper {

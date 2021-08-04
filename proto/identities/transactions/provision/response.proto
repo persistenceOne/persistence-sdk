@@ -1,0 +1,18 @@
+syntax="proto3";
+
+package base;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "third_party/proto/cosmos_proto/cosmos.proto";
+option go_package = "modules/identities/internal/transactions/provision";
+
+message transactionResponse {
+  option (gogoproto.equal)            = false;
+
+  option (cosmos_proto.implements_interface) = "TransactionResponse";
+
+  bool success =1;
+  string error =2 [ (gogoproto.customtype) = "error",  (gogoproto.nullable) = false];
+
+
+}

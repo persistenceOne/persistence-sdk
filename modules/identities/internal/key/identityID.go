@@ -21,11 +21,28 @@ import (
 )
 
 type identityID struct {
-	ClassificationID types.ID      `json:"classificationID" valid:"required~required field classificationID missing"`
+	ClassificationID test_types.ID      `json:"classificationID" valid:"required~required field classificationID missing"`
 	HashID           test_types.ID `json:"hashID" valid:"required~required field hashID missing"`
 }
 
-var _ types.ID = (*identityID)(nil)
+
+func (identityID identityID) Size() int {
+	panic("implement me")
+}
+
+func (identityID identityID) MarshalTo(i []byte) (int, error) {
+	panic("implement me")
+}
+
+func (identityID identityID) Unmarshal(i []byte) error {
+	panic("implement me")
+}
+
+func (identityID identityID) MarshalToSizedBuffer(i []byte) (int, error) {
+	panic("implement me")
+}
+
+var _ test_types.ID = (*identityID)(nil)
 var _ helpers.Key = (*identityID)(nil)
 
 func (identityID identityID) Bytes() []byte {
@@ -41,7 +58,7 @@ func (identityID identityID) String() string {
 
 	return strings.Join(values, constants.FirstOrderCompositeIDSeparator)
 }
-func (identityID identityID) Equals(id types.ID) bool {
+func (identityID identityID) Equals(id test_types.ID) bool {
 	return bytes.Equal(identityID.Bytes(), id.Bytes())
 }
 func (identityID identityID) GenerateStoreKeyBytes() []byte {
@@ -57,7 +74,7 @@ func (identityID identityID) Matches(key helpers.Key) bool {
 	return identityID.Equals(identityIDFromInterface(key))
 }
 
-func NewIdentityID(classificationID types.ID, immutableProperties types.Properties) types.ID {
+func NewIdentityID(classificationID test_types.ID, immutableProperties types.Properties) test_types.ID {
 	return identityID{
 		ClassificationID: classificationID,
 		HashID:           baseTraits.HasImmutables{Properties: immutableProperties}.GenerateHashID(),

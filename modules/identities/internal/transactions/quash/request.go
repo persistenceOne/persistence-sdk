@@ -7,24 +7,20 @@ package quash
 
 import (
 	"encoding/json"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-type transactionRequest struct {
-	BaseReq    rest.BaseReq `json:"baseReq"`
-	FromID     string       `json:"fromID" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID "`
-	IdentityID string       `json:"identityID" valid:"required~required field identityID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field identityID "`
-}
+
 
 var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 
@@ -46,7 +42,7 @@ func (transactionRequest transactionRequest) FromJSON(rawMessage json.RawMessage
 
 	return transactionRequest, nil
 }
-func (transactionRequest transactionRequest) GetBaseReq() rest.BaseReq {
+func (transactionRequest transactionRequest) GetBaseReq() test_types.BaseReq {
 	return transactionRequest.BaseReq
 }
 func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
@@ -57,17 +53,17 @@ func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 
 	return newMessage(
 		from,
-		base.NewID(transactionRequest.FromID),
-		base.NewID(transactionRequest.IdentityID),
+		testBase.NewID(transactionRequest.FromID),
+		testBase.NewID(transactionRequest.IdentityID),
 	), nil
 }
-func (transactionRequest) RegisterCodec(codec *codec.Codec) {
+func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, transactionRequest{})
 }
 func requestPrototype() helpers.TransactionRequest {
 	return transactionRequest{}
 }
-func newTransactionRequest(baseReq rest.BaseReq, fromID string, identityID string) helpers.TransactionRequest {
+func newTransactionRequest(baseReq test_types.BaseReq, fromID string, identityID string) helpers.TransactionRequest {
 	return transactionRequest{
 		BaseReq:    baseReq,
 		FromID:     fromID,

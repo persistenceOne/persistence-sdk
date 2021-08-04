@@ -7,24 +7,21 @@ package key
 
 import (
 	"bytes"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 	metaUtilities "github.com/persistenceOne/persistenceSDK/utilities/meta"
 )
 
-type classificationID struct {
-	ChainID types.ID `json:"chainID" valid:"required~required field chainID missing"`
-	HashID  types.ID `json:"hashID" valid:"required~required field hashID missing"`
-}
-
-var _ types.ID = (*classificationID)(nil)
+var _ test_types.ID = (*classificationID)(nil)
 var _ helpers.Key = (*classificationID)(nil)
 
 func (classificationID classificationID) Bytes() []byte {
@@ -39,7 +36,7 @@ func (classificationID classificationID) String() string {
 
 	return strings.Join(values, constants.IDSeparator)
 }
-func (classificationID classificationID) Equals(id types.ID) bool {
+func (classificationID classificationID) Equals(id test_types.ID) bool {
 	return bytes.Equal(classificationID.Bytes(), id.Bytes())
 }
 func (classificationID classificationID) GenerateStoreKeyBytes() []byte {
@@ -55,7 +52,7 @@ func (classificationID classificationID) Matches(key helpers.Key) bool {
 	return classificationID.Equals(classificationIDFromInterface(key))
 }
 
-func NewClassificationID(chainID types.ID, immutableProperties types.Properties, mutableProperties types.Properties) types.ID {
+func NewClassificationID(chainID test_types.ID, immutableProperties types.Properties, mutableProperties types.Properties) test_types.ID {
 	immutableIDStringList := make([]string, len(immutableProperties.GetList()))
 
 	for i, property := range immutableProperties.GetList() {
@@ -78,6 +75,6 @@ func NewClassificationID(chainID types.ID, immutableProperties types.Properties,
 
 	return classificationID{
 		ChainID: chainID,
-		HashID:  base.NewID(metaUtilities.Hash(metaUtilities.Hash(immutableIDStringList...), metaUtilities.Hash(mutableIDStringList...), metaUtilities.Hash(defaultImmutableStringList...))),
+		HashID:  testBase.NewID(metaUtilities.Hash(metaUtilities.Hash(immutableIDStringList...), metaUtilities.Hash(mutableIDStringList...), metaUtilities.Hash(defaultImmutableStringList...))),
 	}
 }

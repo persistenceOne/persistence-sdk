@@ -18,23 +18,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
 
-type message struct {
-	From       sdkTypes.AccAddress `json:"from" valid:"required~required field from missing"`
-	To         sdkTypes.AccAddress `json:"to" valid:"required~required field to missing, matches(^[a-z0-9]*$)~invalid field to"`
-	IdentityID test_types.ID       `json:"identityID" valid:"required~required field identityID missing"`
-}
 
-func (message message) Reset() {
-	panic("implement me")
-}
-
-func (message message) String() string {
-	panic("implement me")
-}
-
-func (message message) ProtoMessage() {
-	panic("implement me")
-}
 
 var _ sdkTypes.Msg = message{}
 

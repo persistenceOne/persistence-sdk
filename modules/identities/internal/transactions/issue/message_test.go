@@ -38,7 +38,7 @@ func Test_Issue_Message(t *testing.T) {
 	require.Equal(t, nil, Error)
 
 	testMessage := newMessage(fromAccAddress, toAccAddress, testFromID, testClassificationID, immutableMetaProperties, immutableProperties, mutableMetaProperties, mutableProperties)
-	require.Equal(t, message{From: fromAccAddress, To: toAccAddress, FromID: testFromID, ClassificationID: testClassificationID, ImmutableMetaProperties: immutableMetaProperties, ImmutableProperties: immutableProperties, MutableMetaProperties: mutableMetaProperties, MutableProperties: mutableProperties}, testMessage)
+	require.Equal(t, message{From: fromAccAddress, To: toAccAddress, To: testFromID, ClassificationID: testClassificationID, ImmutableMetaProperties: immutableMetaProperties, ImmutableProperties: immutableProperties, MutableMetaProperties: mutableMetaProperties, MutableProperties: mutableProperties}, testMessage)
 	require.Equal(t, module.Name, testMessage.Route())
 	require.Equal(t, Transaction.GetName(), testMessage.Type())
 	require.Equal(t, nil, testMessage.ValidateBasic())

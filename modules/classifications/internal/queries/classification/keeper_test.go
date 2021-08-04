@@ -6,13 +6,15 @@
 package classification
 
 import (
+	parKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/codec"
+	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
-	"github.com/cosmos/cosmos-sdk/x/params"
+	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/key"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/mappable"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/parameters"
@@ -21,18 +23,18 @@ import (
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
-	abciTypes "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	tendermintDB "github.com/tendermint/tm-db"
 )
 
 func CreateTestInput2(t *testing.T) (sdkTypes.Context, helpers.Keeper) {
-	var Codec = codec.New()
+	var Codec = codec.NewLegacyAmino()
 	schema.RegisterCodec(Codec)
-	sdkTypes.RegisterCodec(Codec)
-	codec.RegisterCrypto(Codec)
+	sdkTypes.RegisterLegacyAminoCodec(Codec)
+	cryptoCodec.RegisterCrypto(Codec)
 	codec.RegisterEvidences(Codec)
-	vesting.RegisterCodec(Codec)
+	vestingTypes.RegisterLegacyAminoCodec(Codec)
 	Codec.Seal()
 	storeKey := sdkTypes.NewKVStoreKey("test")
 	paramsStoreKey := sdkTypes.NewKVStoreKey("testParams")
@@ -46,13 +48,14 @@ func CreateTestInput2(t *testing.T) (sdkTypes.Context, helpers.Keeper) {
 	Error := commitMultiStore.LoadLatestVersion()
 	require.Nil(t, Error)
 
-	context := sdkTypes.NewContext(commitMultiStore, abciTypes.Header{
+	context := sdkTypes.NewContext(commitMultiStore, tendermintTypes.Header{
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 
 	mapper := baseHelpers.NewMapper(key.Prototype, mappable.Prototype).Initialize(storeKey)
-	paramsKeeper := params.NewKeeper(
-		Codec,
+	paramsKeeper := parKeeper.NewKeeper(
+		nil,
+		codec.NewLegacyAmino(),
 		paramsStoreKey,
 		paramsTransientStoreKeys,
 	)
@@ -70,7 +73,7 @@ func Test_Query_Keeper_Classification(t *testing.T) {
 	require.Equal(t, nil, Error)
 	mutableProperties, Error2 := base.ReadProperties("burn:S|100")
 	require.Equal(t, nil, Error2)
-	chainID := base.NewID("ChainID")
+	chainID := testBase.NewID("ChainID")
 
 	classificationID := key.NewClassificationID(chainID, immutableProperties, mutableProperties)
 	keepers.(queryKeeper).mapper.NewCollection(context).Add(mappable.NewClassification(classificationID, immutableProperties, mutableProperties))

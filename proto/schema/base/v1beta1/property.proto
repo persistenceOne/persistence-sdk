@@ -1,0 +1,5 @@
+syntax="proto3";
+
+package schema.base.v1beta1;
+import "proto/schema/base/v1beta1/id.proto";
+

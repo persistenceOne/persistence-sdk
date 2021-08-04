@@ -1,0 +1,11 @@
+syntax="proto3";
+
+package schema.base.v1beta1;
+
+
+
+option go_package = "schema/test_types/base";
+
+message height {
+    int64 value = 1;
+}

@@ -6,6 +6,7 @@
 package define
 
 import (
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"testing"
 
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
@@ -14,8 +15,8 @@ import (
 
 func Test_Define_Request(t *testing.T) {
 
-	immutableProperties := base.NewProperties(base.NewProperty(base.NewID("ID2"), base.NewFact(base.NewStringData("Data2"))))
-	mutableProperties := base.NewProperties(base.NewProperty(base.NewID("ID1"), base.NewFact(base.NewStringData("Data1"))))
+	immutableProperties := base.NewProperties(base.NewProperty(testBase.NewID("ID2"), base.NewFact(base.NewStringData("Data2"))))
+	mutableProperties := base.NewProperties(base.NewProperty(testBase.NewID("ID1"), base.NewFact(base.NewStringData("Data1"))))
 
 	testAuxiliaryRequest := NewAuxiliaryRequest(immutableProperties, mutableProperties)
 

@@ -6,6 +6,15 @@
 package deputize
 
 import (
+	"github.com/cosmos/cosmos-sdk/codec/types"
+	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
+	"github.com/cosmos/cosmos-sdk/std"
+	"github.com/cosmos/cosmos-sdk/x/auth/tx"
+	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
+	"github.com/persistenceOne/persistenceSDK/schema/applications"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	"reflect"
 	"testing"
 
@@ -16,8 +25,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
-	"github.com/cosmos/cosmos-sdk/x/params"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/auxiliaries/conform"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/auxiliaries/verify"
@@ -29,7 +36,6 @@ import (
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
-	abciTypes "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 )
 
@@ -38,21 +44,34 @@ type TestKeepers struct {
 }
 
 func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
-
-	var Codec = codec.New()
+	var Codec = codec.NewLegacyAmino()
 	schema.RegisterCodec(Codec)
-	sdkTypes.RegisterCodec(Codec)
-	codec.RegisterCrypto(Codec)
+	sdkTypes.RegisterLegacyAminoCodec(Codec)
+	cryptoCodec.RegisterCrypto(Codec)
 	codec.RegisterEvidences(Codec)
-	vesting.RegisterCodec(Codec)
+	vestingTypes.RegisterLegacyAminoCodec(Codec)
 	Codec.Seal()
+
+	interfaceRegistry := types.NewInterfaceRegistry()
+	marshaler := codec.NewProtoCodec(interfaceRegistry)
+	txCfg := tx.NewTxConfig(marshaler, tx.DefaultSignModes)
+	std.RegisterLegacyAminoCodec(Codec)
+	std.RegisterInterfaces(interfaceRegistry)
+
+	encodingConfig := applications.EncodingConfig{
+		InterfaceRegistry: interfaceRegistry,
+		Marshaler:         marshaler,
+		TxConfig:          txCfg,
+		Amino:             Codec,
+	}
 
 	storeKey := sdkTypes.NewKVStoreKey("test")
 	paramsStoreKey := sdkTypes.NewKVStoreKey("testParams")
 	paramsTransientStoreKeys := sdkTypes.NewTransientStoreKey("testParamsTransient")
 	Mapper := baseHelpers.NewMapper(key.Prototype, mappable.Prototype).Initialize(storeKey)
-	paramsKeeper := params.NewKeeper(
-		Codec,
+	paramsKeeper := paramsKeeper.NewKeeper(
+		encodingConfig.Marshaler,
+		encodingConfig.Amino,
 		paramsStoreKey,
 		paramsTransientStoreKeys,
 	)
@@ -66,7 +85,7 @@ func CreateTestInput(t *testing.T) (sdkTypes.Context, TestKeepers) {
 	Error := commitMultiStore.LoadLatestVersion()
 	require.Nil(t, Error)
 
-	context := sdkTypes.NewContext(commitMultiStore, abciTypes.Header{
+	context := sdkTypes.NewContext(commitMultiStore, tendermintTypes.Header{
 		ChainID: "test",
 	}, false, log.NewNopLogger())
 
@@ -89,11 +108,11 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	require.Equal(t, nil, Error)
 	defaultAddr := sdkTypes.AccAddress("addr")
 	verifyMockErrorAddress := sdkTypes.AccAddress("verifyError")
-	defaultIdentityID := base.NewID("fromIdentityID")
-	fakeFromID := base.NewID("fakeFromID")
-	toID := base.NewID("toID")
-	toID2 := base.NewID("toID2")
-	classificationID := base.NewID("ClassificationID")
+	defaultIdentityID := testBase.NewID("fromIdentityID")
+	fakeFromID := testBase.NewID("fakeFromID")
+	toID := testBase.NewID("toID")
+	toID2 := testBase.NewID("toID2")
+	classificationID := testBase.NewID("ClassificationID")
 
 	t.Run("PositiveCase", func(t *testing.T) {
 		want := newTransactionResponse(nil)

@@ -11,13 +11,11 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/common"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 )
 
-type queryRequest struct {
-	ClassificationID types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
-}
+
 
 var _ helpers.QueryRequest = (*queryRequest)(nil)
 
@@ -26,11 +24,11 @@ func (queryRequest queryRequest) Validate() error {
 	return Error
 }
 func (queryRequest queryRequest) FromCLI(cliCommand helpers.CLICommand, _ client.Context) helpers.QueryRequest {
-	return newQueryRequest(base.NewID(cliCommand.ReadString(flags.ClassificationID)))
+	return newQueryRequest(testBase.NewID(cliCommand.ReadString(flags.ClassificationID)))
 }
 
 func (queryRequest queryRequest) FromMap(vars map[string]string) helpers.QueryRequest {
-	return newQueryRequest(base.NewID(vars[Query.GetName()]))
+	return newQueryRequest(testBase.NewID(vars[Query.GetName()]))
 }
 func (queryRequest queryRequest) Encode() ([]byte, error) {
 	return common.Codec.MarshalJSON(queryRequest)
@@ -56,6 +54,6 @@ func queryRequestFromInterface(request helpers.QueryRequest) queryRequest {
 	}
 }
 
-func newQueryRequest(classificationID types.ID) helpers.QueryRequest {
+func newQueryRequest(classificationID test_types.ID) helpers.QueryRequest {
 	return queryRequest{ClassificationID: classificationID}
 }

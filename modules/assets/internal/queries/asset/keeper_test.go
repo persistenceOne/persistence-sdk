@@ -6,13 +6,20 @@
 package asset
 
 import (
+	"github.com/cosmos/cosmos-sdk/codec/types"
+	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
+	"github.com/cosmos/cosmos-sdk/std"
+	"github.com/cosmos/cosmos-sdk/x/auth/tx"
+	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
+	"github.com/persistenceOne/persistenceSDK/schema/applications"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
-	"github.com/cosmos/cosmos-sdk/x/params"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/key"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/mappable"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/parameters"
@@ -21,22 +28,44 @@ import (
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
-	abciTypes "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tendermintDB "github.com/tendermint/tm-db"
 )
 
 func CreateTestInput2(t *testing.T) (sdkTypes.Context, helpers.Keeper) {
-	var Codec = codec.New()
+
+	var Codec = codec.NewLegacyAmino()
 	schema.RegisterCodec(Codec)
-	sdkTypes.RegisterCodec(Codec)
-	codec.RegisterCrypto(Codec)
+	sdkTypes.RegisterLegacyAminoCodec(Codec)
+	cryptoCodec.RegisterCrypto(Codec)
 	codec.RegisterEvidences(Codec)
-	vesting.RegisterCodec(Codec)
+	vestingTypes.RegisterLegacyAminoCodec(Codec)
 	Codec.Seal()
+
+	interfaceRegistry := types.NewInterfaceRegistry()
+	marshaler := codec.NewProtoCodec(interfaceRegistry)
+	txCfg := tx.NewTxConfig(marshaler, tx.DefaultSignModes)
+	std.RegisterLegacyAminoCodec(Codec)
+	std.RegisterInterfaces(interfaceRegistry)
+
+	encodingConfig := applications.EncodingConfig{
+		InterfaceRegistry: interfaceRegistry,
+		Marshaler:         marshaler,
+		TxConfig:          txCfg,
+		Amino:             Codec,
+	}
+
 	storeKey := sdkTypes.NewKVStoreKey("test")
 	paramsStoreKey := sdkTypes.NewKVStoreKey("testParams")
 	paramsTransientStoreKeys := sdkTypes.NewTransientStoreKey("testParamsTransient")
+	mapper := baseHelpers.NewMapper(key.Prototype, mappable.Prototype).Initialize(storeKey)
+	paramsKeeper := paramsKeeper.NewKeeper(
+		encodingConfig.Marshaler,
+		encodingConfig.Amino,
+		paramsStoreKey,
+		paramsTransientStoreKeys,
+	)
+	Parameters := parameters.Prototype().Initialize(paramsKeeper.Subspace("test"))
 
 	memDB := tendermintDB.NewMemDB()
 	commitMultiStore := store.NewCommitMultiStore(memDB)
@@ -46,18 +75,9 @@ func CreateTestInput2(t *testing.T) (sdkTypes.Context, helpers.Keeper) {
 	Error := commitMultiStore.LoadLatestVersion()
 	require.Nil(t, Error)
 
-	context := sdkTypes.NewContext(commitMultiStore, abciTypes.Header{
+	context := sdkTypes.NewContext(commitMultiStore, tendermintTypes.Header{
 		ChainID: "test",
 	}, false, log.NewNopLogger())
-
-	mapper := baseHelpers.NewMapper(key.Prototype, mappable.Prototype).Initialize(storeKey)
-	paramsKeeper := params.NewKeeper(
-		Codec,
-		paramsStoreKey,
-		paramsTransientStoreKeys,
-	)
-	Parameters := parameters.Prototype().Initialize(paramsKeeper.Subspace("test"))
-
 	testQueryKeeper := keeperPrototype().Initialize(mapper, Parameters, []interface{}{})
 
 	return context, testQueryKeeper
@@ -70,7 +90,7 @@ func Test_Query_Keeper_Asset(t *testing.T) {
 	require.Equal(t, nil, Error)
 	mutableProperties, Error2 := base.ReadProperties("burn:S|100")
 	require.Equal(t, nil, Error2)
-	classificationID := base.NewID("ClassificationID")
+	classificationID := testBase.NewID("ClassificationID")
 	assetID := key.NewAssetID(classificationID, immutableProperties)
 	keepers.(queryKeeper).mapper.NewCollection(context).Add(mappable.NewAsset(assetID, immutableProperties, mutableProperties))
 

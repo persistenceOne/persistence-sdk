@@ -15,14 +15,11 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-type transactionRequest struct {
-	BaseReq    test_types.BaseReq `json:"baseReq"`
-	To         string       `json:"to" valid:"required~required field to missing, matches(^[a-z0-9]+$)~invalid field to"`
-	IdentityID string       `json:"identityID" valid:"required~required field identityID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field identityID"`
-}
+
 
 var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 
@@ -61,7 +58,7 @@ func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 	return newMessage(
 		from,
 		to,
-		test_types.NewID(transactionRequest.IdentityID),
+		testBase.NewID(transactionRequest.IdentityID),
 	), nil
 }
 func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {

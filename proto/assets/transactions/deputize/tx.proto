@@ -1,0 +1,36 @@
+syntax ="proto3";
+
+package base;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "proto/assets/transactions/deputize/request.proto";
+import "proto/assets/transactions/deputize/response.proto";
+
+
+
+option go_package = "modules/assets/internal/transactions/deputize";
+
+service Msg {
+
+    rpc assetsDeputize(transactionRequest) returns (transactionResponse);
+
+}
+message message {
+    option (gogoproto.goproto_getters) = false;
+    option (gogoproto.equal)            = false;
+
+    string from =1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.AccAddress", (gogoproto.nullable) = false] ;
+    string fromID =2 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false] ;
+    string toID =3 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false] ;
+    string classificationID =4 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false] ;
+    string maintainedProperties =5 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.Properties", (gogoproto.nullable) = false];
+    bool addMaintainer =6;
+    bool  removeMaintainer=7;
+    bool mutateMaintainer=8;
+
+    
+    
+
+    
+}
+

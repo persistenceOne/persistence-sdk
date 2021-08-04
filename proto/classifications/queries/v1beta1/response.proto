@@ -1,0 +1,19 @@
+syntax="proto3";
+
+package classifications.queries.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "third_party/proto/cosmos_proto/cosmos.proto";
+option go_package = "modules/classifications/internal/queries/classification";
+
+message queryResponse {
+  option (gogoproto.equal)            = false;
+
+  option (cosmos_proto.implements_interface) = "QueryResponse";
+
+  bool success =1;
+  string error =2 [ (gogoproto.customtype) = "error",  (gogoproto.nullable) = false];
+  repeated string list =3 [ (gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/helpers.Mappable" , (gogoproto.nullable) = false] ;
+
+
+}

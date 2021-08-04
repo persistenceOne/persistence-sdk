@@ -8,30 +8,32 @@ package asset
 import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
+	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
+	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/common"
 	"github.com/persistenceOne/persistenceSDK/modules/assets/internal/key"
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
 
 func Test_Asset_Request(t *testing.T) {
-
 	var Codec = codec.NewLegacyAmino()
 	schema.RegisterCodec(Codec)
 	sdkTypes.RegisterLegacyAminoCodec(Codec)
-	codec.RegisterCrypto(Codec)
+	cryptoCodec.RegisterCrypto(Codec)
 	codec.RegisterEvidences(Codec)
-	vesting.RegisterCodec(Codec)
+	vestingTypes.RegisterLegacyAminoCodec(Codec)
 	Codec.Seal()
-	classificationID := base.NewID("classificationID")
-	immutableProperties := base.NewProperties(base.NewProperty(base.NewID("ID1"), base.NewFact(base.NewStringData("ImmutableData"))))
+
+	classificationID := testBase.NewID("classificationID")
+	immutableProperties := base.NewProperties(base.NewProperty(testBase.NewID("ID1"), base.NewFact(base.NewStringData("ImmutableData"))))
 
 	testAssetID := key.NewAssetID(classificationID, immutableProperties)
 	testQueryRequest := newQueryRequest(testAssetID)
@@ -40,11 +42,11 @@ func Test_Asset_Request(t *testing.T) {
 
 	cliCommand := baseHelpers.NewCLICommand("", "", "", []helpers.CLIFlag{flags.AssetID})
 	cliContext := client.Context{}.WithLegacyAmino(Codec)
-	require.Equal(t, newQueryRequest(base.NewID("")), queryRequest{}.FromCLI(cliCommand, cliContext))
+	require.Equal(t, newQueryRequest(testBase.NewID("")), queryRequest{}.FromCLI(cliCommand, cliContext))
 
 	vars := make(map[string]string)
 	vars["assets"] = "randomString"
-	require.Equal(t, newQueryRequest(base.NewID("randomString")), queryRequest{}.FromMap(vars))
+	require.Equal(t, newQueryRequest(testBase.NewID("randomString")), queryRequest{}.FromMap(vars))
 
 	encodedRequest, Error := testQueryRequest.Encode()
 	encodedResult, _ := common.Codec.MarshalJSON(testQueryRequest)

@@ -17,5 +17,5 @@ func Test_Prototype(t *testing.T) {
 	prototype := Prototype()
 	require.Equal(t, baseHelpers.NewParameters(dummy.Parameter).String(), prototype.String())
 	require.Equal(t, nil, prototype.Validate())
-	require.Equal(t, dummy.Parameter.String(), prototype.Get(base.NewID("dummy")).String())
+	require.Equal(t, dummy.Parameter.String(), prototype.Get(testBase.NewID("dummy")).String())
 }

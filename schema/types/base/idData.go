@@ -8,13 +8,15 @@ package base
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/utilities/meta"
 )
 
 type idData struct {
-	Value types.ID `json:"value"`
+	Value test_types.ID `json:"value"`
 }
 
 var _ types.Data = (*idData)(nil)
@@ -23,13 +25,13 @@ func (idData idData) String() string {
 	return idData.Value.String()
 }
 func (idData idData) ZeroValue() types.Data {
-	return NewIDData(NewID(""))
+	return NewIDData(testBase.NewID(""))
 }
-func (idData idData) GetTypeID() types.ID {
-	return NewID("I")
+func (idData idData) GetTypeID() test_types.ID {
+	return testBase.NewID("I")
 }
-func (idData idData) GenerateHashID() types.ID {
-	return NewID(meta.Hash(idData.Value.String()))
+func (idData idData) GenerateHashID() test_types.ID {
+	return testBase.NewID(meta.Hash(idData.Value.String()))
 }
 func (idData idData) AsAccAddress() (sdkTypes.AccAddress, error) {
 	zeroValue, _ := accAddressData{}.ZeroValue().AsAccAddress()
@@ -51,7 +53,7 @@ func (idData idData) AsHeight() (types.Height, error) {
 	zeroValue, _ := heightData{}.ZeroValue().AsHeight()
 	return zeroValue, errors.IncorrectFormat
 }
-func (idData idData) AsID() (types.ID, error) {
+func (idData idData) AsID() (test_types.ID, error) {
 	return idData.Value, nil
 }
 func (idData idData) Get() interface{} {
@@ -74,12 +76,12 @@ func idDataFromInterface(data types.Data) (idData, error) {
 	}
 }
 
-func NewIDData(value types.ID) types.Data {
+func NewIDData(value test_types.ID) types.Data {
 	return idData{
 		Value: value,
 	}
 }
 
 func ReadIDData(idData string) (types.Data, error) {
-	return NewIDData(NewID(idData)), nil
+	return NewIDData(testBase.NewID(idData)), nil
 }

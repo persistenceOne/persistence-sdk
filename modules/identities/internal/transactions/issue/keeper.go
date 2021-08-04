@@ -13,7 +13,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/mappable"
 	"github.com/persistenceOne/persistenceSDK/modules/metas/auxiliaries/scrub"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
 

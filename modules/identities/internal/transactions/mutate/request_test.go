@@ -7,13 +7,15 @@ package mutate
 
 import (
 	"encoding/json"
+	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
+	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/rest"
-	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
@@ -24,15 +26,15 @@ import (
 
 func Test_Define_Request(t *testing.T) {
 
-	var Codec = codec.New()
+	var Codec = codec.NewLegacyAmino()
 	schema.RegisterCodec(Codec)
-	sdkTypes.RegisterCodec(Codec)
-	codec.RegisterCrypto(Codec)
+	sdkTypes.RegisterLegacyAminoCodec(Codec)
+	cryptoCodec.RegisterCrypto(Codec)
 	codec.RegisterEvidences(Codec)
-	vesting.RegisterCodec(Codec)
+	vestingTypes.RegisterLegacyAminoCodec(Codec)
 	Codec.Seal()
-	cliCommand := baseHelpers.NewCLICommand("", "", "", []helpers.CLIFlag{flags.FromID, flags.IdentityID, flags.MutableMetaProperties, flags.MutableProperties})
-	cliContext := client.Context{}.WithCodec(Codec)
+	cliCommand := baseHelpers.NewCLICommand("", "", "", []helpers.CLIFlag{flags.FromID, flags.ImmutableMetaProperties, flags.ImmutableProperties, flags.MutableMetaProperties, flags.MutableProperties})
+	cliContext := client.Context{}.WithLegacyAmino(Codec)
 
 	mutableMetaPropertiesString := "defaultMutableMeta1:S|defaultMutableMeta1"
 	mutablePropertiesString := "defaultMutable1:S|defaultMutable1"
@@ -46,7 +48,7 @@ func Test_Define_Request(t *testing.T) {
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)
 	require.Nil(t, Error)
 
-	testBaseReq := rest.BaseReq{From: fromAddress, ChainID: "test", Fees: sdkTypes.NewCoins()}
+	testBaseReq := test_types.BaseReq{From: fromAddress, ChainId: "test", Fees: sdkTypes.NewCoins()}
 	testTransactionRequest := newTransactionRequest(testBaseReq, "fromID", "identityID", mutableMetaPropertiesString, mutablePropertiesString)
 
 	require.Equal(t, transactionRequest{BaseReq: testBaseReq, FromID: "fromID", IdentityID: "identityID", MutableMetaProperties: mutableMetaPropertiesString, MutableProperties: mutablePropertiesString}, testTransactionRequest)
@@ -54,7 +56,7 @@ func Test_Define_Request(t *testing.T) {
 
 	requestFromCLI, Error := transactionRequest{}.FromCLI(cliCommand, cliContext)
 	require.Equal(t, nil, Error)
-	require.Equal(t, transactionRequest{BaseReq: rest.BaseReq{From: cliContext.GetFromAddress().String(), ChainID: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", MutableMetaProperties: "", MutableProperties: ""}, requestFromCLI)
+	require.Equal(t, transactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", MutableMetaProperties: "", MutableProperties: ""}, requestFromCLI)
 
 	jsonMessage, _ := json.Marshal(testTransactionRequest)
 	transactionRequestUnmarshalled, Error := transactionRequest{}.FromJSON(jsonMessage)
@@ -68,10 +70,10 @@ func Test_Define_Request(t *testing.T) {
 	require.Equal(t, testBaseReq, testTransactionRequest.GetBaseReq())
 
 	msg, Error := testTransactionRequest.MakeMsg()
-	require.Equal(t, newMessage(fromAccAddress, base.NewID("fromID"), base.NewID("identityID"), mutableMetaProperties, mutableProperties), msg)
+	require.Equal(t, newMessage(fromAccAddress, testBase.NewID("fromID"), testBase.NewID("identityID"), mutableMetaProperties, mutableProperties), msg)
 	require.Nil(t, Error)
 
-	msg, Error = newTransactionRequest(rest.BaseReq{From: "randomFromAddress", ChainID: "test"}, "fromID", "identityID", mutableMetaPropertiesString, mutablePropertiesString).MakeMsg()
+	msg, Error = newTransactionRequest(test_types.BaseReq{From: "randomFromAddress", ChainId: "test"}, "fromID", "identityID", mutableMetaPropertiesString, mutablePropertiesString).MakeMsg()
 	require.Equal(t, nil, msg)
 	require.NotNil(t, Error)
 
@@ -85,6 +87,6 @@ func Test_Define_Request(t *testing.T) {
 
 	require.Equal(t, transactionRequest{}, requestPrototype())
 	require.NotPanics(t, func() {
-		requestPrototype().RegisterCodec(codec.New())
+		requestPrototype().RegisterCodec(codec.NewLegacyAmino())
 	})
 }

@@ -10,11 +10,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 )
 
-type queryResponse struct {
-	Success bool               `json:"success"`
-	Error   error              `json:"error"`
-	List    []helpers.Mappable `json:"list"`
-}
+
 
 var _ helpers.QueryResponse = (*queryResponse)(nil)
 

@@ -8,12 +8,13 @@ package super
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
 type auxiliaryRequest struct {
-	ClassificationID  types.ID         `json:"classificationID" valid:"required~required field classificationID missing"`
-	IdentityID        types.ID         `json:"identityID" valid:"required~required field identityID missing"`
+	ClassificationID  test_types.ID         `json:"classificationID" valid:"required~required field classificationID missing"`
+	IdentityID        test_types.ID         `json:"identityID" valid:"required~required field identityID missing"`
 	MutableProperties types.Properties `json:"mutableProperties" valid:"required~required field mutableProperties missing"`
 }
 
@@ -33,7 +34,7 @@ func auxiliaryRequestFromInterface(request helpers.AuxiliaryRequest) auxiliaryRe
 	}
 }
 
-func NewAuxiliaryRequest(classificationID types.ID, identityID types.ID, mutableProperties types.Properties) helpers.AuxiliaryRequest {
+func NewAuxiliaryRequest(classificationID test_types.ID, identityID test_types.ID, mutableProperties types.Properties) helpers.AuxiliaryRequest {
 	return auxiliaryRequest{
 		ClassificationID:  classificationID,
 		IdentityID:        identityID,

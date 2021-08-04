@@ -8,6 +8,7 @@ package nub
 import (
 	"encoding/json"
 	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -16,9 +17,9 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
+
 
 
 var _ helpers.TransactionRequest = (*transactionRequest)(nil)
@@ -51,7 +52,7 @@ func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 
 	return newMessage(
 		from,
-		base.NewID(transactionRequest.NubID),
+		testBase.NewID(transactionRequest.NubID),
 	), nil
 }
 func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {

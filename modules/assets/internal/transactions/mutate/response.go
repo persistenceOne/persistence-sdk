@@ -9,10 +9,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 )
 
-type transactionResponse struct {
-	Success bool
-	Error   error
-}
+
 
 var _ helpers.TransactionResponse = (*transactionResponse)(nil)
 

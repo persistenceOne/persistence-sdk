@@ -1,0 +1,30 @@
+syntax ="proto3";
+
+package base;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "proto/assets/transactions/mutate/request.proto";
+import "proto/assets/transactions/mutate/response.proto";
+
+
+
+option go_package = "modules/assets/internal/transactions/mutate";
+
+service Msg {
+
+    rpc assetsMutate(transactionRequest) returns (transactionResponse);
+
+}
+message message {
+    option (gogoproto.goproto_getters) = false;
+    option (gogoproto.equal)            = false;
+
+    string from =1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.AccAddress", (gogoproto.nullable) = false] ;
+    string fromID =2 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false] ;
+    string assetID =3 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false] ;
+    string mutableMetaProperties =4 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.MetaProperties", (gogoproto.nullable) = false];
+    string mutableProperties =5 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.Properties", (gogoproto.nullable) = false];
+
+    
+}
+
