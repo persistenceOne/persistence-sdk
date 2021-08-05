@@ -7,10 +7,10 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	io "io"
 	math "math"
 	math_bits "math/bits"
-	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -25,14 +25,14 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type fact struct {
-	HashID     test_types.ID `protobuf:"bytes,1,opt,name=hashID,proto3" json:"hashID"`
-	TypeID     test_types.ID `protobuf:"bytes,2,opt,name=typeID,proto3" json:"typeID"`
-	Signatures test_types.Signatures    `protobuf:"bytes,3,opt,name=signatures,proto3" json:"signatures"`
+	HashID     protoTypes.ID         `protobuf:"bytes,1,opt,name=hashID,proto3" json:"hashID"`
+	TypeID     protoTypes.ID         `protobuf:"bytes,2,opt,name=typeID,proto3" json:"typeID"`
+	Signatures protoTypes.Signatures `protobuf:"bytes,3,opt,name=signatures,proto3" json:"signatures"`
 }
 
-func (m *fact) Reset()         { *m = fact{} }
+func (m *fact) Reset()        { *m = fact{} }
 func (m fact) String() string { return proto.CompactTextString(&m) }
-func (*fact) ProtoMessage()    {}
+func (*fact) ProtoMessage()   {}
 func (*fact) Descriptor() ([]byte, []int) {
 	return fileDescriptor_588d012b167ae2a6, []int{0}
 }

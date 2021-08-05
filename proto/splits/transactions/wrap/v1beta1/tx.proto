@@ -19,7 +19,7 @@ message message {
   option (gogoproto.equal)            = false;
 
   string from =1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.AccAddress", (gogoproto.nullable) = false] ;
-  string from_iD =2 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false] ;
+  string from_iD =2 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
   string coins =5 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coins", (gogoproto.nullable) = false];
 
 }

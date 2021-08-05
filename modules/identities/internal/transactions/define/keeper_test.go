@@ -13,7 +13,7 @@ import (
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	"reflect"
 	"testing"
@@ -120,7 +120,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	gt22Properties, Error := base.ReadMetaProperties("0:S|0,1:S|1,2:S|2,3:S|3,4:S|4,5:S|5,6:S|6,7:S|7,8:S|8,9:S|9,10:S|10,11:S|11,12:S|12,13:S|13,14:S|14,15:S|15,16:S|16,17:S|17,18:S|18,19:S|19,20:S|20,21:S|21")
 	require.Equal(t, nil, Error)
 	defaultAddr := sdkTypes.AccAddress("addr")
-	defaultIdentityID := key.NewIdentityID(testBase.NewID("test.cGn3HMW8M3t5gMDv-wXa9sseHnA="), immutableProperties)
+	defaultIdentityID := key.NewIdentityID(base2.NewID("test.cGn3HMW8M3t5gMDv-wXa9sseHnA="), immutableProperties)
 	keepers.IdentitiesKeeper.(transactionKeeper).mapper.NewCollection(context).Add(mappable.NewIdentity(defaultIdentityID, base.NewProperties(), base.NewProperties()))
 
 	t.Run("PositiveCase", func(t *testing.T) {
@@ -135,7 +135,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	t.Run("NegativeCase - IdentityNil", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.EntityNotFound)
-		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, testBase.NewID(""), immutableMetaProperties,
+		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, base2.NewID(""), immutableMetaProperties,
 			immutableProperties, mutableMetaProperties, mutableProperties)); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}

@@ -8,7 +8,7 @@ package unprovision
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -16,7 +16,7 @@ import (
 
 func Test_Unprovision_Message(t *testing.T) {
 
-	testIdentityID := testBase.NewID("identityID")
+	testIdentityID := base.NewID("identityID")
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)

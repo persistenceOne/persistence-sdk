@@ -10,7 +10,7 @@ import (
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
-	github_com_persistenceOne_persistenceSDK_schema_test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -31,9 +31,9 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type message struct {
-	From       github_com_cosmos_cosmos_sdk_types.AccAddress                 `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from"  valid:"required~required field from missing, matches(^[a-z0-9]*$)~field from is invalid"`
-	To         github_com_cosmos_cosmos_sdk_types.AccAddress                 `protobuf:"bytes,2,opt,name=to,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"to"  valid:"required~required field to missing, matches(^[a-z0-9]*$)~field to is invalid"`
-	IdentityID github_com_persistenceOne_persistenceSDK_schema_test_types.ID `protobuf:"bytes,3,opt,name=identityID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"identityID"  valid:"required~required field identityID missing"`
+	From       github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from"  valid:"required~required field from missing, matches(^[a-z0-9]*$)~field from is invalid"`
+	To         github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,2,opt,name=to,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"to"  valid:"required~required field to missing, matches(^[a-z0-9]*$)~field to is invalid"`
+	IdentityID types.ID                                      `protobuf:"bytes,3,opt,name=identityID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"identityID"  valid:"required~required field identityID missing"`
 }
 
 func (m message) Reset()         { m = message{} }

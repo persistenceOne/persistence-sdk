@@ -12,7 +12,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/key"
 	"github.com/persistenceOne/persistenceSDK/modules/classifications/internal/mappable"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/persistenceOne/persistenceSDK/utilities/property"
 )
 
@@ -33,16 +33,16 @@ func (auxiliaryKeeper auxiliaryKeeper) Help(context sdkTypes.Context, request he
 		return newAuxiliaryResponse(nil, errors.InvalidRequest)
 	}
 
-	classificationID := key.NewClassificationID(testBase.NewID(context.ChainID()), auxiliaryRequest.ImmutableProperties, auxiliaryRequest.MutableProperties)
+	classificationID := key.NewClassificationID(base.NewID(context.ChainID()), auxiliaryRequest.ImmutableProperties, auxiliaryRequest.MutableProperties)
 
 	classifications := auxiliaryKeeper.mapper.NewCollection(context).Fetch(key.FromID(classificationID))
 	if classifications.Get(key.FromID(classificationID)) != nil {
-		return newAuxiliaryResponse(testBase.NewID(classificationID.String()), errors.EntityAlreadyExists)
+		return newAuxiliaryResponse(base.NewID(classificationID.String()), errors.EntityAlreadyExists)
 	}
 
 	classifications.Add(mappable.NewClassification(classificationID, auxiliaryRequest.ImmutableProperties, auxiliaryRequest.MutableProperties))
 
-	return newAuxiliaryResponse(testBase.NewID(classificationID.String()), nil)
+	return newAuxiliaryResponse(base.NewID(classificationID.String()), nil)
 }
 
 func (auxiliaryKeeper) Initialize(mapper helpers.Mapper, _ helpers.Parameters, _ []interface{}) helpers.Keeper {

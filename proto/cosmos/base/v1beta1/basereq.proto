@@ -5,7 +5,7 @@ package cosmos.base.v1beta1;
  import "third_party/proto/gogoproto/gogo.proto";
  import "proto/cosmos/base/v1beta1/coin.proto";
 
-option go_package = "schema/test_types";
+option go_package = "schema/types";
 
 message BaseReq {
     option (gogoproto.goproto_getters) = false;

@@ -6,8 +6,8 @@
 package key
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"strings"
 
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
@@ -16,16 +16,16 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-func readClassificationID(classificationIDString string) test_types.ID {
+func readClassificationID(classificationIDString string) protoTypes.ID {
 	idList := strings.Split(classificationIDString, constants.IDSeparator)
 	if len(idList) == 2 {
 		return classificationID{
-			ChainID: testBase.NewID(idList[0]),
-			HashID:  testBase.NewID(idList[1]),
+			ChainID: base.NewID(idList[0]),
+			HashID:  base.NewID(idList[1]),
 		}
 	}
 
-	return classificationID{ChainID: testBase.NewID(""), HashID: testBase.NewID("")}
+	return classificationID{ChainID: base.NewID(""), HashID: base.NewID("")}
 }
 func classificationIDFromInterface(i interface{}) classificationID {
 	switch value := i.(type) {
@@ -38,6 +38,6 @@ func classificationIDFromInterface(i interface{}) classificationID {
 	}
 }
 
-func FromID(id test_types.ID) helpers.Key {
+func FromID(id protoTypes.ID) helpers.Key {
 	return classificationIDFromInterface(id)
 }

@@ -6,7 +6,7 @@
 package revoke
 
 import (
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
@@ -17,9 +17,9 @@ import (
 
 func Test_Revoke_Message(t *testing.T) {
 
-	testFromID := testBase.NewID("fromID")
-	testToID := testBase.NewID("toID")
-	testClassificationID := testBase.NewID("classificationID")
+	testFromID := base.NewID("fromID")
+	testToID := base.NewID("toID")
+	testClassificationID := base.NewID("classificationID")
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)

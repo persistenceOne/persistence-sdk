@@ -1,12 +1,12 @@
 package base
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 )
 
-var _ test_types.Signatures = (*signatures)(nil)
+var _ protoTypes.Signatures = (*signatures)(nil)
 
-func (signatures signatures) Get(id test_types.ID) test_types.Signature {
+func (signatures signatures) Get(id protoTypes.ID) protoTypes.Signature {
 	for _, signature := range signatures.SignatureList {
 		if signature.GetID().Equals(id) {
 			return signature
@@ -15,14 +15,14 @@ func (signatures signatures) Get(id test_types.ID) test_types.Signature {
 
 	return nil
 }
-func (signatures signatures) GetList() []test_types.Signature {
+func (signatures signatures) GetList() []protoTypes.Signature {
 	return signatures.SignatureList
 }
-func (signatures signatures) Add(signature test_types.Signature) test_types.Signatures {
+func (signatures signatures) Add(signature protoTypes.Signature) protoTypes.Signatures {
 	signatures.SignatureList = append(signatures.SignatureList, signature)
 	return signatures
 }
-func (signatures signatures) Remove(signature test_types.Signature) test_types.Signatures {
+func (signatures signatures) Remove(signature protoTypes.Signature) protoTypes.Signatures {
 	signatureList := signatures.SignatureList
 	for i, oldSignature := range signatureList {
 		if oldSignature.GetID().Equals(signature.GetID()) {
@@ -32,7 +32,7 @@ func (signatures signatures) Remove(signature test_types.Signature) test_types.S
 
 	return NewSignatures(signatureList)
 }
-func (signatures signatures) Mutate(signature test_types.Signature) test_types.Signatures {
+func (signatures signatures) Mutate(signature protoTypes.Signature) protoTypes.Signatures {
 	signatureList := signatures.GetList()
 	for i, oldSignature := range signatureList {
 		if oldSignature.GetID().Equals(signature.GetID()) {
@@ -42,6 +42,6 @@ func (signatures signatures) Mutate(signature test_types.Signature) test_types.S
 
 	return NewSignatures(signatureList)
 }
-func NewSignatures(signatureList []test_types.Signature) test_types.Signatures {
+func NewSignatures(signatureList []protoTypes.Signature) protoTypes.Signatures {
 	return signatures{SignatureList: signatureList}
 }

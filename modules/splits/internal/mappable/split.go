@@ -12,22 +12,22 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/mappables"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"github.com/persistenceOne/persistenceSDK/schema/traits"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
 type split struct {
-	ID    test_types.ID `json:"id" valid:"required field key missing"`
+	ID    protoTypes.ID `json:"id" valid:"required field key missing"`
 	Value sdkTypes.Dec  `json:"value" valid:"required~required field value missing, matches(^[0-9]$)~invalid field value"`
 }
 var _ mappables.Split = (*split)(nil)
 
-func (split split) GetID() test_types.ID { return split.ID }
-func (split split) GetOwnerID() test_types.ID {
+func (split split) GetID() protoTypes.ID { return split.ID }
+func (split split) GetOwnerID() protoTypes.ID {
 	return key.ReadOwnerID(split.ID)
 }
-func (split split) GetOwnableID() test_types.ID {
+func (split split) GetOwnableID() protoTypes.ID {
 	return key.ReadOwnableID(split.ID)
 }
 func (split split) GetValue() sdkTypes.Dec {
@@ -51,7 +51,7 @@ func (split) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, split{})
 }
 
-func NewSplit(splitID test_types.ID, value sdkTypes.Dec) mappables.Split {
+func NewSplit(splitID protoTypes.ID, value sdkTypes.Dec) mappables.Split {
 	return split{
 		ID:    splitID,
 		Value: value,

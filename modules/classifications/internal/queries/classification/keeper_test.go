@@ -7,7 +7,7 @@ package classification
 
 import (
 	parKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -73,7 +73,7 @@ func Test_Query_Keeper_Classification(t *testing.T) {
 	require.Equal(t, nil, Error)
 	mutableProperties, Error2 := base.ReadProperties("burn:S|100")
 	require.Equal(t, nil, Error2)
-	chainID := testBase.NewID("ChainID")
+	chainID := base2.NewID("ChainID")
 
 	classificationID := key.NewClassificationID(chainID, immutableProperties, mutableProperties)
 	keepers.(queryKeeper).mapper.NewCollection(context).Add(mappable.NewClassification(classificationID, immutableProperties, mutableProperties))

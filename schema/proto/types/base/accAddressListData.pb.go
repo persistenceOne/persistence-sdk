@@ -25,7 +25,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type AccAddressListData struct {
-	Value SortedAccAddresses `protobuf:"bytes,1,opt,name=value,proto3,customtype=schema/test_types/base.SortedAccAddresses" json:"value"`
+	Value SortedAccAddresses `protobuf:"bytes,1,opt,name=value,proto3,customtype=schema/types/base.SortedAccAddresses" json:"value"`
 }
 
 func (m *AccAddressListData) Reset()         { *m = AccAddressListData{} }

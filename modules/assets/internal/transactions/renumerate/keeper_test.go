@@ -13,7 +13,7 @@ import (
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	"reflect"
 	"testing"
@@ -111,11 +111,11 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	require.Equal(t, nil, Error)
 	defaultAddr := sdkTypes.AccAddress("addr")
 	verifyMockErrorAddress := sdkTypes.AccAddress("verifyError")
-	defaultIdentityID := testBase.NewID("fromIdentityID")
-	classificationID := testBase.NewID("ClassificationID")
+	defaultIdentityID := base2.NewID("fromIdentityID")
+	classificationID := base2.NewID("ClassificationID")
 	assetID := key.NewAssetID(classificationID, immutableProperties)
-	assetID2 := key.NewAssetID(testBase.NewID("ClassificationID2"), immutableProperties)
-	assetID3 := key.NewAssetID(testBase.NewID("ClassificationID3"), immutableProperties)
+	assetID2 := key.NewAssetID(base2.NewID("ClassificationID2"), immutableProperties)
+	assetID3 := key.NewAssetID(base2.NewID("ClassificationID3"), immutableProperties)
 	keepers.AssetsKeeper.(transactionKeeper).mapper.NewCollection(ctx).Add(mappable.NewAsset(assetID, immutableProperties, mutableProperties))
 	keepers.AssetsKeeper.(transactionKeeper).mapper.NewCollection(ctx).Add(mappable.NewAsset(assetID2, immutableProperties, supplementError.RemoveData()))
 	keepers.AssetsKeeper.(transactionKeeper).mapper.NewCollection(ctx).Add(mappable.NewAsset(assetID3, immutableProperties, mutableProperties))
@@ -143,7 +143,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.EntityNotFound)
 		require.NotPanics(t, func() {
-			if got := keepers.AssetsKeeper.Transact(ctx, newMessage(defaultAddr, defaultIdentityID, testBase.NewID(""))); !reflect.DeepEqual(got, want) {
+			if got := keepers.AssetsKeeper.Transact(ctx, newMessage(defaultAddr, defaultIdentityID, base2.NewID(""))); !reflect.DeepEqual(got, want) {
 				t.Errorf("Transact() = %v, want %v", got, want)
 			}
 		})

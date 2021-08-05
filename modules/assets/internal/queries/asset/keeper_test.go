@@ -13,7 +13,7 @@ import (
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	"testing"
 
@@ -90,7 +90,7 @@ func Test_Query_Keeper_Asset(t *testing.T) {
 	require.Equal(t, nil, Error)
 	mutableProperties, Error2 := base.ReadProperties("burn:S|100")
 	require.Equal(t, nil, Error2)
-	classificationID := testBase.NewID("ClassificationID")
+	classificationID := base2.NewID("ClassificationID")
 	assetID := key.NewAssetID(classificationID, immutableProperties)
 	keepers.(queryKeeper).mapper.NewCollection(context).Add(mappable.NewAsset(assetID, immutableProperties, mutableProperties))
 

@@ -7,7 +7,7 @@ package key
 
 import (
 	"bytes"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -18,8 +18,8 @@ import (
 )
 
 type maintainerID struct {
-	ClassificationID test_types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
-	IdentityID       test_types.ID `json:"identityID" valid:"required~required field identityID missing"`
+	ClassificationID protoTypes.ID `json:"classificationID" valid:"required~required field classificationID missing"`
+	IdentityID       protoTypes.ID `json:"identityID" valid:"required~required field identityID missing"`
 }
 
 
@@ -39,7 +39,7 @@ func (maintainerID maintainerID) MarshalToSizedBuffer(i []byte) (int, error) {
 	panic("implement me")
 }
 
-var _ test_types.ID = (*maintainerID)(nil)
+var _ protoTypes.ID = (*maintainerID)(nil)
 var _ helpers.Key = (*maintainerID)(nil)
 
 func (maintainerID maintainerID) Bytes() []byte {
@@ -54,7 +54,7 @@ func (maintainerID maintainerID) String() string {
 
 	return strings.Join(values, constants.SecondOrderCompositeIDSeparator)
 }
-func (maintainerID maintainerID) Equals(id test_types.ID) bool {
+func (maintainerID maintainerID) Equals(id protoTypes.ID) bool {
 	return bytes.Equal(maintainerID.Bytes(), id.Bytes())
 }
 func (maintainerID maintainerID) GenerateStoreKeyBytes() []byte {
@@ -70,7 +70,7 @@ func (maintainerID maintainerID) Matches(key helpers.Key) bool {
 	return maintainerID.Equals(maintainerIDFromInterface(key))
 }
 
-func NewMaintainerID(classificationID test_types.ID, identityID test_types.ID) test_types.ID {
+func NewMaintainerID(classificationID protoTypes.ID, identityID protoTypes.ID) protoTypes.ID {
 	return maintainerID{
 		ClassificationID: classificationID,
 		IdentityID:       identityID,

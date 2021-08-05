@@ -8,7 +8,7 @@ package wrap
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/module"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -16,7 +16,7 @@ import (
 
 func Test_Wrap_Message(t *testing.T) {
 
-	testFromID := testBase.NewID("fromID")
+	testFromID := base.NewID("fromID")
 	testCoins := sdkTypes.NewCoins(sdkTypes.NewCoin("stake", sdkTypes.NewInt(2)))
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)

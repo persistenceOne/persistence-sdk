@@ -7,7 +7,7 @@ package key
 
 import (
 	"bytes"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"strings"
 
 	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
@@ -21,8 +21,8 @@ import (
 )
 
 type identityID struct {
-	ClassificationID test_types.ID      `json:"classificationID" valid:"required~required field classificationID missing"`
-	HashID           test_types.ID `json:"hashID" valid:"required~required field hashID missing"`
+	ClassificationID protoTypes.ID `json:"classificationID" valid:"required~required field classificationID missing"`
+	HashID           protoTypes.ID `json:"hashID" valid:"required~required field hashID missing"`
 }
 
 
@@ -42,7 +42,7 @@ func (identityID identityID) MarshalToSizedBuffer(i []byte) (int, error) {
 	panic("implement me")
 }
 
-var _ test_types.ID = (*identityID)(nil)
+var _ protoTypes.ID = (*identityID)(nil)
 var _ helpers.Key = (*identityID)(nil)
 
 func (identityID identityID) Bytes() []byte {
@@ -58,7 +58,7 @@ func (identityID identityID) String() string {
 
 	return strings.Join(values, constants.FirstOrderCompositeIDSeparator)
 }
-func (identityID identityID) Equals(id test_types.ID) bool {
+func (identityID identityID) Equals(id protoTypes.ID) bool {
 	return bytes.Equal(identityID.Bytes(), id.Bytes())
 }
 func (identityID identityID) GenerateStoreKeyBytes() []byte {
@@ -74,7 +74,7 @@ func (identityID identityID) Matches(key helpers.Key) bool {
 	return identityID.Equals(identityIDFromInterface(key))
 }
 
-func NewIdentityID(classificationID test_types.ID, immutableProperties types.Properties) test_types.ID {
+func NewIdentityID(classificationID protoTypes.ID, immutableProperties types.Properties) protoTypes.ID {
 	return identityID{
 		ClassificationID: classificationID,
 		HashID:           baseTraits.HasImmutables{Properties: immutableProperties}.GenerateHashID(),

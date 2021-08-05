@@ -7,7 +7,7 @@ package key
 
 import (
 	"bytes"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"strings"
 
 	"github.com/persistenceOne/persistenceSDK/schema/traits/base"
@@ -21,8 +21,16 @@ import (
 )
 
 type assetID struct {
-	ClassificationID test_types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
-	HashID           test_types.ID `json:"hashID" valid:"required~required field hashID missing"`
+	ClassificationID protoTypes.ID `json:"classificationID" valid:"required~required field classificationID missing"`
+	HashID           protoTypes.ID `json:"hashID" valid:"required~required field hashID missing"`
+}
+
+var _ protoTypes.ID = (*assetID)(nil)
+var _ helpers.Key = (*assetID)(nil)
+
+
+func (assetID assetID) MarshalToSizedBuffer(i []byte) (int, error) {
+	panic("implement me")
 }
 
 //TODO:generate via proto below methods would be generated
@@ -39,8 +47,6 @@ func (assetID assetID) Unmarshal(i []byte) error {
 	panic("implement me")
 }
 
-var _ test_types.ID = (*assetID)(nil)
-var _ helpers.Key = (*assetID)(nil)
 
 func (assetID assetID) Bytes() []byte {
 	var Bytes []byte
@@ -56,7 +62,7 @@ func (assetID assetID) String() string {
 
 	return strings.Join(values, constants.FirstOrderCompositeIDSeparator)
 }
-func (assetID assetID) Equals(id test_types.ID) bool {
+func (assetID assetID) Equals(id protoTypes.ID) bool {
 	return bytes.Equal(assetID.Bytes(), id.Bytes())
 }
 func (assetID assetID) GenerateStoreKeyBytes() []byte {
@@ -72,7 +78,7 @@ func (assetID assetID) Matches(key helpers.Key) bool {
 	return assetID.Equals(assetIDFromInterface(key))
 }
 
-func NewAssetID(classificationID test_types.ID, immutableProperties types.Properties) test_types.ID {
+func NewAssetID(classificationID protoTypes.ID, immutableProperties types.Properties) protoTypes.ID {
 	return assetID{
 		ClassificationID: classificationID,
 		HashID:           base.HasImmutables{Properties: immutableProperties}.GenerateHashID(),

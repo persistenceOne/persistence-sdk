@@ -9,8 +9,8 @@ import (
 	"encoding/json"
 	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -54,7 +54,7 @@ func Test_Mint_Request(t *testing.T) {
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)
 	require.Nil(t, Error)
 
-	testBaseReq := test_types.BaseReq{From: fromAddress, ChainId: "test", Fees: sdkTypes.NewCoins()}
+	testBaseReq := protoTypes.BaseReq{From: fromAddress, ChainId: "test", Fees: sdkTypes.NewCoins()}
 	testTransactionRequest := newTransactionRequest(testBaseReq, "fromID", "toID", "classificationID", immutableMetaPropertiesString, immutablePropertiesString, mutableMetaPropertiesString, mutablePropertiesString)
 
 	require.Equal(t, transactionRequest{BaseReq: testBaseReq, FromID: "fromID", ToID: "toID", ClassificationID: "classificationID", ImmutableMetaProperties: immutableMetaPropertiesString, ImmutableProperties: immutablePropertiesString, MutableMetaProperties: mutableMetaPropertiesString, MutableProperties: mutablePropertiesString}, testTransactionRequest)
@@ -62,7 +62,7 @@ func Test_Mint_Request(t *testing.T) {
 
 	requestFromCLI, Error := transactionRequest{}.FromCLI(cliCommand, cliContext)
 	require.Equal(t, nil, Error)
-	require.Equal(t, transactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", ToID: "", ClassificationID: "", ImmutableMetaProperties: "", ImmutableProperties: "", MutableMetaProperties: "", MutableProperties: ""}, requestFromCLI)
+	require.Equal(t, transactionRequest{BaseReq: protoTypes.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", ToID: "", ClassificationID: "", ImmutableMetaProperties: "", ImmutableProperties: "", MutableMetaProperties: "", MutableProperties: ""}, requestFromCLI)
 
 	jsonMessage, _ := json.Marshal(testTransactionRequest)
 	transactionRequestUnmarshalled, Error := transactionRequest{}.FromJSON(jsonMessage)
@@ -76,10 +76,10 @@ func Test_Mint_Request(t *testing.T) {
 	require.Equal(t, testBaseReq, testTransactionRequest.GetBaseReq())
 
 	msg, Error := testTransactionRequest.MakeMsg()
-	require.Equal(t, newMessage(fromAccAddress, testBase.NewID("fromID"), testBase.NewID("toID"), testBase.NewID("classificationID"), immutableMetaProperties, immutableProperties, mutableMetaProperties, mutableProperties), msg)
+	require.Equal(t, newMessage(fromAccAddress, base2.NewID("fromID"), base2.NewID("toID"), base2.NewID("classificationID"), immutableMetaProperties, immutableProperties, mutableMetaProperties, mutableProperties), msg)
 	require.Nil(t, Error)
 
-	msg, Error = newTransactionRequest(test_types.BaseReq{From: "randomFromAddress", ChainId: "test"}, "fromID", "toID", "classificationID", immutableMetaPropertiesString, immutablePropertiesString, mutableMetaPropertiesString, mutablePropertiesString).MakeMsg()
+	msg, Error = newTransactionRequest(protoTypes.BaseReq{From: "randomFromAddress", ChainId: "test"}, "fromID", "toID", "classificationID", immutableMetaPropertiesString, immutablePropertiesString, mutableMetaPropertiesString, mutablePropertiesString).MakeMsg()
 	require.Equal(t, nil, msg)
 	require.NotNil(t, Error)
 

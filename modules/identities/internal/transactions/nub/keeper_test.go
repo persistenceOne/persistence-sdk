@@ -25,7 +25,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -101,7 +101,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 
 	t.Run("PositiveCase", func(t *testing.T) {
 		want := newTransactionResponse(nil)
-		if got := keepers.IdentitiesKeeper.Transact(ctx, newMessage(sdkTypes.AccAddress("addr"), testBase.NewID("nubID"))); !reflect.DeepEqual(got, want) {
+		if got := keepers.IdentitiesKeeper.Transact(ctx, newMessage(sdkTypes.AccAddress("addr"), base.NewID("nubID"))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
@@ -109,7 +109,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	t.Run("NegativeCase-Duplicate", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.EntityAlreadyExists)
-		if got := keepers.IdentitiesKeeper.Transact(ctx, newMessage(sdkTypes.AccAddress("addr"), testBase.NewID("nubID"))); !reflect.DeepEqual(got, want) {
+		if got := keepers.IdentitiesKeeper.Transact(ctx, newMessage(sdkTypes.AccAddress("addr"), base.NewID("nubID"))); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})

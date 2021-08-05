@@ -3,19 +3,19 @@ package base
 import (
 	"github.com/99designs/keyring"
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-var _ test_types.Fact = (*fact)(nil)
+var _ protoTypes.Fact = (*fact)(nil)
 
-func (fact fact) GetHashID() test_types.ID             { return fact.HashID }
-func (fact fact) GetTypeID() test_types.ID             { return fact.TypeID }
-func (fact fact) GetSignatures() test_types.Signatures { return fact.Signatures }
+func (fact fact) GetHashID() protoTypes.ID             { return fact.HashID }
+func (fact fact) GetTypeID() protoTypes.ID             { return fact.TypeID }
+func (fact fact) GetSignatures() protoTypes.Signatures { return fact.Signatures }
 func (fact fact) IsMeta() bool {
 	return false
 }
-func (fact fact) Sign(_ keyring.Keyring) test_types.Fact {
+func (fact fact) Sign(_ keyring.Keyring) protoTypes.Fact {
 	clicont := client.Context{}
 	sign, _, _ := clicont.Keyring.Sign(clicont.FromName, fact.HashID.Bytes())
 	Signature := signature{
@@ -28,7 +28,7 @@ func (fact fact) Sign(_ keyring.Keyring) test_types.Fact {
 	return fact
 }
 
-func NewFact(data types.Data) test_types.Fact {
+func NewFact(data types.Data) protoTypes.Fact {
 	return fact{
 		HashID:     data.GenerateHashID(),
 		TypeID:     data.GetTypeID(),
@@ -36,7 +36,7 @@ func NewFact(data types.Data) test_types.Fact {
 	}
 }
 
-func ReadFact(metaFactString string) (test_types.Fact, error) {
+func ReadFact(metaFactString string) (protoTypes.Fact, error) {
 	metaFact, Error := ReadMetaFact(metaFactString)
 	if Error != nil {
 		return nil, Error

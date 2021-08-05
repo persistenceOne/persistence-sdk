@@ -7,7 +7,7 @@ package key
 
 import (
 	"bytes"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"strconv"
 	"strings"
 
@@ -22,13 +22,13 @@ import (
 )
 
 type orderID struct {
-	ClassificationID test_types.ID `json:"classificationID"`
-	MakerOwnableID   test_types.ID `json:"makerOwnableID"`
-	TakerOwnableID   test_types.ID `json:"takerOwnableID"`
-	RateID           test_types.ID `json:"rateID"`
-	CreationID       test_types.ID `json:"creationID"`
-	MakerID          test_types.ID `json:"makerID"`
-	HashID           test_types.ID `json:"hashID"`
+	ClassificationID protoTypes.ID `json:"classificationID"`
+	MakerOwnableID   protoTypes.ID `json:"makerOwnableID"`
+	TakerOwnableID   protoTypes.ID `json:"takerOwnableID"`
+	RateID           protoTypes.ID `json:"rateID"`
+	CreationID       protoTypes.ID `json:"creationID"`
+	MakerID          protoTypes.ID `json:"makerID"`
+	HashID           protoTypes.ID `json:"hashID"`
 }
 
 var _ types.ID = (*orderID)(nil)
@@ -121,7 +121,7 @@ func (orderID orderID) getCreationHeightBytes() ([]byte, error) {
 	return Bytes, Error
 }
 
-func NewOrderID(classificationID test_types.ID, makerOwnableID test_types.ID, takerOwnableID test_types.ID, rateID test_types.ID, creationID test_types.ID, makerID test_types.ID, immutableProperties types.Properties) types.ID {
+func NewOrderID(classificationID protoTypes.ID, makerOwnableID protoTypes.ID, takerOwnableID protoTypes.ID, rateID protoTypes.ID, creationID protoTypes.ID, makerID protoTypes.ID, immutableProperties types.Properties) types.ID {
 	return orderID{
 		ClassificationID: classificationID,
 		MakerOwnableID:   makerOwnableID,

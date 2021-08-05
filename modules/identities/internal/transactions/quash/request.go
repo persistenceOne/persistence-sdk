@@ -7,9 +7,6 @@ package quash
 
 import (
 	"encoding/json"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
-
 	"github.com/asaskevich/govalidator"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -17,6 +14,8 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
@@ -42,7 +41,7 @@ func (transactionRequest transactionRequest) FromJSON(rawMessage json.RawMessage
 
 	return transactionRequest, nil
 }
-func (transactionRequest transactionRequest) GetBaseReq() test_types.BaseReq {
+func (transactionRequest transactionRequest) GetBaseReq() protoTypes.BaseReq {
 	return transactionRequest.BaseReq
 }
 func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
@@ -53,8 +52,8 @@ func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 
 	return newMessage(
 		from,
-		testBase.NewID(transactionRequest.FromID),
-		testBase.NewID(transactionRequest.IdentityID),
+		base.NewID(transactionRequest.FromID),
+		base.NewID(transactionRequest.IdentityID),
 	), nil
 }
 func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
@@ -63,7 +62,7 @@ func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
 func requestPrototype() helpers.TransactionRequest {
 	return transactionRequest{}
 }
-func newTransactionRequest(baseReq test_types.BaseReq, fromID string, identityID string) helpers.TransactionRequest {
+func newTransactionRequest(baseReq protoTypes.BaseReq, fromID string, identityID string) helpers.TransactionRequest {
 	return transactionRequest{
 		BaseReq:    baseReq,
 		FromID:     fromID,

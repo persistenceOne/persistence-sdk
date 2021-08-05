@@ -6,7 +6,7 @@
 package mint
 
 import (
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"reflect"
 	"testing"
 
@@ -93,8 +93,8 @@ func Test_Burn_Aux_Keeper_Help(t *testing.T) {
 
 	context, keepers := CreateTestInput(t)
 
-	ownerID := testBase.NewID("ownerID")
-	ownableID := testBase.NewID("ownableID")
+	ownerID := base2.NewID("ownerID")
+	ownableID := base2.NewID("ownableID")
 
 	defaultSplitID := key.NewSplitID(ownerID, ownableID)
 	splits := sdkTypes.NewDec(123)

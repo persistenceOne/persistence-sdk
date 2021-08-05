@@ -6,7 +6,7 @@
 package deputize
 
 import (
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
@@ -18,9 +18,9 @@ import (
 
 func Test_Deputize_Message(t *testing.T) {
 
-	testFromID := testBase.NewID("fromID")
-	testToID := testBase.NewID("toID")
-	testClassificationID := testBase.NewID("classificationID")
+	testFromID := base2.NewID("fromID")
+	testToID := base2.NewID("toID")
+	testClassificationID := base2.NewID("classificationID")
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)

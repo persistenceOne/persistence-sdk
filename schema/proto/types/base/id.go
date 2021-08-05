@@ -2,10 +2,10 @@ package base
 
 import (
 	"bytes"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 )
 
-var _ test_types.ID = (*ID)(nil)
+var _ protoTypes.ID = (*ID)(nil)
 
 func (id ID) String() string {
 	return id.IdString
@@ -14,10 +14,10 @@ func (id ID) String() string {
 func (id ID) Bytes() []byte {
 	return []byte(id.IdString)
 }
-func (id ID) Equals(compareID test_types.ID) bool {
+func (id ID) Equals(compareID protoTypes.ID) bool {
 	return bytes.Equal(id.Bytes(), compareID.Bytes())
 }
 
-func NewID(idString string) test_types.ID {
+func NewID(idString string) protoTypes.ID {
 	return ID{IdString: idString}
 }

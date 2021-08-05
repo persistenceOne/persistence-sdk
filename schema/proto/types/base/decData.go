@@ -3,23 +3,23 @@ package base
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/utilities/meta"
 )
 
-var _ test_types.Data = (*decData)(nil)
+var _ protoTypes.Data = (*decData)(nil)
 
 func (decData decData) String() string {
 	return decData.Value.String()
 }
-func (decData decData) GetTypeID() test_types.ID {
+func (decData decData) GetTypeID() protoTypes.ID {
 	return NewID("D")
 }
-func (decData decData) ZeroValue() test_types.Data {
+func (decData decData) ZeroValue() protoTypes.Data {
 	return NewDecData(sdkTypes.ZeroDec())
 }
-func (decData decData) GenerateHashID() test_types.ID {
+func (decData decData) GenerateHashID() protoTypes.ID {
 	if decData.Equal(decData.ZeroValue()) {
 		return NewID("")
 	}

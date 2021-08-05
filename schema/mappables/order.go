@@ -6,17 +6,17 @@
 package mappables
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
 type Order interface {
-	GetClassificationID() test_types.ID
-	GetRateID() test_types.ID
-	GetCreationID() test_types.ID
-	GetMakerOwnableID() test_types.ID
-	GetTakerOwnableID() test_types.ID
-	GetMakerID() test_types.ID
+	GetClassificationID() protoTypes.ID
+	GetRateID() protoTypes.ID
+	GetCreationID() protoTypes.ID
+	GetMakerOwnableID() protoTypes.ID
+	GetTakerOwnableID() protoTypes.ID
+	GetMakerID() protoTypes.ID
 
 	GetCreation() types.MetaProperty
 	GetExchangeRate() types.MetaProperty

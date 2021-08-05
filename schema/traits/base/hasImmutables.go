@@ -6,7 +6,8 @@
 package base
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	base2"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/persistenceOne/persistenceSDK/schema/traits"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	metaUtilities "github.com/persistenceOne/persistenceSDK/utilities/meta"
@@ -21,12 +22,12 @@ var _ traits.HasImmutables = (*HasImmutables)(nil)
 func (immutables HasImmutables) GetImmutableProperties() types.Properties {
 	return immutables.Properties
 }
-func (immutables HasImmutables) GenerateHashID() test_types.ID {
+func (immutables HasImmutables) GenerateHashID() protoTypes.ID {
 	metaList := make([]string, len(immutables.Properties.GetList()))
 
 	for i, immutableProperty := range immutables.Properties.GetList() {
 		metaList[i] = immutableProperty.GetFact().GetHashID().String()
 	}
 
-	return test_types.NewID(metaUtilities.Hash(metaList...))
+	return base2.NewID(metaUtilities.Hash(metaList...))
 }

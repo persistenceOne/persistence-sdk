@@ -10,13 +10,13 @@ import (
 	"github.com/asaskevich/govalidator"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 )
 
 type auxiliaryRequest struct {
-	OwnerID   test_types.ID `json:"ownerID" valid:"required~required field ownerID missing"`
-	OwnableID test_types.ID `json:"ownableID" valid:"required~required field ownableID missing"`
+	OwnerID   protoTypes.ID `json:"ownerID" valid:"required~required field ownerID missing"`
+	OwnableID protoTypes.ID `json:"ownableID" valid:"required~required field ownableID missing"`
 	Value     sdkTypes.Dec  `json:"value" valid:"required~required field value missing"`
 }
 
@@ -38,8 +38,8 @@ func auxiliaryRequestFromInterface(request helpers.AuxiliaryRequest) auxiliaryRe
 
 func NewAuxiliaryRequest(ownerID fmt.Stringer, ownableID fmt.Stringer, value sdkTypes.Dec) helpers.AuxiliaryRequest {
 	return auxiliaryRequest{
-		OwnerID:   testBase.NewID(ownerID.String()),
-		OwnableID: testBase.NewID(ownableID.String()),
+		OwnerID:   base.NewID(ownerID.String()),
+		OwnableID: base.NewID(ownableID.String()),
 		Value:     value,
 	}
 }

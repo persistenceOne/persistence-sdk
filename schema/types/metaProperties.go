@@ -5,11 +5,12 @@
 
 package types
 
-import "github.com/persistenceOne/persistenceSDK/schema/test_types"
+import (
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+)
 
 type MetaProperties interface {
-
-	test_types.ProtoInterface
+	protoTypes.ProtoInterface
 	Get(ID) MetaProperty
 
 	GetList() []MetaProperty

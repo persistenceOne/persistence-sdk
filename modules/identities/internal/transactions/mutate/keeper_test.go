@@ -13,7 +13,7 @@ import (
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	"reflect"
 	"testing"
@@ -119,9 +119,9 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	require.Equal(t, nil, Error)
 	defaultAddr := sdkTypes.AccAddress("addr")
 	verifyMockErrorAddress := sdkTypes.AccAddress("verifyError")
-	defaultIdentityID := testBase.NewID("fromIdentityID")
-	maintainIdentityMockError := testBase.NewID("maintainError")
-	classificationID := testBase.NewID("ClassificationID")
+	defaultIdentityID := base2.NewID("fromIdentityID")
+	maintainIdentityMockError := base2.NewID("maintainError")
+	classificationID := base2.NewID("ClassificationID")
 	identityID := key.NewIdentityID(classificationID, immutableProperties)
 	keepers.IdentitiesKeeper.(transactionKeeper).mapper.NewCollection(context).Add(mappable.NewIdentity(identityID, immutableProperties, mutableProperties))
 
@@ -147,7 +147,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	t.Run("NegativeCase - UnMinted identity", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.EntityNotFound)
-		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, testBase.NewID("identityID"),
+		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, base2.NewID("identityID"),
 			mutableMetaProperties, mutableProperties)); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}

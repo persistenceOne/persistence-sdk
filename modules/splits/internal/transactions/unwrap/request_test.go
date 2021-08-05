@@ -9,8 +9,8 @@ import (
 	"encoding/json"
 	cryptoCodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -39,7 +39,7 @@ func Test_Unwrap_Request(t *testing.T) {
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)
 	require.Nil(t, Error)
 
-	testBaseReq := test_types.BaseReq{From: fromAddress, ChainId: "test", Fees: sdkTypes.NewCoins()}
+	testBaseReq := protoTypes.BaseReq{From: fromAddress, ChainId: "test", Fees: sdkTypes.NewCoins()}
 	testTransactionRequest := newTransactionRequest(testBaseReq, "fromID", "ownableID", "2")
 
 	require.Equal(t, transactionRequest{BaseReq: testBaseReq, FromID: "fromID", OwnableID: "ownableID", Value: "2"}, testTransactionRequest)
@@ -47,7 +47,7 @@ func Test_Unwrap_Request(t *testing.T) {
 
 	requestFromCLI, Error := transactionRequest{}.FromCLI(cliCommand, cliContext)
 	require.Equal(t, nil, Error)
-	require.Equal(t, transactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", OwnableID: "", Value: ""}, requestFromCLI)
+	require.Equal(t, transactionRequest{BaseReq: protoTypes.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", OwnableID: "", Value: ""}, requestFromCLI)
 
 	jsonMessage, _ := json.Marshal(testTransactionRequest)
 	transactionRequestUnmarshalled, Error := transactionRequest{}.FromJSON(jsonMessage)
@@ -61,14 +61,14 @@ func Test_Unwrap_Request(t *testing.T) {
 	require.Equal(t, testBaseReq, testTransactionRequest.GetBaseReq())
 
 	msg, Error := testTransactionRequest.MakeMsg()
-	require.Equal(t, newMessage(fromAccAddress, testBase.NewID("fromID"), testBase.NewID("ownableID"), sdkTypes.NewInt(2)), msg)
+	require.Equal(t, newMessage(fromAccAddress, base.NewID("fromID"), base.NewID("ownableID"), sdkTypes.NewInt(2)), msg)
 	require.Nil(t, Error)
 
-	msg2, Error := newTransactionRequest(test_types.BaseReq{From: "randomFromAddress", ChainId: "test"}, "fromID", "ownableID", "2").MakeMsg()
+	msg2, Error := newTransactionRequest(protoTypes.BaseReq{From: "randomFromAddress", ChainId: "test"}, "fromID", "ownableID", "2").MakeMsg()
 	require.NotNil(t, Error)
 	require.Nil(t, msg2)
 
-	msg2, Error = newTransactionRequest(test_types.BaseReq{From: fromAddress, ChainId: "test"}, "fromID", "ownableID", "2.5").MakeMsg()
+	msg2, Error = newTransactionRequest(protoTypes.BaseReq{From: fromAddress, ChainId: "test"}, "fromID", "ownableID", "2.5").MakeMsg()
 	require.Equal(t, xprtErrors.InvalidRequest, Error)
 	require.Nil(t, msg2)
 

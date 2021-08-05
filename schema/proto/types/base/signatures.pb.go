@@ -7,7 +7,7 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -25,7 +25,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type signatures struct {
-	SignatureList []test_types.Signature `protobuf:"bytes,1,rep,name=signatures,proto3" json:"signatures"`
+	SignatureList []protoTypes.Signature `protobuf:"bytes,1,rep,name=signatures,proto3" json:"signatures"`
 }
 
 func (m *signatures) Reset()         { *m = signatures{} }

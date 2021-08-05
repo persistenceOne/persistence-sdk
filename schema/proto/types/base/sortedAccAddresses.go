@@ -2,7 +2,7 @@ package base
 
 import (
 	"bytes"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"sort"
 
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
@@ -12,7 +12,7 @@ import (
 
 type SortedAccAddresses []sdkTypes.AccAddress
 
-var _ test_types.SortedList = (*SortedAccAddresses)(nil)
+var _ protoTypes.SortedList = (*SortedAccAddresses)(nil)
 
 func (accAddresses SortedAccAddresses) Len() int {
 	return len(accAddresses)
@@ -23,11 +23,11 @@ func (accAddresses SortedAccAddresses) Less(i, j int) bool {
 func (accAddresses SortedAccAddresses) Swap(i, j int) {
 	accAddresses[i], accAddresses[j] = accAddresses[j], accAddresses[i]
 }
-func (accAddresses SortedAccAddresses) Sort() test_types.SortedList {
+func (accAddresses SortedAccAddresses) Sort() protoTypes.SortedList {
 	sort.Sort(accAddresses)
 	return accAddresses
 }
-func (accAddresses SortedAccAddresses) Insert(i interface{}) test_types.SortedList {
+func (accAddresses SortedAccAddresses) Insert(i interface{}) protoTypes.SortedList {
 	accAddress := accAddressFromInterface(i)
 	if accAddresses.Search(accAddress) != accAddresses.Len() {
 		return accAddresses
@@ -46,7 +46,7 @@ func (accAddresses SortedAccAddresses) Insert(i interface{}) test_types.SortedLi
 
 	return newAccAddresses
 }
-func (accAddresses SortedAccAddresses) Delete(i interface{}) test_types.SortedList {
+func (accAddresses SortedAccAddresses) Delete(i interface{}) protoTypes.SortedList {
 	accAddress := accAddressFromInterface(i)
 	index := accAddresses.Search(accAddress)
 
@@ -68,6 +68,7 @@ func (accAddresses SortedAccAddresses) Search(i interface{}) int {
 }
 
 func (accAddresses SortedAccAddresses) MarshalTo(i []byte) (interface{}, interface{}) {
+	panic("todo")
 	
 }
 

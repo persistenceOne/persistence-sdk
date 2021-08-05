@@ -6,7 +6,7 @@
 package mutate
 
 import (
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
@@ -18,8 +18,8 @@ import (
 
 func Test_Mutate_Message(t *testing.T) {
 
-	testFromID := testBase.NewID("fromID")
-	testAssetID := testBase.NewID("assetID")
+	testFromID := base2.NewID("fromID")
+	testAssetID := base2.NewID("assetID")
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)

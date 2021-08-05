@@ -7,11 +7,11 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	_ "github.com/regen-network/cosmos-proto"
 	io "io"
 	math "math"
 	math_bits "math/bits"
-	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -26,7 +26,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionRequest struct {
-	BaseReq test_types.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"base_req"`
+	BaseReq protoTypes.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"base_req"`
 	NubID   string             `protobuf:"bytes,2,opt,name=nubID,proto3" json:"nubID,omitempty" valid:"required~required field nubID missing, matches(^.*$)~invalid field nubID"`
 }
 

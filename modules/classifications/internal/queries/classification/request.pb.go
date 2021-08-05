@@ -7,7 +7,7 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	github_com_persistenceOne_persistenceSDK_schema_test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	_ "github.com/regen-network/cosmos-proto"
 	io "io"
 	math "math"
@@ -26,7 +26,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type queryRequest struct {
-	ClassificationID github_com_persistenceOne_persistenceSDK_schema_test_types.ID `protobuf:"bytes,1,opt,name=classificationID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"classificationID"valid:"required~required field classificationID missing"`
+	ClassificationID types.ID `protobuf:"bytes,1,opt,name=classificationID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"classificationID"valid:"required~required field classificationID missing"`
 }
 
 func (m *queryRequest) Reset()         { *m = queryRequest{} }

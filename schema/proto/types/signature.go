@@ -1,4 +1,4 @@
-package test_types
+package types
 
 import "github.com/tendermint/tendermint/crypto"
 

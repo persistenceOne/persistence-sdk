@@ -13,7 +13,7 @@ import (
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	"reflect"
 	"testing"
@@ -116,7 +116,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	conformMockErrorProperties, Error := base.ReadMetaProperties("conformError:S|mockError")
 	require.Equal(t, nil, Error)
 	defaultAddr := sdkTypes.AccAddress("addr")
-	defaultClassificationID := testBase.NewID("test.cGn3HMW8M3t5gMDv-wXa9sseHnA=")
+	defaultClassificationID := base2.NewID("test.cGn3HMW8M3t5gMDv-wXa9sseHnA=")
 	defaultIdentityID := key.NewIdentityID(defaultClassificationID, immutableProperties)
 	keepers.IdentitiesKeeper.(transactionKeeper).mapper.NewCollection(context).Add(mappable.NewIdentity(defaultIdentityID, base.NewProperties(), base.NewProperties()))
 
@@ -149,7 +149,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	t.Run("NegativeCase-MutableScrubError", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
-		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, defaultAddr, defaultIdentityID, testBase.NewID("newClassificationID"),
+		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, defaultAddr, defaultIdentityID, base2.NewID("newClassificationID"),
 			immutableMetaProperties, immutableProperties, scrubMockErrorProperties, mutableProperties)); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
@@ -158,7 +158,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	t.Run("NegativeCase-ConformError", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
-		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, defaultAddr, defaultIdentityID, testBase.NewID("newClassificationID"),
+		if got := keepers.IdentitiesKeeper.Transact(context, newMessage(defaultAddr, defaultAddr, defaultIdentityID, base2.NewID("newClassificationID"),
 			immutableMetaProperties, immutableProperties, conformMockErrorProperties, mutableProperties)); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}

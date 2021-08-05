@@ -10,12 +10,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 )
 
 type TransactionRequest interface {
 	//proto.Message
-	GetBaseReq() test_types.BaseReq
+	GetBaseReq() protoTypes.BaseReq
 
 	FromCLI(CLICommand, client.Context) (TransactionRequest, error)
 	FromJSON(json.RawMessage) (TransactionRequest, error)

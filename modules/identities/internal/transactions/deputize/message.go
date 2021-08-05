@@ -13,7 +13,7 @@ import (
 	xprtErrors "github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
@@ -53,7 +53,7 @@ func messagePrototype() helpers.Message {
 	return message{}
 }
 
-func newMessage(from sdkTypes.AccAddress, fromID test_types.ID, toID test_types.ID, classificationID test_types.ID, maintainedProperties types.Properties, addMaintainer bool, removeMaintainer bool, mutateMaintainer bool) sdkTypes.Msg {
+func newMessage(from sdkTypes.AccAddress, fromID protoTypes.ID, toID protoTypes.ID, classificationID protoTypes.ID, maintainedProperties types.Properties, addMaintainer bool, removeMaintainer bool, mutateMaintainer bool) sdkTypes.Msg {
 	return message{
 		From:                 from,
 		FromID:               fromID,

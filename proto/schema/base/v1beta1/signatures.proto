@@ -5,7 +5,7 @@ package schema.base.v1beta1;
 import "third_party/proto/gogoproto/gogo.proto";
 import "proto/schema/base/v1beta1/signature.proto";
 
-option go_package = "schema/test_types/base";
+option go_package = "schema/types/base";
 
 message signatures {
     option (gogoproto.goproto_getters) = false;

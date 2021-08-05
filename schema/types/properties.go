@@ -5,11 +5,13 @@
 
 package types
 
-import "github.com/persistenceOne/persistenceSDK/schema/test_types"
+import (
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+)
 
 type Properties interface {
-	test_types.ProtoInterface
-	Get(test_types.ID) Property
+	protoTypes.ProtoInterface
+	Get(protoTypes.ID) Property
 
 	GetList() []Property
 

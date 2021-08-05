@@ -7,24 +7,24 @@ package types
 
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 )
 
 type Data interface {
 	String() string
 
-	GetTypeID() test_types.ID
+	GetTypeID() protoTypes.ID
 
 	ZeroValue() Data
 
-	GenerateHashID() test_types.ID
+	GenerateHashID() protoTypes.ID
 
 	AsAccAddress() (sdkTypes.AccAddress, error)
 	AsAccAddressList() ([]sdkTypes.AccAddress, error)
 	AsString() (string, error)
 	AsDec() (sdkTypes.Dec, error)
 	AsHeight() (Height, error)
-	AsID() (test_types.ID, error)
+	AsID() (protoTypes.ID, error)
 
 	Get() interface{}
 

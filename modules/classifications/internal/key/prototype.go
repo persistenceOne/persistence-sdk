@@ -7,9 +7,9 @@ package key
 
 import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 )
 
 func Prototype() helpers.Key {
-	return classificationIDFromInterface(testBase.NewID(""))
+	return classificationIDFromInterface(base.NewID(""))
 }

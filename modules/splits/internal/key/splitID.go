@@ -7,7 +7,7 @@ package key
 
 import (
 	"bytes"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -18,8 +18,12 @@ import (
 )
 
 type splitID struct {
-	OwnerID   test_types.ID `json:"ownerID" valid:"required~required field ownerID missing"`
-	OwnableID test_types.ID `json:"ownableID" valid:"required~required field ownableID missing"`
+	OwnerID   protoTypes.ID `json:"ownerID" valid:"required~required field ownerID missing"`
+	OwnableID protoTypes.ID `json:"ownableID" valid:"required~required field ownableID missing"`
+}
+
+func (splitID splitID) MarshalToSizedBuffer(i []byte) (int, error) {
+	panic("implement me")
 }
 
 //TODO: would be generated via proto file
@@ -35,7 +39,7 @@ func (splitID splitID) Unmarshal(i []byte) error {
 	panic("implement me")
 }
 
-var _ test_types.ID = (*splitID)(nil)
+var _ protoTypes.ID = (*splitID)(nil)
 var _ helpers.Key = (*splitID)(nil)
 
 func (splitID splitID) Bytes() []byte {
@@ -50,7 +54,7 @@ func (splitID splitID) String() string {
 
 	return strings.Join(values, constants.SecondOrderCompositeIDSeparator)
 }
-func (splitID splitID) Equals(id test_types.ID) bool {
+func (splitID splitID) Equals(id protoTypes.ID) bool {
 	return bytes.Equal(splitID.Bytes(), id.Bytes())
 }
 func (splitID splitID) GenerateStoreKeyBytes() []byte {
@@ -66,7 +70,7 @@ func (splitID splitID) Matches(key helpers.Key) bool {
 	return splitID.Equals(splitIDFromInterface(key))
 }
 
-func NewSplitID(ownerID test_types.ID, ownableID test_types.ID) test_types.ID {
+func NewSplitID(ownerID protoTypes.ID, ownableID protoTypes.ID) protoTypes.ID {
 	return splitID{
 		OwnerID:   ownerID,
 		OwnableID: ownableID,

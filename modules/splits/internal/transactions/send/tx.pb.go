@@ -10,7 +10,7 @@ import (
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -32,9 +32,9 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type message struct {
 	from      github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty" valid:"required~required field from missing"`
-	fromID    test_types.ID                                 `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"from_iD" valid:"required~required field fromID missing"`
-	toID      test_types.ID                                 `protobuf:"bytes,3,opt,name=to_iD,json=toID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"to_iD" valid:"required~required field toID missing"`
-	ownableID test_types.ID                                 `protobuf:"bytes,4,opt,name=ownable_iD,json=ownableID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"ownable_iD" valid:"required~required field ownableID missing"`
+	fromID    protoTypes.ID                                 `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"from_iD" valid:"required~required field fromID missing"`
+	toID      protoTypes.ID                                 `protobuf:"bytes,3,opt,name=to_iD,json=toID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"to_iD" valid:"required~required field toID missing"`
+	ownableID protoTypes.ID                                 `protobuf:"bytes,4,opt,name=ownable_iD,json=ownableID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"ownable_iD" valid:"required~required field ownableID missing"`
 	value     github_com_cosmos_cosmos_sdk_types.Dec        `protobuf:"bytes,5,opt,name=value,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"value" valid:"required~required field value missing"`
 }
 

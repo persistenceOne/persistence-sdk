@@ -11,12 +11,12 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/common"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 )
 
 type queryRequest struct {
-	OwnableID test_types.ID `json:"ownableID" valid:"required~required field ownableID missing"`
+	OwnableID protoTypes.ID `json:"ownableID" valid:"required~required field ownableID missing"`
 }
 
 var _ helpers.QueryRequest = (*queryRequest)(nil)
@@ -27,11 +27,11 @@ func (queryRequest queryRequest) Validate() error {
 }
 
 func (queryRequest queryRequest) FromCLI(cliCommand helpers.CLICommand, _ client.Context) helpers.QueryRequest {
-	return newQueryRequest(testBase.NewID(cliCommand.ReadString(flags.OwnableID)))
+	return newQueryRequest(base.NewID(cliCommand.ReadString(flags.OwnableID)))
 }
 
 func (queryRequest queryRequest) FromMap(vars map[string]string) helpers.QueryRequest {
-	return newQueryRequest(testBase.NewID(vars[Query.GetName()]))
+	return newQueryRequest(base.NewID(vars[Query.GetName()]))
 }
 
 func (queryRequest queryRequest) Encode() ([]byte, error) {
@@ -58,6 +58,6 @@ func queryRequestFromInterface(request helpers.QueryRequest) queryRequest {
 	}
 }
 
-func newQueryRequest(ownableID test_types.ID) helpers.QueryRequest {
+func newQueryRequest(ownableID protoTypes.ID) helpers.QueryRequest {
 	return queryRequest{OwnableID: ownableID}
 }

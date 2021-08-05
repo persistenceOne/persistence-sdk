@@ -7,12 +7,12 @@ package mappables
 
 import (
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"github.com/persistenceOne/persistenceSDK/schema/traits"
 )
 
 type Document interface {
-	GetID() test_types.ID
+	GetID() protoTypes.ID
 
 	traits.HasImmutables
 	traits.HasMutables

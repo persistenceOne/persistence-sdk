@@ -6,7 +6,7 @@ import "third_party/proto/gogoproto/gogo.proto";
 import "proto/schema/base/v1beta1/id.proto";
 import "proto/schema/base/v1beta1/signatures.proto";
 
-option go_package = "schema/test_types/base";
+option go_package = "schema/types/base";
 
 message fact {
   option (gogoproto.goproto_getters) = false;

@@ -6,10 +6,10 @@
 package traits
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 )
 
 type Ownable interface {
-	GetOwnerID() test_types.ID
-	GetOwnableID() test_types.ID
+	GetOwnerID() protoTypes.ID
+	GetOwnableID() protoTypes.ID
 }

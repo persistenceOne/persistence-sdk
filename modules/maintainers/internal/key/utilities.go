@@ -6,8 +6,8 @@
 package key
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"strings"
 
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
@@ -15,36 +15,36 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants"
 )
 
-func readMaintainerID(maintainerIDString string) test_types.ID {
+func readMaintainerID(maintainerIDString string) protoTypes.ID {
 	idList := strings.Split(maintainerIDString, constants.SecondOrderCompositeIDSeparator)
 	if len(idList) == 2 {
 		return maintainerID{
-			ClassificationID: testBase.NewID(idList[0]),
-			IdentityID:       testBase.NewID(idList[1]),
+			ClassificationID: base.NewID(idList[0]),
+			IdentityID:       base.NewID(idList[1]),
 		}
 	}
 
-	return maintainerID{IdentityID: testBase.NewID(""), ClassificationID: testBase.NewID("")}
+	return maintainerID{IdentityID: base.NewID(""), ClassificationID: base.NewID("")}
 }
 func maintainerIDFromInterface(i interface{}) maintainerID {
 	switch value := i.(type) {
 	case maintainerID:
 		return value
-	case test_types.ID:
+	case protoTypes.ID:
 		return maintainerIDFromInterface(readMaintainerID(value.String()))
 	default:
 		panic(i)
 	}
 }
 
-func ReadClassificationID(assetID test_types.ID) test_types.ID {
+func ReadClassificationID(assetID protoTypes.ID) protoTypes.ID {
 	return maintainerIDFromInterface(assetID).ClassificationID
 }
 
-func ReadIdentityID(assetID test_types.ID) test_types.ID {
+func ReadIdentityID(assetID protoTypes.ID) protoTypes.ID {
 	return maintainerIDFromInterface(assetID).IdentityID
 }
 
-func FromID(id test_types.ID) helpers.Key {
+func FromID(id protoTypes.ID) helpers.Key {
 	return maintainerIDFromInterface(id)
 }

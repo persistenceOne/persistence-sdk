@@ -14,7 +14,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/mappable"
 	"github.com/persistenceOne/persistenceSDK/modules/metas/auxiliaries/scrub"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
 
@@ -43,7 +43,7 @@ func (transactionKeeper transactionKeeper) Transact(context sdkTypes.Context, ms
 		return newTransactionResponse(Error)
 	}
 
-	classificationID, Error := define.GetClassificationIDFromResponse(transactionKeeper.defineAuxiliary.GetKeeper().Help(context, define.NewAuxiliaryRequest(base.NewProperties(base.NewProperty(testBase.NewID(properties.NubID), base.NewFact(base.NewIDData(testBase.NewID(""))))), base.NewProperties(base.NewProperty(testBase.NewID(properties.Authentication), base.NewFact(base.NewAccAddressData(nil).ZeroValue()))))))
+	classificationID, Error := define.GetClassificationIDFromResponse(transactionKeeper.defineAuxiliary.GetKeeper().Help(context, define.NewAuxiliaryRequest(base.NewProperties(base.NewProperty(base2.NewID(properties.NubID), base.NewFact(base.NewIDData(base2.NewID(""))))), base.NewProperties(base.NewProperty(base2.NewID(properties.Authentication), base.NewFact(base.NewAccAddressData(nil).ZeroValue()))))))
 	if classificationID == nil && Error != nil {
 		return newTransactionResponse(Error)
 	}

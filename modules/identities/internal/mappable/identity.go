@@ -14,7 +14,8 @@ import (
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	"github.com/persistenceOne/persistenceSDK/schema/mappables"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	baseTraits "github.com/persistenceOne/persistenceSDK/schema/traits/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
@@ -22,30 +23,32 @@ import (
 )
 
 type identity struct {
-	ID test_types.ID `json:"id" valid:"required~required field id missing"`
+	ID protoTypes.ID `json:"id" valid:"required~required field id missing"`
 	baseTraits.HasImmutables
 	baseTraits.HasMutables //nolint:govet
 }
 
+
+
 var _ mappables.InterIdentity = (*identity)(nil)
 
-func (identity identity) GetID() test_types.ID { return identity.ID }
+func (identity identity) GetID() protoTypes.ID { return identity.ID }
 func (identity identity) GetExpiry() types.Property {
-	if property := identity.HasImmutables.GetImmutableProperties().Get(base.NewID(properties.Expiry)); property != nil {
+	if property := identity.HasImmutables.GetImmutableProperties().Get(base2.NewID(properties.Expiry)); property != nil {
 		return property
-	} else if property := identity.HasMutables.GetMutableProperties().Get(base.NewID(properties.Expiry)); property != nil {
+	} else if property := identity.HasMutables.GetMutableProperties().Get(base2.NewID(properties.Expiry)); property != nil {
 		return property
 	} else {
-		return base.NewProperty(base.NewID(properties.Expiry), base.NewFact(base.NewHeightData(base.NewHeight(-1))))
+		return base.NewProperty(base2.NewID(properties.Expiry), base.NewFact(base.NewHeightData(base.NewHeight(-1))))
 	}
 }
 func (identity identity) GetAuthentication() types.Property {
-	if property := identity.HasImmutables.GetImmutableProperties().Get(base.NewID(properties.Authentication)); property != nil {
+	if property := identity.HasImmutables.GetImmutableProperties().Get(base2.NewID(properties.Authentication)); property != nil {
 		return property
-	} else if property := identity.HasMutables.GetMutableProperties().Get(base.NewID(properties.Authentication)); property != nil {
+	} else if property := identity.HasMutables.GetMutableProperties().Get(base2.NewID(properties.Authentication)); property != nil {
 		return property
 	} else {
-		return base.NewProperty(base.NewID(properties.Expiry), base.NewFact(base.NewHeightData(base.NewHeight(-1))))
+		return base.NewProperty(base2.NewID(properties.Expiry), base.NewFact(base.NewHeightData(base.NewHeight(-1))))
 	}
 }
 func (identity identity) GetKey() helpers.Key {
@@ -54,7 +57,7 @@ func (identity identity) GetKey() helpers.Key {
 func (identity) RegisterCodec(codec *codec.LegacyAmino) {
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, identity{})
 }
-func NewIdentity(id test_types.ID, immutableProperties types.Properties, mutableProperties types.Properties) mappables.InterIdentity {
+func NewIdentity(id protoTypes.ID, immutableProperties types.Properties, mutableProperties types.Properties) mappables.InterIdentity {
 	return identity{
 		ID:            id,
 		HasImmutables: baseTraits.HasImmutables{Properties: immutableProperties},

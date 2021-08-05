@@ -13,7 +13,7 @@ import (
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	"reflect"
 	"testing"
@@ -120,9 +120,9 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	require.Equal(t, nil, Error)
 	defaultAddr := sdkTypes.AccAddress("addr")
 	verifyMockErrorAddress := sdkTypes.AccAddress("verifyError")
-	defaultIdentityID := testBase.NewID("fromIdentityID")
-	maintainIdentityMockError := testBase.NewID("maintainError")
-	classificationID := testBase.NewID("ClassificationID")
+	defaultIdentityID := base2.NewID("fromIdentityID")
+	maintainIdentityMockError := base2.NewID("maintainError")
+	classificationID := base2.NewID("ClassificationID")
 	assetID := key.NewAssetID(classificationID, immutableProperties)
 	keepers.AssetsKeeper.(transactionKeeper).mapper.NewCollection(context).Add(mappable.NewAsset(assetID, immutableProperties, mutableProperties))
 
@@ -146,7 +146,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	t.Run("NegativeCase - UnMinted asset", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.EntityNotFound)
-		if got := keepers.AssetsKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, testBase.NewID("assetID"),
+		if got := keepers.AssetsKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, base2.NewID("assetID"),
 			mutableMetaProperties, mutableProperties)); !reflect.DeepEqual(got, want) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}

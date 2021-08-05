@@ -16,7 +16,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -32,7 +32,7 @@ func Test_Split_Request(t *testing.T) {
 	vestingTypes.RegisterLegacyAminoCodec(Codec)
 	Codec.Seal()
 
-	testSplitID := testBase.NewID("ownableID")
+	testSplitID := base2.NewID("ownableID")
 	testQueryRequest := newQueryRequest(testSplitID)
 	require.Equal(t, nil, testQueryRequest.Validate())
 	require.Equal(t, queryRequest{}, requestPrototype())
@@ -40,12 +40,12 @@ func Test_Split_Request(t *testing.T) {
 	cliCommand := baseHelpers.NewCLICommand("", "", "", []helpers.CLIFlag{flags.SplitID})
 	cliContext := client.Context{}.WithLegacyAmino(Codec)
 	require.Panics(t, func() {
-		require.Equal(t, newQueryRequest(testBase.NewID("")), queryRequest{}.FromCLI(cliCommand, cliContext))
+		require.Equal(t, newQueryRequest(base2.NewID("")), queryRequest{}.FromCLI(cliCommand, cliContext))
 	})
 
 	vars := make(map[string]string)
 	vars["ownables"] = "randomString"
-	require.Equal(t, newQueryRequest(testBase.NewID("randomString")), queryRequest{}.FromMap(vars))
+	require.Equal(t, newQueryRequest(base2.NewID("randomString")), queryRequest{}.FromMap(vars))
 
 	encodedRequest, Error := testQueryRequest.Encode()
 	encodedResult, _ := common.Codec.MarshalJSON(testQueryRequest)

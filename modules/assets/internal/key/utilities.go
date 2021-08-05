@@ -6,8 +6,8 @@
 package key
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"strings"
 
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
@@ -16,16 +16,16 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-func readAssetID(assetIDString string) test_types.ID {
+func readAssetID(assetIDString string) protoTypes.ID {
 	idList := strings.Split(assetIDString, constants.FirstOrderCompositeIDSeparator)
 	if len(idList) == 2 {
 		return assetID{
-			ClassificationID: base.NewID(idList[0]),
-			HashID:           base.NewID(idList[1]),
+			ClassificationID: base2.NewID(idList[0]),
+			HashID:           base2.NewID(idList[1]),
 		}
 	}
 
-	return assetID{ClassificationID: base.NewID(""), HashID: base.NewID("")}
+	return assetID{ClassificationID: base2.NewID(""), HashID: base2.NewID("")}
 }
 func assetIDFromInterface(i interface{}) assetID {
 	switch value := i.(type) {
@@ -38,10 +38,10 @@ func assetIDFromInterface(i interface{}) assetID {
 	}
 }
 
-func ReadClassificationID(assetID test_types.ID) test_types.ID {
+func ReadClassificationID(assetID protoTypes.ID) protoTypes.ID {
 	return assetIDFromInterface(assetID).ClassificationID
 }
 
-func FromID(id test_types.ID) helpers.Key {
+func FromID(id protoTypes.ID) helpers.Key {
 	return assetIDFromInterface(id)
 }

@@ -8,13 +8,13 @@ package maintain
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
 type auxiliaryRequest struct {
-	ClassificationID     test_types.ID         `json:"classificationID" valid:"required~required field classificationID missing"`
-	IdentityID           test_types.ID         `json:"identityID" valid:"required~required field identityID missing"`
+	ClassificationID     protoTypes.ID    `json:"classificationID" valid:"required~required field classificationID missing"`
+	IdentityID           protoTypes.ID    `json:"identityID" valid:"required~required field identityID missing"`
 	MaintainedProperties types.Properties `json:"maintainedProperties" valid:"required~required field maintainedProperties missing"`
 }
 
@@ -34,7 +34,7 @@ func auxiliaryRequestFromInterface(request helpers.AuxiliaryRequest) auxiliaryRe
 	}
 }
 
-func NewAuxiliaryRequest(classificationID test_types.ID, identityID test_types.ID, maintainedProperties types.Properties) helpers.AuxiliaryRequest {
+func NewAuxiliaryRequest(classificationID protoTypes.ID, identityID protoTypes.ID, maintainedProperties types.Properties) helpers.AuxiliaryRequest {
 	return auxiliaryRequest{
 		ClassificationID:     classificationID,
 		IdentityID:           identityID,

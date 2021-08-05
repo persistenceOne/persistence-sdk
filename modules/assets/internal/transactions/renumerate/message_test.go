@@ -6,7 +6,7 @@
 package renumerate
 
 import (
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
@@ -17,8 +17,8 @@ import (
 
 func Test_Renumerate_Message(t *testing.T) {
 
-	testAssetID := testBase.NewID("assetID")
-	testFromID := testBase.NewID("fromID")
+	testAssetID := base.NewID("assetID")
+	testFromID := base.NewID("fromID")
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)

@@ -13,7 +13,7 @@ import (
 	vestingTypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	paramsKeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	tendermintTypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	"reflect"
 	"testing"
@@ -109,11 +109,11 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 	require.Equal(t, nil, Error)
 	defaultAddr := sdkTypes.AccAddress("addr")
 	verifyMockErrorAddress := sdkTypes.AccAddress("verifyError")
-	defaultIdentityID :=testBase.NewID("fromIdentityID")
-	fakeFromID := testBase.NewID("fakeFromID")
-	toID := testBase.NewID("toID")
-	toID2 := testBase.NewID("toID2")
-	classificationID := testBase.NewID("ClassificationID")
+	defaultIdentityID := base2.NewID("fromIdentityID")
+	fakeFromID := base2.NewID("fakeFromID")
+	toID := base2.NewID("toID")
+	toID2 := base2.NewID("toID2")
+	classificationID := base2.NewID("ClassificationID")
 
 	t.Run("PositiveCase", func(t *testing.T) {
 		want := newTransactionResponse(nil)

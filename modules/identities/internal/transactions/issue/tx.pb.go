@@ -10,7 +10,7 @@ import (
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
-	github_com_persistenceOne_persistenceSDK_schema_test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	github_com_persistenceOne_persistenceSDK_schema_types "github.com/persistenceOne/persistenceSDK/schema/types"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -33,9 +33,9 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type message struct {
 	From                    github_com_cosmos_cosmos_sdk_types.AccAddress                        `protobuf:"bytes,1,opt,name=from,proto3,customtype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"from"  valid:"required~required field from missing"`
-	To                      github_com_cosmos_cosmos_sdk_types.AccAddress                        `protobuf:"bytes,2,opt,name=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"fromID"  valid:"required~required field to missing, matches(^[a-z0-9]*$)~invalid field to"`
-	FromID                  github_com_persistenceOne_persistenceSDK_schema_test_types.ID        `protobuf:"bytes,3,opt,name=toID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"toID"  valid:"required~required field fromID missing"`
-	ClassificationID        github_com_persistenceOne_persistenceSDK_schema_test_types.ID        `protobuf:"bytes,4,opt,name=classificationID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/test_types.ID" json:"classificationID"  valid:"required~required field classificationID missing"`
+	To                      github_com_cosmos_cosmos_sdk_types.AccAddress                        `protobuf:"bytes,2,opt,name=fromID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"fromID"  valid:"required~required field to missing, matches(^[a-z0-9]*$)~invalid field to"`
+	FromID                  types.ID                                                             `protobuf:"bytes,3,opt,name=toID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"toID"  valid:"required~required field fromID missing"`
+	ClassificationID        types.ID                                                             `protobuf:"bytes,4,opt,name=classificationID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"classificationID"  valid:"required~required field classificationID missing"`
 	ImmutableMetaProperties github_com_persistenceOne_persistenceSDK_schema_types.MetaProperties `protobuf:"bytes,5,opt,name=immutableMetaProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.MetaProperties" json:"immutableMetaProperties"  valid:"required~required field immutableMetaProperties missing"`
 	ImmutableProperties     github_com_persistenceOne_persistenceSDK_schema_types.Properties     `protobuf:"bytes,6,opt,name=immutableProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Properties" json:"immutableProperties"  valid:"required~required field immutableProperties missing"`
 	MutableMetaProperties   github_com_persistenceOne_persistenceSDK_schema_types.MetaProperties `protobuf:"bytes,7,opt,name=mutableMetaProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.MetaProperties" json:"mutableMetaProperties"  valid:"required~required field mutableMetaProperties missing"`

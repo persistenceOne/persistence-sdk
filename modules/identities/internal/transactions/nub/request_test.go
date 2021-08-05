@@ -16,8 +16,8 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
@@ -38,7 +38,7 @@ func Test_Define_Request(t *testing.T) {
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)
 	require.Nil(t, Error)
 
-	testBaseReq := test_types.BaseReq{From: fromAddress, ChainId: "test", Fees: sdkTypes.NewCoins()}
+	testBaseReq := protoTypes.BaseReq{From: fromAddress, ChainId: "test", Fees: sdkTypes.NewCoins()}
 	testTransactionRequest := newTransactionRequest(testBaseReq, "nubID")
 
 	require.Equal(t, transactionRequest{BaseReq: testBaseReq, NubID: "nubID"}, testTransactionRequest)
@@ -46,7 +46,7 @@ func Test_Define_Request(t *testing.T) {
 
 	requestFromCLI, Error := transactionRequest{}.FromCLI(cliCommand, cliContext)
 	require.Equal(t, nil, Error)
-	require.Equal(t, transactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, NubID: ""}, requestFromCLI)
+	require.Equal(t, transactionRequest{BaseReq: protoTypes.BaseReq{From: cliContext.GetFromAddress().String(), ChainId: cliContext.ChainID, Simulate: cliContext.Simulate}, NubID: ""}, requestFromCLI)
 
 	jsonMessage, _ := json.Marshal(testTransactionRequest)
 	transactionRequestUnmarshalled, Error := transactionRequest{}.FromJSON(jsonMessage)
@@ -60,10 +60,10 @@ func Test_Define_Request(t *testing.T) {
 	require.Equal(t, testBaseReq, testTransactionRequest.GetBaseReq())
 
 	msg, Error := testTransactionRequest.MakeMsg()
-	require.Equal(t, newMessage(fromAccAddress, testBase.NewID("nubID")), msg)
+	require.Equal(t, newMessage(fromAccAddress, base.NewID("nubID")), msg)
 	require.Nil(t, Error)
 
-	msg, Error = newTransactionRequest(test_types.BaseReq{From: "randomFromAddress", ChainId: "test"}, "nubID").MakeMsg()
+	msg, Error = newTransactionRequest(protoTypes.BaseReq{From: "randomFromAddress", ChainId: "test"}, "nubID").MakeMsg()
 	require.Equal(t, nil, msg)
 	require.NotNil(t, Error)
 

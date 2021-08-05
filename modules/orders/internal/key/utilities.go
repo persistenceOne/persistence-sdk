@@ -6,7 +6,9 @@
 package key
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
+
 	"strconv"
 	"strings"
 
@@ -22,26 +24,26 @@ func readOrderID(orderIDString string) types.ID {
 	if len(idList) == 7 {
 		exchangeRate, Error := sdkTypes.NewDecFromStr(idList[3])
 		if Error != nil {
-			return orderID{ClassificationID: test_types.NewID(""), MakerOwnableID: test_types.NewID(""), TakerOwnableID: test_types.NewID(""), RateID: test_types.NewID(""), CreationID: test_types.NewID(""), MakerID: test_types.NewID(""), HashID: test_types.NewID("")}
+			return orderID{ClassificationID: base2.NewID(""), MakerOwnableID: base2.NewID(""), TakerOwnableID: base2.NewID(""), RateID: base2.NewID(""), CreationID: base2.NewID(""), MakerID: base2.NewID(""), HashID: base2.NewID("")}
 		}
 
 		height, Error := strconv.ParseInt(idList[4], 10, 64)
 		if Error != nil {
-			return orderID{ClassificationID: test_types.NewID(""), MakerOwnableID: test_types.NewID(""), TakerOwnableID: test_types.NewID(""), RateID: test_types.NewID(""), CreationID: test_types.NewID(""), MakerID: test_types.NewID(""), HashID: test_types.NewID("")}
+			return orderID{ClassificationID: base2.NewID(""), MakerOwnableID: base2.NewID(""), TakerOwnableID: base2.NewID(""), RateID: base2.NewID(""), CreationID: base2.NewID(""), MakerID: base2.NewID(""), HashID: base2.NewID("")}
 		}
 
 		return orderID{
-			ClassificationID: test_types.NewID(idList[0]),
-			MakerOwnableID:   test_types.NewID(idList[1]),
-			TakerOwnableID:   test_types.NewID(idList[2]),
-			RateID:           test_types.NewID(exchangeRate.String()),
-			CreationID:       test_types.NewID(strconv.FormatInt(height, 10)),
-			MakerID:          test_types.NewID(idList[5]),
-			HashID:           test_types.NewID(idList[6]),
+			ClassificationID: base2.NewID(idList[0]),
+			MakerOwnableID:   base2.NewID(idList[1]),
+			TakerOwnableID:   base2.NewID(idList[2]),
+			RateID:           base2.NewID(exchangeRate.String()),
+			CreationID:       base2.NewID(strconv.FormatInt(height, 10)),
+			MakerID:          base2.NewID(idList[5]),
+			HashID:           base2.NewID(idList[6]),
 		}
 	}
 
-	return orderID{ClassificationID: test_types.NewID(""), MakerOwnableID: test_types.NewID(""), TakerOwnableID: test_types.NewID(""), RateID: test_types.NewID(""), CreationID: test_types.NewID(""), MakerID: test_types.NewID(""), HashID: test_types.NewID("")}
+	return orderID{ClassificationID: base2.NewID(""), MakerOwnableID: base2.NewID(""), TakerOwnableID: base2.NewID(""), RateID: base2.NewID(""), CreationID: base2.NewID(""), MakerID: base2.NewID(""), HashID: base2.NewID("")}
 }
 func orderIDFromInterface(i interface{}) orderID {
 	switch value := i.(type) {
@@ -54,30 +56,30 @@ func orderIDFromInterface(i interface{}) orderID {
 	}
 }
 
-func ReadClassificationID(orderID test_types.ID) test_types.ID {
+func ReadClassificationID(orderID protoTypes.ID) protoTypes.ID {
 	return orderIDFromInterface(orderID).ClassificationID
 }
 
-func ReadRateID(orderID test_types.ID) test_types.ID {
+func ReadRateID(orderID protoTypes.ID) protoTypes.ID {
 	return orderIDFromInterface(orderID).RateID
 }
 
-func ReadCreationID(orderID test_types.ID) test_types.ID {
+func ReadCreationID(orderID protoTypes.ID) protoTypes.ID {
 	return orderIDFromInterface(orderID).CreationID
 }
 
-func ReadMakerOwnableID(orderID test_types.ID) test_types.ID {
+func ReadMakerOwnableID(orderID protoTypes.ID) protoTypes.ID {
 	return orderIDFromInterface(orderID).MakerOwnableID
 }
 
-func ReadTakerOwnableID(orderID test_types.ID) test_types.ID {
+func ReadTakerOwnableID(orderID protoTypes.ID) protoTypes.ID {
 	return orderIDFromInterface(orderID).TakerOwnableID
 }
 
-func ReadMakerID(orderID test_types.ID) test_types.ID {
+func ReadMakerID(orderID protoTypes.ID) protoTypes.ID {
 	return orderIDFromInterface(orderID).MakerID
 }
 
-func FromID(id test_types.ID) helpers.Key {
+func FromID(id protoTypes.ID) helpers.Key {
 	return orderIDFromInterface(id)
 }

@@ -7,10 +7,10 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	io "io"
 	math "math"
 	math_bits "math/bits"
-	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -25,13 +25,13 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type signature struct {
-	ID             test_types.ID `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID"`
-	SignatureBytes []byte        `protobuf:"bytes,2,opt,name=signature_bytes,json=signatureBytes,proto3" json:"signature_bytes,omitempty"`
-	ValidityHeight test_types.Height        `protobuf:"bytes,3,opt,name=validity_height,json=validityHeight,proto3" json:"validity_height"`
+	ID             protoTypes.ID     `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID"`
+	SignatureBytes []byte            `protobuf:"bytes,2,opt,name=signature_bytes,json=signatureBytes,proto3" json:"signature_bytes,omitempty"`
+	ValidityHeight protoTypes.Height `protobuf:"bytes,3,opt,name=validity_height,json=validityHeight,proto3" json:"validity_height"`
 }
 
-func (m *signature) Reset()         { *m = signature{} }
-func (*signature) ProtoMessage()    {}
+func (m *signature) Reset()      { *m = signature{} }
+func (*signature) ProtoMessage() {}
 func (*signature) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d6be50e99f298bbf, []int{0}
 }

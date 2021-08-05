@@ -6,10 +6,10 @@
 package types
 
 import (
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 )
 
 type NFT interface {
 	ID() ID
-	GetClassificationID() test_types.ID
+	GetClassificationID() protoTypes.ID
 }

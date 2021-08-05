@@ -21,7 +21,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/applications"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
@@ -90,11 +90,11 @@ func Test_Burn_Aux_Keeper_Help(t *testing.T) {
 
 	context, keepers := CreateTestInput(t)
 
-	ownerID := testBase.NewID("ownerID")
-	ownableID := testBase.NewID("ownableID")
+	ownerID := base2.NewID("ownerID")
+	ownableID := base2.NewID("ownableID")
 
-	ownerID2 := testBase.NewID("ownerID2")
-	ownableID2 := testBase.NewID("ownableID2")
+	ownerID2 := base2.NewID("ownerID2")
+	ownableID2 := base2.NewID("ownableID2")
 
 	splitID := key.NewSplitID(ownerID, ownableID)
 	splitID2 := key.NewSplitID(ownerID2, ownableID2)

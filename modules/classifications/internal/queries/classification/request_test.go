@@ -16,7 +16,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -32,18 +32,18 @@ func Test_Classification_Request(t *testing.T) {
 	vestingTypes.RegisterLegacyAminoCodec(Codec)
 	Codec.Seal()
 
-	testClassificationID := testBase.NewID("ClassificationID")
+	testClassificationID := base2.NewID("ClassificationID")
 	testQueryRequest := newQueryRequest(testClassificationID)
 	require.Equal(t, nil, testQueryRequest.Validate())
 	require.Equal(t, queryRequest{}, requestPrototype())
 
 	cliCommand := baseHelpers.NewCLICommand("", "", "", []helpers.CLIFlag{flags.ClassificationID})
 	cliContext := client.Context{}.WithLegacyAmino(Codec)
-	require.Equal(t, newQueryRequest(testBase.NewID("")), queryRequest{}.FromCLI(cliCommand, cliContext))
+	require.Equal(t, newQueryRequest(base2.NewID("")), queryRequest{}.FromCLI(cliCommand, cliContext))
 
 	vars := make(map[string]string)
 	vars["classifications"] = "randomString"
-	require.Equal(t, newQueryRequest(testBase.NewID("randomString")), queryRequest{}.FromMap(vars))
+	require.Equal(t, newQueryRequest(base2.NewID("randomString")), queryRequest{}.FromMap(vars))
 
 	encodedRequest, Error := testQueryRequest.Encode()
 	encodedResult, _ := common.Codec.MarshalJSON(testQueryRequest)

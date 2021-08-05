@@ -6,18 +6,18 @@
 package mappable
 
 import (
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/key"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_Split_Methods(t *testing.T) {
 
-	ownerID := testBase.NewID("ownerID")
-	ownableID := testBase.NewID("ownableID")
+	ownerID := base.NewID("ownerID")
+	ownableID := base.NewID("ownableID")
 
 	testSplitID := key.NewSplitID(ownerID, ownableID)
 	testValue := sdkTypes.NewDec(12)

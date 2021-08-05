@@ -12,7 +12,7 @@ message queryRequest {
   option (gogoproto.equal)            = false;
   option (cosmos_proto.implements_interface) = "QueryRequest";
 
-  string classificationID =1 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/test_types.ID", (gogoproto.nullable) = false] ;
+  string classificationID =1 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
 
 
 }

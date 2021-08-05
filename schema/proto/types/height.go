@@ -1,4 +1,4 @@
-package test_types
+package types
 
 type Height interface {
 	Get() int64

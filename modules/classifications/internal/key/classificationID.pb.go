@@ -7,10 +7,10 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	io "io"
 	math "math"
 	math_bits "math/bits"
-	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -25,8 +25,8 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type classificationID struct {
-	ChainID test_types.ID `protobuf:"bytes,1,opt,name=chainID,proto3" json:"chainID" valid:"required~required field chainID missing"`
-	HashID  test_types.ID `protobuf:"bytes,2,opt,name=hashID,proto3" json:"hashID" valid:"required~required field hashID missing"`
+	ChainID protoTypes.ID `protobuf:"bytes,1,opt,name=chainID,proto3" json:"chainID" valid:"required~required field chainID missing"`
+	HashID  protoTypes.ID `protobuf:"bytes,2,opt,name=hashID,proto3" json:"hashID" valid:"required~required field hashID missing"`
 }
 
 func (m *classificationID) Reset()         { *m = classificationID{} }

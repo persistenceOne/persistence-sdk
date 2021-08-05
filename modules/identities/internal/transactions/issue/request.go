@@ -7,8 +7,6 @@ package issue
 
 import (
 	"encoding/json"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-
 	"github.com/asaskevich/govalidator"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -16,6 +14,8 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/module"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
@@ -46,7 +46,7 @@ func (transactionRequest transactionRequest) FromJSON(rawMessage json.RawMessage
 
 	return transactionRequest, nil
 }
-func (transactionRequest transactionRequest) GetBaseReq() test_types.BaseReq {
+func (transactionRequest transactionRequest) GetBaseReq() protoTypes.BaseReq {
 	return transactionRequest.BaseReq
 }
 func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
@@ -83,8 +83,8 @@ func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
 	return newMessage(
 		from,
 		to,
-		base.NewID(transactionRequest.FromID),
-		base.NewID(transactionRequest.ClassificationID),
+		base2.NewID(transactionRequest.FromID),
+		base2.NewID(transactionRequest.ClassificationID),
 		immutableMetaProperties,
 		immutableProperties,
 		mutableMetaProperties,
@@ -98,7 +98,7 @@ func requestPrototype() helpers.TransactionRequest {
 	return transactionRequest{}
 }
 
-func newTransactionRequest(baseReq test_types.BaseReq, to string, fromID string, classificationID string, immutableMetaProperties string, immutableProperties string, mutableMetaProperties string, mutableProperties string) helpers.TransactionRequest {
+func newTransactionRequest(baseReq protoTypes.BaseReq, to string, fromID string, classificationID string, immutableMetaProperties string, immutableProperties string, mutableMetaProperties string, mutableProperties string) helpers.TransactionRequest {
 	return transactionRequest{
 		BaseReq:                 baseReq,
 		To:                      to,

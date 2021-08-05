@@ -17,7 +17,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -32,8 +32,8 @@ func Test_Asset_Request(t *testing.T) {
 	vestingTypes.RegisterLegacyAminoCodec(Codec)
 	Codec.Seal()
 
-	classificationID := testBase.NewID("classificationID")
-	immutableProperties := base.NewProperties(base.NewProperty(testBase.NewID("ID1"), base.NewFact(base.NewStringData("ImmutableData"))))
+	classificationID := base2.NewID("classificationID")
+	immutableProperties := base.NewProperties(base.NewProperty(base2.NewID("ID1"), base.NewFact(base.NewStringData("ImmutableData"))))
 
 	testAssetID := key.NewAssetID(classificationID, immutableProperties)
 	testQueryRequest := newQueryRequest(testAssetID)
@@ -42,11 +42,11 @@ func Test_Asset_Request(t *testing.T) {
 
 	cliCommand := baseHelpers.NewCLICommand("", "", "", []helpers.CLIFlag{flags.AssetID})
 	cliContext := client.Context{}.WithLegacyAmino(Codec)
-	require.Equal(t, newQueryRequest(testBase.NewID("")), queryRequest{}.FromCLI(cliCommand, cliContext))
+	require.Equal(t, newQueryRequest(base2.NewID("")), queryRequest{}.FromCLI(cliCommand, cliContext))
 
 	vars := make(map[string]string)
 	vars["assets"] = "randomString"
-	require.Equal(t, newQueryRequest(testBase.NewID("randomString")), queryRequest{}.FromMap(vars))
+	require.Equal(t, newQueryRequest(base2.NewID("randomString")), queryRequest{}.FromMap(vars))
 
 	encodedRequest, Error := testQueryRequest.Encode()
 	encodedResult, _ := common.Codec.MarshalJSON(testQueryRequest)

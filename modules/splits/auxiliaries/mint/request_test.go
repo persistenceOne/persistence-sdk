@@ -6,7 +6,7 @@
 package mint
 
 import (
-	testBase "github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	"github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
@@ -15,8 +15,8 @@ import (
 
 func Test_Mint_Request(t *testing.T) {
 
-	ownerID := testBase.NewID("ownerID")
-	ownableID := testBase.NewID("ownableID")
+	ownerID := base.NewID("ownerID")
+	ownableID := base.NewID("ownableID")
 	splits := sdkTypes.NewDec(10)
 	testAuxiliaryRequest := NewAuxiliaryRequest(ownerID, ownableID, splits)
 

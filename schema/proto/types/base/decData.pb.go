@@ -28,8 +28,8 @@ type decData struct {
 	Value github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,1,opt,name=value,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"value"`
 }
 
-func (m *decData) Reset()         { *m = decData{} }
-func (*decData) ProtoMessage()    {}
+func (m *decData) Reset()      { *m = decData{} }
+func (*decData) ProtoMessage() {}
 func (*decData) Descriptor() ([]byte, []int) {
 	return fileDescriptor_6d1cd5ff047da603, []int{0}
 }

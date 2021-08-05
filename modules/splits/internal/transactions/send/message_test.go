@@ -7,7 +7,7 @@ package send
 
 import (
 	"fmt"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types/base"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"testing"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
@@ -18,9 +18,9 @@ import (
 
 func Test_Send_Message(t *testing.T) {
 
-	testToID := base.NewID("toID")
-	testFromID := base.NewID("fromID")
-	testOwnableID := base.NewID("ownableID")
+	testToID := base2.NewID("toID")
+	testFromID := base2.NewID("fromID")
+	testOwnableID := base2.NewID("ownableID")
 	testSplit := sdkTypes.NewDec(2)
 
 	fromAddress := "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c"

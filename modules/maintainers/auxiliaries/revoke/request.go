@@ -8,13 +8,13 @@ package revoke
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 )
 
 type auxiliaryRequest struct {
-	FromID           test_types.ID `json:"fromID" valid:"required~required field fromID missing"`
-	ToID             test_types.ID `json:"toID" valid:"required~required field toID missing"`
-	ClassificationID test_types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
+	FromID           protoTypes.ID `json:"fromID" valid:"required~required field fromID missing"`
+	ToID             protoTypes.ID `json:"toID" valid:"required~required field toID missing"`
+	ClassificationID protoTypes.ID `json:"classificationID" valid:"required~required field classificationID missing"`
 }
 
 var _ helpers.AuxiliaryRequest = (*auxiliaryRequest)(nil)
@@ -32,7 +32,7 @@ func auxiliaryRequestFromInterface(request helpers.AuxiliaryRequest) auxiliaryRe
 	}
 }
 
-func NewAuxiliaryRequest(fromID test_types.ID, toID test_types.ID, classificationID test_types.ID) helpers.AuxiliaryRequest {
+func NewAuxiliaryRequest(fromID protoTypes.ID, toID protoTypes.ID, classificationID protoTypes.ID) helpers.AuxiliaryRequest {
 	return auxiliaryRequest{
 		FromID:           fromID,
 		ToID:             toID,
