@@ -22,6 +22,7 @@ type splitID struct {
 	OwnableID types.ID `json:"ownableID" valid:"required~required field ownableID missing"`
 }
 
+//TODO : Implement these methods
 func (splitID splitID) Size() int {
 	panic("implement me")
 }

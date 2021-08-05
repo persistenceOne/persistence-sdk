@@ -24,6 +24,7 @@ type identityID struct {
 	HashID           types.ID `json:"hashID" valid:"required~required field hashID missing"`
 }
 
+//TODO : Implement these methods
 func (identityID identityID) Size() int {
 	panic("implement me")
 }

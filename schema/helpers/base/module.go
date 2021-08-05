@@ -12,7 +12,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	sdkTypesModule "github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/cosmos/cosmos-sdk/x/params"
+	simulationTypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/gorilla/mux"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
@@ -49,11 +50,11 @@ func (module module) GenerateGenesisState(simulationState *sdkTypesModule.Simula
 	module.simulatorPrototype().RandomizedGenesisState(simulationState)
 }
 
-func (module module) ProposalContents(_ sdkTypesModule.SimulationState) []simulation.WeightedProposalContent {
+func (module module) ProposalContents(_ sdkTypesModule.SimulationState) []simulationTypes.WeightedProposalContent {
 	return module.simulatorPrototype().WeightedProposalContentList()
 }
 
-func (module module) RandomizedParams(r *rand.Rand) []simulation.ParamChange {
+func (module module) RandomizedParams(r *rand.Rand) []simulationTypes.ParamChange {
 	return module.simulatorPrototype().ParamChangeList(r)
 }
 
@@ -208,7 +209,7 @@ func (module module) DecodeModuleTransactionRequest(transactionName string, rawM
 	return nil, errors.IncorrectMessage
 }
 
-func (module module) Initialize(kvStoreKey *sdkTypes.KVStoreKey, paramsSubspace params.Subspace, auxiliaryKeepers ...interface{}) helpers.Module {
+func (module module) Initialize(kvStoreKey *sdkTypes.KVStoreKey, paramsSubspace paramsTypes.Subspace, auxiliaryKeepers ...interface{}) helpers.Module {
 	module.mapper = module.mapperPrototype().Initialize(kvStoreKey)
 
 	module.genesis = module.genesisPrototype().Initialize(module.genesisPrototype().GetMappableList(), module.genesisPrototype().GetParameterList())

@@ -16,6 +16,7 @@ type decData struct {
 	Value sdkTypes.Dec `json:"value"`
 }
 
+//TODO : Implement these methods
 func (decData decData) Size() int {
 	panic("implement me")
 }

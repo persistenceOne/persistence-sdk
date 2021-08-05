@@ -30,6 +30,7 @@ type orderID struct {
 	HashID           types.ID `json:"hashID"`
 }
 
+//TODO : Implement these methods
 func (orderID orderID) Size() int {
 	panic("implement me")
 }

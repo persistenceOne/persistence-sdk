@@ -18,6 +18,7 @@ type idData struct {
 	Value types.ID `json:"value"`
 }
 
+//TODO : Implement these methods
 func (idData idData) Size() int {
 	panic("implement me")
 }

@@ -19,6 +19,7 @@ type listData struct {
 	Value sortedDataList `json:"value"`
 }
 
+//TODO : Implement these methods
 func (listData listData) Size() int {
 	panic("implement me")
 }

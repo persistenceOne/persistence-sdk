@@ -18,6 +18,7 @@ type heightData struct {
 	Value types.Height `json:"value"`
 }
 
+//TODO : Implement these methods
 func (heightData heightData) Size() int {
 	panic("implement me")
 }

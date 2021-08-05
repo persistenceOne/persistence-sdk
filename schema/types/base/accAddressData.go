@@ -18,6 +18,7 @@ type accAddressData struct {
 	Value sdkTypes.AccAddress `json:"value"`
 }
 
+//TODO : Implement these methods
 func (accAddressData accAddressData) Size() int {
 	panic("implement me")
 }
