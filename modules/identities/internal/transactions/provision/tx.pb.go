@@ -217,7 +217,7 @@ func (m *message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	{
 		size := len(m.To)
 		i -= size
-		if _, err := m.MarshalTo(dAtA[i:]); err != nil {
+		if _, err := m.Error.MarshalTo(dAtA[i:]); err != nil {
 			return 0, err
 		}
 		i = encodeVarintTx(dAtA, i, uint64(size))

@@ -41,9 +41,9 @@ func (query query) Command() *cobra.Command {
 			return Error
 		}
 
-		//response, Error := query.responsePrototype().Decode(responseBytes)
-		//if Error != nil {
-		//	return Error
+		//response, error := query.responsePrototype().Decode(responseBytes)
+		//if error != nil {
+		//	return error
 		//}
 
 		return cliContext.PrintBytes(responseBytes)

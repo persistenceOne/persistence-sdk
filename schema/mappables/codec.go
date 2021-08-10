@@ -10,7 +10,7 @@ import (
 )
 
 func RegisterCodec(codec *codec.LegacyAmino) {
-	//TODO: Any
+
 	codec.RegisterInterface((*Chain)(nil), nil)
 	codec.RegisterInterface((*Classification)(nil), nil)
 	codec.RegisterInterface((*InterIdentity)(nil), nil)

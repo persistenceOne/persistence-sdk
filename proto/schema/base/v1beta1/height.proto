@@ -4,7 +4,7 @@ package schema.base.v1beta1;
 
 
 
-option go_package = "schema/types/base";
+option go_package = "schema/proto/types/base";
 
 message height {
     int64 value = 1;

@@ -7,7 +7,8 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	github_com_persistenceOne_persistenceSDK_schema_helpers "github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	_ "github.com/regen-network/cosmos-proto"
 	io "io"
 	math "math"
@@ -26,9 +27,9 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type queryResponse struct {
-	Success bool                                                               `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Error   error                                                              `protobuf:"bytes,2,opt,name=error,proto3,customtype=error" json:"error"`
-	List    []github_com_persistenceOne_persistenceSDK_schema_helpers.Mappable `protobuf:"bytes,3,rep,name=list,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/helpers.Mappable" json:"list"`
+	Success bool               `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Error   protoTypes.Error   `protobuf:"bytes,2,opt,name=error,proto3,customtype=error" json:"error"`
+	List    []helpers.Mappable `protobuf:"bytes,3,rep,name=list,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/helpers.Mappable" json:"list"`
 }
 
 func (m *queryResponse) Reset()         { *m = queryResponse{} }
@@ -41,6 +42,7 @@ func (m *queryResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
 func (m *queryResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+
 	if deterministic {
 		return xxx_messageInfo_QueryResponse.Marshal(b, m, deterministic)
 	} else {
@@ -139,10 +141,9 @@ func (m *queryResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		}
 	}
 	{
-		size := len(m.Error.Error())
+		size := m.Error.Size()
 		i -= size
-		//TODO:custom error that implements protoInterface
-		if _, err := m.MarshalTo(dAtA[i:]); err != nil {
+		if _, err := m.Error.MarshalTo(dAtA[i:]); err != nil {
 			return 0, err
 		}
 		i = encodeVarintResponse(dAtA, i, uint64(size))
@@ -182,7 +183,7 @@ func (m *queryResponse) Size() (n int) {
 	if m.Success {
 		n += 2
 	}
-	l= len(m.Error.Error())
+	l = m.Error.Size()
 	n += 1 + l + sovResponse(uint64(l))
 	if len(m.List) > 0 {
 		for _, e := range m.List {
@@ -250,7 +251,7 @@ func (m *queryResponse) Unmarshal(dAtA []byte) error {
 			m.Success = bool(v != 0)
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Error", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field error", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -278,7 +279,7 @@ func (m *queryResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Error.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -312,7 +313,7 @@ func (m *queryResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			var v github_com_persistenceOne_persistenceSDK_schema_helpers.Mappable
+			var v helpers.Mappable
 			m.List = append(m.List, v)
 			if err := m.List[len(m.List)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err

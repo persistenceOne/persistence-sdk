@@ -18,7 +18,7 @@ import (
 	"github.com/persistenceOne/persistenceSDK/utilities/transaction"
 )
 
-//TODO: message.proto --> grpc routes
+
 var _ helpers.Message = message{}
 
 func (message message) Route() string { return module.Name }
@@ -38,7 +38,7 @@ func (message message) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{message.From}
 }
 func (message) RegisterCodec(codec *codec.LegacyAmino) {
-	//TODO: concrete
+
 	codecUtilities.RegisterXPRTConcrete(codec, module.Name, message{})
 }
 func messageFromInterface(msg sdkTypes.Msg) message {

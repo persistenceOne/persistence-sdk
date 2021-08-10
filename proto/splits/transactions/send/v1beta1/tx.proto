@@ -20,9 +20,9 @@ message message {
     option (gogoproto.equal)            = false;
 
     string from =1 ;
-    string from_iD =2 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
-    string to_iD =3 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false];
-    string ownable_iD =4 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false];
+    string from_iD =2 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/proto/types.ID", (gogoproto.nullable) = false] ;
+    string to_iD =3 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/proto/types.ID", (gogoproto.nullable) = false];
+    string ownable_iD =4 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/proto/types.ID", (gogoproto.nullable) = false];
     string value =5 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
     
 }

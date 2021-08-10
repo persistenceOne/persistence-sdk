@@ -13,6 +13,6 @@ import (
 
 func RegisterXPRTConcrete(codec *codec.LegacyAmino, moduleName string, o interface{}) {
 	//TODO: RegisterConcrete Alternative
-	//codec.
+
 	codec.RegisterConcrete(o, constants.ProjectRoute+"/"+moduleName+"/"+reflect.TypeOf(o).PkgPath()+"/"+reflect.TypeOf(o).Name(), nil)
 }

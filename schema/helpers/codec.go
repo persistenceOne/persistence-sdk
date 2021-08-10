@@ -18,10 +18,4 @@ func RegisterCodec(codec *codec.LegacyAmino) {
 }
 
 
-//func RegisterCodec(codec *codec.ProtoCodec) {
-//	//TODO: Register Interface TO be replaced by Any from protobuf
-//	codec.RegisterInterface((*Mappable)(nil), nil)
-//	codec.RegisterInterface((*QueryRequest)(nil), nil)
-//	codec.RegisterInterface((*QueryResponse)(nil), nil)
-//	codec.RegisterInterface((*TransactionRequest)(nil), nil)
-//}
+

@@ -20,32 +20,11 @@ import (
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-type assetID struct {
-	ClassificationID protoTypes.ID `json:"classificationID" valid:"required~required field classificationID missing"`
-	HashID           protoTypes.ID `json:"hashID" valid:"required~required field hashID missing"`
-}
+
 
 var _ protoTypes.ID = (*assetID)(nil)
 var _ helpers.Key = (*assetID)(nil)
 
-
-func (assetID assetID) MarshalToSizedBuffer(i []byte) (int, error) {
-	panic("implement me")
-}
-
-//TODO:generate via proto below methods would be generated
-
-func (assetID assetID) Size() int {
-	panic("implement me")
-}
-
-func (assetID assetID) MarshalTo(i []byte) (int, error) {
-	panic("implement me")
-}
-
-func (assetID assetID) Unmarshal(i []byte) error {
-	panic("implement me")
-}
 
 
 func (assetID assetID) Bytes() []byte {

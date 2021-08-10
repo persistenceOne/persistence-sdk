@@ -168,7 +168,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
-	t.Run("NegativeCase - maintain Error", func(t *testing.T) {
+	t.Run("NegativeCase - maintain txError", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
 		if got := keepers.AssetsKeeper.Transact(context, newMessage(defaultAddr, maintainIdentityMockError, assetID,

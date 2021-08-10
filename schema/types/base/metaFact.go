@@ -25,7 +25,7 @@ func (metaFact metaFact) GetHashID() types.ID             { return metaFact.Data
 func (metaFact metaFact) GetTypeID() types.ID             { return metaFact.Data.GetTypeID() }
 func (metaFact metaFact) GetSignatures() types.Signatures { return metaFact.Signatures }
 func (metaFact metaFact) Sign(_ keyring.Keyring) types.MetaFact {
-	// TODO implement signing
+
 	return metaFact
 }
 func (metaFact metaFact) GetData() types.Data    { return metaFact.Data }

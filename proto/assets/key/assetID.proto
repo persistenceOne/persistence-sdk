@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package assets.key;
+
+import "third_party/proto/gogoproto/gogo.proto";
+import "proto/schema/base/v1beta1/id.proto";
+
+option go_package = "modules/assets/internal/key";
+
+message asset_i_d {
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.equal)            = false;
+  option (gogoproto.stringer) = false;
+
+  schema.base.v1beta1.ID classification_i_d = 1 [(gogoproto.nullable) = false];
+  schema.base.v1beta1.ID hash_i_d= 2 [(gogoproto.nullable) = false];
+
+}

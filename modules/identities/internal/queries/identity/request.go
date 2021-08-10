@@ -11,14 +11,10 @@ import (
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/common"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/types"
-	"github.com/persistenceOne/persistenceSDK/schema/types/base"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
+	base2 "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 )
-//TODO: Query service and proto
 
-type queryRequest struct {
-	IdentityID types.ID `json:"identityID" valid:"required~required field identityID missing"`
-}
 
 var _ helpers.QueryRequest = (*queryRequest)(nil)
 
@@ -28,11 +24,11 @@ func (queryRequest queryRequest) Validate() error {
 }
 
 func (queryRequest queryRequest) FromCLI(cliCommand helpers.CLICommand, _ client.Context) helpers.QueryRequest {
-	return newQueryRequest(base.NewID(cliCommand.ReadString(flags.IdentityID)))
+	return newQueryRequest(base2.NewID(cliCommand.ReadString(flags.IdentityID)))
 }
 
 func (queryRequest queryRequest) FromMap(vars map[string]string) helpers.QueryRequest {
-	return newQueryRequest(base.NewID(vars[Query.GetName()]))
+	return newQueryRequest(base2.NewID(vars[Query.GetName()]))
 }
 func (queryRequest queryRequest) Encode() ([]byte, error) {
 	return common.Codec.MarshalJSON(queryRequest)
@@ -58,6 +54,6 @@ func queryRequestFromInterface(request helpers.QueryRequest) queryRequest {
 	}
 }
 
-func newQueryRequest(identityID types.ID) helpers.QueryRequest {
+func newQueryRequest(identityID protoTypes.ID) helpers.QueryRequest {
 	return queryRequest{IdentityID: identityID}
 }

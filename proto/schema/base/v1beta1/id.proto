@@ -4,7 +4,7 @@ package schema.base.v1beta1;
 
 import "third_party/proto/gogoproto/gogo.proto";
 
-option go_package = "schema/types";
+option go_package = "schema/proto/types/base";
 
 message ID {
   option (gogoproto.goproto_getters) = false;

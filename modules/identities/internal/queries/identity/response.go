@@ -8,13 +8,9 @@ package identity
 import (
 	"github.com/persistenceOne/persistenceSDK/modules/identities/internal/common"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 )
 
-type queryResponse struct {
-	Success bool               `json:"success"`
-	Error   error              `json:"error"`
-	List    []helpers.Mappable `json:"list"`
-}
 
 var _ helpers.QueryResponse = (*queryResponse)(nil)
 
@@ -37,7 +33,7 @@ func (queryResponse queryResponse) Decode(bytes []byte) (helpers.QueryResponse, 
 func responsePrototype() helpers.QueryResponse {
 	return queryResponse{}
 }
-func newQueryResponse(collection helpers.Collection, error error) helpers.QueryResponse {
+func newQueryResponse(collection helpers.Collection, error protoTypes.Error) helpers.QueryResponse {
 	success := true
 	if error != nil {
 		success = false

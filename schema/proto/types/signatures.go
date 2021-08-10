@@ -10,8 +10,5 @@ type Signatures interface {
 	Remove(Signature) Signatures
 	Mutate(Signature) Signatures
 
-	MarshalTo([]byte) (int, error)
-	Unmarshal([]byte) error
-	MarshalToSizedBuffer([]byte) (int, error)
-	Size() int
+	ProtoInterface
 }

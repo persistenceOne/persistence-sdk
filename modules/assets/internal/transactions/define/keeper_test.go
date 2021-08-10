@@ -149,7 +149,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase - ImmutableMeta Scrub Error", func(t *testing.T) {
+	t.Run("NegativeCase - ImmutableMeta Scrub txError", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
 		if got := keepers.AssetsKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, scrubMockErrorProperties,
@@ -158,7 +158,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase - MutableMeta Scrub Error", func(t *testing.T) {
+	t.Run("NegativeCase - MutableMeta Scrub txError", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
 		if got := keepers.AssetsKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, immutableMetaProperties,
@@ -167,7 +167,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase - Classification define Error", func(t *testing.T) {
+	t.Run("NegativeCase - Classification define txError", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(errors.InvalidRequest)
 		if got := keepers.AssetsKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, immutableMetaProperties,
@@ -175,7 +175,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 			t.Errorf("Transact() = %v, want %v", got, want)
 		}
 	})
-	t.Run("NegativeCase - maintainer super Error", func(t *testing.T) {
+	t.Run("NegativeCase - maintainer super txError", func(t *testing.T) {
 		t.Parallel()
 		want := newTransactionResponse(test.MockError)
 		if got := keepers.AssetsKeeper.Transact(context, newMessage(defaultAddr, defaultIdentityID, immutableMetaProperties,

@@ -567,7 +567,7 @@ func (application application) Initialize(applicationName string, encodingConfig
 
 	//wasmConfig, err := wasm.ReadWasmConfig(applicationOptions)
 	//if err != nil {
-	//	panic("error while reading wasm config: " + err.Error())
+	//	panic("error while reading wasm config: " + err.error())
 	//}
 	//
 	//wasmKeeper := wasm.NewKeeper(

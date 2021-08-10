@@ -27,6 +27,24 @@ type asset struct {
 	baseTraits.HasMutables //nolint:govet
 }
 
+
+
+func (asset asset) Size() int {
+	panic("implement me")
+}
+
+func (asset asset) MarshalTo(bytes []byte) (int, error) {
+	panic("implement me")
+}
+
+func (asset asset) Unmarshal(bytes []byte) error {
+	panic("implement me")
+}
+
+func (asset asset) MarshalToSizedBuffer(bytes []byte) (int, error) {
+	panic("implement me")
+}
+
 var _ mappables.InterNFT = (*asset)(nil)
 
 func (asset asset) GetID() protoTypes.ID {

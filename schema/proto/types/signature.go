@@ -12,8 +12,5 @@ type Signature interface {
 	GetValidityHeight() Height
 	HasExpired(Height) bool
 
-	MarshalTo([]byte) (int, error)
-	Unmarshal([]byte) error
-	MarshalToSizedBuffer([]byte) (int, error)
-	Size() int
+	ProtoInterface
 }

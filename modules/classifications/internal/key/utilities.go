@@ -22,6 +22,7 @@ func readClassificationID(classificationIDString string) protoTypes.ID {
 		return classificationID{
 			ChainID: base.NewID(idList[0]),
 			HashID:  base.NewID(idList[1]),
+
 		}
 	}
 

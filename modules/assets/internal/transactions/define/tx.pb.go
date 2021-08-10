@@ -262,7 +262,6 @@ func (m *message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintTx(dAtA, i, uint64(size))
 	}
 	i--
-	//todo: customFrom
 	dAtA[i] = 0x12
 	{
 		size := len(m.From)

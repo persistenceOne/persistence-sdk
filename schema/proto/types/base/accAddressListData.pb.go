@@ -25,7 +25,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type AccAddressListData struct {
-	Value SortedAccAddresses `protobuf:"bytes,1,opt,name=value,proto3,customtype=schema/types/base.SortedAccAddresses" json:"value"`
+	Value sortedAccAddresses `protobuf:"bytes,1,opt,name=value,proto3,customtype=schema/types/base.sortedAccAddresses" json:"value"`
 }
 
 func (m *AccAddressListData) Reset()         { *m = AccAddressListData{} }
@@ -108,7 +108,7 @@ func (m *AccAddressListData) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	var l int
 	_ = l
 	{
-		size := len(m.Value)
+		size := m.Value.Len()
 		i -= size
 		if _, err := m.Value.MarshalTo(dAtA[i:]); err != nil {
 			return 0, err
@@ -137,7 +137,7 @@ func (m *AccAddressListData) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = m.Value.Size()
+	l = m.Value.Len()
 	n += 1 + l + sovAccAddressListData(uint64(l))
 	return n
 }

@@ -143,7 +143,7 @@ func Test_transactionKeeper_Transact(t *testing.T) {
 		}
 	})
 
-	t.Run("NegativeCase - transferMock Error", func(t *testing.T) {
+	t.Run("NegativeCase - transferMock txError", func(t *testing.T) {
 		t.Parallel()
 		transferErrorID := key.NewOrderID(classificationID,
 			base.NewID("transferError"),

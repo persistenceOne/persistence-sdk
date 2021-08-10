@@ -208,7 +208,7 @@ func (m *Message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	{
 		size := m.Coins.Len()
 		i -= size
-		if _, err := m.MarshalTo(dAtA[i:]); err != nil {
+		if _, err := m.Error.MarshalTo(dAtA[i:]); err != nil {
 			return 0, err
 		}
 		i = encodeVarintTx(dAtA, i, uint64(size))
@@ -397,7 +397,7 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Error.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

@@ -31,8 +31,7 @@ type classificationID struct {
 
 func (m *classificationID) Reset()         { *m = classificationID{} }
 
-//TODO: find the best suitable for stringer method
-//func (m classificationID) String() string { return proto.CompactTextString(&m) }
+
 func (*classificationID) ProtoMessage()    {}
 func (*classificationID) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e8743d8ff5ca95ad, []int{0}

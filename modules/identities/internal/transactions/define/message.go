@@ -20,7 +20,7 @@ import (
 )
 
 
-//TODO: message.proto with service
+
 
 var _ sdkTypes.Msg = message{}
 

@@ -257,7 +257,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 			var v error
 			m.error = v
 
-			if err := m.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Error.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

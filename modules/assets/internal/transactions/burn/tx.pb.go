@@ -224,7 +224,7 @@ func (m *message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	}
 	i--
 	dAtA[i] = 0x12
-	//Todo: custom from implementing protoInterface
+	//Todo: custom From implementing protoInterface
 	{
 		size := len(m.From)
 		i -= size

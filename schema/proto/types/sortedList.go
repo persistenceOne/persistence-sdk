@@ -4,6 +4,8 @@ package types
 import "sort"
 
 type SortedList interface {
+
+	ProtoInterface
 	sort.Interface
 
 	Sort() SortedList

@@ -7,6 +7,7 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	_ "github.com/regen-network/cosmos-proto"
 	io "io"
 	math "math"
@@ -26,7 +27,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionResponse struct {
 	Success bool  `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Error   error `protobuf:"bytes,2,opt,name=error,proto3,customtype=error" json:"error"`
+	Error protoTypes.Error `protobuf:"bytes,2,opt,name=error,proto3,customtype=error" json:"error"`
 }
 
 func (m *transactionResponse) Reset()         { *m = transactionResponse{} }
@@ -118,9 +119,9 @@ func (m *transactionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	var l int
 	_ = l
 	{
-		size := len(m.Error.Error())
+		size := m.Error.Size()
 		i -= size
-		if _, err := m.MarshalTo(dAtA[i:]); err != nil {
+		if _, err := m.Error.MarshalTo(dAtA[i:]); err != nil {
 			return 0, err
 		}
 		i = encodeVarintResponse(dAtA, i, uint64(size))
@@ -160,7 +161,7 @@ func (m *transactionResponse) Size() (n int) {
 	if m.Success {
 		n += 2
 	}
-	l = len(m.Error.Error())
+	l = m.Error.Size()
 	n += 1 + l + sovResponse(uint64(l))
 	return n
 }
@@ -222,7 +223,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 			m.Success = bool(v != 0)
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Error", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field error", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -250,7 +251,7 @@ func (m *transactionResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Error.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

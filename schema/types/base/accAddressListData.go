@@ -6,11 +6,13 @@
 package base
 
 import (
+	protoTypes "github.com/persistenceOne/persistenceSDK/schema/proto/types"
 	"strings"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/constants"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
+	protoBase "github.com/persistenceOne/persistenceSDK/schema/proto/types/base"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/utilities/meta"
 )
@@ -28,21 +30,20 @@ func (accAddressListData accAddressListData) String() string {
 		accAddressDataStringList[i] = accAddress.String()
 	}
 
-
 	return strings.Join(accAddressDataStringList, constants.ListDataStringSeparator)
 }
-func (accAddressListData accAddressListData) GetTypeID() types.ID {
-	return NewID("AL")
+func (accAddressListData accAddressListData) GetTypeID() protoTypes.ID {
+	return protoBase.NewID("AL")
 }
 func (accAddressListData accAddressListData) ZeroValue() types.Data {
 	return NewAccAddressListData([]sdkTypes.AccAddress{}...)
 }
-func (accAddressListData accAddressListData) GenerateHashID() types.ID {
+func (accAddressListData accAddressListData) GenerateHashID() protoTypes.ID {
 	if len(accAddressListData.Value) == 0 {
-		return NewID("")
+		return protoBase.NewID("")
 	}
 
-	return NewID(meta.Hash(accAddressListData.String()))
+	return protoBase.NewID(meta.Hash(accAddressListData.String()))
 }
 func (accAddressListData accAddressListData) AsAccAddress() (sdkTypes.AccAddress, error) {
 	zeroValue, _ := accAddressData{}.ZeroValue().AsAccAddress()
@@ -63,7 +64,7 @@ func (accAddressListData accAddressListData) AsHeight() (types.Height, error) {
 	zeroValue, _ := heightData{}.ZeroValue().AsHeight()
 	return zeroValue, errors.IncorrectFormat
 }
-func (accAddressListData accAddressListData) AsID() (types.ID, error) {
+func (accAddressListData accAddressListData) AsID() (protoTypes.ID, error) {
 	zeroValue, _ := idData{}.ZeroValue().AsID()
 	return zeroValue, errors.IncorrectFormat
 }

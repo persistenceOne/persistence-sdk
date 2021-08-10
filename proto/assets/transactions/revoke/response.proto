@@ -12,6 +12,6 @@ message transactionResponse {
   option (cosmos_proto.implements_interface) = "TransactionResponse";
 
   bool success = 1;
-  string error = 2 [(gogoproto.customtype) = "error", (gogoproto.nullable) = false];
+  string error = 2 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/proto/types.ID", (gogoproto.nullable) = false];
 
 }

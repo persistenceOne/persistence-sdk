@@ -12,7 +12,7 @@ message queryResponse {
   option (cosmos_proto.implements_interface) = "QueryResponse";
 
   bool success =1;
-  string error =2 [ (gogoproto.customtype) = "error",  (gogoproto.nullable) = false];
+ string error =2 [ (gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/proto/types.Error",  (gogoproto.nullable) = false];
   repeated string list =3 [ (gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/helpers.Mappable" , (gogoproto.nullable) = false] ;
 
 
