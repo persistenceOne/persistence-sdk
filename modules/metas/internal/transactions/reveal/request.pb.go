@@ -7,7 +7,7 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -25,8 +25,8 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionRequest struct {
-	BaseReq  test_types.BaseReq `protobuf:"bytes,1,opt,name=baseReq,proto3" json:"baseReq"`
-	MetaFact string             `protobuf:"bytes,2,opt,name=metaFact,proto3" json:"metaFact,omitempty" valid:"required~required field metaFact missing, matches(^[DHIS]{1}[|]{1}.*$)"`
+	BaseReq  base.BaseReq `protobuf:"bytes,1,opt,name=baseReq,proto3" json:"baseReq"`
+	MetaFact string       `protobuf:"bytes,2,opt,name=metaFact,proto3" json:"metaFact,omitempty" valid:"required~required field metaFact missing, matches(^[DHIS]{1}[|]{1}.*$)"`
 }
 
 func (m *transactionRequest) Reset()         { *m = transactionRequest{} }

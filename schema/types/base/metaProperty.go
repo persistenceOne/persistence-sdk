@@ -13,16 +13,16 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-var _ types.MetaProperty = (*metaProperty)(nil)
+var _ types.MetaProperty = (*MetaProperty)(nil)
 
-func (metaProperty metaProperty) GetMetaFact() types.MetaFact { return metaProperty.MetaFact }
-func (metaProperty metaProperty) GetID() types.ID             { return metaProperty.ID }
-func (metaProperty metaProperty) RemoveData() types.Property {
+func (metaProperty MetaProperty) GetMetaFact() types.MetaFact { return metaProperty.MetaFact }
+func (metaProperty MetaProperty) GetID() types.ID             { return metaProperty.ID }
+func (metaProperty MetaProperty) RemoveData() types.Property {
 	return NewProperty(metaProperty.ID, metaProperty.MetaFact.RemoveData())
 }
 
 func NewMetaProperty(id types.ID, metaFact types.MetaFact) types.MetaProperty {
-	return metaProperty{
+	return MetaProperty{
 		ID:       id,
 		MetaFact: metaFact,
 	}

@@ -6,11 +6,11 @@
 package base
 
 import (
+	simulationTypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"math"
 	"math/rand"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 )
@@ -22,9 +22,9 @@ func GenerateRandomData(r *rand.Rand) types.Data {
 	case 0:
 		return base.NewIDData(GenerateRandomID(r))
 	case 1:
-		return base.NewStringData(simulation.RandStringOfLength(r, r.Intn(99)))
+		return base.NewStringData(simulationTypes.RandStringOfLength(r, r.Intn(99)))
 	case 2:
-		return base.NewDecData(simulation.RandomDecAmount(r, sdkTypes.NewDec(99)))
+		return base.NewDecData(simulationTypes.RandomDecAmount(r, sdkTypes.NewDec(99)))
 	case 3:
 		return base.NewHeightData(base.NewHeight(r.Int63()))
 	default:

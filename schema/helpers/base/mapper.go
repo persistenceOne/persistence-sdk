@@ -8,10 +8,9 @@ package base
 import (
 	"bytes"
 	"fmt"
-	"github.com/cosmos/cosmos-sdk/types/kv"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 )
@@ -93,7 +92,7 @@ func (mapper mapper) ReverseIterate(context sdkTypes.Context, partialKey helpers
 		}
 	}
 }
-func (mapper mapper) StoreDecoder(_ *codec.LegacyAmino, kvA kv.Pair, kvB kv.Pair) string {
+func (mapper mapper) StoreDecoder(kvA kv.Pair, kvB kv.Pair) string {
 	if bytes.Equal(kvA.Key[:1], mapper.keyPrototype().GenerateStoreKeyBytes()) {
 		var mappableA helpers.Mappable
 

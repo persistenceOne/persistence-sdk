@@ -10,7 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/spf13/cobra"
 )
 
@@ -85,8 +85,8 @@ func (cliCommand cliCommand) ReadString(cliFlag helpers.CLIFlag) string {
 	panic(fmt.Errorf("uregistered flag %v type %T", cliFlag.GetName(), cliFlag.GetValue()))
 }
 
-func (cliCommand cliCommand) ReadBaseReq(cliContext client.Context) test_types.BaseReq {
-	return test_types.BaseReq{
+func (cliCommand cliCommand) ReadBaseReq(cliContext client.Context) base.BaseReq {
+	return base.BaseReq{
 		From:     cliContext.GetFromAddress().String(),
 		ChainID:  cliContext.ChainID,
 		Simulate: cliContext.Simulate,

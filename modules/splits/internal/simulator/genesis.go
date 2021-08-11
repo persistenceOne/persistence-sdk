@@ -6,11 +6,11 @@
 package simulator
 
 import (
+	simulationTypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"math/rand"
 
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/common"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/key"
 	"github.com/persistenceOne/persistenceSDK/modules/splits/internal/mappable"
@@ -38,7 +38,7 @@ func (simulator) RandomizedGenesisState(simulationState *module.SimulationState)
 	mappableList := make([]helpers.Mappable, simulationState.Rand.Intn(99))
 
 	for i := range mappableList {
-		mappableList[i] = mappable.NewSplit(key.NewSplitID(baseSimulation.GenerateRandomID(simulationState.Rand), baseSimulation.GenerateRandomID(simulationState.Rand)), simulation.RandomDecAmount(simulationState.Rand, sdkTypes.NewDec(9999999999)))
+		mappableList[i] = mappable.NewSplit(key.NewSplitID(baseSimulation.GenerateRandomID(simulationState.Rand), baseSimulation.GenerateRandomID(simulationState.Rand)), simulationTypes.RandomDecAmount(simulationState.Rand, sdkTypes.NewDec(9999999999)))
 	}
 
 	genesisState := baseHelpers.NewGenesis(key.Prototype, mappable.Prototype, nil, parameters.Prototype().GetList()).Initialize(mappableList, []types.Parameter{dummy.Parameter.Mutate(data)})

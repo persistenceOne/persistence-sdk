@@ -6,7 +6,7 @@
 package base
 
 import (
-	"github.com/cosmos/cosmos-sdk/client/keys"
+	"github.com/cosmos/cosmos-sdk/client"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/stretchr/testify/require"
@@ -41,9 +41,9 @@ func Test_Fact(t *testing.T) {
 	require.Equal(t, nil, readFact2)
 	require.Equal(t, errors.IncorrectFormat, Error)
 
-	cliContext := context.NewCLIContext()
+	cliContext := client.Context{}
 	require.Panics(t, func() {
-		sign, _, _ := cliContext.Keybase.Sign(cliContext.FromName, keys.DefaultKeyPass, readFact.GetHashID().Bytes())
+		sign, _, _ := cliContext.Keyring.Sign(cliContext.FromName, readFact.GetHashID().Bytes())
 		Signature := signature{
 			ID:             id{IDString: readFact.GetHashID().String()},
 			SignatureBytes: sign,

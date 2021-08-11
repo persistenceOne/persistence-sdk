@@ -16,7 +16,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -37,7 +36,7 @@ func Test_Wrap_Request(t *testing.T) {
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)
 	require.Nil(t, Error)
 
-	testBaseReq := test_types.BaseReq{From: fromAddress, ChainID: "test", Fees: sdkTypes.NewCoins()}
+	testBaseReq := base.BaseReq{From: fromAddress, ChainID: "test", Fees: sdkTypes.NewCoins()}
 	testTransactionRequest := newTransactionRequest(testBaseReq, "fromID", "2 stake")
 
 	require.Equal(t, transactionRequest{BaseReq: testBaseReq, FromID: "fromID", Coins: "2 stake"}, testTransactionRequest)
@@ -45,7 +44,7 @@ func Test_Wrap_Request(t *testing.T) {
 
 	requestFromCLI, Error := transactionRequest{}.FromCLI(cliCommand, cliContext)
 	require.Equal(t, nil, Error)
-	require.Equal(t, transactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainID: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", Coins: ""}, requestFromCLI)
+	require.Equal(t, transactionRequest{BaseReq: base.BaseReq{From: cliContext.GetFromAddress().String(), ChainID: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", Coins: ""}, requestFromCLI)
 
 	jsonMessage, _ := json.Marshal(testTransactionRequest)
 	transactionRequestUnmarshalled, Error := transactionRequest{}.FromJSON(jsonMessage)
@@ -62,7 +61,7 @@ func Test_Wrap_Request(t *testing.T) {
 	require.Equal(t, newMessage(fromAccAddress, base.NewID("fromID"), sdkTypes.NewCoins(sdkTypes.NewCoin("stake", sdkTypes.NewInt(2)))), msg)
 	require.Nil(t, Error)
 
-	msg2, Error := newTransactionRequest(test_types.BaseReq{From: "randomFromAddress", ChainID: "test"}, "fromID", "2 stake").MakeMsg()
+	msg2, Error := newTransactionRequest(base.BaseReq{From: "randomFromAddress", ChainID: "test"}, "fromID", "2 stake").MakeMsg()
 	require.NotNil(t, Error)
 	require.Nil(t, msg2)
 

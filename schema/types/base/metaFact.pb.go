@@ -25,8 +25,8 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type metaFact struct {
-	Data       github_com_persistenceOne_persistenceSDK_schema_types.Data       `protobuf:"bytes,1,opt,name=Data,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Data" json:"Data"`
-	Signatures github_com_persistenceOne_persistenceSDK_schema_types.Signatures `protobuf:"bytes,2,opt,name=Signatures,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Signatures" json:"Signatures"`
+	Data       github_com_persistenceOne_persistenceSDK_schema_types.Data       `protobuf:"bytes,1,opt,name=Data,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Data" json:"data"`
+	Signatures github_com_persistenceOne_persistenceSDK_schema_types.Signatures `protobuf:"bytes,2,opt,name=Signatures,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Signatures" json:"signatures"`
 }
 
 func (m *metaFact) Reset()         { *m = metaFact{} }
@@ -222,7 +222,9 @@ func (m metaFact) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err:= m.Data.Unmarshal(dAtA[iNdEx:postIndex]); err!= nil {return err}
+			if err := m.Data.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -254,7 +256,9 @@ func (m metaFact) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Signatures.Unmarshal(dAtA[iNdEx:postIndex]); err!=nil {return err}
+			if err := m.Signatures.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

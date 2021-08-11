@@ -7,10 +7,8 @@ package take
 
 import (
 	"encoding/json"
-	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
-
 	"github.com/asaskevich/govalidator"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/persistenceOne/persistenceSDK/constants/flags"
@@ -41,7 +39,7 @@ func (transactionRequest transactionRequest) FromJSON(rawMessage json.RawMessage
 
 	return transactionRequest, nil
 }
-func (transactionRequest transactionRequest) GetBaseReq() test_types.BaseReq {
+func (transactionRequest transactionRequest) GetBaseReq() base.BaseReq {
 	return transactionRequest.BaseReq
 }
 func (transactionRequest transactionRequest) MakeMsg() (sdkTypes.Msg, error) {
@@ -68,7 +66,7 @@ func (transactionRequest) RegisterCodec(codec *codec.LegacyAmino) {
 func requestPrototype() helpers.TransactionRequest {
 	return transactionRequest{}
 }
-func newTransactionRequest(baseReq test_types.BaseReq, fromID string, takerOwnableSplit string, orderID string) helpers.TransactionRequest {
+func newTransactionRequest(baseReq base.BaseReq, fromID string, takerOwnableSplit string, orderID string) helpers.TransactionRequest {
 	return transactionRequest{
 		BaseReq:           baseReq,
 		FromID:            fromID,

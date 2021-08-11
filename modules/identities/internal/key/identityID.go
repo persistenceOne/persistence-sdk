@@ -19,24 +19,6 @@ import (
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-type identityID struct {
-	ClassificationID types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
-	HashID           types.ID `json:"hashID" valid:"required~required field hashID missing"`
-}
-
-//TODO : Implement these methods
-func (identityID identityID) Size() int {
-	panic("implement me")
-}
-
-func (identityID identityID) MarshalTo(i []byte) (int, error) {
-	panic("implement me")
-}
-
-func (identityID identityID) Unmarshal(i []byte) error {
-	panic("implement me")
-}
-
 var _ types.ID = (*identityID)(nil)
 var _ helpers.Key = (*identityID)(nil)
 

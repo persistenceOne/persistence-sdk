@@ -6,6 +6,7 @@
 package simulator
 
 import (
+	simulationTypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"math/rand"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -17,8 +18,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 )
 
-func (simulator) ParamChangeList(_ *rand.Rand) []simulation.ParamChange {
-	return []simulation.ParamChange{
+func (simulator) ParamChangeList(_ *rand.Rand) []simulationTypes.ParamChange {
+	return []simulationTypes.ParamChange{
 		simulation.NewSimParamChange(module.Name,
 			dummy.ID.String(),
 			func(r *rand.Rand) string {

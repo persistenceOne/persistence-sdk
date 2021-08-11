@@ -9,12 +9,12 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
-var _ types.Property = (*property)(nil)
+var _ types.Property = (*Property)(nil)
 
-func (property property) GetID() types.ID     { return property.ID }
-func (property property) GetFact() types.Fact { return property.Fact }
+func (property Property) GetID() types.ID     { return property.ID }
+func (property Property) GetFact() types.Fact { return property.Fact }
 func NewProperty(id types.ID, fact types.Fact) types.Property {
-	return property{
+	return Property{
 		ID:   id,
 		Fact: fact,
 	}

@@ -16,7 +16,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -46,7 +45,7 @@ func Test_Define_Request(t *testing.T) {
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)
 	require.Nil(t, Error)
 
-	testBaseReq := test_types.BaseReq{From: fromAddress, ChainID: "test", Fees: sdkTypes.NewCoins()}
+	testBaseReq := base.BaseReq{From: fromAddress, ChainID: "test", Fees: sdkTypes.NewCoins()}
 	testTransactionRequest := newTransactionRequest(testBaseReq, "fromID", "orderID", sdkTypes.OneDec().String(), "1.0", 123, mutableMetaPropertiesString, mutablePropertiesString)
 
 	require.Equal(t, transactionRequest{BaseReq: testBaseReq, FromID: "fromID", OrderID: "orderID", ExpiresIn: 123, MakerOwnableSplit: "1.0", TakerOwnableSplit: sdkTypes.OneDec().String(), MutableMetaProperties: mutableMetaPropertiesString, MutableProperties: mutablePropertiesString}, testTransactionRequest)
@@ -54,7 +53,7 @@ func Test_Define_Request(t *testing.T) {
 
 	requestFromCLI, Error := transactionRequest{}.FromCLI(cliCommand, cliContext)
 	require.Equal(t, nil, Error)
-	require.Equal(t, transactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainID: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", MutableMetaProperties: "", MutableProperties: ""}, requestFromCLI)
+	require.Equal(t, transactionRequest{BaseReq: base.BaseReq{From: cliContext.GetFromAddress().String(), ChainID: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", MutableMetaProperties: "", MutableProperties: ""}, requestFromCLI)
 
 	jsonMessage, _ := json.Marshal(testTransactionRequest)
 	transactionRequestUnmarshalled, error3 := transactionRequest{}.FromJSON(jsonMessage)
@@ -71,7 +70,7 @@ func Test_Define_Request(t *testing.T) {
 	require.Equal(t, newMessage(fromAccAddress, base.NewID("fromID"), base.NewID("orderID"), sdkTypes.OneDec(), sdkTypes.NewDec(1), base.NewHeight(123), mutableMetaProperties, mutableProperties), msg)
 	require.Nil(t, Error)
 
-	msg, Error = newTransactionRequest(test_types.BaseReq{From: "fromAddress", ChainID: "test", Fees: sdkTypes.NewCoins()}, "fromID", "orderID", sdkTypes.OneDec().String(), "aa", 123, mutableMetaPropertiesString, mutablePropertiesString).MakeMsg()
+	msg, Error = newTransactionRequest(base.BaseReq{From: "fromAddress", ChainID: "test", Fees: sdkTypes.NewCoins()}, "fromID", "orderID", sdkTypes.OneDec().String(), "aa", 123, mutableMetaPropertiesString, mutablePropertiesString).MakeMsg()
 	require.Equal(t, nil, msg)
 	require.NotNil(t, Error)
 
@@ -83,11 +82,11 @@ func Test_Define_Request(t *testing.T) {
 	require.Equal(t, nil, msg)
 	require.NotNil(t, Error)
 
-	msg, Error = newTransactionRequest(test_types.BaseReq{From: "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c", ChainID: "test", Fees: sdkTypes.NewCoins()}, "fromID", "orderID", sdkTypes.OneDec().String(), sdkTypes.OneDec().String(), 123, "randomString", mutableMetaPropertiesString).MakeMsg()
+	msg, Error = newTransactionRequest(base.BaseReq{From: "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c", ChainID: "test", Fees: sdkTypes.NewCoins()}, "fromID", "orderID", sdkTypes.OneDec().String(), sdkTypes.OneDec().String(), 123, "randomString", mutableMetaPropertiesString).MakeMsg()
 	require.Equal(t, nil, msg)
 	require.NotNil(t, Error)
 
-	msg, Error = newTransactionRequest(test_types.BaseReq{From: "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c", ChainID: "test", Fees: sdkTypes.NewCoins()}, "fromID", "orderID", sdkTypes.OneDec().String(), sdkTypes.OneDec().String(), 123, mutablePropertiesString, "randomString").MakeMsg()
+	msg, Error = newTransactionRequest(base.BaseReq{From: "cosmos1pkkayn066msg6kn33wnl5srhdt3tnu2vzasz9c", ChainID: "test", Fees: sdkTypes.NewCoins()}, "fromID", "orderID", sdkTypes.OneDec().String(), sdkTypes.OneDec().String(), 123, mutablePropertiesString, "randomString").MakeMsg()
 	require.Equal(t, nil, msg)
 	require.NotNil(t, Error)
 

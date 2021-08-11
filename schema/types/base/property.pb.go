@@ -24,21 +24,21 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type property struct {
-	ID   github_com_persistenceOne_persistenceSDK_schema_types.ID   `protobuf:"bytes,1,opt,name=ID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"ID"`
-	Fact github_com_persistenceOne_persistenceSDK_schema_types.Fact `protobuf:"bytes,2,opt,name=Fact,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Fact" json:"Fact"`
+type Property struct {
+	ID   github_com_persistenceOne_persistenceSDK_schema_types.ID   `protobuf:"bytes,1,opt,name=ID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"id"`
+	Fact github_com_persistenceOne_persistenceSDK_schema_types.Fact `protobuf:"bytes,2,opt,name=Fact,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Fact" json:"fact"`
 }
 
-func (m *property) Reset()         { *m = property{} }
-func (m *property) String() string { return proto.CompactTextString(m) }
-func (*property) ProtoMessage()    {}
-func (*property) Descriptor() ([]byte, []int) {
+func (m *Property) Reset()         { *m = Property{} }
+func (m *Property) String() string { return proto.CompactTextString(m) }
+func (*Property) ProtoMessage()    {}
+func (*Property) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a4a977b235cf633f, []int{0}
 }
-func (m *property) XXX_Unmarshal(b []byte) error {
+func (m *Property) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *property) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *Property) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_Property.Marshal(b, m, deterministic)
 	} else {
@@ -50,20 +50,20 @@ func (m *property) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-func (m *property) XXX_Merge(src proto.Message) {
+func (m *Property) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Property.Merge(m, src)
 }
-func (m *property) XXX_Size() int {
+func (m *Property) XXX_Size() int {
 	return m.Size()
 }
-func (m *property) XXX_DiscardUnknown() {
+func (m *Property) XXX_DiscardUnknown() {
 	xxx_messageInfo_Property.DiscardUnknown(m)
 }
 
 var xxx_messageInfo_Property proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*property)(nil), "persistence.schema.types.v1beta1.types.Property")
+	proto.RegisterType((*Property)(nil), "persistence.schema.types.v1beta1.types.Property")
 }
 
 func init() {
@@ -90,7 +90,7 @@ var fileDescriptor_a4a977b235cf633f = []byte{
 	0x00, 0x00,
 }
 
-func (m *property) Marshal() (dAtA []byte, err error) {
+func (m *Property) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -100,12 +100,12 @@ func (m *property) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m property) MarshalTo(dAtA []byte) (int, error) {
+func (m Property) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *property) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *Property) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -142,7 +142,7 @@ func encodeVarintProperty(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m property) Size() (n int) {
+func (m Property) Size() (n int) {
 	var l int
 	_ = l
 	l = m.ID.Size()
@@ -162,7 +162,7 @@ func sovProperty(x uint64) (n int) {
 func sozProperty(x uint64) (n int) {
 	return sovProperty(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m property) Unmarshal(dAtA []byte) error {
+func (m Property) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -221,7 +221,9 @@ func (m property) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.ID.Unmarshal(dAtA[iNdEx:postIndex]); err!=nil {return err}
+			if err := m.ID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -253,7 +255,9 @@ func (m property) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Fact.Unmarshal(dAtA[iNdEx:postIndex]); err!=nil {return err}
+			if err := m.Fact.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

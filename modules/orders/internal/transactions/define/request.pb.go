@@ -6,7 +6,7 @@ package define
 import (
 	fmt "fmt"
 	proto "github.com/gogo/protobuf/proto"
-	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -24,12 +24,12 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionRequest struct {
-	BaseReq                 test_types.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"baseReq"`
-	FromID                  string             `protobuf:"bytes,2,opt,name=fromID,proto3" json:"fromID,omitempty" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
-	ImmutableMetaProperties string             `protobuf:"bytes,3,opt,name=ImmutableMetaProperties,proto3" json:"ImmutableMetaProperties,omitempty" valid:"required~required field immutableMetaProperties missing, matches(^.*$)~invalid field immutableMetaProperties"`
-	ImmutableProperties     string             `protobuf:"bytes,4,opt,name=ImmutableProperties,proto3" json:"ImmutableProperties,omitempty" valid:"required~required field immutableProperties missing, matches(^.*$)~invalid field immutableProperties"`
-	MutableMetaProperties   string             `protobuf:"bytes,5,opt,name=MutableMetaProperties,proto3" json:"MutableMetaProperties,omitempty" valid:"required~required field mutableMetaProperties missing, matches(^.*$)~invalid field mutableMetaProperties"`
-	MutableProperties       string             `protobuf:"bytes,6,opt,name=MutableProperties,proto3" json:"MutableProperties,omitempty" valid:"required~required field mutableProperties missing, matches(^.*$)~invalid field mutableProperties"`
+	BaseReq                 base.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"baseReq"`
+	FromID                  string       `protobuf:"bytes,2,opt,name=fromID,proto3" json:"fromID,omitempty" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
+	ImmutableMetaProperties string       `protobuf:"bytes,3,opt,name=ImmutableMetaProperties,proto3" json:"ImmutableMetaProperties,omitempty" valid:"required~required field immutableMetaProperties missing, matches(^.*$)~invalid field immutableMetaProperties"`
+	ImmutableProperties     string       `protobuf:"bytes,4,opt,name=ImmutableProperties,proto3" json:"ImmutableProperties,omitempty" valid:"required~required field immutableProperties missing, matches(^.*$)~invalid field immutableProperties"`
+	MutableMetaProperties   string       `protobuf:"bytes,5,opt,name=MutableMetaProperties,proto3" json:"MutableMetaProperties,omitempty" valid:"required~required field mutableMetaProperties missing, matches(^.*$)~invalid field mutableMetaProperties"`
+	MutableProperties       string       `protobuf:"bytes,6,opt,name=MutableProperties,proto3" json:"MutableProperties,omitempty" valid:"required~required field mutableProperties missing, matches(^.*$)~invalid field mutableProperties"`
 }
 
 func (m *transactionRequest) Reset()         { *m = transactionRequest{} }

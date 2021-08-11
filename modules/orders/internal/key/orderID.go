@@ -20,29 +20,6 @@ import (
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-type orderID struct {
-	ClassificationID types.ID `json:"classificationID"`
-	MakerOwnableID   types.ID `json:"makerOwnableID"`
-	TakerOwnableID   types.ID `json:"takerOwnableID"`
-	RateID           types.ID `json:"rateID"`
-	CreationID       types.ID `json:"creationID"`
-	MakerID          types.ID `json:"makerID"`
-	HashID           types.ID `json:"hashID"`
-}
-
-//TODO : Implement these methods
-func (orderID orderID) Size() int {
-	panic("implement me")
-}
-
-func (orderID orderID) MarshalTo(i []byte) (int, error) {
-	panic("implement me")
-}
-
-func (orderID orderID) Unmarshal(i []byte) error {
-	panic("implement me")
-}
-
 var _ types.ID = (*orderID)(nil)
 var _ helpers.Key = (*orderID)(nil)
 

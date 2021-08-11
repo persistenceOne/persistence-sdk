@@ -29,9 +29,9 @@ type auxiliaryRequest struct {
 	ToID                 github_com_persistenceOne_persistenceSDK_schema_types.ID         `protobuf:"bytes,2,opt,name=toID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"toID"valid:"required~required field toID missing"`
 	ClassificationID     github_com_persistenceOne_persistenceSDK_schema_types.ID         `protobuf:"bytes,3,opt,name=classificationID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"classificationID"valid:"required~required field classificationID missing"`
 	MaintainedProperties github_com_persistenceOne_persistenceSDK_schema_types.Properties `protobuf:"bytes,4,opt,name=maintainedProperties,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Properties" json:"maintainedProperties"valid:"required~required field maintainedProperties missing"`
-	AddMaintainer        bool                                                             `protobuf:"varint,5,opt,name=addMaintainer,proto3" json:"addMaintainer,omitempty"valid:"required~required field addMaintainer missing"`
-	RemoveMaintainer     bool                                                             `protobuf:"varint,6,opt,name=removeMaintainer,proto3" json:"removeMaintainer,omitempty"valid:"required~required field removeMaintainer missing"`
-	MutateMaintainer     bool                                                             `protobuf:"varint,7,opt,name=mutateMaintainer,proto3" json:"mutateMaintainer,omitempty"valid:"required~required field mutateMaintainer missing"`
+	AddMaintainer        bool                                                             `protobuf:"varint,5,opt,name=addMaintainer,proto3" json:"addMaintainer,omitempty"`
+	RemoveMaintainer     bool                                                             `protobuf:"varint,6,opt,name=removeMaintainer,proto3" json:"removeMaintainer,omitempty"`
+	MutateMaintainer     bool                                                             `protobuf:"varint,7,opt,name=mutateMaintainer,proto3" json:"mutateMaintainer,omitempty"`
 }
 
 func (m *auxiliaryRequest) Reset()         { *m = auxiliaryRequest{} }

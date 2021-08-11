@@ -16,7 +16,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/schema"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	baseHelpers "github.com/persistenceOne/persistenceSDK/schema/helpers/base"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
 	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -37,14 +36,14 @@ func Test_Send_Request(t *testing.T) {
 	fromAccAddress, Error := sdkTypes.AccAddressFromBech32(fromAddress)
 	require.Nil(t, Error)
 
-	testBaseReq := test_types.BaseReq{From: fromAddress, ChainID: "test", Fees: sdkTypes.NewCoins()}
+	testBaseReq := base.BaseReq{From: fromAddress, ChainID: "test", Fees: sdkTypes.NewCoins()}
 	testTransactionRequest := newTransactionRequest(testBaseReq, "fromID", "toID", "ownableID", "2")
 	require.Equal(t, transactionRequest{BaseReq: testBaseReq, FromID: "fromID", ToID: "toID", OwnableID: "ownableID", Value: "2"}, testTransactionRequest)
 	require.Equal(t, nil, testTransactionRequest.Validate())
 
 	requestFromCLI, Error := transactionRequest{}.FromCLI(cliCommand, cliContext)
 	require.Equal(t, nil, Error)
-	require.Equal(t, transactionRequest{BaseReq: test_types.BaseReq{From: cliContext.GetFromAddress().String(), ChainID: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", ToID: "", OwnableID: "", Value: ""}, requestFromCLI)
+	require.Equal(t, transactionRequest{BaseReq: base.BaseReq{From: cliContext.GetFromAddress().String(), ChainID: cliContext.ChainID, Simulate: cliContext.Simulate}, FromID: "", ToID: "", OwnableID: "", Value: ""}, requestFromCLI)
 
 	jsonMessage, _ := json.Marshal(testTransactionRequest)
 	transactionRequestUnmarshalled, Error := transactionRequest{}.FromJSON(jsonMessage)
@@ -62,13 +61,22 @@ func Test_Send_Request(t *testing.T) {
 	require.Equal(t, newMessage(fromAccAddress, base.NewID("fromID"), base.NewID("toID"), base.NewID("ownableID"), sdkTypes.NewDec(2)), msg)
 	require.Nil(t, Error)
 
-	msg2, Error := newTransactionRequest(test_types.BaseReq{From: "randomFromAddress", ChainID: "test"}, "fromID", "toID", "ownableID", "2").MakeMsg()
+	msg2, Error := newTransactionRequest(base.BaseReq{From: "randomFromAddress", ChainID: "test"}, "fromID", "toID", "ownableID", "2").MakeMsg()
 	require.NotNil(t, Error)
 	require.Nil(t, msg2)
 
 	msg2, Error = newTransactionRequest(testBaseReq, "fromID", "toID", "ownableID", "randomString").MakeMsg()
 	require.NotNil(t, Error)
 	require.Nil(t, msg2)
+
+	//req := transactionRequest{
+	//	BaseReq: testBaseReq,
+	//}
+	//var ctx client.Context
+	//queryClient := NewMsgClient(ctx)
+	//res, err := queryClient.SplitsSend(context.Background(), &req)
+	//fmt.Println(res)
+	//require.NotNil(t, err)
 
 	require.Equal(t, transactionRequest{}, requestPrototype())
 	require.NotPanics(t, func() {

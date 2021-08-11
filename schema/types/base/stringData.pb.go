@@ -23,11 +23,11 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type stringData struct {
-	Value string `protobuf:"bytes,1,opt,name=Value,proto3" json:"Value,omitempty"`
+	Value string `protobuf:"bytes,1,opt,name=Value,proto3" json:"value,omitempty"`
 }
 
-func (m *stringData) Reset()         { *m = stringData{} }
-func (*stringData) ProtoMessage()    {}
+func (m *stringData) Reset()      { *m = stringData{} }
+func (*stringData) ProtoMessage() {}
 func (*stringData) Descriptor() ([]byte, []int) {
 	return fileDescriptor_7d98a766f4db2fcd, []int{0}
 }

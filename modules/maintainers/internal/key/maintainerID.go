@@ -17,11 +17,6 @@ import (
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-type maintainerID struct {
-	ClassificationID types.ID `json:"classificationID" valid:"required~required field classificationID missing"`
-	IdentityID       types.ID `json:"identityID" valid:"required~required field identityID missing"`
-}
-
 var _ types.ID = (*maintainerID)(nil)
 var _ helpers.Key = (*maintainerID)(nil)
 

@@ -25,7 +25,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type properties struct {
-	PropertyList []github_com_persistenceOne_persistenceSDK_schema_types.Property `protobuf:"bytes,1,rep,name=PropertyList,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Property" json:"PropertyList"`
+	PropertyList []github_com_persistenceOne_persistenceSDK_schema_types.Property `protobuf:"bytes,1,rep,name=PropertyList,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Property" json:"propertyList"`
 }
 
 func (m *properties) Reset()         { *m = properties{} }
@@ -209,8 +209,10 @@ func (m properties) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.PropertyList = append(m.PropertyList, property{})
-			if err := m.PropertyList[len(m.PropertyList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err!=nil {return err}
+			m.PropertyList = append(m.PropertyList, Property{})
+			if err := m.PropertyList[len(m.PropertyList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

@@ -9,8 +9,5 @@ type Property interface {
 	GetID() ID
 	GetFact() Fact
 
-	//New Addition
-	Size() int
-	MarshalTo([]byte) (int, error)
-	Unmarshal([]byte) error
+	ProtoInterface
 }

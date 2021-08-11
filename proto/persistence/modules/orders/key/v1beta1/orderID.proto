@@ -1,0 +1,20 @@
+syntax ="proto3";
+
+package persistence.modules.orders.key.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+
+option go_package = "modules/orders/internal/key";
+
+message orderID {
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.equal) = false;
+
+  string classificationID = 1 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
+  string makerOwnableID = 2 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
+  string takerOwnableID = 3 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
+  string rateID = 4 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
+  string creationID = 5 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
+  string makerID = 6 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
+  string hashID = 7 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false] ;
+}

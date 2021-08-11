@@ -17,24 +17,6 @@ import (
 	codecUtilities "github.com/persistenceOne/persistenceSDK/utilities/codec"
 )
 
-type splitID struct {
-	OwnerID   types.ID `json:"ownerID" valid:"required~required field ownerID missing"`
-	OwnableID types.ID `json:"ownableID" valid:"required~required field ownableID missing"`
-}
-
-//TODO : Implement these methods
-func (splitID splitID) Size() int {
-	panic("implement me")
-}
-
-func (splitID splitID) MarshalTo(i []byte) (int, error) {
-	panic("implement me")
-}
-
-func (splitID splitID) Unmarshal(i []byte) error {
-	panic("implement me")
-}
-
 var _ types.ID = (*splitID)(nil)
 var _ helpers.Key = (*splitID)(nil)
 

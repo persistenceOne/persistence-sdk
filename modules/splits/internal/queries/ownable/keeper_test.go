@@ -87,6 +87,7 @@ func Test_Query_Keeper_Split(t *testing.T) {
 	keepers.(queryKeeper).mapper.NewCollection(context).Add(mappable.NewSplit(splitID, sdkTypes.NewDec(123)))
 
 	testQueryRequest := newQueryRequest(splitID)
+	//TODO : Fix this test case
 	require.Equal(t, queryResponse{Success: true, Value: sdkTypes.NewDec(123)}, keepers.(queryKeeper).Enquire(context, testQueryRequest))
 
 }

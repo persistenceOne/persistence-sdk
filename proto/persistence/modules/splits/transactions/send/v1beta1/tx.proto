@@ -3,13 +3,14 @@ syntax ="proto3";
 package persistence.modules.splits.transactions.send.v1beta1;
 
 import "third_party/proto/gogoproto/gogo.proto";
-import "proto/persistence/modules/splits/transactions/send/v1beta1/request.proto";
-import "proto/persistence/modules/splits/transactions/send/v1beta1/response.proto";
+//import "proto/persistence/modules/splits/transactions/send/v1beta1/request.proto";
+//import "proto/persistence/modules/splits/transactions/send/v1beta1/response.proto";
 
 option go_package = "modules/splits/internal/transactions/send";
 
 service Msg {
-  rpc splitsSend(transactionRequest) returns (transactionResponse);
+//  rpc splitsSend(transactionRequest) returns (transactionResponse);
+  rpc TransactService(message) returns (messageResponse) {};
 }
 
 message message {
@@ -22,3 +23,5 @@ message message {
   string ownableID =4 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.ID", (gogoproto.nullable) = false];
   string value = 5 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
 }
+
+message messageResponse {}

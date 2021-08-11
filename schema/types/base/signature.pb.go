@@ -25,9 +25,9 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type signature struct {
-	ID             github_com_persistenceOne_persistenceSDK_schema_types.ID     `protobuf:"bytes,1,opt,name=ID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"ID"`
-	SignatureBytes []byte                                                       `protobuf:"bytes,2,opt,name=SignatureBytes,proto3" json:"SignatureBytes,omitempty"`
-	ValidityHeight github_com_persistenceOne_persistenceSDK_schema_types.Height `protobuf:"bytes,3,opt,name=ValidityHeight,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Height" json:"ValidityHeight"`
+	ID             github_com_persistenceOne_persistenceSDK_schema_types.ID     `protobuf:"bytes,1,opt,name=ID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"id"`
+	SignatureBytes []byte                                                       `protobuf:"bytes,2,opt,name=SignatureBytes,proto3" json:"signatureBytes,omitempty"`
+	ValidityHeight github_com_persistenceOne_persistenceSDK_schema_types.Height `protobuf:"bytes,3,opt,name=ValidityHeight,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Height" json:"validityHeight"`
 }
 
 func (m *signature) Reset()      { *m = signature{} }

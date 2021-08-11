@@ -16,8 +16,5 @@ type MetaFact interface {
 	Sign(keyring.Keyring) MetaFact
 	RemoveData() Fact
 
-	//New Addition
-	Size() int
-	MarshalTo([]byte) (int, error)
-	Unmarshal([]byte) error
+	ProtoInterface
 }

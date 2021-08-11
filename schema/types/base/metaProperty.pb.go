@@ -24,21 +24,21 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type metaProperty struct {
-	ID       github_com_persistenceOne_persistenceSDK_schema_types.ID       `protobuf:"bytes,1,opt,name=ID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"ID"`
-	MetaFact github_com_persistenceOne_persistenceSDK_schema_types.MetaFact `protobuf:"bytes,2,opt,name=MetaFact,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.MetaFact" json:"MetaFact"`
+type MetaProperty struct {
+	ID       github_com_persistenceOne_persistenceSDK_schema_types.ID       `protobuf:"bytes,1,opt,name=ID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"id"`
+	MetaFact github_com_persistenceOne_persistenceSDK_schema_types.MetaFact `protobuf:"bytes,2,opt,name=MetaFact,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.MetaFact" json:"metaFact"`
 }
 
-func (m *metaProperty) Reset()         { *m = metaProperty{} }
-func (m *metaProperty) String() string { return proto.CompactTextString(m) }
-func (*metaProperty) ProtoMessage()    {}
-func (*metaProperty) Descriptor() ([]byte, []int) {
+func (m *MetaProperty) Reset()         { *m = MetaProperty{} }
+func (m *MetaProperty) String() string { return proto.CompactTextString(m) }
+func (*MetaProperty) ProtoMessage()    {}
+func (*MetaProperty) Descriptor() ([]byte, []int) {
 	return fileDescriptor_000a370511e2e378, []int{0}
 }
-func (m *metaProperty) XXX_Unmarshal(b []byte) error {
+func (m *MetaProperty) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *metaProperty) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MetaProperty) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_MetaProperty.Marshal(b, m, deterministic)
 	} else {
@@ -50,20 +50,20 @@ func (m *metaProperty) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
 		return b[:n], nil
 	}
 }
-func (m *metaProperty) XXX_Merge(src proto.Message) {
+func (m *MetaProperty) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_MetaProperty.Merge(m, src)
 }
-func (m *metaProperty) XXX_Size() int {
+func (m *MetaProperty) XXX_Size() int {
 	return m.Size()
 }
-func (m *metaProperty) XXX_DiscardUnknown() {
+func (m *MetaProperty) XXX_DiscardUnknown() {
 	xxx_messageInfo_MetaProperty.DiscardUnknown(m)
 }
 
 var xxx_messageInfo_MetaProperty proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*metaProperty)(nil), "persistence.schema.types.base.v1beta1.metaProperty")
+	proto.RegisterType((*MetaProperty)(nil), "persistence.schema.types.base.v1beta1.metaProperty")
 }
 
 func init() {
@@ -91,7 +91,7 @@ var fileDescriptor_000a370511e2e378 = []byte{
 	0x95, 0x01, 0x00, 0x00,
 }
 
-func (m *metaProperty) Marshal() (dAtA []byte, err error) {
+func (m *MetaProperty) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -101,12 +101,12 @@ func (m *metaProperty) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m metaProperty) MarshalTo(dAtA []byte) (int, error) {
+func (m MetaProperty) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *metaProperty) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MetaProperty) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -143,7 +143,7 @@ func encodeVarintMetaProperty(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m metaProperty) Size() (n int) {
+func (m MetaProperty) Size() (n int) {
 	var l int
 	_ = l
 	l = m.ID.Size()
@@ -163,7 +163,7 @@ func sovMetaProperty(x uint64) (n int) {
 func sozMetaProperty(x uint64) (n int) {
 	return sovMetaProperty(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m metaProperty) Unmarshal(dAtA []byte) error {
+func (m MetaProperty) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {

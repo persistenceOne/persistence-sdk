@@ -6,7 +6,7 @@ package wrap
 import (
 	fmt "fmt"
 	proto "github.com/gogo/protobuf/proto"
-	"github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -24,9 +24,9 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionRequest struct {
-	BaseReq test_types.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"baseReq"`
-	FromID  string             `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3" json:"fromID,omitempty" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
-	Coins   string             `protobuf:"bytes,3,opt,name=coins,proto3" json:"coins,omitempty" valid:"required~required field coins missing, matches(^.*$)~invalid field coins"`
+	BaseReq base.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"baseReq"`
+	FromID  string       `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3" json:"fromID,omitempty" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
+	Coins   string       `protobuf:"bytes,3,opt,name=coins,proto3" json:"coins,omitempty" valid:"required~required field coins missing, matches(^.*$)~invalid field coins"`
 }
 
 func (m *transactionRequest) Reset()         { *m = transactionRequest{} }

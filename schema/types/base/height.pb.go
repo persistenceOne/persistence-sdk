@@ -23,7 +23,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type height struct {
-	Value int64 `protobuf:"varint,1,opt,name=Value,proto3" json:"Value,omitempty"`
+	Value int64 `protobuf:"varint,1,opt,name=Value,proto3" json:"value,omitempty"`
 }
 
 func (m *height) Reset()         { *m = height{} }

@@ -25,9 +25,9 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type fact struct {
-	HashID     github_com_persistenceOne_persistenceSDK_schema_types.ID         `protobuf:"bytes,1,opt,name=HashID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"HashID"`
-	TypeID     github_com_persistenceOne_persistenceSDK_schema_types.ID         `protobuf:"bytes,2,opt,name=TypeID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"TypeID"`
-	Signatures github_com_persistenceOne_persistenceSDK_schema_types.Signatures `protobuf:"bytes,3,opt,name=Signatures,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Signatures" json:"Signatures"`
+	HashID     github_com_persistenceOne_persistenceSDK_schema_types.ID         `protobuf:"bytes,1,opt,name=HashID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"hashID"`
+	TypeID     github_com_persistenceOne_persistenceSDK_schema_types.ID         `protobuf:"bytes,2,opt,name=TypeID,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.ID" json:"typeID"`
+	Signatures github_com_persistenceOne_persistenceSDK_schema_types.Signatures `protobuf:"bytes,3,opt,name=Signatures,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.Signatures" json:"signatures"`
 }
 
 func (m *fact) Reset()         { *m = fact{} }

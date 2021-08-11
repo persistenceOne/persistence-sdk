@@ -14,23 +14,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/utilities/meta"
 )
 
-type idData struct {
-	Value types.ID `json:"value"`
-}
-
-//TODO : Implement these methods
-func (idData idData) Size() int {
-	panic("implement me")
-}
-
-func (idData idData) MarshalTo(i []byte) (int, error) {
-	panic("implement me")
-}
-
-func (idData idData) Unmarshal(i []byte) error {
-	panic("implement me")
-}
-
 var _ types.Data = (*idData)(nil)
 
 func (idData idData) Compare(data types.Data) int {
@@ -39,7 +22,7 @@ func (idData idData) Compare(data types.Data) int {
 		panic(Error)
 	}
 
-	return bytes.Compare(idData.Value.Bytes(), compareIDData.Value.Bytes()) % 2
+	return bytes.Compare(idData.Value.Bytes(), compareIDData.Value.Bytes())
 }
 func (idData idData) String() string {
 	return idData.Value.String()

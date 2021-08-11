@@ -14,7 +14,7 @@ import (
 
 type Simulator interface {
 	RandomizedGenesisState(*module.SimulationState)
-	WeightedOperations(simulationTypes.AppParams, *codec.LegacyAmino) []simulationTypes.WeightedOperation
+	WeightedOperations(simulationTypes.AppParams, codec.JSONMarshaler) []simulationTypes.WeightedOperation
 	WeightedProposalContentList() []simulationTypes.WeightedProposalContent
 	ParamChangeList(*rand.Rand) []simulationTypes.ParamChange
 }

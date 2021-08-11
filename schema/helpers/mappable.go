@@ -7,14 +7,12 @@ package helpers
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/persistenceOne/persistenceSDK/schema/types"
 )
 
 type Mappable interface {
 	GetKey() Key
 	RegisterCodec(amino *codec.LegacyAmino)
 
-	//New Addition
-	Size() int
-	MarshalTo([]byte) (int, error)
-	Unmarshal([]byte) error
+	types.ProtoInterface
 }

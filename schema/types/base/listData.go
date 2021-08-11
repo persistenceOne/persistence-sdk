@@ -15,23 +15,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/utilities/meta"
 )
 
-type listData struct {
-	Value sortedDataList `json:"value"`
-}
-
-//TODO : Implement these methods
-func (listData listData) Size() int {
-	panic("implement me")
-}
-
-func (listData listData) MarshalTo(bytes []byte) (int, error) {
-	panic("implement me")
-}
-
-func (listData listData) Unmarshal(bytes []byte) error {
-	panic("implement me")
-}
-
 var _ types.ListData = (*listData)(nil)
 
 func (listData listData) Compare(data types.Data) int {
@@ -40,12 +23,17 @@ func (listData listData) Compare(data types.Data) int {
 		panic(Error)
 	}
 
-	difference := 0
-	for i, compareData := range compareListData.Value {
-		difference += listData.Value[i].Compare(compareData)
+	var listDataString []string
+	for _, data := range listData.Value {
+		listDataString = append(listDataString, data.String())
 	}
 
-	return difference % 2
+	var comparisonDataString []string
+	for _, data := range compareListData.Value {
+		comparisonDataString = append(comparisonDataString, data.String())
+	}
+
+	return strings.Compare(strings.Join(listDataString, constants.ListDataStringSeparator), strings.Join(comparisonDataString, constants.ListDataStringSeparator))
 }
 func (listData listData) String() string {
 	dataStringList := make([]string, len(listData.Value))
@@ -103,14 +91,14 @@ func (listData listData) GetList() []types.Data {
 }
 func (listData listData) Add(dataList ...types.Data) types.ListData {
 	for _, data := range dataList {
-		listData.Value.Add(data)
+		listData.Value = listData.Value.Add(data).(sortedDataList)
 	}
 
 	return listData
 }
 func (listData listData) Remove(dataList ...types.Data) types.ListData {
 	for _, data := range dataList {
-		listData.Value.Remove(data)
+		listData.Value = listData.Value.Remove(data).(sortedDataList)
 	}
 
 	return listData
@@ -125,9 +113,7 @@ func listDataFromData(data types.Data) (listData, error) {
 }
 
 func NewListData(value ...types.Data) types.Data {
-	return listData{
-		Value: value,
-	}
+	return listData{}.Add(value...)
 }
 
 func ReadAccAddressListData(dataString string) (types.Data, error) {

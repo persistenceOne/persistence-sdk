@@ -25,7 +25,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type metaProperties struct {
-	MetaPropertyList []github_com_persistenceOne_persistenceSDK_schema_types.MetaProperty `protobuf:"bytes,1,rep,name=MetaPropertyList,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.MetaProperty" json:"MetaPropertyList"`
+	MetaPropertyList []github_com_persistenceOne_persistenceSDK_schema_types.MetaProperty `protobuf:"bytes,1,rep,name=MetaPropertyList,proto3,customtype=github.com/persistenceOne/persistenceSDK/schema/types.MetaProperty" json:"metaPropertyList"`
 }
 
 func (m *metaProperties) Reset()         { *m = metaProperties{} }
@@ -210,7 +210,7 @@ func (m metaProperties) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.MetaPropertyList = append(m.MetaPropertyList, metaProperty{})
+			m.MetaPropertyList = append(m.MetaPropertyList, MetaProperty{})
 			if err := m.MetaPropertyList[len(m.MetaPropertyList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}

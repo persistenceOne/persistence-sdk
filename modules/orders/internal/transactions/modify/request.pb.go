@@ -7,7 +7,7 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -25,14 +25,14 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionRequest struct {
-	BaseReq               test_types.BaseReq `protobuf:"bytes,1,opt,name=baseReq,proto3" json:"baseReq"`
-	FromID                string             `protobuf:"bytes,2,opt,name=fromID,proto3" json:"fromID,omitempty" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
-	OrderID               string             `protobuf:"bytes,3,opt,name=orderID,proto3" json:"orderID,omitempty" valid:"required~required field orderID missing, matches(^[A-Za-z0-9-_|=.*]+$)~invalid field orderID"`
-	TakerOwnableSplit     string             `protobuf:"bytes,4,opt,name=takerOwnableSplit,proto3" json:"takerOwnableSplit,omitempty" valid:"required~required field takerOwnableSplit missing, matches(^[0-9.]+$)~invalid field takerOwnableSplit"`
-	MakerOwnableSplit     string             `protobuf:"bytes,5,opt,name=makerOwnableSplit,proto3" json:"makerOwnableSplit,omitempty" valid:"required~required field makerOwnableSplit missing, matches(^[0-9.]+$)~invalid field makerOwnableSplit"`
-	ExpiresIn             int64              `protobuf:"varint,6,opt,name=expiresIn,proto3" json:"expiresIn,omitempty" valid:"required~required field expiresIn missing, matches(^[0-9]+$)~invalid field expiresIn"`
-	MutableMetaProperties string             `protobuf:"bytes,7,opt,name=mutableMetaProperties,proto3" json:"mutableMetaProperties,omitempty" valid:"required~required field mutableMetaProperties missing, matches(^.*$)~invalid field mutableMetaProperties"`
-	MutableProperties     string             `protobuf:"bytes,8,opt,name=mutableProperties,proto3" json:"mutableProperties,omitempty" valid:"required~required field mutableProperties missing, matches(^.*$)~invalid field mutableProperties"`
+	BaseReq               base.BaseReq `protobuf:"bytes,1,opt,name=baseReq,proto3" json:"baseReq"`
+	FromID                string       `protobuf:"bytes,2,opt,name=fromID,proto3" json:"fromID,omitempty" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
+	OrderID               string       `protobuf:"bytes,3,opt,name=orderID,proto3" json:"orderID,omitempty" valid:"required~required field orderID missing, matches(^[A-Za-z0-9-_|=.*]+$)~invalid field orderID"`
+	TakerOwnableSplit     string       `protobuf:"bytes,4,opt,name=takerOwnableSplit,proto3" json:"takerOwnableSplit,omitempty" valid:"required~required field takerOwnableSplit missing, matches(^[0-9.]+$)~invalid field takerOwnableSplit"`
+	MakerOwnableSplit     string       `protobuf:"bytes,5,opt,name=makerOwnableSplit,proto3" json:"makerOwnableSplit,omitempty" valid:"required~required field makerOwnableSplit missing, matches(^[0-9.]+$)~invalid field makerOwnableSplit"`
+	ExpiresIn             int64        `protobuf:"varint,6,opt,name=expiresIn,proto3" json:"expiresIn,omitempty" valid:"required~required field expiresIn missing, matches(^[0-9]+$)~invalid field expiresIn"`
+	MutableMetaProperties string       `protobuf:"bytes,7,opt,name=mutableMetaProperties,proto3" json:"mutableMetaProperties,omitempty" valid:"required~required field mutableMetaProperties missing, matches(^.*$)~invalid field mutableMetaProperties"`
+	MutableProperties     string       `protobuf:"bytes,8,opt,name=mutableProperties,proto3" json:"mutableProperties,omitempty" valid:"required~required field mutableProperties missing, matches(^.*$)~invalid field mutableProperties"`
 }
 
 func (m *transactionRequest) Reset()         { *m = transactionRequest{} }

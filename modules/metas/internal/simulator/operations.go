@@ -15,7 +15,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 )
 
-func (simulator) WeightedOperations(appParams simulationTypes.AppParams, codec codec.JSONMarshaler) simulation.WeightedOperations {
+func (simulator) WeightedOperations(appParams simulationTypes.AppParams, codec codec.JSONMarshaler) []simulationTypes.WeightedOperation {
 	var weightMsg int
 
 	appParams.GetOrGenerate(codec, OpWeightMsg, &weightMsg, nil,

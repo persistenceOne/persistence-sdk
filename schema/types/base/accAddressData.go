@@ -14,23 +14,6 @@ import (
 	"github.com/persistenceOne/persistenceSDK/utilities/meta"
 )
 
-type accAddressData struct {
-	Value sdkTypes.AccAddress `json:"value"`
-}
-
-//TODO : Implement these methods
-func (accAddressData accAddressData) Size() int {
-	panic("implement me")
-}
-
-func (accAddressData accAddressData) MarshalTo(i []byte) (int, error) {
-	panic("implement me")
-}
-
-func (accAddressData accAddressData) Unmarshal(i []byte) error {
-	panic("implement me")
-}
-
 var _ types.Data = (*accAddressData)(nil)
 
 func (accAddressData accAddressData) Compare(sortable types.Data) int {
@@ -39,7 +22,7 @@ func (accAddressData accAddressData) Compare(sortable types.Data) int {
 		panic(Error)
 	}
 
-	return bytes.Compare(accAddressData.Value.Bytes(), compareAccAddressData.Value.Bytes()) % 2
+	return bytes.Compare(accAddressData.Value.Bytes(), compareAccAddressData.Value.Bytes())
 }
 func (accAddressData accAddressData) String() string {
 	return accAddressData.Value.String()

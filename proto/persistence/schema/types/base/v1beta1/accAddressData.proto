@@ -1,0 +1,10 @@
+syntax = "proto3";
+package persistence.schema.types.base.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+
+option go_package = "schema/types/base";
+
+message accAddressData {
+  string value = 1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.AccAddress", (gogoproto.nullable) = false] ;
+}

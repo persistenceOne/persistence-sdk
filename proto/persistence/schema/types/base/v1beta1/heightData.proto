@@ -1,0 +1,10 @@
+syntax = "proto3";
+package persistence.schema.types.base.v1beta1;
+
+import "third_party/proto/gogoproto/gogo.proto";
+
+option go_package = "schema/types/base";
+
+message heightData {
+  string value = 1 [(gogoproto.customtype) = "github.com/persistenceOne/persistenceSDK/schema/types.Height", (gogoproto.nullable) = false] ;
+}

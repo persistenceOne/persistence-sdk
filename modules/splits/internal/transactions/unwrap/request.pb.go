@@ -7,7 +7,7 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	test_types "github.com/persistenceOne/persistenceSDK/schema/test_types"
+	"github.com/persistenceOne/persistenceSDK/schema/types/base"
 	_ "github.com/regen-network/cosmos-proto"
 	io "io"
 	math "math"
@@ -26,10 +26,10 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type transactionRequest struct {
-	BaseReq   test_types.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"baseReq"`
-	FromID    string             `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3" json:"fromID,omitempty" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
-	OwnableID string             `protobuf:"bytes,4,opt,name=ownable_iD,json=ownableID,proto3" json:"ownableID,omitempty" valid:"required~required field ownableID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field ownableID"`
-	Value     string             `protobuf:"bytes,5,opt,name=value,proto3" json:"value,omitempty" valid:"required~required field value missing, matches(^[0-9]+$)~invalid field value"`
+	BaseReq   base.BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq,proto3" json:"baseReq"`
+	FromID    string       `protobuf:"bytes,2,opt,name=from_iD,json=fromID,proto3" json:"fromID,omitempty" valid:"required~required field fromID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field fromID"`
+	OwnableID string       `protobuf:"bytes,4,opt,name=ownable_iD,json=ownableID,proto3" json:"ownableID,omitempty" valid:"required~required field ownableID missing, matches(^[A-Za-z0-9-_=.|]+$)~invalid field ownableID"`
+	Value     string       `protobuf:"bytes,5,opt,name=value,proto3" json:"value,omitempty" valid:"required~required field value missing, matches(^[0-9]+$)~invalid field value"`
 }
 
 func (m *transactionRequest) Reset()         { *m = transactionRequest{} }

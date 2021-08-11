@@ -217,8 +217,7 @@ func (m *auxiliaryRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.PropertyList = append(m.PropertyList, base.property{})
-			//TODO : Make property exported to use it here.
+			m.PropertyList = append(m.PropertyList, base.Property{})
 			if err := m.PropertyList[len(m.PropertyList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}

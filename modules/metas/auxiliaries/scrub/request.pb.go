@@ -217,8 +217,7 @@ func (m *auxiliaryRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.MetaPropertyList = append(m.MetaPropertyList, base.metaProperty{})
-			//TODO : Have to make metaProperty exported in order to Unmarshal metaPropertyList.
+			m.MetaPropertyList = append(m.MetaPropertyList, base.MetaProperty{})
 			if err := m.MetaPropertyList[len(m.MetaPropertyList)].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}

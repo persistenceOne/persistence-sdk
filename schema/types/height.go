@@ -10,8 +10,5 @@ type Height interface {
 
 	Compare(Height) int
 
-	//New Addition
-	Size() int
-	MarshalTo([]byte) (int, error)
-	Unmarshal([]byte) error
+	ProtoInterface
 }
