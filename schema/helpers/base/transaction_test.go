@@ -8,6 +8,7 @@ package base
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
@@ -41,7 +42,7 @@ func TestTransaction(t *testing.T) {
 	require.NotPanics(t, func() { Transaction.RegisterCodec(codec) })
 
 	// Command : No Panics
-	command := Transaction.Command(codec)
+	command := Transaction.Command()
 	require.Equal(t, `ABCIQuery: Post failed: Post "http://localhost:26657": dial tcp 127.0.0.1:26657: connect: connection refused`,
 		command.ExecuteContext(context.Context()).Error())
 	// HandleMessage
@@ -49,7 +50,7 @@ func TestTransaction(t *testing.T) {
 	require.Nil(t, Error)
 
 	// RESTRequestHandler : No Panics
-	cliContext := clientContext.NewCLIContext().WithCodec(codec).WithChainID("test")
+	cliContext := client.Context{}.WithLegacyAmino(codec).WithChainID("test")
 
 	//RPC ERROR
 	request1 := codec.MustMarshalJSON(base.TransactionRequest{

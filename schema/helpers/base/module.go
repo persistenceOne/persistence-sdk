@@ -66,7 +66,7 @@ func (module module) LegacyQuerierHandler(amino *codec.LegacyAmino) sdkTypes.Que
 }
 
 func (module module) RegisterServices(configurator sdkTypesModule.Configurator) {
-	panic("implement me")
+	//TODO : RegisterServices
 }
 
 func (module module) WeightedOperations(simState sdkTypesModule.SimulationState) []simulationTypes.WeightedOperation {
