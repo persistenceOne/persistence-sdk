@@ -7,6 +7,7 @@ package send
 
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
+	sdkModule "github.com/cosmos/cosmos-sdk/types/module"
 	bank "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/persistenceOne/persistenceSDK/constants/errors"
 	"github.com/persistenceOne/persistenceSDK/modules/identities/auxiliaries/verify"
@@ -17,6 +18,10 @@ type transactionKeeper struct {
 	mapper          helpers.Mapper
 	parameters      helpers.Parameters
 	verifyAuxiliary helpers.Auxiliary
+}
+
+func (transactionKeeper transactionKeeper) RegisterServices(configurator sdkModule.Configurator) {
+	RegisterMsgServer(configurator.MsgServer(), NewMsgServerImpl(transactionKeeper))
 }
 
 var _ helpers.TransactionKeeper = (*transactionKeeper)(nil)

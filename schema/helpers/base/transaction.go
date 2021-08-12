@@ -7,25 +7,25 @@ package base
 
 import (
 	"encoding/json"
-	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/persistenceOne/persistenceSDK/utilities/random"
-	"log"
-	"net/http"
-	"reflect"
-	"strings"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
+	sdkModule "github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
+	"github.com/persistenceOne/persistenceSDK/utilities/random"
 	"github.com/persistenceOne/persistenceSDK/utilities/rest/queuing"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"log"
+	"net/http"
+	"reflect"
+	"strings"
 )
 
 type transaction struct {
@@ -35,6 +35,11 @@ type transaction struct {
 	requestPrototype func() helpers.TransactionRequest
 	messagePrototype func() helpers.Message
 	keeperPrototype  func() helpers.TransactionKeeper
+}
+
+func (transaction transaction) ForRegisterService(configurator sdkModule.Configurator) {
+	transaction.keeper.RegisterServices(configurator)
+
 }
 
 var _ helpers.Transaction = (*transaction)(nil)

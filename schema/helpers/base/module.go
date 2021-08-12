@@ -66,7 +66,10 @@ func (module module) LegacyQuerierHandler(amino *codec.LegacyAmino) sdkTypes.Que
 }
 
 func (module module) RegisterServices(configurator sdkTypesModule.Configurator) {
-	//TODO : RegisterServices
+	transactionList := module.transactions.GetList()
+	for _, transaction := range transactionList {
+		transaction.ForRegisterService(configurator)
+	}
 }
 
 func (module module) WeightedOperations(simState sdkTypesModule.SimulationState) []simulationTypes.WeightedOperation {

@@ -8,6 +8,7 @@ import (
 	fmt "fmt"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
+	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	"github.com/persistenceOne/persistenceSDK/schema/helpers"
 	github_com_persistenceOne_persistenceSDK_schema_types "github.com/persistenceOne/persistenceSDK/schema/types"
@@ -164,10 +165,10 @@ type MsgClient interface {
 }
 
 type msgClient struct {
-	cc *grpc.ClientConn
+	cc grpc1.ClientConn
 }
 
-func NewMsgClient(cc *grpc.ClientConn) MsgClient {
+func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
@@ -194,7 +195,7 @@ func (*UnimplementedMsgServer) TransactService(ctx context.Context, req *message
 	return nil, status.Errorf(codes.Unimplemented, "method TransactService not implemented")
 }
 
-func RegisterMsgServer(s *grpc.Server, srv MsgServer) {
+func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
