@@ -20,6 +20,7 @@ type transactionKeeper struct {
 	verifyAuxiliary helpers.Auxiliary
 }
 
+//Test
 func (transactionKeeper transactionKeeper) RegisterServices(configurator sdkModule.Configurator) {
 	RegisterMsgServer(configurator.MsgServer(), NewMsgServerImpl(transactionKeeper))
 }
