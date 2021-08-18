@@ -22,6 +22,7 @@ import (
 
 var _ mappables.InterNFT = (*Asset)(nil)
 
+
 func (asset Asset) GetID() types.ID {
 	return asset.ID
 }
@@ -78,7 +79,7 @@ func (Asset) RegisterLegacyAminoCodec(codec *codec.LegacyAmino) {
 }
 
 func NewAsset(assetID types.ID, immutableProperties types.Properties, mutableProperties types.Properties) mappables.InterNFT {
-	return Asset{
+	return &Asset{
 		ID:            assetID,
 		HasImmutables: baseTraits.HasImmutables{Properties: immutableProperties},
 		HasMutables:   baseTraits.HasMutables{Properties: mutableProperties},
