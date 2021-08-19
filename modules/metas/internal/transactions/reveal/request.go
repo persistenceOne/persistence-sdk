@@ -29,7 +29,7 @@ var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 
 // Transaction Request godoc
 // @Summary reveal metas transaction
-// @Descrption reveal metas transaction
+// @Description reveal metas transaction
 // @Accept text/plain
 // @Produce json
 // @Tags Metas
@@ -37,6 +37,7 @@ var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 // @Success 200 {object} transactionResponse   "A successful response."
 // @Failure default  {object}  transactionResponse "An unexpected error response."
 // @Router /metas/reveal [post]
+
 func (transactionRequest transactionRequest) Validate() error {
 	_, Error := govalidator.ValidateStruct(transactionRequest)
 	return Error

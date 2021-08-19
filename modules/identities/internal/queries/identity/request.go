@@ -23,7 +23,7 @@ var _ helpers.QueryRequest = (*queryRequest)(nil)
 
 // QueryRequest godoc
 // @Summary Query identities using identity id
-// @Descrption Able to query the asset
+// @Description Able to query the asset
 // @Accept json
 // @Produce json
 // @Tags Identities
@@ -31,6 +31,7 @@ var _ helpers.QueryRequest = (*queryRequest)(nil)
 // @Success 200 {object} queryResponse "Sucessful query response"
 // @Failure default  {object}  queryResponse "An unexpected error response."
 // @Router /identities/identities/{identityID} [get]
+
 func (queryRequest queryRequest) Validate() error {
 	_, Error := govalidator.ValidateStruct(queryRequest)
 	return Error

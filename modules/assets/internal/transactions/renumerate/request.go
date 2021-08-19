@@ -30,7 +30,7 @@ var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 
 // Transaction Request godoc
 // @Summary renumerate asset transaction
-// @Descrption renumerate asset with mutable immutable properties
+// @Description renumerate asset with mutable immutable properties
 // @Accept text/plain
 // @Produce json
 // @Tags Assets
@@ -38,6 +38,7 @@ var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 // @Success 200 {object} transactionResponse   "A successful response."
 // @Failure default  {object}  transactionResponse "An unexpected error response."
 // @Router /assets/renumerate [post]
+
 func (transactionRequest transactionRequest) Validate() error {
 	_, Error := govalidator.ValidateStruct(transactionRequest)
 	return Error

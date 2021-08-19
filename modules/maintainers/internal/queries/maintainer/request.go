@@ -23,7 +23,7 @@ var _ helpers.QueryRequest = (*queryRequest)(nil)
 
 // QueryRequest godoc
 // @Summary Query maintainers using maintainer id
-// @Descrption Able to query the maintainers details
+// @Description Able to query the maintainers details
 // @Accept json
 // @Produce json
 // @Tags Maintainers
@@ -31,6 +31,7 @@ var _ helpers.QueryRequest = (*queryRequest)(nil)
 // @Success 200 {object} queryResponse "A successful query response"
 // @Failure default  {object}  queryResponse "An unexpected error response."
 // @Router /maintainers/maintainers/{maintainerID} [get]
+
 func (queryRequest queryRequest) Validate() error {
 	_, Error := govalidator.ValidateStruct(queryRequest)
 	return Error

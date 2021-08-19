@@ -35,7 +35,7 @@ var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 
 // Transaction Request godoc
 // @Summary deputize asset transaction
-// @Descrption deputize asset
+// @Description deputize asset
 // @Accept text/plain
 // @Produce json
 // @Tags Assets
@@ -43,6 +43,7 @@ var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 // @Success 200 {object} transactionResponse   "A successful response."
 // @Failure default  {object}  transactionResponse "An unexpected error response."
 // @Router /assets/deputize [post]
+
 func (transactionRequest transactionRequest) Validate() error {
 	_, Error := govalidator.ValidateStruct(transactionRequest)
 	return Error
