@@ -31,7 +31,6 @@ var _ helpers.QueryRequest = (*queryRequest)(nil)
 // @Success 200 {object} queryResponse "A succesful query response"
 // @Failure default  {object}  queryResponse "An unexpected error response."
 // @Router /ownable/{ownableID} [get]
-
 func (queryRequest queryRequest) Validate() error {
 	_, Error := govalidator.ValidateStruct(queryRequest)
 	return Error
