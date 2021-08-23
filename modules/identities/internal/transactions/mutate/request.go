@@ -40,7 +40,6 @@ var _ helpers.TransactionRequest = (*transactionRequest)(nil)
 // @Success 200 {object} transactionResponse   "A successful response."
 // @Failure default  {object}  transactionResponse "An unexpected error response."
 // @Router /identities/mutate [post]
-
 func (transactionRequest transactionRequest) Validate() error {
 	_, Error := govalidator.ValidateStruct(transactionRequest)
 	return Error
