@@ -1,3 +1,5 @@
+# ⛔️ DEPRECATED ⛔️
+persistenceSDK will not live under [assetMantle](https://github.com/assetmantleone)
 # persistenceSDK
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/persistenceOne/persistenceSDK)](https://goreportcard.com/report/github.com/persistenceOne/persistenceSDK)
