@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/persistenceOne/pstake-native/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 )
 
 var _ types.QueryServer = Keeper{}

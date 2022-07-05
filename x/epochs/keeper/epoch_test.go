@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"time"
 
-	"github.com/persistenceOne/pstake-native/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 )
 
 func (suite *KeeperTestSuite) TestEpochLifeCycle() {
