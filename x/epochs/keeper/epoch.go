@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/persistenceOne/pstake-native/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 )
 
 // GetEpochInfo returns epoch info by identifier

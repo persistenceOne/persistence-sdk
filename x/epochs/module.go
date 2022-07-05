@@ -19,11 +19,11 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/persistenceOne/pstake-native/x/epochs/client/cli"
-	"github.com/persistenceOne/pstake-native/x/epochs/client/rest"
-	"github.com/persistenceOne/pstake-native/x/epochs/keeper"
-	"github.com/persistenceOne/pstake-native/x/epochs/simulation"
-	"github.com/persistenceOne/pstake-native/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/client/cli"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/client/rest"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/keeper"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/simulation"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 )
 
 var (

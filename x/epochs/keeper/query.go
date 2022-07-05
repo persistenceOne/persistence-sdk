@@ -4,7 +4,7 @@ import (
 	sdkCodec "github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkErrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/persistenceOne/pstake-native/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 	abciTypes "github.com/tendermint/tendermint/abci/types"
 )
 
