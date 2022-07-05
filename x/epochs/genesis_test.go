@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	simapp "github.com/persistenceOne/pstake-native/app"
-	"github.com/persistenceOne/pstake-native/x/epochs"
-	"github.com/persistenceOne/pstake-native/x/epochs/types"
+	simapp "github.com/persistenceOne/persistenceSDK/app"
+	"github.com/persistenceOne/persistenceSDK/x/epochs"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )
