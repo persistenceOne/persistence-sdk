@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/persistenceOne/pstake-native/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 )
 
 // RandomizedGenState generates a random GenesisState for mint

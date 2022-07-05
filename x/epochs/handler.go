@@ -5,8 +5,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/persistenceOne/pstake-native/x/epochs/keeper"
-	"github.com/persistenceOne/pstake-native/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/keeper"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 )
 
 // NewHandler returns a handler for epochs module messages
