@@ -2,9 +2,8 @@ module github.com/persistenceOne/persistenceSDK
 
 go 1.17
 
-<<<<<<< HEAD
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
-=======
+
 require (
 	github.com/armon/go-metrics v0.3.10
 	github.com/cosmos/cosmos-sdk v0.44.5
@@ -130,4 +129,4 @@ replace (
 	github.com/tecbot/gorocksdb => github.com/cosmos/gorocksdb v1.2.0
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
 )
->>>>>>> a6cd920c (modified epochs for sdk)
+
