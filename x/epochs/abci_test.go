@@ -5,7 +5,7 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	simapp "github.com/persistenceOne/persistenceCore/app"
+	simapp "github.com/persistenceOne/persistenceSDK/app"
 	"github.com/persistenceOne/persistenceSDK/x/epochs"
 	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 	"github.com/stretchr/testify/require"

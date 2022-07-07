@@ -49,10 +49,10 @@ test: test-unit
 test-all: test-unit test-ledger-mock test-race test-cover
 
 test-ledger-mock:
-	@go test -mod=readonly `go list github.com/cosmos/cosmos-sdk/crypto` -tags='cgo ledger test_ledger_mock'
+	@go test -mod=readonly `go list github.com/persistenceOne/persistenceSDK/crypto` -tags='cgo ledger test_ledger_mock'
 
 test-ledger: test-ledger-mock
-	@go test -mod=readonly -v `go list github.com/cosmos/cosmos-sdk/crypto` -tags='cgo ledger'
+	@go test -mod=readonly -v `go list github.com/persistenceOne/persistenceSDK/crypto` -tags='cgo ledger'
 
 test-unit:
 	@VERSION=$(VERSION) go test -mod=readonly $(PACKAGES_NOSIMULATION) -tags='ledger test_ledger_mock'
