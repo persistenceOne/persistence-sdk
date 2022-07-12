@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	simapp "github.com/persistenceOne/persistenceSDK/app"
 	"github.com/persistenceOne/persistenceSDK/x/epochs"
 	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 	"github.com/stretchr/testify/require"
