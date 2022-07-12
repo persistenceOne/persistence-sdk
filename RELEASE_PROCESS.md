@@ -1,6 +1,6 @@
 # Release Process
 
-This document outlines the process for releasing a new version of Cosmos SDK, which involves major release and patch
+This document outlines the process for releasing a new version of Persistence SDK, which involves major release and patch
 releases as well as maintenance for the major release.
 
 ## Major Release Procedure
