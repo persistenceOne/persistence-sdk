@@ -107,6 +107,8 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
+	"github.com/persistenceOne/persistenceSDK/x/halving"
+
 
 	//"github.com/strangelove-ventures/packet-forward-middleware/v2/router"
 	//routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v2/router/keeper"
@@ -156,6 +158,8 @@ var (
 		//router.AppModuleBasic{},
 		ica.AppModuleBasic{},
 		epochs.AppModuleBasic{},
+		halving.AppModuleBasic{},
+
 	)
 
 	// module account permissions
@@ -212,6 +216,7 @@ type GaiaApp struct { // nolint: golint
 	TransferKeeper  ibctransferkeeper.Keeper
 	FeeGrantKeeper  feegrantkeeper.Keeper
 	AuthzKeeper     authzkeeper.Keeper
+	HalvingKeeper   halving.Keeper
 	LiquidityKeeper liquiditykeeper.Keeper
 	//RouterKeeper    routerkeeper.Keeper
 	EpochsKeeper    epochsKeeper.Keeper
@@ -267,7 +272,7 @@ func NewGaiaApp(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, liquiditytypes.StoreKey, ibctransfertypes.StoreKey,
-		capabilitytypes.StoreKey, feegrant.StoreKey, authzkeeper.StoreKey,
+		capabilitytypes.StoreKey, feegrant.StoreKey, authzkeeper.StoreKey, halving.StoreKey,
 		/*routertypes.StoreKey,*/ icahosttypes.StoreKey, epochsTypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -376,6 +381,11 @@ func NewGaiaApp(
 		appCodec,
 		homePath,
 		app.BaseApp,
+	)
+	app.HalvingKeeper = halving.NewKeeper(
+		keys[halving.StoreKey],
+		app.ParamsKeeper.Subspace(halving.DefaultParamspace),
+		app.MintKeeper,
 	)
 	app.LiquidityKeeper = liquiditykeeper.NewKeeper(
 		appCodec,
@@ -493,6 +503,7 @@ func NewGaiaApp(
 		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
+		halving.NewAppModule(appCodec, app.HalvingKeeper),
 		liquidity.NewAppModule(appCodec, app.LiquidityKeeper, app.AccountKeeper, app.BankKeeper, app.DistrKeeper),
 		epochs.NewAppModule(appCodec, app.EpochsKeeper),
 		transferModule,
@@ -528,8 +539,8 @@ func NewGaiaApp(
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
+		halving.ModuleName,
 		epochsTypes.ModuleName,
-
 	)
 	app.mm.SetOrderEndBlockers(
 		crisistypes.ModuleName,
@@ -553,8 +564,8 @@ func NewGaiaApp(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
+		halving.ModuleName,
 		epochsTypes.ModuleName,
-
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -585,6 +596,7 @@ func NewGaiaApp(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
+		halving.ModuleName,
 		epochsTypes.ModuleName,
 	)
 
@@ -610,6 +622,7 @@ func NewGaiaApp(
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		params.NewAppModule(app.ParamsKeeper),
+		halving.NewAppModule(appCodec, app.HalvingKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
 		liquidity.NewAppModule(appCodec, app.LiquidityKeeper, app.AccountKeeper, app.BankKeeper, app.DistrKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
