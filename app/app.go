@@ -17,9 +17,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/server/api"
 	"github.com/cosmos/cosmos-sdk/server/config"
-	"github.com/persistenceOne/persistenceSDK/x/cosmos"
-	cosmosClient "github.com/persistenceOne/persistenceSDK/x/cosmos/client"
-	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	"github.com/cosmos/cosmos-sdk/simapp"
 	store "github.com/cosmos/cosmos-sdk/store/types"
@@ -111,9 +108,9 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/strangelove-ventures/packet-forward-middleware/v2/router"
-	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v2/router/keeper"
-	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v2/router/types"
+	//"github.com/strangelove-ventures/packet-forward-middleware/v2/router"
+	//routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v2/router/keeper"
+	//routertypes "github.com/strangelove-ventures/packet-forward-middleware/v2/router/types"
 
 	gaiaante "github.com/persistenceOne/persistenceSDK/ante"
 	gaiaappparams "github.com/persistenceOne/persistenceSDK/app/params"
@@ -144,10 +141,6 @@ var (
 			upgradeclient.CancelProposalHandler,
 			ibcclientclient.UpdateClientProposalHandler,
 			ibcclientclient.UpgradeProposalHandler,
-			cosmosClient.EnableModuleProposalHandler,
-			cosmosClient.ChangeMultisigProposalHandler,
-			cosmosClient.ChangeCosmosValidatorWeightsProposalHandler,
-			cosmosClient.ChangeOracleValidatorWeightsProposalHandler,
 		),
 		params.AppModuleBasic{},
 		crisis.AppModuleBasic{},
@@ -160,9 +153,8 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		liquidity.AppModuleBasic{},
-		router.AppModuleBasic{},
+		//router.AppModuleBasic{},
 		ica.AppModuleBasic{},
-		cosmos.AppModuleBasic{},
 		epochs.AppModuleBasic{},
 	)
 
@@ -177,7 +169,6 @@ var (
 		govtypes.ModuleName:            {authtypes.Burner},
 		liquiditytypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		cosmos.ModuleName:              {authtypes.Minter, authtypes.Burner},
 	}
 )
 
@@ -222,8 +213,7 @@ type GaiaApp struct { // nolint: golint
 	FeeGrantKeeper  feegrantkeeper.Keeper
 	AuthzKeeper     authzkeeper.Keeper
 	LiquidityKeeper liquiditykeeper.Keeper
-	RouterKeeper    routerkeeper.Keeper
-	CosmosKeeper    cosmos.Keeper
+	//RouterKeeper    routerkeeper.Keeper
 	EpochsKeeper    epochsKeeper.Keeper
 
 
@@ -278,7 +268,7 @@ func NewGaiaApp(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, liquiditytypes.StoreKey, ibctransfertypes.StoreKey,
 		capabilitytypes.StoreKey, feegrant.StoreKey, authzkeeper.StoreKey,
-		routertypes.StoreKey, icahosttypes.StoreKey, cosmos.StoreKey, epochsTypes.StoreKey,
+		/*routertypes.StoreKey,*/ icahosttypes.StoreKey, epochsTypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -380,16 +370,6 @@ func NewGaiaApp(
 		appCodec,
 		keys[epochsTypes.StoreKey],
 	)
-	app.CosmosKeeper = cosmos.NewKeeper(
-		appCodec,
-		keys[cosmos.StoreKey],
-		app.ParamsKeeper.Subspace(cosmos.DefaultParamspace),
-		&app.AccountKeeper,
-		&app.BankKeeper,
-		&app.MintKeeper,
-		&app.StakingKeeper,
-		app.EpochsKeeper,
-	)
 	app.UpgradeKeeper = upgradekeeper.NewKeeper(
 		skipUpgradeHeights,
 		keys[upgradetypes.StoreKey],
@@ -428,8 +408,7 @@ func NewGaiaApp(
 		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
 		AddRoute(distrtypes.RouterKey, distr.NewCommunityPoolSpendProposalHandler(app.DistrKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
-		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper)).
-		AddRoute(cosmosTypes.RouterKey, cosmos.NewCosmosLiquidStakingParametersHandler(app.CosmosKeeper))
+		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper))
 
 	app.GovKeeper = govkeeper.NewKeeper(
 		appCodec,
@@ -467,9 +446,9 @@ func NewGaiaApp(
 	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper)
 	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
 
-	app.RouterKeeper = routerkeeper.NewKeeper(appCodec, keys[routertypes.StoreKey], app.GetSubspace(routertypes.ModuleName), app.TransferKeeper, app.DistrKeeper)
+	//app.RouterKeeper = routerkeeper.NewKeeper(appCodec, keys[routertypes.StoreKey], app.GetSubspace(routertypes.ModuleName), app.TransferKeeper, app.DistrKeeper)
 
-	routerModule := router.NewAppModule(app.RouterKeeper, transferIBCModule)
+	//routerModule := router.NewAppModule(app.RouterKeeper, transferIBCModule)
 	// create static IBC router, add transfer route, then set and seal it
 	ibcRouter := porttypes.NewRouter()
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
@@ -486,12 +465,6 @@ func NewGaiaApp(
 	)
 
 	app.EvidenceKeeper = *evidenceKeeper
-
-	app.EpochsKeeper.SetHooks(
-		epochsTypes.NewMultiEpochHooks(
-			app.CosmosKeeper.Hooks(),
-		),
-	)
 
 	skipGenesisInvariants := cast.ToBool(appOpts.Get(crisis.FlagSkipGenesisInvariants))
 
@@ -521,11 +494,10 @@ func NewGaiaApp(
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
 		liquidity.NewAppModule(appCodec, app.LiquidityKeeper, app.AccountKeeper, app.BankKeeper, app.DistrKeeper),
-		cosmos.NewAppModule(appCodec, app.CosmosKeeper),
 		epochs.NewAppModule(appCodec, app.EpochsKeeper),
 		transferModule,
 		icaModule,
-		routerModule,
+		//routerModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -544,7 +516,7 @@ func NewGaiaApp(
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
 		icatypes.ModuleName,
-		routertypes.ModuleName,
+		//routertypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
 		distrtypes.ModuleName,
@@ -556,7 +528,6 @@ func NewGaiaApp(
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
-		cosmos.ModuleName,
 		epochsTypes.ModuleName,
 
 	)
@@ -568,7 +539,7 @@ func NewGaiaApp(
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
 		icatypes.ModuleName,
-		routertypes.ModuleName,
+		//routertypes.ModuleName,
 		feegrant.ModuleName,
 		authz.ModuleName,
 		capabilitytypes.ModuleName,
@@ -582,7 +553,6 @@ func NewGaiaApp(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
-		cosmos.ModuleName,
 		epochsTypes.ModuleName,
 
 	)
@@ -611,11 +581,10 @@ func NewGaiaApp(
 		authz.ModuleName,
 		authtypes.ModuleName,
 		genutiltypes.ModuleName,
-		routertypes.ModuleName,
+		//routertypes.ModuleName,
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
-		cosmos.ModuleName,
 		epochsTypes.ModuleName,
 	)
 
@@ -644,7 +613,6 @@ func NewGaiaApp(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		liquidity.NewAppModule(appCodec, app.LiquidityKeeper, app.AccountKeeper, app.BankKeeper, app.DistrKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
-		cosmos.NewAppModule(appCodec, app.CosmosKeeper),
 		transferModule,
 	)
 
@@ -906,7 +874,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(liquiditytypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
-	paramsKeeper.Subspace(routertypes.ModuleName).WithKeyTable(routertypes.ParamKeyTable())
+	//paramsKeeper.Subspace(routertypes.ModuleName).WithKeyTable(routertypes.ParamKeyTable())
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 
 	return paramsKeeper
