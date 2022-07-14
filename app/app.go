@@ -17,6 +17,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/server/api"
 	"github.com/cosmos/cosmos-sdk/server/config"
+	"github.com/persistenceOne/persistenceSDK/x/cosmos"
+	cosmosClient "github.com/persistenceOne/persistenceSDK/x/cosmos/client"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	"github.com/cosmos/cosmos-sdk/simapp"
 	store "github.com/cosmos/cosmos-sdk/store/types"
@@ -141,6 +144,10 @@ var (
 			upgradeclient.CancelProposalHandler,
 			ibcclientclient.UpdateClientProposalHandler,
 			ibcclientclient.UpgradeProposalHandler,
+			cosmosClient.EnableModuleProposalHandler,
+			cosmosClient.ChangeMultisigProposalHandler,
+			cosmosClient.ChangeCosmosValidatorWeightsProposalHandler,
+			cosmosClient.ChangeOracleValidatorWeightsProposalHandler,
 		),
 		params.AppModuleBasic{},
 		crisis.AppModuleBasic{},
@@ -155,6 +162,7 @@ var (
 		liquidity.AppModuleBasic{},
 		router.AppModuleBasic{},
 		ica.AppModuleBasic{},
+		cosmos.AppModuleBasic{},
 		epochs.AppModuleBasic{},
 	)
 
@@ -169,6 +177,7 @@ var (
 		govtypes.ModuleName:            {authtypes.Burner},
 		liquiditytypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		cosmos.ModuleName:              {authtypes.Minter, authtypes.Burner},
 	}
 )
 
@@ -214,6 +223,7 @@ type GaiaApp struct { // nolint: golint
 	AuthzKeeper     authzkeeper.Keeper
 	LiquidityKeeper liquiditykeeper.Keeper
 	RouterKeeper    routerkeeper.Keeper
+	CosmosKeeper    cosmos.Keeper
 	EpochsKeeper    epochsKeeper.Keeper
 
 
@@ -268,7 +278,7 @@ func NewGaiaApp(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, liquiditytypes.StoreKey, ibctransfertypes.StoreKey,
 		capabilitytypes.StoreKey, feegrant.StoreKey, authzkeeper.StoreKey,
-		routertypes.StoreKey, icahosttypes.StoreKey, epochsTypes.StoreKey,
+		routertypes.StoreKey, icahosttypes.StoreKey, cosmos.StoreKey, epochsTypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -370,6 +380,16 @@ func NewGaiaApp(
 		appCodec,
 		keys[epochsTypes.StoreKey],
 	)
+	app.CosmosKeeper = cosmos.NewKeeper(
+		appCodec,
+		keys[cosmos.StoreKey],
+		app.ParamsKeeper.Subspace(cosmos.DefaultParamspace),
+		&app.AccountKeeper,
+		&app.BankKeeper,
+		&app.MintKeeper,
+		&app.StakingKeeper,
+		app.EpochsKeeper,
+	)
 	app.UpgradeKeeper = upgradekeeper.NewKeeper(
 		skipUpgradeHeights,
 		keys[upgradetypes.StoreKey],
@@ -408,7 +428,8 @@ func NewGaiaApp(
 		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
 		AddRoute(distrtypes.RouterKey, distr.NewCommunityPoolSpendProposalHandler(app.DistrKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
-		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper))
+		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper)).
+		AddRoute(cosmosTypes.RouterKey, cosmos.NewCosmosLiquidStakingParametersHandler(app.CosmosKeeper))
 
 	app.GovKeeper = govkeeper.NewKeeper(
 		appCodec,
@@ -500,6 +521,7 @@ func NewGaiaApp(
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
 		liquidity.NewAppModule(appCodec, app.LiquidityKeeper, app.AccountKeeper, app.BankKeeper, app.DistrKeeper),
+		cosmos.NewAppModule(appCodec, app.CosmosKeeper),
 		epochs.NewAppModule(appCodec, app.EpochsKeeper),
 		transferModule,
 		icaModule,
@@ -534,6 +556,7 @@ func NewGaiaApp(
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
+		cosmos.ModuleName,
 		epochsTypes.ModuleName,
 
 	)
@@ -559,6 +582,7 @@ func NewGaiaApp(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
+		cosmos.ModuleName,
 		epochsTypes.ModuleName,
 
 	)
@@ -591,6 +615,7 @@ func NewGaiaApp(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
+		cosmos.ModuleName,
 		epochsTypes.ModuleName,
 	)
 
@@ -619,6 +644,7 @@ func NewGaiaApp(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		liquidity.NewAppModule(appCodec, app.LiquidityKeeper, app.AccountKeeper, app.BankKeeper, app.DistrKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
+		cosmos.NewAppModule(appCodec, app.CosmosKeeper),
 		transferModule,
 	)
 
