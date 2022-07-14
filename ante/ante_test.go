@@ -16,8 +16,8 @@ import (
 	tmrand "github.com/tendermint/tendermint/libs/rand"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	gaiaapp "github.com/cosmos/gaia/v7/app"
-	gaiahelpers "github.com/cosmos/gaia/v7/app/helpers"
+	gaiaapp "github.com/persistenceOne/persistenceSDK/app"
+	gaiahelpers "github.com/persistenceOne/persistenceSDK/app/helpers"
 )
 
 type IntegrationTestSuite struct {
