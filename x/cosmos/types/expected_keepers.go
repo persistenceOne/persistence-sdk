@@ -3,7 +3,7 @@ package types
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	mintTypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	epochsTypes "github.com/persistenceOne/pstake-native/x/epochs/types"
+	epochsTypes "github.com/persistenceOne/persistenceSDK/x/epochs/types"
 )
 
 type BankKeeper interface {

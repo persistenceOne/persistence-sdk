@@ -13,8 +13,8 @@ import (
 	stakingKeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	tmLog "github.com/tendermint/tendermint/libs/log"
 
-	cosmosTypes "github.com/persistenceOne/pstake-native/x/cosmos/types"
-	epochsTypes "github.com/persistenceOne/pstake-native/x/epochs/types"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
+	epochsTypes "github.com/persistenceOne/persistenceSDK/x/epochs/types"
 )
 
 type Keeper struct {

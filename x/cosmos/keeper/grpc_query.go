@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	cosmosTypes "github.com/persistenceOne/pstake-native/x/cosmos/types"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

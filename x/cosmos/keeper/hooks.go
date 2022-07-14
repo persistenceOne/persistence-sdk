@@ -2,8 +2,8 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	cosmosTypes "github.com/persistenceOne/pstake-native/x/cosmos/types"
-	epochsTypes "github.com/persistenceOne/pstake-native/x/epochs/types"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
+	epochsTypes "github.com/persistenceOne/persistenceSDK/x/epochs/types"
 )
 
 // Implements GovHooks interface

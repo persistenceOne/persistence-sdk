@@ -3,7 +3,7 @@ package keeper_test
 import (
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	stakingTypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	"github.com/persistenceOne/pstake-native/app/helpers"
+	"github.com/persistenceOne/persistenceSDK/app/helpers"
 	"github.com/stretchr/testify/require"
 	"testing"
 )

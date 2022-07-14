@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 
-	cosmosTypes "github.com/persistenceOne/pstake-native/x/cosmos/types"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 )
 
 // EnableModuleProposalReq defines a community pool spend proposal request body.

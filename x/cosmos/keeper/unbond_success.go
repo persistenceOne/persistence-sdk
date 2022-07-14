@@ -5,7 +5,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"math"
 
-	cosmosTypes "github.com/persistenceOne/pstake-native/x/cosmos/types"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 )
 
 type UndelegateSuccessKeyAndValue struct {

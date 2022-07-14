@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
-	cosmosTypes "github.com/persistenceOne/pstake-native/x/cosmos/types"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 )
 
 // SendReq defines the properties of a send request's body.

@@ -6,8 +6,8 @@
 package cosmos
 
 import (
-	"github.com/persistenceOne/pstake-native/x/cosmos/keeper"
-	"github.com/persistenceOne/pstake-native/x/cosmos/types"
+	"github.com/persistenceOne/persistenceSDK/x/cosmos/keeper"
+	"github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 )
 
 const (

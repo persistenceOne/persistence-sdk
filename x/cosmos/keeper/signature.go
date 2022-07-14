@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkErrors "github.com/cosmos/cosmos-sdk/types/errors"
 	signingtypes "github.com/cosmos/cosmos-sdk/types/tx/signing"
-	cosmosTypes "github.com/persistenceOne/pstake-native/x/cosmos/types"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 )
 
 type OutgoingSignaturePoolKeyAndValue struct {

@@ -7,8 +7,8 @@ import (
 	sdkErrors "github.com/cosmos/cosmos-sdk/types/errors"
 	govTypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	"github.com/persistenceOne/pstake-native/x/cosmos/keeper"
-	cosmosTypes "github.com/persistenceOne/pstake-native/x/cosmos/types"
+	"github.com/persistenceOne/persistenceSDK/x/cosmos/keeper"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 )
 
 // NewHandler returns a handler for "Gravity" type messages.

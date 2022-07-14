@@ -6,9 +6,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/persistenceOne/pstake-native/app"
-	"github.com/persistenceOne/pstake-native/app/helpers"
-	"github.com/persistenceOne/pstake-native/x/cosmos/types"
+	"github.com/persistenceOne/persistenceSDK/app"
+	"github.com/persistenceOne/persistenceSDK/app/helpers"
+	"github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 )
 
 type IntegrationTestSuite struct {

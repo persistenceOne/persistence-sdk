@@ -9,7 +9,7 @@ import (
 	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/ghodss/yaml"
 
-	epochsTypes "github.com/persistenceOne/pstake-native/x/epochs/types"
+	epochsTypes "github.com/persistenceOne/persistenceSDK/x/epochs/types"
 )
 
 const (

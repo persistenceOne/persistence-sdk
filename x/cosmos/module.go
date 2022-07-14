@@ -22,10 +22,10 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	cosmosCli "github.com/persistenceOne/pstake-native/x/cosmos/client/cli"
-	cosmosRest "github.com/persistenceOne/pstake-native/x/cosmos/client/rest"
-	cosmosKeeper "github.com/persistenceOne/pstake-native/x/cosmos/keeper"
-	cosmosTypes "github.com/persistenceOne/pstake-native/x/cosmos/types"
+	cosmosCli "github.com/persistenceOne/persistenceSDK/x/cosmos/client/cli"
+	cosmosRest "github.com/persistenceOne/persistenceSDK/x/cosmos/client/rest"
+	cosmosKeeper "github.com/persistenceOne/persistenceSDK/x/cosmos/keeper"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 )
 
 var (

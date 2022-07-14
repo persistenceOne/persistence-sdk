@@ -2,8 +2,8 @@ package client
 
 import (
 	"github.com/cosmos/cosmos-sdk/x/gov/client"
-	"github.com/persistenceOne/pstake-native/x/cosmos/client/cli"
-	"github.com/persistenceOne/pstake-native/x/cosmos/client/rest"
+	"github.com/persistenceOne/persistenceSDK/x/cosmos/client/cli"
+	"github.com/persistenceOne/persistenceSDK/x/cosmos/client/rest"
 )
 
 var (

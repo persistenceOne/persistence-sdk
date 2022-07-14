@@ -17,9 +17,9 @@ import (
 	govrest "github.com/cosmos/cosmos-sdk/x/gov/client/rest"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/gorilla/mux"
-	cosmosTypes "github.com/persistenceOne/pstake-native/x/cosmos/types"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 
-	"github.com/persistenceOne/pstake-native/x/cosmos/client/utils"
+	"github.com/persistenceOne/persistenceSDK/x/cosmos/client/utils"
 )
 
 func RegisterHandlers(clientCtx client.Context, rtr *mux.Router) {

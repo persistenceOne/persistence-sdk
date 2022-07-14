@@ -14,7 +14,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
-	"github.com/persistenceOne/pstake-native/x/cosmos/types"
+	"github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 )
 
 func registerQueryRoutes(cliCtx client.Context, r *mux.Router) {

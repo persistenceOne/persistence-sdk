@@ -7,7 +7,7 @@ package cosmos
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/persistenceOne/pstake-native/x/cosmos/types"
+	"github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 )
 
 // ExportGenesis returns a GenesisState for a given context and keeper.

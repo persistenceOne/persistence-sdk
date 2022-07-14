@@ -17,8 +17,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
 
-	cosmosUtils "github.com/persistenceOne/pstake-native/x/cosmos/client/utils"
-	cosmosTypes "github.com/persistenceOne/pstake-native/x/cosmos/types"
+	cosmosUtils "github.com/persistenceOne/persistenceSDK/x/cosmos/client/utils"
+	cosmosTypes "github.com/persistenceOne/persistenceSDK/x/cosmos/types"
 )
 
 // GetQueryCmd returns the cli query commands for the cosmos module.
