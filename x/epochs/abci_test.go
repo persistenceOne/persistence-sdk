@@ -9,12 +9,12 @@ import (
 	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	simapp "github.com/persistenceOne/persistenceSDK/app"
+	simapp "github.com/persistenceOne/persistenceSDK/simapp"
 
 )
 
 func TestEpochInfoChangesBeginBlockerAndInitGenesis(t *testing.T) {
-	var app *simapp.GaiaApp
+	var app *simapp.SimApp
 	var ctx sdk.Context
 	var epochInfo types.EpochInfo
 

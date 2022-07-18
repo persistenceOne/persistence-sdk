@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil/network"
 	"github.com/persistenceOne/persistenceSDK/x/epochs/client/cli"
 	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
-	app "github.com/persistenceOne/persistenceSDK/app"
+	app "github.com/persistenceOne/persistenceSDK/simapp"
 )
 
 type IntegrationTestSuite struct {

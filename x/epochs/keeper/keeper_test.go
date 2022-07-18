@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	app "github.com/persistenceOne/persistenceSDK/app"
+	app "github.com/persistenceOne/persistenceSDK/simapp"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -14,7 +14,7 @@ import (
 type KeeperTestSuite struct {
 	suite.Suite
 
-	app         *app.GaiaApp
+	app         *app.SimApp
 	ctx         sdk.Context
 	queryClient types.QueryClient
 }
