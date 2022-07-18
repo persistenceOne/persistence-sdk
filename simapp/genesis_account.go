@@ -1,4 +1,4 @@
-package gaia
+package simapp
 
 import (
 	"errors"

@@ -1,4 +1,4 @@
-package gaia
+package simapp
 
 import (
 	"encoding/json"
@@ -15,7 +15,7 @@ import (
 
 // ExportAppStateAndValidators exports the state of the application for a genesis
 // file.
-func (app *GaiaApp) ExportAppStateAndValidators(
+func (app *SimApp) ExportAppStateAndValidators(
 	forZeroHeight bool, jailAllowedAddrs []string,
 ) (servertypes.ExportedApp, error) {
 	// as if they could withdraw from the start of the next block
@@ -47,7 +47,7 @@ func (app *GaiaApp) ExportAppStateAndValidators(
 // prepare for fresh start at zero height
 // NOTE zero height genesis is a temporary feature which will be deprecated
 //      in favour of export at a block height
-func (app *GaiaApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []string) {
+func (app *SimApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []string) {
 	applyAllowedAddrs := false
 
 	// check if there is a allowed address list
@@ -84,10 +84,8 @@ func (app *GaiaApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs [
 			panic(err)
 		}
 
-		delAddr, err := sdk.AccAddressFromBech32(delegation.DelegatorAddress)
-		if err != nil {
-			panic(err)
-		}
+		delAddr := sdk.MustAccAddressFromBech32(delegation.DelegatorAddress)
+
 		_, _ = app.DistrKeeper.WithdrawDelegationRewards(ctx, delAddr, valAddr)
 	}
 
@@ -119,10 +117,7 @@ func (app *GaiaApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs [
 		if err != nil {
 			panic(err)
 		}
-		delAddr, err := sdk.AccAddressFromBech32(del.DelegatorAddress)
-		if err != nil {
-			panic(err)
-		}
+		delAddr := sdk.MustAccAddressFromBech32(del.DelegatorAddress)
 		app.DistrKeeper.Hooks().BeforeDelegationCreated(ctx, delAddr, valAddr)
 		app.DistrKeeper.Hooks().AfterDelegationModified(ctx, delAddr, valAddr)
 	}
