@@ -4,12 +4,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/persistenceOne/persistenceSDK/simapp"
 	"github.com/persistenceOne/persistenceSDK/x/epochs"
 	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	"github.com/persistenceOne/persistenceSDK/simapp"
-
 )
 
 func TestEpochsExportGenesis(t *testing.T) {
@@ -19,19 +18,19 @@ func TestEpochsExportGenesis(t *testing.T) {
 	chainStartTime := ctx.BlockTime()
 	chainStartHeight := ctx.BlockHeight()
 
-	genesis := epochs.ExportGenesis(ctx, *app.EpochsKeeper)
-	require.Len(t, genesis.Epochs, 2)
+	genesis := epochs.ExportGenesis(ctx, app.EpochsKeeper)
+	require.Len(t, genesis.Epochs, 3)
 
-	require.Equal(t, genesis.Epochs[0].Identifier, "day")
+	require.Equal(t, genesis.Epochs[0].Identifier, "reward")
 	require.Equal(t, genesis.Epochs[0].StartTime, chainStartTime)
-	require.Equal(t, genesis.Epochs[0].Duration, time.Hour*24)
+	require.Equal(t, genesis.Epochs[0].Duration, time.Minute)
 	require.Equal(t, genesis.Epochs[0].CurrentEpoch, int64(0))
 	require.Equal(t, genesis.Epochs[0].CurrentEpochStartHeight, chainStartHeight)
 	require.Equal(t, genesis.Epochs[0].CurrentEpochStartTime, chainStartTime)
 	require.Equal(t, genesis.Epochs[0].EpochCountingStarted, false)
-	require.Equal(t, genesis.Epochs[1].Identifier, "week")
+	require.Equal(t, genesis.Epochs[1].Identifier, "stake")
 	require.Equal(t, genesis.Epochs[1].StartTime, chainStartTime)
-	require.Equal(t, genesis.Epochs[1].Duration, time.Hour*24*7)
+	require.Equal(t, genesis.Epochs[1].Duration, time.Minute)
 	require.Equal(t, genesis.Epochs[1].CurrentEpoch, int64(0))
 	require.Equal(t, genesis.Epochs[1].CurrentEpochStartHeight, chainStartHeight)
 	require.Equal(t, genesis.Epochs[1].CurrentEpochStartTime, chainStartTime)
@@ -92,7 +91,7 @@ func TestEpochsInitGenesis(t *testing.T) {
 		},
 	}
 
-	epochs.InitGenesis(ctx, *app.EpochsKeeper, genesisState)
+	epochs.InitGenesis(ctx, app.EpochsKeeper, genesisState)
 	epochInfo := app.EpochsKeeper.GetEpochInfo(ctx, "monthly")
 	require.Equal(t, epochInfo.Identifier, "monthly")
 	require.Equal(t, epochInfo.StartTime.UTC().String(), now.UTC().String())

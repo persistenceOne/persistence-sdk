@@ -35,7 +35,8 @@ message EpochInfo {
 }
 ```
 
-EpochInfo keeps `identifier`, `start_time`,`duration`, `current_epoch`, `current_epoch_start_time`,  `epoch_counting_started`, `current_epoch_start_height`.
+EpochInfo keeps `identifier`, `start_time`,`duration`, `current_epoch`, `current_epoch_start_time`
+,  `epoch_counting_started`, `current_epoch_start_height`.
 
 1. `identifier` keeps epoch identification string.
 2. `start_time` keeps epoch counting start time, if block time passes `start_time`, `epoch_counting_started` is set.

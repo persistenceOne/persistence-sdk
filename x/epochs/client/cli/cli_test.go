@@ -8,7 +8,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil/network"
 	"github.com/persistenceOne/persistenceSDK/x/epochs/client/cli"
 	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
-	app "github.com/persistenceOne/persistenceSDK/simapp"
 )
 
 type IntegrationTestSuite struct {
@@ -21,7 +20,7 @@ type IntegrationTestSuite struct {
 func (s *IntegrationTestSuite) SetupSuite() {
 	s.T().Log("setting up integration test suite")
 
-	s.cfg = app.DefaultConfig()
+	s.cfg = network.DefaultConfig()
 
 	s.network = network.New(s.T(), s.cfg)
 
