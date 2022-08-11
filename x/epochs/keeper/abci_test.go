@@ -7,12 +7,12 @@ import (
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	simapp "github.com/osmosis-labs/osmosis/v10/app"
-	"github.com/osmosis-labs/osmosis/v10/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/simapp"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 
 	"golang.org/x/exp/maps"
 
-	"github.com/osmosis-labs/osmosis/v10/osmoutils"
+	"github.com/persistenceOne/persistenceSDK/utilities"
 )
 
 // This test is responsible for testing how epochs increment based off
@@ -91,7 +91,7 @@ func (suite KeeperTestSuite) TestEpochInfoBeginBlockChanges() {
 
 			// get sorted heights
 			heights := maps.Keys(test.blockHeightTimePairs)
-			osmoutils.SortSlice(heights)
+			utilities.SortSlice(heights)
 			for _, h := range heights {
 				// for each height in order, run begin block
 				suite.Ctx = suite.Ctx.WithBlockHeight(int64(h)).WithBlockTime(test.blockHeightTimePairs[h])
