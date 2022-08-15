@@ -6,8 +6,9 @@
 package types
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewGenesisState(t *testing.T) {
@@ -18,6 +19,7 @@ func TestNewGenesisState(t *testing.T) {
 
 func TestDefaultGenesisState(t *testing.T) {
 	params := NewParams(uint64(2 * 60 * 60 * 8766 / 5))
+
 	require.Equal(t, &GenesisState{Params: params}, DefaultGenesisState())
 }
 

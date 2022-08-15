@@ -14,7 +14,9 @@ import (
 
 func TestEpochInfoChangesBeginBlockerAndInitGenesis(t *testing.T) {
 	var app *simapp.SimApp
+
 	var ctx sdk.Context
+
 	var epochInfo types.EpochInfo
 
 	now := time.Now()

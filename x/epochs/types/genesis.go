@@ -19,7 +19,7 @@ func DefaultGenesis() *GenesisState {
 		{
 			Identifier:              "stake",
 			StartTime:               time.Time{},
-			Duration:                time.Minute * 1, //TODO revert
+			Duration:                time.Minute * 1, // TODO revert
 			CurrentEpoch:            0,
 			CurrentEpochStartHeight: 0,
 			CurrentEpochStartTime:   time.Time{},
@@ -28,7 +28,7 @@ func DefaultGenesis() *GenesisState {
 		{
 			Identifier:              "reward",
 			StartTime:               time.Time{},
-			Duration:                time.Minute * 1, //TODO revert
+			Duration:                time.Minute * 1, // TODO revert
 			CurrentEpoch:            0,
 			CurrentEpochStartHeight: 0,
 			CurrentEpochStartTime:   time.Time{},
@@ -37,13 +37,14 @@ func DefaultGenesis() *GenesisState {
 		{
 			Identifier:              "undelegate",
 			StartTime:               time.Time{},
-			Duration:                time.Minute * 8, //TODO revert
+			Duration:                time.Minute * 8, // TODO revert
 			CurrentEpoch:            0,
 			CurrentEpochStartHeight: 0,
 			CurrentEpochStartTime:   time.Time{},
 			EpochCountingStarted:    false,
 		},
 	}
+
 	return NewGenesisState(epochs)
 }
 
@@ -52,17 +53,22 @@ func DefaultGenesis() *GenesisState {
 func (gs GenesisState) Validate() error {
 	// TODO: Epochs identifiers should be unique
 	epochIdentifiers := map[string]bool{}
+
 	for _, epoch := range gs.Epochs {
 		if epoch.Identifier == "" {
 			return errors.New("epoch identifier should NOT be empty")
 		}
+
 		if epochIdentifiers[epoch.Identifier] {
 			return errors.New("epoch identifier should be unique")
 		}
+
 		if epoch.Duration == 0 {
 			return errors.New("epoch duration should NOT be 0")
 		}
+
 		epochIdentifiers[epoch.Identifier] = true
 	}
+
 	return nil
 }

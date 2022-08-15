@@ -1,11 +1,11 @@
 package keeper_test
 
 import (
-	app "github.com/persistenceOne/persistenceSDK/simapp"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	app "github.com/persistenceOne/persistenceSDK/simapp"
 	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"

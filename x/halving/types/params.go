@@ -7,6 +7,7 @@ package types
 
 import (
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
@@ -41,12 +42,14 @@ func (p Params) Validate() error {
 	if err := validateBlockHeight(p.BlockHeight); err != nil {
 		return err
 	}
+
 	return nil
 }
 
-//stringer function
+// stringer function
 func (p Params) String() string {
 	out, _ := yaml.Marshal(p)
+
 	return string(out)
 }
 
@@ -62,5 +65,6 @@ func validateBlockHeight(i interface{}) error {
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
+
 	return nil
 }

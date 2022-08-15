@@ -60,6 +60,7 @@ func TestFullAppSimulation(t *testing.T) {
 	if skip {
 		t.Skip("skipping application simulation")
 	}
+
 	require.NoError(t, err, "simulation setup failed")
 
 	defer func() {
@@ -98,6 +99,7 @@ func TestAppImportExport(t *testing.T) {
 	if skip {
 		t.Skip("skipping application import/export simulation")
 	}
+
 	require.NoError(t, err, "simulation setup failed")
 
 	defer func() {
@@ -194,6 +196,7 @@ func TestAppSimulationAfterImport(t *testing.T) {
 	if skip {
 		t.Skip("skipping application simulation after import")
 	}
+
 	require.NoError(t, err, "simulation setup failed")
 
 	defer func() {
@@ -286,7 +289,7 @@ func TestAppStateDeterminism(t *testing.T) {
 	appHashList := make([]json.RawMessage, numTimesToRunPerSeed)
 
 	for i := 0; i < numSeeds; i++ {
-		config.Seed = rand.Int63()
+		config.Seed = rand.Int63() //nolint:gosec
 
 		for j := 0; j < numTimesToRunPerSeed; j++ {
 			var logger log.Logger

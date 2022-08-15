@@ -35,6 +35,7 @@ import (
 	dbm "github.com/tendermint/tm-db"
 )
 
+//nolint:nolintlint,scopelint
 func TestSimAppExportAndBlockedAddrs(t *testing.T) {
 	encCfg := MakeTestEncodingConfig()
 	db := dbm.NewMemDB()
@@ -72,6 +73,7 @@ func TestGetMaccPerms(t *testing.T) {
 	require.Equal(t, maccPerms, dup, "duplicated module account permissions differed from actual module account permissions")
 }
 
+//nolint:nolintlint,scopelint
 func TestRunMigrations(t *testing.T) {
 	db := dbm.NewMemDB()
 	encCfg := MakeTestEncodingConfig()
@@ -101,7 +103,7 @@ func TestRunMigrations(t *testing.T) {
 	// Initialize the chain
 	app.InitChain(abci.RequestInitChain{})
 	app.Commit()
-
+	//nolint:maligned
 	testCases := []struct {
 		name         string
 		moduleName   string
@@ -261,6 +263,7 @@ func TestUpgradeStateOnGenesis(t *testing.T) {
 
 	// make sure the upgrade keeper has version map in state
 	ctx := app.NewContext(false, tmproto.Header{})
+
 	vm := app.UpgradeKeeper.GetModuleVersionMap(ctx)
 	for v, i := range app.mm.Modules {
 		require.Equal(t, vm[v], i.ConsensusVersion())

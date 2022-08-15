@@ -12,23 +12,28 @@ func (k Keeper) GetEpochInfo(ctx sdk.Context, identifier string) types.EpochInfo
 	epoch := types.EpochInfo{}
 	store := ctx.KVStore(k.storeKey)
 	b := store.Get(append(types.KeyPrefixEpoch, []byte(identifier)...))
+
 	if b == nil {
 		return epoch
 	}
+
 	err := k.cdc.Unmarshal(b, &epoch)
 	if err != nil {
 		panic(err)
 	}
+
 	return epoch
 }
 
 // SetEpochInfo set epoch info
 func (k Keeper) SetEpochInfo(ctx sdk.Context, epoch types.EpochInfo) {
 	store := ctx.KVStore(k.storeKey)
+
 	value, err := k.cdc.Marshal(&epoch)
 	if err != nil {
 		panic(err)
 	}
+
 	store.Set(append(types.KeyPrefixEpoch, []byte(epoch.Identifier)...), value)
 }
 
@@ -49,12 +54,13 @@ func (k Keeper) IterateEpochInfo(ctx sdk.Context, fn func(index int64, epochInfo
 
 	for ; iterator.Valid(); iterator.Next() {
 		epoch := types.EpochInfo{}
+
 		err := k.cdc.Unmarshal(iterator.Value(), &epoch)
 		if err != nil {
 			panic(err)
 		}
-		stop := fn(i, epoch)
 
+		stop := fn(i, epoch)
 		if stop {
 			break
 		}
@@ -64,10 +70,12 @@ func (k Keeper) IterateEpochInfo(ctx sdk.Context, fn func(index int64, epochInfo
 
 func (k Keeper) AllEpochInfos(ctx sdk.Context) []types.EpochInfo {
 	epochs := []types.EpochInfo{}
+
 	k.IterateEpochInfo(ctx, func(index int64, epochInfo types.EpochInfo) (stop bool) {
 		epochs = append(epochs, epochInfo)
 		return false
 	})
+
 	return epochs
 }
 
@@ -80,5 +88,6 @@ func (k Keeper) NumBlocksSinceEpochStart(ctx sdk.Context, identifier string) (in
 	if (epoch == types.EpochInfo{}) {
 		return 0, fmt.Errorf("epoch with identifier %s not found", identifier)
 	}
+
 	return ctx.BlockHeight() - epoch.CurrentEpochStartHeight, nil
 }
