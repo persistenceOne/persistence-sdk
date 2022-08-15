@@ -24,6 +24,8 @@ jobs:
             **/**.go
             go.mod
             go.sum
+      - name: get golangci
+        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@1.48.0
       - name: Run golangci-lint
         run: make lint
         if: env.GIT_DIFF
