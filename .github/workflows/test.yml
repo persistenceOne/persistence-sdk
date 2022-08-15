@@ -48,9 +48,7 @@ jobs:
           make test TEST_ARGS="-timeout 12m -race -coverprofile=coverage.txt -covermode=atomic"
         if: "env.GIT_DIFF != ''"
         env:
-          TEST_TARGET: "./..."
-          TEST_ARGS: "-timeout 12m -race -coverprofile=./coverage.out -covermode=atomic -v"
-
+          TEST_TARGET: "./x/..."
 
       - name: filter out DONTCOVER
         run: |
@@ -64,16 +62,8 @@ jobs:
           done
         if: "env.GIT_DIFF != ''"
 
-      - name: Convert coverage to lcov
-        uses: jandelgado/gcov2lcov-action@v1
-      - name: Coveralls
-        uses: coverallsapp/github-action@v1.1.2
+      - uses: codecov/codecov-action@v2.1.0
         with:
-          github-token: ${{ secrets.github_token }}
-          path-to-lcov: coverage.lcov
-
-      - name: Code Coverage Report
-        uses: vebr/jest-lcov-reporter@v0.2.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          lcov-file: coverage.lcov
+          file: ./coverage.txt # optional
+          fail_ci_if_error: true
+        if: "env.GIT_DIFF != ''"
