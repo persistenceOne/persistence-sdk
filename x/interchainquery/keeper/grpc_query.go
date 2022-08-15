@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/ingenuity-build/quicksilver/x/interchainquery/types"
+	"github.com/persistenceOne/persistenceSDK/x/interchainquery/types"
 )
 
 var _ types.QuerySrvrServer = Keeper{}
