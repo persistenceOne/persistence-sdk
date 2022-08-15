@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/persistenceOne/persistenceSDK/simapp/simd/cmd"
 	"os"
 
 	"github.com/cosmos/cosmos-sdk/server"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
-	"github.com/cosmos/cosmos-sdk/simapp"
-	"github.com/cosmos/cosmos-sdk/simapp/simd/cmd"
+	"github.com/persistenceOne/persistenceSDK/simapp"
 )
 
 func main() {
