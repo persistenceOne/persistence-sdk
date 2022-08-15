@@ -27,3 +27,6 @@ jobs:
       - name: Run golangci-lint
         run: make lint
         if: env.GIT_DIFF
+
+
+on:
