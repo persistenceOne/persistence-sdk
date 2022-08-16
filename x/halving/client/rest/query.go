@@ -7,11 +7,12 @@ package rest
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
 	"github.com/persistenceOne/persistenceSDK/x/halving/types"
-	"net/http"
 )
 
 func registerQueryRoutes(cliCtx client.Context, r *mux.Router) {

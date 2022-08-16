@@ -22,7 +22,6 @@ import (
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
-	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -30,6 +29,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistenceSDK/simapp/helpers"
 )
 
 // DefaultConsensusParams defines the default Tendermint consensus params used in
@@ -55,9 +55,11 @@ func setup(withGenesis bool, invCheckPeriod uint) (*SimApp, GenesisState) {
 	db := dbm.NewMemDB()
 	encCdc := MakeTestEncodingConfig()
 	app := NewSimApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, DefaultNodeHome, invCheckPeriod, encCdc, EmptyAppOptions{})
+
 	if withGenesis {
 		return app, NewDefaultGenesisState(encCdc.Marshaler)
 	}
+
 	return app, GenesisState{}
 }
 
@@ -104,6 +106,7 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 		require.NoError(t, err)
 		pkAny, err := codectypes.NewAnyWithValue(pk)
 		require.NoError(t, err)
+
 		validator := stakingtypes.Validator{
 			OperatorAddress:   sdk.ValAddress(val.Address).String(),
 			ConsensusPubkey:   pkAny,
@@ -119,7 +122,6 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 		}
 		validators = append(validators, validator)
 		delegations = append(delegations, stakingtypes.NewDelegation(genAccs[0].GetAddress(), val.Address.Bytes(), sdk.OneDec()))
-
 	}
 	// set validators and delegations
 	stakingGenesis := stakingtypes.NewGenesisState(stakingtypes.DefaultParams(), validators, delegations)
@@ -204,6 +206,7 @@ type GenerateAccountStrategy func(int) []sdk.AccAddress
 // createRandomAccounts is a strategy used by addTestAddrs() in order to generated addresses in random order.
 func createRandomAccounts(accNum int) []sdk.AccAddress {
 	testAddrs := make([]sdk.AccAddress, accNum)
+
 	for i := 0; i < accNum; i++ {
 		pk := ed25519.GenPrivKey().PubKey()
 		testAddrs[i] = sdk.AccAddress(pk.Address())
@@ -215,19 +218,21 @@ func createRandomAccounts(accNum int) []sdk.AccAddress {
 // createIncrementalAccounts is a strategy used by addTestAddrs() in order to generated addresses in ascending order.
 func createIncrementalAccounts(accNum int) []sdk.AccAddress {
 	var addresses []sdk.AccAddress
+
 	var buffer bytes.Buffer
 
 	// start at 100 so we can make up to 999 test addresses with valid test addresses
 	for i := 100; i < (accNum + 100); i++ {
 		numString := strconv.Itoa(i)
+
 		buffer.WriteString("A58856F0FD53BF058B4909A21AEC019107BA6") // base address string
 
 		buffer.WriteString(numString) // adding on final two digits to make addresses unique
 		res, _ := sdk.AccAddressFromHex(buffer.String())
 		bech := res.String()
 		addr, _ := TestAddr(buffer.String(), bech)
-
 		addresses = append(addresses, addr)
+
 		buffer.Reset()
 	}
 
@@ -295,6 +300,7 @@ func TestAddr(addr string, bech string) (sdk.AccAddress, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	bechexpected := res.String()
 	if bech != bechexpected {
 		return nil, fmt.Errorf("bech encoding doesn't match reference")
@@ -304,6 +310,7 @@ func TestAddr(addr string, bech string) (sdk.AccAddress, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	if !bytes.Equal(bechres, res) {
 		return nil, err
 	}
@@ -325,7 +332,6 @@ func SignCheckDeliver(
 	t *testing.T, txCfg client.TxConfig, app *bam.BaseApp, header tmproto.Header, msgs []sdk.Msg,
 	chainID string, accNums, accSeqs []uint64, expSimPass, expPass bool, priv ...cryptotypes.PrivKey,
 ) (sdk.GasInfo, *sdk.Result, error) {
-
 	tx, err := helpers.GenTx(
 		txCfg,
 		msgs,
@@ -374,7 +380,9 @@ func SignCheckDeliver(
 // every transaction.
 func GenSequenceOfTxs(txGen client.TxConfig, msgs []sdk.Msg, accNums []uint64, initSeqNums []uint64, numToGenerate int, priv ...cryptotypes.PrivKey) ([]sdk.Tx, error) {
 	txs := make([]sdk.Tx, numToGenerate)
+
 	var err error
+
 	for i := 0; i < numToGenerate; i++ {
 		txs[i], err = helpers.GenTx(
 			txGen,
@@ -389,6 +397,7 @@ func GenSequenceOfTxs(txGen client.TxConfig, msgs []sdk.Msg, accNums []uint64, i
 		if err != nil {
 			break
 		}
+
 		incrementAllSequenceNumbers(initSeqNums)
 	}
 
@@ -404,11 +413,13 @@ func incrementAllSequenceNumbers(initSeqNums []uint64) {
 // CreateTestPubKeys returns a total of numPubKeys public keys in ascending order.
 func CreateTestPubKeys(numPubKeys int) []cryptotypes.PubKey {
 	var publicKeys []cryptotypes.PubKey
+
 	var buffer bytes.Buffer
 
 	// start at 10 to avoid changing 1 to 01, 2 to 02, etc
 	for i := 100; i < (numPubKeys + 100); i++ {
 		numString := strconv.Itoa(i)
+
 		buffer.WriteString("0B485CFC0EECC619440448436F8FC9DF40566F2369E72400281454CB552AF") // base pubkey string
 		buffer.WriteString(numString)                                                       // adding on final two digits to make pubkeys unique
 		publicKeys = append(publicKeys, NewPubKeyFromHex(buffer.String()))
@@ -424,9 +435,11 @@ func NewPubKeyFromHex(pk string) (res cryptotypes.PubKey) {
 	if err != nil {
 		panic(err)
 	}
+
 	if len(pkBytes) != ed25519.PubKeySize {
 		panic(errors.Wrap(errors.ErrInvalidPubKey, "invalid pubkey size"))
 	}
+
 	return &ed25519.PubKey{Key: pkBytes}
 }
 

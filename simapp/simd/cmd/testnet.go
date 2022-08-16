@@ -114,7 +114,6 @@ func InitTestnet(
 	algoStr string,
 	numValidators int,
 ) error {
-
 	if chainID == "" {
 		chainID = "chain-" + tmrand.NewRand().Str(6)
 	}
@@ -166,6 +165,7 @@ func InitTestnet(
 		}
 
 		memo := fmt.Sprintf("%s@%s:26656", nodeIDs[i], ip)
+
 		genFiles = append(genFiles, nodeConfig.GenesisFile())
 
 		kb, err := keyring.New(sdk.KeyringServiceName(), keyringBackend, nodeDir, inBuf)
@@ -174,6 +174,7 @@ func InitTestnet(
 		}
 
 		keyringAlgos, _ := kb.SupportedAlgorithms()
+
 		algo, err := keyring.NewSigningAlgoFromString(algoStr, keyringAlgos)
 		if err != nil {
 			return err
@@ -208,6 +209,7 @@ func InitTestnet(
 		genAccounts = append(genAccounts, authtypes.NewBaseAccount(addr, nil, 0, 0))
 
 		valTokens := sdk.TokensFromConsensusPower(100, sdk.DefaultPowerReduction)
+
 		createValMsg, err := stakingtypes.NewMsgCreateValidator(
 			sdk.ValAddress(addr),
 			valPubKeys[i],
@@ -263,6 +265,7 @@ func InitTestnet(
 	}
 
 	cmd.PrintErrf("Successfully initialized %d node directories\n", numValidators)
+
 	return nil
 }
 
@@ -271,11 +274,11 @@ func initGenFiles(
 	genAccounts []authtypes.GenesisAccount, genBalances []banktypes.Balance,
 	genFiles []string, numValidators int,
 ) error {
-
 	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
 
 	// set the accounts in the genesis state
 	var authGenState authtypes.GenesisState
+
 	clientCtx.Codec.MustUnmarshalJSON(appGenState[authtypes.ModuleName], &authGenState)
 
 	accounts, err := authtypes.PackAccounts(genAccounts)
@@ -288,12 +291,14 @@ func initGenFiles(
 
 	// set the balances in the genesis state
 	var bankGenState banktypes.GenesisState
+
 	clientCtx.Codec.MustUnmarshalJSON(appGenState[banktypes.ModuleName], &bankGenState)
 
 	bankGenState.Balances = banktypes.SanitizeGenesisBalances(genBalances)
 	for _, bal := range bankGenState.Balances {
 		bankGenState.Supply = bankGenState.Supply.Add(bal.Coins...)
 	}
+
 	appGenState[banktypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&bankGenState)
 
 	appGenStateJSON, err := json.MarshalIndent(appGenState, "", "  ")
@@ -313,6 +318,7 @@ func initGenFiles(
 			return err
 		}
 	}
+
 	return nil
 }
 
@@ -321,8 +327,8 @@ func collectGenFiles(
 	nodeIDs []string, valPubKeys []cryptotypes.PubKey, numValidators int,
 	outputDir, nodeDirPrefix, nodeDaemonHome string, genBalIterator banktypes.GenesisBalancesIterator,
 ) error {
-
 	var appState json.RawMessage
+
 	genTime := tmtime.Now()
 
 	for i := 0; i < numValidators; i++ {
@@ -368,8 +374,10 @@ func getIP(i int, startingIPAddr string) (ip string, err error) {
 		if err != nil {
 			return "", err
 		}
+
 		return ip, nil
 	}
+
 	return calculateIP(startingIPAddr, i)
 }
 
@@ -387,7 +395,7 @@ func calculateIP(ip string, i int) (string, error) {
 }
 
 func writeFile(name string, dir string, contents []byte) error {
-	writePath := filepath.Join(dir)
+	writePath := filepath.Clean(dir)
 	file := filepath.Join(writePath, name)
 
 	err := tmos.EnsureDir(writePath, 0755)

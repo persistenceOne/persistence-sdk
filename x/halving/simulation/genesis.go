@@ -19,7 +19,6 @@ func GetBlockHeight(r *rand.Rand) uint64 {
 
 // RandomizedGenState generates a random GenesisState for halving
 func RandomizedGenState(simState *module.SimulationState) {
-
 	// params
 	blocksPerYear := uint64(2 * 60 * 60 * 8766 / 5)
 	halvingGenesis := types.NewGenesisState(types.NewParams(blocksPerYear))
