@@ -62,6 +62,9 @@ tools-stamp: statik runsim
 # go.{mod, sum} files.
 #
 # ref: https://github.com/golang/go/issues/30515
+
+# In genera statik allows you to embed a directory of static files into your Go binary
+#to be later served from an http.FileSystem. Here it is used as a filesystem for swaggerDocAPI server.
 statik: $(STATIK)
 $(STATIK):
 	@echo "Installing statik..."
@@ -72,6 +75,7 @@ $(STATIK):
 # go.{mod, sum} files.
 #
 # ref: https://github.com/golang/go/issues/30515
+# runsim is used for running up simulation tests on different threads.
 runsim: $(RUNSIM)
 $(RUNSIM):
 	@echo "Installing runsim..."
