@@ -23,7 +23,7 @@ func TestRandomizedGenState(t *testing.T) {
 	cdc := codec.NewProtoCodec(interfaceRegistry)
 
 	s := rand.NewSource(1)
-	r := rand.New(s)
+	r := rand.New(s) //nolint:gosec,testfile
 
 	simState := module.SimulationState{
 		AppParams:    make(simtypes.AppParams),
@@ -38,7 +38,7 @@ func TestRandomizedGenState(t *testing.T) {
 	RandomizedGenState(&simState)
 
 	var halvingGenesis types.GenesisState
-	simState.Cdc.MustUnmarshalJSON(simState.GenState[types.ModuleName], &halvingGenesis)
 
+	simState.Cdc.MustUnmarshalJSON(simState.GenState[types.ModuleName], &halvingGenesis)
 	require.Equal(t, uint64(2*6311520), halvingGenesis.Params.BlockHeight)
 }

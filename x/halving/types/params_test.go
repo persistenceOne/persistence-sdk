@@ -7,9 +7,10 @@ package types
 
 import (
 	"fmt"
+	"testing"
+
 	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestNewParams(t *testing.T) {
@@ -48,5 +49,4 @@ func TestParams_validateBlockHeight(t *testing.T) {
 
 	err = validateBlockHeight(-100)
 	require.Equal(t, fmt.Errorf("invalid parameter type: int"), err)
-
 }

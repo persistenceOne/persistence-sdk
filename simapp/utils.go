@@ -9,11 +9,11 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/persistenceOne/persistenceSDK/simapp/helpers"
 )
 
 // SetupSimulation creates the config, db (levelDB), temporary directory and logger for
@@ -69,6 +69,7 @@ func SimulationOperations(app App, cdc codec.JSONCodec, config simtypes.Config) 
 
 	simState.ParamChanges = app.SimulationManager().GenerateParamChanges(config.Seed)
 	simState.Contents = app.SimulationManager().GetProposalContents(simState)
+
 	return app.SimulationManager().WeightedOperations(simState)
 }
 
@@ -79,6 +80,7 @@ func CheckExportSimulation(
 ) error {
 	if config.ExportStatePath != "" {
 		fmt.Println("exporting app state...")
+
 		exported, err := app.ExportAppStateAndValidators(false, nil)
 		if err != nil {
 			return err
@@ -91,7 +93,9 @@ func CheckExportSimulation(
 
 	if config.ExportParamsPath != "" {
 		fmt.Println("exporting simulation params...")
+
 		paramsBz, err := json.MarshalIndent(params, "", " ")
+
 		if err != nil {
 			return err
 		}
@@ -100,6 +104,7 @@ func CheckExportSimulation(
 			return err
 		}
 	}
+
 	return nil
 }
 

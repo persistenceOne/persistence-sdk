@@ -1,4 +1,51 @@
-vendor
+# OS
+.DS_Store
+*.swp
+*.swo
+*.swl
+*.swm
+*.swn
 .vscode
 .idea
-.DS_Store
+
+# Build
+artifacts
+vendor
+build
+tools/bin/*
+examples/build/*
+docs/_build
+docs/node_modules
+docs/tutorial
+dist
+tools-stamp
+docs/node_modules
+
+# Data - ideally these don't exist
+baseapp/data/*
+client/lcd/keys/*
+cmd/gaiacli/statik/statik.go
+mytestnet
+
+# Testing
+coverage.out
+profile.out
+
+# Vagrant
+.vagrant/
+*.box
+*.log
+vagrant
+
+# IDE
+.idea/
+*.iml
+
+# Graphviz
+dependency-graph.png
+
+# Latex
+*.aux
+*.out
+*.synctex.gz
+contract_tests/*
