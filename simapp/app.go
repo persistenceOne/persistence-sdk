@@ -2,7 +2,6 @@ package simapp
 
 import (
 	"encoding/json"
-	"github.com/persistenceOne/persistenceSDK/x/epochs"
 	"github.com/persistenceOne/persistenceSDK/x/halving"
 	"io"
 	"net/http"
@@ -85,8 +84,6 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	epochsKeeper "github.com/persistenceOne/persistenceSDK/x/epochs/keeper"
-	epochsTypes "github.com/persistenceOne/persistenceSDK/x/epochs/types"
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
@@ -119,7 +116,6 @@ var (
 		evidence.AppModuleBasic{},
 		authzmodule.AppModuleBasic{},
 		vesting.AppModuleBasic{},
-		epochs.AppModuleBasic{},
 		halving.AppModuleBasic{},
 	)
 
@@ -171,7 +167,6 @@ type SimApp struct {
 	EvidenceKeeper   evidencekeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	HalvingKeeper    halving.Keeper
-	EpochsKeeper     epochsKeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -213,7 +208,6 @@ func NewSimApp(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, capabilitytypes.StoreKey, halving.StoreKey,
-		authzkeeper.StoreKey,  epochsTypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	// NOTE: The testingkey is just mounted for testing purposes. Actual applications should
@@ -264,8 +258,6 @@ func NewSimApp(
 	)
 	app.CrisisKeeper = crisiskeeper.NewKeeper(
 		app.GetSubspace(crisistypes.ModuleName), invCheckPeriod, app.BankKeeper, authtypes.FeeCollectorName,
-	)
-	app.EpochsKeeper = epochsKeeper.NewKeeper(appCodec, keys[epochsTypes.StoreKey],
 	)
 
 	app.FeeGrantKeeper = feegrantkeeper.NewKeeper(appCodec, keys[feegrant.StoreKey], app.AccountKeeper)
@@ -334,7 +326,6 @@ func NewSimApp(
 		params.NewAppModule(app.ParamsKeeper),
 		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		halving.NewAppModule(appCodec, app.HalvingKeeper),
-		epochs.NewAppModule(appCodec, app.EpochsKeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -348,7 +339,6 @@ func NewSimApp(
 		authtypes.ModuleName, banktypes.ModuleName, govtypes.ModuleName, crisistypes.ModuleName, genutiltypes.ModuleName,
 		authz.ModuleName, feegrant.ModuleName,
 		paramstypes.ModuleName, vestingtypes.ModuleName, halving.ModuleName,
-		epochsTypes.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
 		crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName,
@@ -356,8 +346,7 @@ func NewSimApp(
 		slashingtypes.ModuleName, minttypes.ModuleName,
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
 		feegrant.ModuleName,
-		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName,halving.ModuleName,
-		epochsTypes.ModuleName,
+		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, halving.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -371,7 +360,6 @@ func NewSimApp(
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
 		feegrant.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, halving.ModuleName,
-		epochsTypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
