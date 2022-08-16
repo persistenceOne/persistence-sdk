@@ -23,7 +23,7 @@ func GenTx(gen client.TxConfig, msgs []sdk.Msg, feeAmt sdk.Coins, gas uint64, ch
 	sigs := make([]signing.SignatureV2, len(priv))
 
 	// create a random length memo
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	r := rand.New(rand.NewSource(time.Now().UnixNano())) //nolint:gosec,testfile
 
 	memo := simulation.RandStringOfLength(r, simulation.RandIntBetween(r, 0, 100))
 
@@ -42,14 +42,17 @@ func GenTx(gen client.TxConfig, msgs []sdk.Msg, feeAmt sdk.Coins, gas uint64, ch
 	}
 
 	tx := gen.NewTxBuilder()
+
 	err := tx.SetMsgs(msgs...)
 	if err != nil {
 		return nil, err
 	}
+
 	err = tx.SetSignatures(sigs...)
 	if err != nil {
 		return nil, err
 	}
+
 	tx.SetMemo(memo)
 	tx.SetFeeAmount(feeAmt)
 	tx.SetGasLimit(gas)
@@ -61,15 +64,19 @@ func GenTx(gen client.TxConfig, msgs []sdk.Msg, feeAmt sdk.Coins, gas uint64, ch
 			AccountNumber: accNums[i],
 			Sequence:      accSeqs[i],
 		}
+
 		signBytes, err := gen.SignModeHandler().GetSignBytes(signMode, signerData, tx.GetTx())
 		if err != nil {
 			panic(err)
 		}
+
 		sig, err := p.Sign(signBytes)
 		if err != nil {
 			panic(err)
 		}
+
 		sigs[i].Data.(*signing.SingleSignatureData).Signature = sig
+
 		err = tx.SetSignatures(sigs...)
 		if err != nil {
 			panic(err)
