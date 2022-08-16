@@ -23,7 +23,7 @@ func TestRandomizedGenState(t *testing.T) {
 	cdc := codec.NewProtoCodec(interfaceRegistry)
 
 	s := rand.NewSource(1)
-	r := rand.New(s) //nolint:gosec
+	r := rand.New(s) //nolint:gosec,testfile
 
 	simState := module.SimulationState{
 		AppParams:    make(simtypes.AppParams),

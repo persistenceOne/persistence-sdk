@@ -21,4 +21,3 @@ jobs:
       - name: run sims
         run: |
           make test-sim
-        if: "env.GIT_DIFF != ''"

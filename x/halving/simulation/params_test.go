@@ -14,7 +14,7 @@ import (
 
 func TestParamChangest(t *testing.T) {
 	s := rand.NewSource(1)
-	r := rand.New(s) //nolint:gosec
+	r := rand.New(s) //nolint:gosec,testfile
 
 	expected := []struct {
 		composedKey string

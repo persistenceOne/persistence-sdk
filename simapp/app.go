@@ -9,7 +9,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
-	_ "github.com/cosmos/cosmos-sdk/client/docs/statik" //nolint:nolintlint,golint
+	_ "github.com/cosmos/cosmos-sdk/client/docs/statik" //nolint:nolintlint,golint used by swaggerUI
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
 	"github.com/cosmos/cosmos-sdk/codec"
