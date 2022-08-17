@@ -6,12 +6,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/osmosis-labs/osmosis/v10/app/apptesting"
-	"github.com/osmosis-labs/osmosis/v10/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/simapp"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 )
 
 type KeeperTestSuite struct {
-	apptesting.KeeperTestHelper
+	simapp.KeeperTestHelper
 
 	queryClient types.QueryClient
 }
@@ -27,7 +27,7 @@ func (suite *KeeperTestSuite) SetupTest() {
 }
 
 // dummyEpochHook is a struct satisfying the epoch hook interface,
-// that maintains a counter for how many times its been succesfully called,
+// that maintains a counter for how many times its been successfully called,
 // and a boolean for whether it should panic during its execution.
 type dummyEpochHook struct {
 	successCounter int
@@ -38,14 +38,14 @@ func (hook *dummyEpochHook) AfterEpochEnd(ctx sdk.Context, epochIdentifier strin
 	if hook.shouldPanic {
 		panic("dummyEpochHook is panicking")
 	}
-	hook.successCounter += 1
+	hook.successCounter++
 }
 
 func (hook *dummyEpochHook) BeforeEpochStart(ctx sdk.Context, epochIdentifier string, epochNumber int64) {
 	if hook.shouldPanic {
 		panic("dummyEpochHook is panicking")
 	}
-	hook.successCounter += 1
+	hook.successCounter++
 }
 
 func (hook *dummyEpochHook) Clone() *dummyEpochHook {
@@ -71,6 +71,7 @@ func (suite *KeeperTestSuite) TestHooksPanicRecovery() {
 	for tcIndex, tc := range tests {
 		for epochActionSelector := 0; epochActionSelector < 2; epochActionSelector++ {
 			suite.SetupTest()
+
 			hookRefs := []types.EpochHooks{}
 
 			for _, hook := range tc.hooks {
@@ -78,7 +79,9 @@ func (suite *KeeperTestSuite) TestHooksPanicRecovery() {
 			}
 
 			hooks := types.NewMultiEpochHooks(hookRefs...)
+
 			suite.NotPanics(func() {
+				//nolint:scopelint,testfile
 				if epochActionSelector == 0 {
 					hooks.BeforeEpochStart(suite.Ctx, "id", 0)
 				} else if epochActionSelector == 1 {

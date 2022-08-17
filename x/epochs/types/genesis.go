@@ -19,6 +19,7 @@ func DefaultGenesis() *GenesisState {
 		NewGenesisEpochInfo("hour", time.Hour),
 		NewGenesisEpochInfo("week", time.Hour*24*7),
 	}
+
 	return NewGenesisState(epochs)
 }
 
@@ -26,31 +27,40 @@ func DefaultGenesis() *GenesisState {
 // failure.
 func (gs GenesisState) Validate() error {
 	epochIdentifiers := map[string]bool{}
+
 	for _, epoch := range gs.Epochs {
 		if err := epoch.Validate(); err != nil {
 			return err
 		}
+
 		if epochIdentifiers[epoch.Identifier] {
 			return errors.New("epoch identifier should be unique")
 		}
+
 		epochIdentifiers[epoch.Identifier] = true
 	}
+
 	return nil
 }
 
+// Validate also validates epoch info.
 func (epoch EpochInfo) Validate() error {
 	if epoch.Identifier == "" {
 		return errors.New("epoch identifier should NOT be empty")
 	}
+
 	if epoch.Duration == 0 {
 		return errors.New("epoch duration should NOT be 0")
 	}
+
 	if epoch.CurrentEpoch < 0 {
 		return errors.New("epoch CurrentEpoch must be non-negative")
 	}
+
 	if epoch.CurrentEpochStartHeight < 0 {
 		return errors.New("epoch CurrentEpoch must be non-negative")
 	}
+
 	return nil
 }
 

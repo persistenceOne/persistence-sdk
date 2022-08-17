@@ -1,24 +1,23 @@
-package epochs
+package keeper
 
 import (
 	"fmt"
 	"time"
 
-	"github.com/osmosis-labs/osmosis/v10/x/epochs/keeper"
-	"github.com/osmosis-labs/osmosis/v10/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // BeginBlocker of epochs module.
-func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
+func (k Keeper) BeginBlocker(ctx sdk.Context) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 	k.IterateEpochInfo(ctx, func(index int64, epochInfo types.EpochInfo) (stop bool) {
 		logger := k.Logger(ctx)
 
-		// If initial epoch start time > blocktime, return
-		if epochInfo.StartTime.After(ctx.BlockTime()) {
+		// If blocktime < initial epoch start time, return
+		if ctx.BlockTime().Before(epochInfo.StartTime) {
 			return
 		}
 		// if epoch counting hasn't started, signal we need to start.
@@ -45,7 +44,7 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 				),
 			)
 			k.AfterEpochEnd(ctx, epochInfo.Identifier, epochInfo.CurrentEpoch)
-			epochInfo.CurrentEpoch += 1
+			epochInfo.CurrentEpoch++
 			epochInfo.CurrentEpochStartTime = epochInfo.CurrentEpochStartTime.Add(epochInfo.Duration)
 			logger.Info(fmt.Sprintf("Starting epoch with identifier %s epoch number %d", epochInfo.Identifier, epochInfo.CurrentEpoch))
 		}
@@ -58,7 +57,7 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 				sdk.NewAttribute(types.AttributeEpochStartTime, fmt.Sprintf("%d", epochInfo.CurrentEpochStartTime.Unix())),
 			),
 		)
-		k.SetEpochInfo(ctx, epochInfo)
+		k.setEpochInfo(ctx, epochInfo)
 		k.BeforeEpochStart(ctx, epochInfo.Identifier, epochInfo.CurrentEpoch)
 
 		return false

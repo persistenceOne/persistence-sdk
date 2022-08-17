@@ -3,7 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/osmosis-labs/osmosis/v10/osmoutils"
+	"github.com/persistenceOne/persistenceSDK/utilities"
 )
 
 type EpochHooks interface {
@@ -44,9 +44,10 @@ func panicCatchingEpochHook(
 ) {
 	defer func() {
 		if recovErr := recover(); recovErr != nil {
-			osmoutils.PrintPanicRecoveryError(ctx, recovErr)
+			utilities.PrintPanicRecoveryError(ctx, recovErr)
 		}
 	}()
+
 	cacheCtx, write := ctx.CacheContext()
 	hookFn(cacheCtx, epochIdentifier, epochNumber)
 	write()
