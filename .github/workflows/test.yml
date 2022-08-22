@@ -4,7 +4,9 @@ on:
   pull_request:
     branches:
       - master
-
+  push:
+    branches:
+      - master
 jobs:
   cleanup-runs:
     runs-on: ubuntu-latest
@@ -44,6 +46,7 @@ jobs:
           TEST_ARGS: "-timeout 12m -race -coverprofile=./coverage.out -covermode=atomic -v"
 
       - name: filter out DONTCOVER
+        if: github.event_name == 'pull_request'
         run: |
           excludelist="$(find ./ -type f -name '*.go' | xargs grep -l 'DONTCOVER')"
           excludelist+=" $(find ./ -type f -name '*.pb.go')"
@@ -55,15 +58,18 @@ jobs:
           done
 
       - name: Convert coverage to lcov
+        if: github.event_name == 'pull_request'
         uses: jandelgado/gcov2lcov-action@v1
 
       - name: Coveralls
+        if: github.event_name == 'pull_request'
         uses: coverallsapp/github-action@v1.1.2
         with:
           github-token: ${{ secrets.github_token }}
           path-to-lcov: coverage.lcov
 
       - name: Code Coverage Report
+        if: github.event_name == 'pull_request'
         uses: vebr/jest-lcov-reporter@v0.2.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
