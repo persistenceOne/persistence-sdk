@@ -5,9 +5,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/persistenceOne/persistenceSDK/x/epochs"
-	"github.com/persistenceOne/persistenceSDK/x/halving"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/tests/mocks"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -29,12 +26,17 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
+	ibc "github.com/cosmos/ibc-go/v3/modules/core"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
+
+	"github.com/persistenceOne/persistenceSDK/x/epochs"
+	"github.com/persistenceOne/persistenceSDK/x/halving"
+	"github.com/persistenceOne/persistenceSDK/x/interchainquery"
 )
 
 func TestSimAppExportAndBlockedAddrs(t *testing.T) {
@@ -169,24 +171,26 @@ func TestRunMigrations(t *testing.T) {
 			_, err = app.mm.RunMigrations(
 				app.NewContext(true, tmproto.Header{Height: app.LastBlockHeight()}), app.configurator,
 				module.VersionMap{
-					"bank":         1,
-					"auth":         auth.AppModule{}.ConsensusVersion(),
-					"authz":        authzmodule.AppModule{}.ConsensusVersion(),
-					"staking":      staking.AppModule{}.ConsensusVersion(),
-					"mint":         mint.AppModule{}.ConsensusVersion(),
-					"distribution": distribution.AppModule{}.ConsensusVersion(),
-					"slashing":     slashing.AppModule{}.ConsensusVersion(),
-					"gov":          gov.AppModule{}.ConsensusVersion(),
-					"params":       params.AppModule{}.ConsensusVersion(),
-					"upgrade":      upgrade.AppModule{}.ConsensusVersion(),
-					"vesting":      vesting.AppModule{}.ConsensusVersion(),
-					"feegrant":     feegrantmodule.AppModule{}.ConsensusVersion(),
-					"evidence":     evidence.AppModule{}.ConsensusVersion(),
-					"crisis":       crisis.AppModule{}.ConsensusVersion(),
-					"genutil":      genutil.AppModule{}.ConsensusVersion(),
-					"capability":   capability.AppModule{}.ConsensusVersion(),
-					"epochs":       epochs.AppModule{}.ConsensusVersion(),
-					"halving":      halving.AppModule{}.ConsensusVersion(),
+					"bank":            1,
+					"auth":            auth.AppModule{}.ConsensusVersion(),
+					"authz":           authzmodule.AppModule{}.ConsensusVersion(),
+					"staking":         staking.AppModule{}.ConsensusVersion(),
+					"mint":            mint.AppModule{}.ConsensusVersion(),
+					"distribution":    distribution.AppModule{}.ConsensusVersion(),
+					"slashing":        slashing.AppModule{}.ConsensusVersion(),
+					"gov":             gov.AppModule{}.ConsensusVersion(),
+					"params":          params.AppModule{}.ConsensusVersion(),
+					"upgrade":         upgrade.AppModule{}.ConsensusVersion(),
+					"vesting":         vesting.AppModule{}.ConsensusVersion(),
+					"feegrant":        feegrantmodule.AppModule{}.ConsensusVersion(),
+					"evidence":        evidence.AppModule{}.ConsensusVersion(),
+					"crisis":          crisis.AppModule{}.ConsensusVersion(),
+					"genutil":         genutil.AppModule{}.ConsensusVersion(),
+					"capability":      capability.AppModule{}.ConsensusVersion(),
+					"epochs":          epochs.AppModule{}.ConsensusVersion(),
+					"halving":         halving.AppModule{}.ConsensusVersion(),
+					"ibc":             ibc.AppModule{}.ConsensusVersion(),
+					"interchainquery": interchainquery.AppModule{}.ConsensusVersion(),
 				},
 			)
 
@@ -224,24 +228,26 @@ func TestInitGenesisOnMigration(t *testing.T) {
 	// the VersionMap to simulate upgrading with a new module.
 	_, err := app.mm.RunMigrations(ctx, app.configurator,
 		module.VersionMap{
-			"bank":         bank.AppModule{}.ConsensusVersion(),
-			"auth":         auth.AppModule{}.ConsensusVersion(),
-			"authz":        authzmodule.AppModule{}.ConsensusVersion(),
-			"staking":      staking.AppModule{}.ConsensusVersion(),
-			"mint":         mint.AppModule{}.ConsensusVersion(),
-			"distribution": distribution.AppModule{}.ConsensusVersion(),
-			"slashing":     slashing.AppModule{}.ConsensusVersion(),
-			"gov":          gov.AppModule{}.ConsensusVersion(),
-			"params":       params.AppModule{}.ConsensusVersion(),
-			"upgrade":      upgrade.AppModule{}.ConsensusVersion(),
-			"vesting":      vesting.AppModule{}.ConsensusVersion(),
-			"feegrant":     feegrantmodule.AppModule{}.ConsensusVersion(),
-			"evidence":     evidence.AppModule{}.ConsensusVersion(),
-			"crisis":       crisis.AppModule{}.ConsensusVersion(),
-			"genutil":      genutil.AppModule{}.ConsensusVersion(),
-			"capability":   capability.AppModule{}.ConsensusVersion(),
-			"epochs":       epochs.AppModule{}.ConsensusVersion(),
-			"halving":      halving.AppModule{}.ConsensusVersion(),
+			"bank":            bank.AppModule{}.ConsensusVersion(),
+			"auth":            auth.AppModule{}.ConsensusVersion(),
+			"authz":           authzmodule.AppModule{}.ConsensusVersion(),
+			"staking":         staking.AppModule{}.ConsensusVersion(),
+			"mint":            mint.AppModule{}.ConsensusVersion(),
+			"distribution":    distribution.AppModule{}.ConsensusVersion(),
+			"slashing":        slashing.AppModule{}.ConsensusVersion(),
+			"gov":             gov.AppModule{}.ConsensusVersion(),
+			"params":          params.AppModule{}.ConsensusVersion(),
+			"upgrade":         upgrade.AppModule{}.ConsensusVersion(),
+			"vesting":         vesting.AppModule{}.ConsensusVersion(),
+			"feegrant":        feegrantmodule.AppModule{}.ConsensusVersion(),
+			"evidence":        evidence.AppModule{}.ConsensusVersion(),
+			"crisis":          crisis.AppModule{}.ConsensusVersion(),
+			"genutil":         genutil.AppModule{}.ConsensusVersion(),
+			"capability":      capability.AppModule{}.ConsensusVersion(),
+			"epochs":          epochs.AppModule{}.ConsensusVersion(),
+			"halving":         halving.AppModule{}.ConsensusVersion(),
+			"ibc":             ibc.AppModule{}.ConsensusVersion(),
+			"interchainquery": interchainquery.AppModule{}.ConsensusVersion(),
 		},
 	)
 	require.NoError(t, err)
