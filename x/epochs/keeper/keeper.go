@@ -5,7 +5,7 @@ import (
 
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/x/epochs/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"

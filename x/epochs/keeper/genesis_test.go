@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	simapp "github.com/persistenceOne/persistenceSDK/simapp"
+	simapp "github.com/persistenceOne/persistence-sdk/simapp"
 
-	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/x/epochs/types"
 )
 
 func TestEpochsExportGenesis(t *testing.T) {

@@ -30,8 +30,8 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
-	"github.com/persistenceOne/persistenceSDK/simapp/helpers"
-	interchainquerytypes "github.com/persistenceOne/persistenceSDK/x/interchainquery/types"
+	"github.com/persistenceOne/persistence-sdk/simapp/helpers"
+	interchainquerytypes "github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
 )
 
 // Get flags every time the simulator is run

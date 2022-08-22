@@ -85,14 +85,14 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
-	simappparams "github.com/persistenceOne/persistenceSDK/simapp/params"
-	"github.com/persistenceOne/persistenceSDK/x/epochs"
-	epochsKeeper "github.com/persistenceOne/persistenceSDK/x/epochs/keeper"
-	epochsTypes "github.com/persistenceOne/persistenceSDK/x/epochs/types"
-	"github.com/persistenceOne/persistenceSDK/x/halving"
-	"github.com/persistenceOne/persistenceSDK/x/interchainquery"
-	interchainquerykeeper "github.com/persistenceOne/persistenceSDK/x/interchainquery/keeper"
-	interchainquerytypes "github.com/persistenceOne/persistenceSDK/x/interchainquery/types"
+	simappparams "github.com/persistenceOne/persistence-sdk/simapp/params"
+	"github.com/persistenceOne/persistence-sdk/x/epochs"
+	epochsKeeper "github.com/persistenceOne/persistence-sdk/x/epochs/keeper"
+	epochsTypes "github.com/persistenceOne/persistence-sdk/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/x/halving"
+	"github.com/persistenceOne/persistence-sdk/x/interchainquery"
+	interchainquerykeeper "github.com/persistenceOne/persistence-sdk/x/interchainquery/keeper"
+	interchainquerytypes "github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
 )
 
 const appName = "SimApp"
