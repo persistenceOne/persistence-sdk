@@ -7,12 +7,6 @@ import (
 	"os"
 	"path/filepath"
 
-	simappparams "github.com/persistenceOne/persistenceSDK/simapp/params"
-	"github.com/persistenceOne/persistenceSDK/x/epochs"
-	epochsKeeper "github.com/persistenceOne/persistenceSDK/x/epochs/keeper"
-	epochsTypes "github.com/persistenceOne/persistenceSDK/x/epochs/types"
-	"github.com/persistenceOne/persistenceSDK/x/halving"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
@@ -91,6 +85,11 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
+	simappparams "github.com/persistenceOne/persistenceSDK/simapp/params"
+	"github.com/persistenceOne/persistenceSDK/x/epochs"
+	epochsKeeper "github.com/persistenceOne/persistenceSDK/x/epochs/keeper"
+	epochsTypes "github.com/persistenceOne/persistenceSDK/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/x/halving"
 	"github.com/persistenceOne/persistenceSDK/x/interchainquery"
 	interchainquerykeeper "github.com/persistenceOne/persistenceSDK/x/interchainquery/keeper"
 	interchainquerytypes "github.com/persistenceOne/persistenceSDK/x/interchainquery/types"
@@ -224,7 +223,7 @@ func NewSimApp(
 		govtypes.StoreKey, paramstypes.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, capabilitytypes.StoreKey, halving.StoreKey,
 		authzkeeper.StoreKey, interchainquerytypes.StoreKey,
-		ibchost.StoreKey, authzkeeper.StoreKey, epochsTypes.StoreKey,
+		ibchost.StoreKey, epochsTypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	// NOTE: The testingkey is just mounted for testing purposes. Actual applications should

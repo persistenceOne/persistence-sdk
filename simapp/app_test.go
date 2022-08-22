@@ -5,9 +5,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/persistenceOne/persistenceSDK/x/epochs"
-	"github.com/persistenceOne/persistenceSDK/x/halving"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/tests/mocks"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -31,12 +28,15 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	ibc "github.com/cosmos/ibc-go/v3/modules/core"
 	"github.com/golang/mock/gomock"
-	"github.com/persistenceOne/persistenceSDK/x/interchainquery"
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
+
+	"github.com/persistenceOne/persistenceSDK/x/epochs"
+	"github.com/persistenceOne/persistenceSDK/x/halving"
+	"github.com/persistenceOne/persistenceSDK/x/interchainquery"
 )
 
 func TestSimAppExportAndBlockedAddrs(t *testing.T) {
