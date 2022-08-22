@@ -5,6 +5,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/persistenceOne/persistenceSDK/x/epochs"
+	"github.com/persistenceOne/persistenceSDK/x/halving"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/tests/mocks"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -28,7 +31,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	ibc "github.com/cosmos/ibc-go/v3/modules/core"
 	"github.com/golang/mock/gomock"
-	"github.com/persistenceOne/persistenceSDK/x/halving"
 	"github.com/persistenceOne/persistenceSDK/x/interchainquery"
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -37,7 +39,6 @@ import (
 	dbm "github.com/tendermint/tm-db"
 )
 
-//nolint:nolintlint,scopelint
 func TestSimAppExportAndBlockedAddrs(t *testing.T) {
 	encCfg := MakeTestEncodingConfig()
 	db := dbm.NewMemDB()
@@ -75,7 +76,6 @@ func TestGetMaccPerms(t *testing.T) {
 	require.Equal(t, maccPerms, dup, "duplicated module account permissions differed from actual module account permissions")
 }
 
-//nolint:nolintlint,scopelint
 func TestRunMigrations(t *testing.T) {
 	db := dbm.NewMemDB()
 	encCfg := MakeTestEncodingConfig()
@@ -105,7 +105,7 @@ func TestRunMigrations(t *testing.T) {
 	// Initialize the chain
 	app.InitChain(abci.RequestInitChain{})
 	app.Commit()
-	//nolint:maligned
+	//nolint:maligned,testfile
 	testCases := []struct {
 		name         string
 		moduleName   string
@@ -139,6 +139,7 @@ func TestRunMigrations(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		//nolint:scopelint,testfile
 		t.Run(tc.name, func(t *testing.T) {
 			var err error
 
@@ -186,11 +187,13 @@ func TestRunMigrations(t *testing.T) {
 					"crisis":          crisis.AppModule{}.ConsensusVersion(),
 					"genutil":         genutil.AppModule{}.ConsensusVersion(),
 					"capability":      capability.AppModule{}.ConsensusVersion(),
+					"epochs":          epochs.AppModule{}.ConsensusVersion(),
 					"halving":         halving.AppModule{}.ConsensusVersion(),
 					"ibc":             ibc.AppModule{}.ConsensusVersion(),
 					"interchainquery": interchainquery.AppModule{}.ConsensusVersion(),
 				},
 			)
+
 			if tc.expRunErr {
 				require.EqualError(t, err, tc.expRunErrMsg)
 			} else {
@@ -241,6 +244,7 @@ func TestInitGenesisOnMigration(t *testing.T) {
 			"crisis":          crisis.AppModule{}.ConsensusVersion(),
 			"genutil":         genutil.AppModule{}.ConsensusVersion(),
 			"capability":      capability.AppModule{}.ConsensusVersion(),
+			"epochs":          epochs.AppModule{}.ConsensusVersion(),
 			"halving":         halving.AppModule{}.ConsensusVersion(),
 			"ibc":             ibc.AppModule{}.ConsensusVersion(),
 			"interchainquery": interchainquery.AppModule{}.ConsensusVersion(),

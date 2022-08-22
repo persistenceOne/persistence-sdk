@@ -7,9 +7,14 @@ import (
 	"os"
 	"path/filepath"
 
+	simappparams "github.com/persistenceOne/persistenceSDK/simapp/params"
+	"github.com/persistenceOne/persistenceSDK/x/epochs"
+	epochsKeeper "github.com/persistenceOne/persistenceSDK/x/epochs/keeper"
+	epochsTypes "github.com/persistenceOne/persistenceSDK/x/epochs/types"
+	"github.com/persistenceOne/persistenceSDK/x/halving"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
-	_ "github.com/cosmos/cosmos-sdk/client/docs/statik" //nolint:nolintlint,golint used by swaggerUI
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -86,8 +91,6 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
-	simappparams "github.com/persistenceOne/persistenceSDK/simapp/params"
-	"github.com/persistenceOne/persistenceSDK/x/halving"
 	"github.com/persistenceOne/persistenceSDK/x/interchainquery"
 	interchainquerykeeper "github.com/persistenceOne/persistenceSDK/x/interchainquery/keeper"
 	interchainquerytypes "github.com/persistenceOne/persistenceSDK/x/interchainquery/types"
@@ -121,6 +124,7 @@ var (
 		evidence.AppModuleBasic{},
 		authzmodule.AppModuleBasic{},
 		vesting.AppModuleBasic{},
+		epochs.AppModuleBasic{},
 		halving.AppModuleBasic{},
 		ibc.AppModuleBasic{},
 		interchainquery.AppModuleBasic{},
@@ -175,6 +179,7 @@ type SimApp struct {
 	EvidenceKeeper        evidencekeeper.Keeper
 	FeeGrantKeeper        feegrantkeeper.Keeper
 	HalvingKeeper         halving.Keeper
+	EpochsKeeper          *epochsKeeper.Keeper
 	IBCKeeper             *ibckeeper.Keeper
 	InterchainQueryKeeper interchainquerykeeper.Keeper
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
@@ -219,7 +224,7 @@ func NewSimApp(
 		govtypes.StoreKey, paramstypes.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, capabilitytypes.StoreKey, halving.StoreKey,
 		authzkeeper.StoreKey, interchainquerytypes.StoreKey,
-		ibchost.StoreKey,
+		ibchost.StoreKey, authzkeeper.StoreKey, epochsTypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	// NOTE: The testingkey is just mounted for testing purposes. Actual applications should
@@ -271,6 +276,10 @@ func NewSimApp(
 	)
 	app.CrisisKeeper = crisiskeeper.NewKeeper(
 		app.GetSubspace(crisistypes.ModuleName), invCheckPeriod, app.BankKeeper, authtypes.FeeCollectorName,
+	)
+	epochKeeper := epochsKeeper.NewKeeper(appCodec, keys[epochsTypes.StoreKey])
+	app.EpochsKeeper = epochKeeper.SetHooks(
+		epochsTypes.NewMultiEpochHooks(),
 	)
 
 	app.FeeGrantKeeper = feegrantkeeper.NewKeeper(appCodec, keys[feegrant.StoreKey], app.AccountKeeper)
@@ -347,6 +356,7 @@ func NewSimApp(
 		halving.NewAppModule(appCodec, app.HalvingKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
 		interchainquery.NewAppModule(appCodec, app.InterchainQueryKeeper),
+		epochs.NewAppModule(*app.EpochsKeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -360,7 +370,7 @@ func NewSimApp(
 		authtypes.ModuleName, banktypes.ModuleName, govtypes.ModuleName, crisistypes.ModuleName, genutiltypes.ModuleName,
 		authz.ModuleName, feegrant.ModuleName, ibchost.ModuleName,
 		paramstypes.ModuleName, vestingtypes.ModuleName, halving.ModuleName,
-		interchainquerytypes.ModuleName,
+		interchainquerytypes.ModuleName, epochsTypes.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
 		crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName,
@@ -369,7 +379,7 @@ func NewSimApp(
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
 		feegrant.ModuleName, ibchost.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, halving.ModuleName,
-		interchainquerytypes.ModuleName,
+		interchainquerytypes.ModuleName, epochsTypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -383,7 +393,7 @@ func NewSimApp(
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
 		feegrant.ModuleName, ibchost.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, halving.ModuleName,
-		interchainquerytypes.ModuleName,
+		interchainquerytypes.ModuleName, epochsTypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
