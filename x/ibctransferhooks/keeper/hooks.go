@@ -10,9 +10,9 @@ import (
 
 var _ types.IBCTransferHooks = Keeper{}
 
-func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channelTypes.Packet, relayer sdk.AccAddress, success bool, transferAck exported.Acknowledgement) {
+func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channelTypes.Packet, relayer sdk.AccAddress, transferAck exported.Acknowledgement) {
 	if k.hooks != nil {
-		k.hooks.OnRecvPacket(ctx, packet, relayer, success, transferAck)
+		k.hooks.OnRecvPacket(ctx, packet, relayer, transferAck)
 	}
 }
 

@@ -15,9 +15,9 @@ func NewMultiStakingHooks(hooks ...IBCTransferHooks) MultiIBCTransferHooks {
 	return hooks
 }
 
-func (h MultiIBCTransferHooks) OnRecvPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, success bool, transferAck exported.Acknowledgement) {
+func (h MultiIBCTransferHooks) OnRecvPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferAck exported.Acknowledgement) {
 	for i := range h {
-		h[i].OnRecvPacket(ctx, packet, relayer, success, transferAck)
+		h[i].OnRecvPacket(ctx, packet, relayer, transferAck)
 	}
 }
 

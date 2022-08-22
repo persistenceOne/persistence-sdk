@@ -2,7 +2,6 @@ package ibctransferhooks
 
 import (
 	"encoding/json"
-	types2 "github.com/persistenceOne/persistence-sdk/x/ibctransferhooks/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -10,14 +9,16 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	"github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
+	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
 	porttypes "github.com/cosmos/ibc-go/v3/modules/core/05-port/types"
 	"github.com/cosmos/ibc-go/v3/modules/core/exported"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/persistenceOne/persistence-sdk/x/ibctransferhooks/keeper"
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
+
+	"github.com/persistenceOne/persistence-sdk/x/ibctransferhooks/keeper"
+	"github.com/persistenceOne/persistence-sdk/x/ibctransferhooks/types"
 )
 
 var (
@@ -30,7 +31,7 @@ type AppModuleBasic struct{}
 
 func (a AppModuleBasic) Name() string {
 
-	return types2.ModuleName
+	return types.ModuleName
 }
 
 func (a AppModuleBasic) RegisterLegacyAminoCodec(amino *codec.LegacyAmino) {
@@ -130,12 +131,12 @@ func (I IBCTransferHooksWrapper) EndBlock(context sdk.Context, block abci.Reques
 	return []abci.ValidatorUpdate{}
 }
 
-func (I IBCTransferHooksWrapper) OnChanOpenInit(ctx sdk.Context, order types.Order, connectionHops []string, portID string, channelID string, channelCap *capabilitytypes.Capability, counterparty types.Counterparty, version string) error {
+func (I IBCTransferHooksWrapper) OnChanOpenInit(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID string, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, version string) error {
 
 	return I.ibcTransferApp.OnChanOpenInit(ctx, order, connectionHops, portID, channelID, channelCap, counterparty, version)
 }
 
-func (I IBCTransferHooksWrapper) OnChanOpenTry(ctx sdk.Context, order types.Order, connectionHops []string, portID, channelID string, channelCap *capabilitytypes.Capability, counterparty types.Counterparty, counterpartyVersion string) (version string, err error) {
+func (I IBCTransferHooksWrapper) OnChanOpenTry(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, counterpartyVersion string) (version string, err error) {
 
 	return I.ibcTransferApp.OnChanOpenTry(ctx, order, connectionHops, portID, channelID, channelCap, counterparty, counterpartyVersion)
 }
@@ -160,31 +161,26 @@ func (I IBCTransferHooksWrapper) OnChanCloseConfirm(ctx sdk.Context, portID, cha
 	return I.ibcTransferApp.OnChanCloseConfirm(ctx, portID, channelID)
 }
 
-func (I IBCTransferHooksWrapper) OnRecvPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress) exported.Acknowledgement {
+func (I IBCTransferHooksWrapper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) exported.Acknowledgement {
 
 	ack := I.ibcTransferApp.OnRecvPacket(ctx, packet, relayer)
-	if ack.Success() {
-		// TODO add OnRecvPacketHook
-	}
+	I.k.OnRecvPacket(ctx, packet, relayer, ack)
 
 	return ack
 }
 
-func (I IBCTransferHooksWrapper) OnAcknowledgementPacket(ctx sdk.Context, packet types.Packet, acknowledgement []byte, relayer sdk.AccAddress) error {
+func (I IBCTransferHooksWrapper) OnAcknowledgementPacket(ctx sdk.Context, packet channeltypes.Packet, acknowledgement []byte, relayer sdk.AccAddress) error {
 
 	err := I.ibcTransferApp.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer)
-	if err == nil {
-		// TODO add OnAcknowledgementPacketHook
-	}
+	I.k.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer, err)
+
 	return err
 }
 
-func (I IBCTransferHooksWrapper) OnTimeoutPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress) error {
+func (I IBCTransferHooksWrapper) OnTimeoutPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) error {
 
 	err := I.ibcTransferApp.OnTimeoutPacket(ctx, packet, relayer)
-	if err == nil {
-		// TODO add OnTimeoutPacketHook
-	}
+	I.k.OnTimeoutPacket(ctx, packet, relayer, err)
 
 	return err
 }
