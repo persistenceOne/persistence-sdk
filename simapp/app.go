@@ -76,6 +76,7 @@ import (
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ibc "github.com/cosmos/ibc-go/v3/modules/core"
+	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
 	"github.com/gorilla/mux"
 	"github.com/rakyll/statik/fs"
@@ -85,7 +86,6 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
-	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 	simappparams "github.com/persistenceOne/persistenceSDK/simapp/params"
 	"github.com/persistenceOne/persistenceSDK/x/halving"
 	"github.com/persistenceOne/persistenceSDK/x/interchainquery"
