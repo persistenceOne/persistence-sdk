@@ -3,7 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/persistenceOne/persistenceSDK/utilities"
+	"github.com/persistenceOne/persistenceSDK/utils"
 )
 
 type EpochHooks interface {
@@ -44,7 +44,7 @@ func panicCatchingEpochHook(
 ) {
 	defer func() {
 		if recovErr := recover(); recovErr != nil {
-			utilities.PrintPanicRecoveryError(ctx, recovErr)
+			utils.PrintPanicRecoveryError(ctx, recovErr)
 		}
 	}()
 
