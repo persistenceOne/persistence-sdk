@@ -23,6 +23,7 @@ func (k Keeper) Queries(c context.Context, req *types.QueryRequestsRequest) (*ty
 	ctx := sdk.UnwrapSDKContext(c)
 
 	var queries []types.Query
+
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixQuery)
 
 	pageRes, err := query.FilteredPaginate(store, req.Pagination, func(_, value []byte, accumulate bool) (bool, error) {

@@ -2,9 +2,6 @@ package simapp
 
 import (
 	"encoding/json"
-	ibc "github.com/cosmos/ibc-go/v3/modules/core"
-	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
-	"github.com/persistenceOne/persistenceSDK/x/interchainquery"
 	"io"
 	"net/http"
 	"os"
@@ -78,19 +75,22 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	ibc "github.com/cosmos/ibc-go/v3/modules/core"
+	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
 	"github.com/gorilla/mux"
-
-	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
-	simappparams "github.com/persistenceOne/persistenceSDK/simapp/params"
-	"github.com/persistenceOne/persistenceSDK/x/halving"
-	interchainquerykeeper "github.com/persistenceOne/persistenceSDK/x/interchainquery/keeper"
-	interchainquerytypes "github.com/persistenceOne/persistenceSDK/x/interchainquery/types"
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
+
+	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
+	simappparams "github.com/persistenceOne/persistenceSDK/simapp/params"
+	"github.com/persistenceOne/persistenceSDK/x/halving"
+	"github.com/persistenceOne/persistenceSDK/x/interchainquery"
+	interchainquerykeeper "github.com/persistenceOne/persistenceSDK/x/interchainquery/keeper"
+	interchainquerytypes "github.com/persistenceOne/persistenceSDK/x/interchainquery/types"
 )
 
 const appName = "SimApp"
@@ -204,7 +204,6 @@ func NewSimApp(
 	homePath string, invCheckPeriod uint, encodingConfig simappparams.EncodingConfig,
 	appOpts servertypes.AppOptions, baseAppOptions ...func(*baseapp.BaseApp),
 ) *SimApp {
-
 	appCodec := encodingConfig.Marshaler
 	legacyAmino := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -294,6 +293,7 @@ func NewSimApp(
 		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
 		AddRoute(distrtypes.RouterKey, distr.NewCommunityPoolSpendProposalHandler(app.DistrKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper))
+
 	govKeeper := govkeeper.NewKeeper(
 		appCodec, keys[govtypes.StoreKey], app.GetSubspace(govtypes.ModuleName), app.AccountKeeper, app.BankKeeper,
 		&stakingKeeper, govRouter,

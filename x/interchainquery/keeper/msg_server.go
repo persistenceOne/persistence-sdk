@@ -77,7 +77,6 @@ func (k msgServer) SubmitQueryResponse(goCtx context.Context, msg *types.MsgSubm
 			q.LastHeight = sdk.NewInt(ctx.BlockHeight())
 			k.SetQuery(ctx, q)
 		}
-
 	} else {
 		k.Logger(ctx).Info("Ignoring duplicate query")
 		return &types.MsgSubmitQueryResponseResponse{}, nil // technically this is an error, but will cause the entire tx to fail if we have one 'bad' message, so we can just no-op here.

@@ -29,7 +29,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 	"github.com/persistenceOne/persistenceSDK/simapp/helpers"
+	interchainquerytypes "github.com/persistenceOne/persistenceSDK/x/interchainquery/types"
 )
 
 // Get flags every time the simulator is run
@@ -177,6 +179,8 @@ func TestAppImportExport(t *testing.T) {
 		{app.keys[evidencetypes.StoreKey], newApp.keys[evidencetypes.StoreKey], [][]byte{}},
 		{app.keys[capabilitytypes.StoreKey], newApp.keys[capabilitytypes.StoreKey], [][]byte{}},
 		{app.keys[authzkeeper.StoreKey], newApp.keys[authzkeeper.StoreKey], [][]byte{}},
+		{app.keys[ibchost.StoreKey], newApp.keys[ibchost.StoreKey], [][]byte{}},
+		{app.keys[interchainquerytypes.StoreKey], newApp.keys[interchainquerytypes.StoreKey], [][]byte{}},
 	}
 
 	for _, skp := range storeKeysPrefixes {

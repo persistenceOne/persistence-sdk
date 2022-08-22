@@ -24,11 +24,14 @@ func (k Keeper) NewQuery(ctx sdk.Context, module string, connectionID string, ch
 func (k Keeper) GetQuery(ctx sdk.Context, id string) (types.Query, bool) {
 	query := types.Query{}
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixQuery)
+
 	bz := store.Get([]byte(id))
 	if len(bz) == 0 {
 		return query, false
 	}
+
 	k.cdc.MustUnmarshal(bz, &query)
+
 	return query, true
 }
 
@@ -49,9 +52,11 @@ func (k Keeper) DeleteQuery(ctx sdk.Context, id string) {
 func (k Keeper) IterateQueries(ctx sdk.Context, fn func(index int64, queryInfo types.Query) (stop bool)) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixQuery)
 	iterator := sdk.KVStorePrefixIterator(store, nil)
+
 	defer iterator.Close()
 
 	i := int64(0)
+
 	for ; iterator.Valid(); iterator.Next() {
 		query := types.Query{}
 		k.cdc.MustUnmarshal(iterator.Value(), &query)
@@ -67,9 +72,11 @@ func (k Keeper) IterateQueries(ctx sdk.Context, fn func(index int64, queryInfo t
 // AllQueries returns every queryInfo in the store
 func (k Keeper) AllQueries(ctx sdk.Context) []types.Query {
 	queries := []types.Query{}
+
 	k.IterateQueries(ctx, func(_ int64, queryInfo types.Query) (stop bool) {
 		queries = append(queries, queryInfo)
 		return false
 	})
+
 	return queries
 }

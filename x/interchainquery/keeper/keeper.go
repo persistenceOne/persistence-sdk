@@ -35,7 +35,9 @@ func (k *Keeper) SetCallbackHandler(module string, handler types.QueryCallbacks)
 	if found {
 		return fmt.Errorf("callback handler already set for %s", module)
 	}
+
 	k.callbacks[module] = handler.RegisterCallbacks()
+
 	return nil
 }
 
@@ -49,18 +51,21 @@ func (k *Keeper) SetDatapointForID(ctx sdk.Context, id string, result []byte, he
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixData)
 	bz := k.cdc.MustMarshal(&mapping)
 	store.Set([]byte(id), bz)
+
 	return nil
 }
 
 func (k *Keeper) GetDatapointForID(ctx sdk.Context, id string) (types.DataPoint, error) {
 	mapping := types.DataPoint{}
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixData)
+
 	bz := store.Get([]byte(id))
 	if len(bz) == 0 {
 		return types.DataPoint{}, fmt.Errorf("unable to find data for id %s", id)
 	}
 
 	k.cdc.MustUnmarshal(bz, &mapping)
+
 	return mapping, nil
 }
 
@@ -68,9 +73,11 @@ func (k *Keeper) GetDatapointForID(ctx sdk.Context, id string) (types.DataPoint,
 func (k Keeper) IterateDatapoints(ctx sdk.Context, fn func(index int64, dp types.DataPoint) (stop bool)) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixData)
 	iterator := sdk.KVStorePrefixIterator(store, nil)
+
 	defer iterator.Close()
 
 	i := int64(0)
+
 	for ; iterator.Valid(); iterator.Next() {
 		datapoint := types.DataPoint{}
 		k.cdc.MustUnmarshal(iterator.Value(), &datapoint)
@@ -122,8 +129,11 @@ func (k *Keeper) MakeRequest(ctx sdk.Context, connectionID string, chainID strin
 		"callback", callbackID,
 		"ttl", ttl,
 	)
+
 	key := GenerateQueryHash(connectionID, chainID, queryType, request, module)
+
 	existingQuery, found := k.GetQuery(ctx, key)
+
 	if !found {
 		if module != "" {
 			if _, exists := k.callbacks[module]; !exists {
@@ -131,15 +141,16 @@ func (k *Keeper) MakeRequest(ctx sdk.Context, connectionID string, chainID strin
 				k.Logger(ctx).Error(err.Error())
 				panic(err)
 			}
+
 			if exists := k.callbacks[module].Has(callbackID); !exists {
 				err := fmt.Errorf("no callback %s registered for module %s", callbackID, module)
 				k.Logger(ctx).Error(err.Error())
 				panic(err)
 			}
 		}
+
 		newQuery := k.NewQuery(ctx, module, connectionID, chainID, queryType, request, period, callbackID, ttl)
 		k.SetQuery(ctx, *newQuery)
-
 	} else {
 		// a re-request of an existing query triggers resetting of height to trigger immediately.
 		existingQuery.LastHeight = sdk.ZeroInt()
