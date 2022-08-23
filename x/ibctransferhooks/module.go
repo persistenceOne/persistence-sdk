@@ -62,10 +62,11 @@ type Wrapper struct {
 	ibcTransferApp porttypes.IBCModule
 }
 
-func NewAppModule(keeper keeper.Keeper) Wrapper {
+func NewAppModule(keeper keeper.Keeper, ibcTransferApp porttypes.IBCModule) Wrapper {
 	return Wrapper{
 		AppModuleBasic: AppModuleBasic{},
 		k:              keeper,
+		ibcTransferApp: ibcTransferApp,
 	}
 }
 
