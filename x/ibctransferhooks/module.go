@@ -22,165 +22,117 @@ import (
 )
 
 var (
-	_ module.AppModule      = IBCTransferHooksWrapper{}
+	_ module.AppModule      = Wrapper{}
 	_ module.AppModuleBasic = AppModuleBasic{}
-	_ porttypes.IBCModule   = IBCTransferHooksWrapper{}
+	_ porttypes.IBCModule   = Wrapper{}
 )
 
 type AppModuleBasic struct{}
 
-func (a AppModuleBasic) Name() string {
+func (a AppModuleBasic) Name() string { return types.ModuleName }
 
-	return types.ModuleName
-}
+func (a AppModuleBasic) RegisterLegacyAminoCodec(_ *codec.LegacyAmino) {}
 
-func (a AppModuleBasic) RegisterLegacyAminoCodec(amino *codec.LegacyAmino) {
+func (a AppModuleBasic) RegisterInterfaces(_ cdctypes.InterfaceRegistry) {}
 
-	return
-}
-
-func (a AppModuleBasic) RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
-
-	return
-}
-
-func (a AppModuleBasic) DefaultGenesis(jsonCodec codec.JSONCodec) json.RawMessage {
-
+func (a AppModuleBasic) DefaultGenesis(_ codec.JSONCodec) json.RawMessage {
 	return nil
 }
 
-func (a AppModuleBasic) ValidateGenesis(jsonCodec codec.JSONCodec, config client.TxEncodingConfig, message json.RawMessage) error {
-
+func (a AppModuleBasic) ValidateGenesis(_ codec.JSONCodec, _ client.TxEncodingConfig, _ json.RawMessage) error {
 	return nil
 }
 
-func (a AppModuleBasic) RegisterRESTRoutes(context client.Context, router *mux.Router) {
+func (a AppModuleBasic) RegisterRESTRoutes(_ client.Context, _ *mux.Router) {}
 
-	return
-}
-
-func (a AppModuleBasic) RegisterGRPCGatewayRoutes(context client.Context, mux *runtime.ServeMux) {
-
-	return
-}
+func (a AppModuleBasic) RegisterGRPCGatewayRoutes(_ client.Context, _ *runtime.ServeMux) {}
 
 func (a AppModuleBasic) GetTxCmd() *cobra.Command {
-
 	return nil
 }
 
 func (a AppModuleBasic) GetQueryCmd() *cobra.Command {
-
 	return nil
 }
 
-type IBCTransferHooksWrapper struct {
+type Wrapper struct {
 	AppModuleBasic
 	k keeper.Keeper
 	// ONLY PASS IBC TRANSFER APP
 	ibcTransferApp porttypes.IBCModule
 }
 
-func (I IBCTransferHooksWrapper) InitGenesis(context sdk.Context, jsonCodec codec.JSONCodec, message json.RawMessage) []abci.ValidatorUpdate {
-
+func (w Wrapper) InitGenesis(_ sdk.Context, _ codec.JSONCodec, _ json.RawMessage) []abci.ValidatorUpdate {
 	return []abci.ValidatorUpdate{}
 }
 
-func (I IBCTransferHooksWrapper) ExportGenesis(context sdk.Context, jsonCodec codec.JSONCodec) json.RawMessage {
-
+func (w Wrapper) ExportGenesis(_ sdk.Context, _ codec.JSONCodec) json.RawMessage {
 	return nil
 }
 
-func (I IBCTransferHooksWrapper) RegisterInvariants(registry sdk.InvariantRegistry) {
+func (w Wrapper) RegisterInvariants(_ sdk.InvariantRegistry) {}
 
-	return
-}
-
-func (I IBCTransferHooksWrapper) Route() sdk.Route {
-
+func (w Wrapper) Route() sdk.Route {
 	return sdk.Route{}
 }
 
-func (I IBCTransferHooksWrapper) QuerierRoute() string {
+func (w Wrapper) QuerierRoute() string { return "" }
 
-	return ""
-}
-
-func (I IBCTransferHooksWrapper) LegacyQuerierHandler(amino *codec.LegacyAmino) sdk.Querier {
-
+func (w Wrapper) LegacyQuerierHandler(_ *codec.LegacyAmino) sdk.Querier {
 	return nil
 }
 
-func (I IBCTransferHooksWrapper) RegisterServices(configurator module.Configurator) {
+func (w Wrapper) RegisterServices(_ module.Configurator) {}
 
-	return
-}
+func (w Wrapper) ConsensusVersion() uint64 { return 1 }
 
-func (I IBCTransferHooksWrapper) ConsensusVersion() uint64 {
+func (w Wrapper) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
 
-	return 1
-}
-
-func (I IBCTransferHooksWrapper) BeginBlock(context sdk.Context, block abci.RequestBeginBlock) {
-
-	return
-}
-
-func (I IBCTransferHooksWrapper) EndBlock(context sdk.Context, block abci.RequestEndBlock) []abci.ValidatorUpdate {
-
+func (w Wrapper) EndBlock(_ sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
 	return []abci.ValidatorUpdate{}
 }
 
-func (I IBCTransferHooksWrapper) OnChanOpenInit(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID string, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, version string) error {
-
-	return I.ibcTransferApp.OnChanOpenInit(ctx, order, connectionHops, portID, channelID, channelCap, counterparty, version)
+func (w Wrapper) OnChanOpenInit(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID string, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, version string) error {
+	return w.ibcTransferApp.OnChanOpenInit(ctx, order, connectionHops, portID, channelID, channelCap, counterparty, version)
 }
 
-func (I IBCTransferHooksWrapper) OnChanOpenTry(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, counterpartyVersion string) (version string, err error) {
-
-	return I.ibcTransferApp.OnChanOpenTry(ctx, order, connectionHops, portID, channelID, channelCap, counterparty, counterpartyVersion)
+func (w Wrapper) OnChanOpenTry(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, counterpartyVersion string) (version string, err error) {
+	return w.ibcTransferApp.OnChanOpenTry(ctx, order, connectionHops, portID, channelID, channelCap, counterparty, counterpartyVersion)
 }
 
-func (I IBCTransferHooksWrapper) OnChanOpenAck(ctx sdk.Context, portID, channelID string, counterpartyChannelID string, counterpartyVersion string) error {
-
-	return I.ibcTransferApp.OnChanOpenAck(ctx, portID, channelID, counterpartyChannelID, counterpartyVersion)
+func (w Wrapper) OnChanOpenAck(ctx sdk.Context, portID, channelID string, counterpartyChannelID string, counterpartyVersion string) error {
+	return w.ibcTransferApp.OnChanOpenAck(ctx, portID, channelID, counterpartyChannelID, counterpartyVersion)
 }
 
-func (I IBCTransferHooksWrapper) OnChanOpenConfirm(ctx sdk.Context, portID, channelID string) error {
-
-	return I.ibcTransferApp.OnChanOpenConfirm(ctx, portID, channelID)
+func (w Wrapper) OnChanOpenConfirm(ctx sdk.Context, portID, channelID string) error {
+	return w.ibcTransferApp.OnChanOpenConfirm(ctx, portID, channelID)
 }
 
-func (I IBCTransferHooksWrapper) OnChanCloseInit(ctx sdk.Context, portID, channelID string) error {
-
-	return I.ibcTransferApp.OnChanCloseInit(ctx, portID, channelID)
+func (w Wrapper) OnChanCloseInit(ctx sdk.Context, portID, channelID string) error {
+	return w.ibcTransferApp.OnChanCloseInit(ctx, portID, channelID)
 }
 
-func (I IBCTransferHooksWrapper) OnChanCloseConfirm(ctx sdk.Context, portID, channelID string) error {
-
-	return I.ibcTransferApp.OnChanCloseConfirm(ctx, portID, channelID)
+func (w Wrapper) OnChanCloseConfirm(ctx sdk.Context, portID, channelID string) error {
+	return w.ibcTransferApp.OnChanCloseConfirm(ctx, portID, channelID)
 }
 
-func (I IBCTransferHooksWrapper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) exported.Acknowledgement {
-
-	ack := I.ibcTransferApp.OnRecvPacket(ctx, packet, relayer)
-	I.k.OnRecvPacket(ctx, packet, relayer, ack)
+func (w Wrapper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) exported.Acknowledgement {
+	ack := w.ibcTransferApp.OnRecvPacket(ctx, packet, relayer)
+	w.k.OnRecvPacket(ctx, packet, relayer, ack)
 
 	return ack
 }
 
-func (I IBCTransferHooksWrapper) OnAcknowledgementPacket(ctx sdk.Context, packet channeltypes.Packet, acknowledgement []byte, relayer sdk.AccAddress) error {
-
-	err := I.ibcTransferApp.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer)
-	I.k.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer, err)
+func (w Wrapper) OnAcknowledgementPacket(ctx sdk.Context, packet channeltypes.Packet, acknowledgement []byte, relayer sdk.AccAddress) error {
+	err := w.ibcTransferApp.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer)
+	w.k.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer, err)
 
 	return err
 }
 
-func (I IBCTransferHooksWrapper) OnTimeoutPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) error {
-
-	err := I.ibcTransferApp.OnTimeoutPacket(ctx, packet, relayer)
-	I.k.OnTimeoutPacket(ctx, packet, relayer, err)
+func (w Wrapper) OnTimeoutPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) error {
+	err := w.ibcTransferApp.OnTimeoutPacket(ctx, packet, relayer)
+	w.k.OnTimeoutPacket(ctx, packet, relayer, err)
 
 	return err
 }
