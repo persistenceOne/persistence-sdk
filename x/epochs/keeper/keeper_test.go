@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/persistenceOne/persistenceSDK/simapp"
-	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/simapp"
+	"github.com/persistenceOne/persistence-sdk/x/epochs/types"
 )
 
 type KeeperTestSuite struct {

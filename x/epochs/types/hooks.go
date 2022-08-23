@@ -3,7 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/persistenceOne/persistenceSDK/utils"
+	"github.com/persistenceOne/persistence-sdk/utils"
 )
 
 type EpochHooks interface {

@@ -12,7 +12,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
-	"github.com/persistenceOne/persistenceSDK/x/halving/types"
+	"github.com/persistenceOne/persistence-sdk/x/halving/types"
 )
 
 func registerQueryRoutes(cliCtx client.Context, r *mux.Router) {

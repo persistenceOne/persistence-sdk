@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/x/epochs/types"
 )
 
 var _ types.QueryServer = Querier{}

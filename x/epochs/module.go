@@ -28,10 +28,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 
-	"github.com/persistenceOne/persistenceSDK/x/epochs/client/cli"
-	"github.com/persistenceOne/persistenceSDK/x/epochs/keeper"
-	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
-	"github.com/persistenceOne/persistenceSDK/x/halving/client/rest"
+	"github.com/persistenceOne/persistence-sdk/x/epochs/client/cli"
+	"github.com/persistenceOne/persistence-sdk/x/epochs/keeper"
+	"github.com/persistenceOne/persistence-sdk/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/x/halving/client/rest"
 )
 
 var (

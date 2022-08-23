@@ -6,8 +6,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/persistenceOne/persistenceSDK/x/interchainquery/keeper"
-	"github.com/persistenceOne/persistenceSDK/x/interchainquery/types"
+	"github.com/persistenceOne/persistence-sdk/x/interchainquery/keeper"
+	"github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
 )
 
 // NewHandler returns a handler for interchainquery module messages

@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/persistenceOne/persistenceSDK/x/interchainquery/types"
+	"github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
 )
 
 const (

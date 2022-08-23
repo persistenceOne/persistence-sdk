@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"time"
 
-	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/x/epochs/types"
 )
 
 func (suite *KeeperTestSuite) TestAddEpochInfo() {

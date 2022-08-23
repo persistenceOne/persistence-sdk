@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/persistenceOne/persistenceSDK/x/interchainquery/types"
+	"github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
 )
 
 var _ types.QuerySrvrServer = Keeper{}

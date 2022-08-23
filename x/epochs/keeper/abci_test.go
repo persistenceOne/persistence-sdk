@@ -7,12 +7,12 @@ import (
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/persistenceOne/persistenceSDK/simapp"
-	"github.com/persistenceOne/persistenceSDK/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/simapp"
+	"github.com/persistenceOne/persistence-sdk/x/epochs/types"
 
 	"golang.org/x/exp/maps"
 
-	"github.com/persistenceOne/persistenceSDK/utils"
+	"github.com/persistenceOne/persistence-sdk/utils"
 )
 
 // This test is responsible for testing how epochs increment based off

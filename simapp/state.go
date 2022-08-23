@@ -19,7 +19,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	simappparams "github.com/persistenceOne/persistenceSDK/simapp/params"
+	simappparams "github.com/persistenceOne/persistence-sdk/simapp/params"
 )
 
 // AppStateFn returns the initial application state using a genesis or the simulation parameters.
