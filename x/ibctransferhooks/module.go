@@ -62,6 +62,13 @@ type Wrapper struct {
 	ibcTransferApp porttypes.IBCModule
 }
 
+func NewAppModule(keeper keeper.Keeper) Wrapper {
+	return Wrapper{
+		AppModuleBasic: AppModuleBasic{},
+		k:              keeper,
+	}
+}
+
 func (w Wrapper) InitGenesis(_ sdk.Context, _ codec.JSONCodec, _ json.RawMessage) []abci.ValidatorUpdate {
 	return []abci.ValidatorUpdate{}
 }
