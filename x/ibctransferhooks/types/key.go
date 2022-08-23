@@ -1,5 +1,5 @@
 package types
 
-var (
+const (
 	ModuleName = "ibctranferhooks"
 )
