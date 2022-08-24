@@ -5,7 +5,7 @@ import (
 	channelTypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
 	"github.com/cosmos/ibc-go/v3/modules/core/exported"
 
-	"github.com/persistenceOne/persistence-sdk/x/ibctransferhooks/types"
+	"github.com/persistenceOne/persistence-sdk/x/ibchooker/types"
 )
 
 var _ types.IBCTransferHooks = Keeper{}

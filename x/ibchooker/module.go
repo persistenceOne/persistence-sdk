@@ -1,4 +1,4 @@
-package ibctransferhooks
+package ibchooker
 
 import (
 	"encoding/json"
@@ -17,8 +17,8 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	ibctransferhookskeeper "github.com/persistenceOne/persistence-sdk/x/ibctransferhooks/keeper"
-	"github.com/persistenceOne/persistence-sdk/x/ibctransferhooks/types"
+	ibchookerkeeper "github.com/persistenceOne/persistence-sdk/x/ibchooker/keeper"
+	"github.com/persistenceOne/persistence-sdk/x/ibchooker/types"
 )
 
 var (
@@ -57,16 +57,16 @@ func (a AppModuleBasic) GetQueryCmd() *cobra.Command {
 
 type AppModule struct {
 	AppModuleBasic
-	keeper ibctransferhookskeeper.Keeper
+	keeper ibchookerkeeper.Keeper
 	// ONLY PASS IBC TRANSFER APP
-	ibcTransferApp porttypes.IBCModule
+	ibcApp porttypes.IBCModule
 }
 
-func NewAppModule(keeper ibctransferhookskeeper.Keeper, ibcTransferApp porttypes.IBCModule) AppModule {
+func NewAppModule(keeper ibchookerkeeper.Keeper, ibcTransferApp porttypes.IBCModule) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         keeper,
-		ibcTransferApp: ibcTransferApp,
+		ibcApp:         ibcTransferApp,
 	}
 }
 
@@ -101,45 +101,45 @@ func (am AppModule) EndBlock(_ sdk.Context, _ abci.RequestEndBlock) []abci.Valid
 }
 
 func (am AppModule) OnChanOpenInit(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID string, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, version string) error {
-	return am.ibcTransferApp.OnChanOpenInit(ctx, order, connectionHops, portID, channelID, channelCap, counterparty, version)
+	return am.ibcApp.OnChanOpenInit(ctx, order, connectionHops, portID, channelID, channelCap, counterparty, version)
 }
 
 func (am AppModule) OnChanOpenTry(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, counterpartyVersion string) (version string, err error) {
-	return am.ibcTransferApp.OnChanOpenTry(ctx, order, connectionHops, portID, channelID, channelCap, counterparty, counterpartyVersion)
+	return am.ibcApp.OnChanOpenTry(ctx, order, connectionHops, portID, channelID, channelCap, counterparty, counterpartyVersion)
 }
 
 func (am AppModule) OnChanOpenAck(ctx sdk.Context, portID, channelID string, counterpartyChannelID string, counterpartyVersion string) error {
-	return am.ibcTransferApp.OnChanOpenAck(ctx, portID, channelID, counterpartyChannelID, counterpartyVersion)
+	return am.ibcApp.OnChanOpenAck(ctx, portID, channelID, counterpartyChannelID, counterpartyVersion)
 }
 
 func (am AppModule) OnChanOpenConfirm(ctx sdk.Context, portID, channelID string) error {
-	return am.ibcTransferApp.OnChanOpenConfirm(ctx, portID, channelID)
+	return am.ibcApp.OnChanOpenConfirm(ctx, portID, channelID)
 }
 
 func (am AppModule) OnChanCloseInit(ctx sdk.Context, portID, channelID string) error {
-	return am.ibcTransferApp.OnChanCloseInit(ctx, portID, channelID)
+	return am.ibcApp.OnChanCloseInit(ctx, portID, channelID)
 }
 
 func (am AppModule) OnChanCloseConfirm(ctx sdk.Context, portID, channelID string) error {
-	return am.ibcTransferApp.OnChanCloseConfirm(ctx, portID, channelID)
+	return am.ibcApp.OnChanCloseConfirm(ctx, portID, channelID)
 }
 
 func (am AppModule) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) exported.Acknowledgement {
-	ack := am.ibcTransferApp.OnRecvPacket(ctx, packet, relayer)
+	ack := am.ibcApp.OnRecvPacket(ctx, packet, relayer)
 	am.keeper.OnRecvPacket(ctx, packet, relayer, ack)
 
 	return ack
 }
 
 func (am AppModule) OnAcknowledgementPacket(ctx sdk.Context, packet channeltypes.Packet, acknowledgement []byte, relayer sdk.AccAddress) error {
-	err := am.ibcTransferApp.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer)
+	err := am.ibcApp.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer)
 	am.keeper.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer, err)
 
 	return err
 }
 
 func (am AppModule) OnTimeoutPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) error {
-	err := am.ibcTransferApp.OnTimeoutPacket(ctx, packet, relayer)
+	err := am.ibcApp.OnTimeoutPacket(ctx, packet, relayer)
 	am.keeper.OnTimeoutPacket(ctx, packet, relayer, err)
 
 	return err

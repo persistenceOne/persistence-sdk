@@ -1,6 +1,6 @@
 package keeper
 
-import "github.com/persistenceOne/persistence-sdk/x/ibctransferhooks/types"
+import "github.com/persistenceOne/persistence-sdk/x/ibchooker/types"
 
 type Keeper struct {
 	hooks types.IBCTransferHooks
