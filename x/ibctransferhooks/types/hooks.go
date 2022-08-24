@@ -8,7 +8,7 @@ import (
 
 var _ IBCTransferHooks = MultiIBCTransferHooks{}
 
-// combine multiple ibc transfer hooks, all hook functions are run in array sequence
+// MultiIBCTransferHooks combine multiple ibc transfer hooks, all hook functions are run in array sequence
 type MultiIBCTransferHooks []IBCTransferHooks
 
 func NewMultiStakingHooks(hooks ...IBCTransferHooks) MultiIBCTransferHooks {
