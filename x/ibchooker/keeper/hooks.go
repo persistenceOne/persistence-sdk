@@ -8,7 +8,7 @@ import (
 	"github.com/persistenceOne/persistence-sdk/x/ibchooker/types"
 )
 
-var _ types.IBCTransferHooks = Keeper{}
+var _ types.IBCHandshakeHooks = Keeper{}
 
 func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channelTypes.Packet, relayer sdk.AccAddress, transferAck exported.Acknowledgement) {
 	if k.hooks != nil {

@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/ibc-go/v3/modules/core/exported"
 )
 
-type IBCTransferHooks interface {
+type IBCHandshakeHooks interface {
 	// Do we care about `relayer sdk.AccAddress` argument here?
 	OnRecvPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferAck exported.Acknowledgement)
 	OnAcknowledgementPacket(ctx sdk.Context, packet types.Packet, acknowledgement []byte, relayer sdk.AccAddress, transferAckErr error)

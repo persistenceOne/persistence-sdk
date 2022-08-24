@@ -3,7 +3,7 @@ package keeper
 import "github.com/persistenceOne/persistence-sdk/x/ibchooker/types"
 
 type Keeper struct {
-	hooks types.IBCTransferHooks
+	hooks types.IBCHandshakeHooks
 }
 
 func NewKeeper() Keeper {
@@ -13,7 +13,7 @@ func NewKeeper() Keeper {
 }
 
 // Set the validator hooks
-func (k *Keeper) SetHooks(transferHooks types.IBCTransferHooks) *Keeper {
+func (k *Keeper) SetHooks(transferHooks types.IBCHandshakeHooks) *Keeper {
 	if k.hooks != nil {
 		panic("cannot set hooks twice")
 	}

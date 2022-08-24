@@ -6,28 +6,28 @@ import (
 	"github.com/cosmos/ibc-go/v3/modules/core/exported"
 )
 
-var _ IBCTransferHooks = MultiIBCTransferHooks{}
+var _ IBCHandshakeHooks = MultiIBCHandshakeHooks{}
 
-// MultiIBCTransferHooks combine multiple ibc transfer hooks, all hook functions are run in array sequence
-type MultiIBCTransferHooks []IBCTransferHooks
+// MultiIBCHandshakeHooks combine multiple ibc transfer hooks, all hook functions are run in array sequence
+type MultiIBCHandshakeHooks []IBCHandshakeHooks
 
-func NewMultiStakingHooks(hooks ...IBCTransferHooks) MultiIBCTransferHooks {
+func NewMultiStakingHooks(hooks ...IBCHandshakeHooks) MultiIBCHandshakeHooks {
 	return hooks
 }
 
-func (h MultiIBCTransferHooks) OnRecvPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferAck exported.Acknowledgement) {
+func (h MultiIBCHandshakeHooks) OnRecvPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferAck exported.Acknowledgement) {
 	for i := range h {
 		h[i].OnRecvPacket(ctx, packet, relayer, transferAck)
 	}
 }
 
-func (h MultiIBCTransferHooks) OnAcknowledgementPacket(ctx sdk.Context, packet types.Packet, acknowledgement []byte, relayer sdk.AccAddress, transferAckErr error) {
+func (h MultiIBCHandshakeHooks) OnAcknowledgementPacket(ctx sdk.Context, packet types.Packet, acknowledgement []byte, relayer sdk.AccAddress, transferAckErr error) {
 	for i := range h {
 		h[i].OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer, transferAckErr)
 	}
 }
 
-func (h MultiIBCTransferHooks) OnTimeoutPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferTimeoutErr error) {
+func (h MultiIBCHandshakeHooks) OnTimeoutPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferTimeoutErr error) {
 	for i := range h {
 		h[i].OnTimeoutPacket(ctx, packet, relayer, transferTimeoutErr)
 	}
