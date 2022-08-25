@@ -32,7 +32,7 @@ type TypesTestSuite struct {
 	path   *ibctesting.Path
 }
 
-func (s *TypesTestSuite) GetSimApp(chain *ibctesting.TestChain) *simapp.SimApp {
+func (suite *TypesTestSuite) GetSimApp(chain *ibctesting.TestChain) *simapp.SimApp {
 	app, ok := chain.App.(*simapp.SimApp)
 	if !ok {
 		panic("not sim app")
@@ -41,13 +41,36 @@ func (s *TypesTestSuite) GetSimApp(chain *ibctesting.TestChain) *simapp.SimApp {
 	return app
 }
 
-func (s *TypesTestSuite) SetupTest() {
-	s.coordinator = ibctesting.NewCoordinator(s.T(), 2)
-	s.chainA = s.coordinator.GetChain(ibctesting.GetChainID(1))
-	s.chainB = s.coordinator.GetChain(ibctesting.GetChainID(2))
+func (suite *TypesTestSuite) SetupTest() {
+	suite.coordinator = ibctesting.NewCoordinator(suite.T(), 2)
+	suite.chainA = suite.coordinator.GetChain(ibctesting.GetChainID(1))
+	suite.chainB = suite.coordinator.GetChain(ibctesting.GetChainID(2))
 
-	s.path = newSimAppPath(s.chainA, s.chainB)
-	s.coordinator.SetupConnections(s.path)
+	suite.path = newSimAppPath(suite.chainA, suite.chainB)
+	suite.coordinator.SetupConnections(suite.path)
+}
+
+func (suite *TypesTestSuite) TestMsgSubmitQueryResponse() {
+	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: stakingtypes.BondStatusBonded}
+	bz, err := bondedQuery.Marshal()
+	suite.NoError(err)
+
+	qvr := stakingtypes.QueryValidatorsResponse{
+		Validators: suite.GetSimApp(suite.chainB).StakingKeeper.GetBondedValidatorsByPower(suite.chainB.GetContext()),
+	}
+
+	msg := types.MsgSubmitQueryResponse{
+		ChainId:     suite.chainB.ChainID + "-N",
+		QueryId:     keeper.GenerateQueryHash(suite.path.EndpointB.ConnectionID, suite.chainB.ChainID, "cosmos.staking.v1beta1.Query/Validators", bz, ""),
+		Result:      suite.GetSimApp(suite.chainB).AppCodec().MustMarshalJSON(&qvr),
+		Height:      suite.chainB.CurrentHeader.Height,
+		FromAddress: TestOwnerAddress,
+	}
+
+	suite.NoError(msg.ValidateBasic())
+	suite.Equal(types.RouterKey, msg.Route())
+	suite.Equal(types.TypeMsgSubmitQueryResponse, msg.Type())
+	suite.Equal(TestOwnerAddress, msg.GetSigners()[0].String())
 }
 
 func newSimAppPath(chainA, chainB *ibctesting.TestChain) *ibctesting.Path {
@@ -56,27 +79,4 @@ func newSimAppPath(chainA, chainB *ibctesting.TestChain) *ibctesting.Path {
 	path.EndpointB.ChannelConfig.PortID = ibctesting.TransferPort
 
 	return path
-}
-
-func (s *TypesTestSuite) TestMsgSubmitQueryResponse() {
-	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: stakingtypes.BondStatusBonded}
-	bz1, err := bondedQuery.Marshal()
-	s.NoError(err)
-
-	qvr := stakingtypes.QueryValidatorsResponse{
-		Validators: s.GetSimApp(s.chainB).StakingKeeper.GetBondedValidatorsByPower(s.chainB.GetContext()),
-	}
-
-	msg := types.MsgSubmitQueryResponse{
-		ChainId:     s.chainB.ChainID + "-N",
-		QueryId:     keeper.GenerateQueryHash(s.path.EndpointB.ConnectionID, s.chainB.ChainID, "cosmos.staking.v1beta1.Query/Validators", bz1, ""),
-		Result:      s.GetSimApp(s.chainB).AppCodec().MustMarshalJSON(&qvr),
-		Height:      s.chainB.CurrentHeader.Height,
-		FromAddress: TestOwnerAddress,
-	}
-
-	s.NoError(msg.ValidateBasic())
-	s.Equal(types.RouterKey, msg.Route())
-	s.Equal(types.TypeMsgSubmitQueryResponse, msg.Type())
-	s.Equal(TestOwnerAddress, msg.GetSigners()[0].String())
 }

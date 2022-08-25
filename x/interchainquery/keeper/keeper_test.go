@@ -33,7 +33,7 @@ type KeeperTestSuite struct {
 	path   *ibctesting.Path
 }
 
-func (s *KeeperTestSuite) GetSimApp(chain *ibctesting.TestChain) *simapp.SimApp {
+func (suite *KeeperTestSuite) GetSimApp(chain *ibctesting.TestChain) *simapp.SimApp {
 	app, ok := chain.App.(*simapp.SimApp)
 	if !ok {
 		panic("not sim app")
@@ -42,55 +42,47 @@ func (s *KeeperTestSuite) GetSimApp(chain *ibctesting.TestChain) *simapp.SimApp 
 	return app
 }
 
-func (s *KeeperTestSuite) SetupTest() {
-	s.coordinator = ibctesting.NewCoordinator(s.T(), 2)
-	s.chainA = s.coordinator.GetChain(ibctesting.GetChainID(1))
-	s.chainB = s.coordinator.GetChain(ibctesting.GetChainID(2))
+func (suite *KeeperTestSuite) SetupTest() {
+	suite.coordinator = ibctesting.NewCoordinator(suite.T(), 2)
+	suite.chainA = suite.coordinator.GetChain(ibctesting.GetChainID(1))
+	suite.chainB = suite.coordinator.GetChain(ibctesting.GetChainID(2))
 
-	s.path = newSimAppPath(s.chainA, s.chainB)
-	s.coordinator.SetupConnections(s.path)
+	suite.path = newSimAppPath(suite.chainA, suite.chainB)
+	suite.coordinator.SetupConnections(suite.path)
 }
 
-func newSimAppPath(chainA, chainB *ibctesting.TestChain) *ibctesting.Path {
-	path := ibctesting.NewPath(chainA, chainB)
-	path.EndpointA.ChannelConfig.PortID = ibctesting.TransferPort
-	path.EndpointB.ChannelConfig.PortID = ibctesting.TransferPort
-
-	return path
-}
-
-func (s *KeeperTestSuite) TestMakeRequest() {
+func (suite *KeeperTestSuite) TestMakeRequest() {
 	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: stakingtypes.BondStatusBonded}
-	bz1, err := bondedQuery.Marshal()
-	s.NoError(err)
+	bz, err := bondedQuery.Marshal()
+	suite.NoError(err)
 
-	s.GetSimApp(s.chainA).InterchainQueryKeeper.MakeRequest(
-		s.chainA.GetContext(),
-		s.path.EndpointB.ConnectionID,
-		s.chainB.ChainID,
+	suite.GetSimApp(suite.chainA).InterchainQueryKeeper.MakeRequest(
+		suite.chainA.GetContext(),
+		suite.path.EndpointB.ConnectionID,
+		suite.chainB.ChainID,
 		"cosmos.staking.v1beta1.Query/Validators",
-		bz1,
+		bz,
 		sdk.NewInt(200),
 		"",
 		"",
 		0,
 	)
 
-	id := keeper.GenerateQueryHash(s.path.EndpointB.ConnectionID, s.chainB.ChainID, "cosmos.staking.v1beta1.Query/Validators", bz1, "")
-	query, found := s.GetSimApp(s.chainA).InterchainQueryKeeper.GetQuery(s.chainA.GetContext(), id)
-	s.True(found)
-	s.Equal(s.path.EndpointB.ConnectionID, query.ConnectionId)
-	s.Equal(s.chainB.ChainID, query.ChainId)
-	s.Equal("cosmos.staking.v1beta1.Query/Validators", query.QueryType)
-	s.Equal(sdk.NewInt(200), query.Period)
-	s.Equal("", query.CallbackId)
+	id := keeper.GenerateQueryHash(suite.path.EndpointB.ConnectionID, suite.chainB.ChainID, "cosmos.staking.v1beta1.Query/Validators", bz, "")
+	query, found := suite.GetSimApp(suite.chainA).InterchainQueryKeeper.GetQuery(suite.chainA.GetContext(), id)
+	suite.True(found)
+	suite.Equal(suite.path.EndpointB.ConnectionID, query.ConnectionId)
+	suite.Equal(suite.chainB.ChainID, query.ChainId)
+	suite.Equal("cosmos.staking.v1beta1.Query/Validators", query.QueryType)
+	suite.Equal(sdk.NewInt(200), query.Period)
+	suite.Equal("", query.CallbackId)
 
-	s.GetSimApp(s.chainA).InterchainQueryKeeper.MakeRequest(
-		s.chainA.GetContext(),
-		s.path.EndpointB.ConnectionID,
-		s.chainB.ChainID,
+	suite.GetSimApp(suite.chainA).InterchainQueryKeeper.MakeRequest(
+		suite.chainA.GetContext(),
+		suite.path.EndpointB.ConnectionID,
+		suite.chainB.ChainID,
 		"cosmos.staking.v1beta1.Query/Validators",
-		bz1,
+		bz,
 		sdk.NewInt(200),
 		"",
 		"",
@@ -98,13 +90,13 @@ func (s *KeeperTestSuite) TestMakeRequest() {
 	)
 }
 
-func (s *KeeperTestSuite) TestSubmitQueryResponse() {
+func (suite *KeeperTestSuite) TestSubmitQueryResponse() {
 	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: stakingtypes.BondStatusBonded}
-	bz1, err := bondedQuery.Marshal()
-	s.NoError(err)
+	bz, err := bondedQuery.Marshal()
+	suite.NoError(err)
 
 	qvr := stakingtypes.QueryValidatorsResponse{
-		Validators: s.GetSimApp(s.chainB).StakingKeeper.GetBondedValidatorsByPower(s.chainB.GetContext()),
+		Validators: suite.GetSimApp(suite.chainB).StakingKeeper.GetBondedValidatorsByPower(suite.chainB.GetContext()),
 	}
 
 	tests := []struct {
@@ -113,14 +105,14 @@ func (s *KeeperTestSuite) TestSubmitQueryResponse() {
 		expectError error
 	}{
 		{
-			s.GetSimApp(s.chainA).InterchainQueryKeeper.
+			suite.GetSimApp(suite.chainA).InterchainQueryKeeper.
 				NewQuery(
-					s.chainA.GetContext(),
+					suite.chainA.GetContext(),
 					"",
-					s.path.EndpointB.ConnectionID,
-					s.chainB.ChainID,
+					suite.path.EndpointB.ConnectionID,
+					suite.chainB.ChainID,
 					"cosmos.staking.v1beta1.Query/Validators",
-					bz1,
+					bz,
 					sdk.NewInt(200),
 					"",
 					0,
@@ -129,14 +121,14 @@ func (s *KeeperTestSuite) TestSubmitQueryResponse() {
 			nil,
 		},
 		{
-			s.GetSimApp(s.chainA).InterchainQueryKeeper.
+			suite.GetSimApp(suite.chainA).InterchainQueryKeeper.
 				NewQuery(
-					s.chainA.GetContext(),
+					suite.chainA.GetContext(),
 					"",
-					s.path.EndpointB.ConnectionID,
-					s.chainB.ChainID,
+					suite.path.EndpointB.ConnectionID,
+					suite.chainB.ChainID,
 					"cosmos.staking.v1beta1.Query/Validators",
-					bz1,
+					bz,
 					sdk.NewInt(200),
 					"",
 					10,
@@ -145,14 +137,14 @@ func (s *KeeperTestSuite) TestSubmitQueryResponse() {
 			nil,
 		},
 		{
-			s.GetSimApp(s.chainA).InterchainQueryKeeper.
+			suite.GetSimApp(suite.chainA).InterchainQueryKeeper.
 				NewQuery(
-					s.chainA.GetContext(),
+					suite.chainA.GetContext(),
 					"",
-					s.path.EndpointB.ConnectionID,
-					s.chainB.ChainID,
+					suite.path.EndpointB.ConnectionID,
+					suite.chainB.ChainID,
 					"cosmos.staking.v1beta1.Query/Validators",
-					bz1,
+					bz,
 					sdk.NewInt(-200),
 					"",
 					0,
@@ -161,14 +153,14 @@ func (s *KeeperTestSuite) TestSubmitQueryResponse() {
 			nil,
 		},
 		{
-			s.GetSimApp(s.chainA).InterchainQueryKeeper.
+			suite.GetSimApp(suite.chainA).InterchainQueryKeeper.
 				NewQuery(
-					s.chainA.GetContext(),
+					suite.chainA.GetContext(),
 					"",
-					s.path.EndpointB.ConnectionID,
-					s.chainB.ChainID,
+					suite.path.EndpointB.ConnectionID,
+					suite.chainB.ChainID,
 					"cosmos.staking.v1beta1.Query/Validators",
-					bz1,
+					bz,
 					sdk.NewInt(100),
 					"",
 					0,
@@ -181,46 +173,54 @@ func (s *KeeperTestSuite) TestSubmitQueryResponse() {
 	for _, tc := range tests {
 		// set the query
 		if tc.setQuery {
-			s.GetSimApp(s.chainA).InterchainQueryKeeper.SetQuery(s.chainA.GetContext(), *tc.query)
+			suite.GetSimApp(suite.chainA).InterchainQueryKeeper.SetQuery(suite.chainA.GetContext(), *tc.query)
 		}
 
-		icqmsgSrv := keeper.NewMsgServerImpl(s.GetSimApp(s.chainA).InterchainQueryKeeper)
+		icqmsgSrv := keeper.NewMsgServerImpl(suite.GetSimApp(suite.chainA).InterchainQueryKeeper)
 
 		qmsg := icqtypes.MsgSubmitQueryResponse{
-			ChainId:     s.chainB.ChainID,
-			QueryId:     keeper.GenerateQueryHash(tc.query.ConnectionId, tc.query.ChainId, tc.query.QueryType, bz1, ""),
-			Result:      s.GetSimApp(s.chainB).AppCodec().MustMarshalJSON(&qvr),
-			Height:      s.chainB.CurrentHeader.Height,
+			ChainId:     suite.chainB.ChainID,
+			QueryId:     keeper.GenerateQueryHash(tc.query.ConnectionId, tc.query.ChainId, tc.query.QueryType, bz, ""),
+			Result:      suite.GetSimApp(suite.chainB).AppCodec().MustMarshalJSON(&qvr),
+			Height:      suite.chainB.CurrentHeader.Height,
 			FromAddress: TestOwnerAddress,
 		}
 
-		_, err = icqmsgSrv.SubmitQueryResponse(sdk.WrapSDKContext(s.chainA.GetContext()), &qmsg)
-		s.Equal(tc.expectError, err)
+		_, err = icqmsgSrv.SubmitQueryResponse(sdk.WrapSDKContext(suite.chainA.GetContext()), &qmsg)
+		suite.Equal(tc.expectError, err)
 	}
 }
 
-func (s *KeeperTestSuite) TestDataPoints() {
+func (suite *KeeperTestSuite) TestDataPoints() {
 	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: stakingtypes.BondStatusBonded}
-	bz1, err := bondedQuery.Marshal()
-	s.NoError(err)
+	bz, err := bondedQuery.Marshal()
+	suite.NoError(err)
 
 	qvr := stakingtypes.QueryValidatorsResponse{
-		Validators: s.GetSimApp(s.chainB).StakingKeeper.GetBondedValidatorsByPower(s.chainB.GetContext()),
+		Validators: suite.GetSimApp(suite.chainB).StakingKeeper.GetBondedValidatorsByPower(suite.chainB.GetContext()),
 	}
 
-	id := keeper.GenerateQueryHash(s.path.EndpointB.ConnectionID, s.chainB.ChainID, "cosmos.staking.v1beta1.Query/Validators", bz1, "")
+	id := keeper.GenerateQueryHash(suite.path.EndpointB.ConnectionID, suite.chainB.ChainID, "cosmos.staking.v1beta1.Query/Validators", bz, "")
 
-	err = s.GetSimApp(s.chainA).InterchainQueryKeeper.SetDatapointForID(
-		s.chainA.GetContext(),
+	err = suite.GetSimApp(suite.chainA).InterchainQueryKeeper.SetDatapointForID(
+		suite.chainA.GetContext(),
 		id,
-		s.GetSimApp(s.chainB).AppCodec().MustMarshalJSON(&qvr),
-		sdk.NewInt(s.chainB.CurrentHeader.Height),
+		suite.GetSimApp(suite.chainB).AppCodec().MustMarshalJSON(&qvr),
+		sdk.NewInt(suite.chainB.CurrentHeader.Height),
 	)
-	s.NoError(err)
+	suite.NoError(err)
 
-	dataPoint, err := s.GetSimApp(s.chainA).InterchainQueryKeeper.GetDatapointForID(s.chainA.GetContext(), id)
-	s.NoError(err)
-	s.NotNil(dataPoint)
+	dataPoint, err := suite.GetSimApp(suite.chainA).InterchainQueryKeeper.GetDatapointForID(suite.chainA.GetContext(), id)
+	suite.NoError(err)
+	suite.NotNil(dataPoint)
 
-	s.GetSimApp(s.chainA).InterchainQueryKeeper.DeleteDatapoint(s.chainA.GetContext(), id)
+	suite.GetSimApp(suite.chainA).InterchainQueryKeeper.DeleteDatapoint(suite.chainA.GetContext(), id)
+}
+
+func newSimAppPath(chainA, chainB *ibctesting.TestChain) *ibctesting.Path {
+	path := ibctesting.NewPath(chainA, chainB)
+	path.EndpointA.ChannelConfig.PortID = ibctesting.TransferPort
+	path.EndpointB.ChannelConfig.PortID = ibctesting.TransferPort
+
+	return path
 }

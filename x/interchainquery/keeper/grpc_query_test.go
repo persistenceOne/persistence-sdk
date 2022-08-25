@@ -7,34 +7,34 @@ import (
 	icqtypes "github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
 )
 
-func (s *KeeperTestSuite) TestQueries() {
+func (suite *KeeperTestSuite) TestQueries() {
 	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: stakingtypes.BondStatusBonded}
-	bz1, err := bondedQuery.Marshal()
-	s.NoError(err)
+	bz, err := bondedQuery.Marshal()
+	suite.NoError(err)
 
-	query := s.GetSimApp(s.chainA).InterchainQueryKeeper.NewQuery(
-		s.chainA.GetContext(),
+	query := suite.GetSimApp(suite.chainA).InterchainQueryKeeper.NewQuery(
+		suite.chainA.GetContext(),
 		"",
-		s.path.EndpointB.ConnectionID,
-		s.chainB.ChainID,
+		suite.path.EndpointB.ConnectionID,
+		suite.chainB.ChainID,
 		"cosmos.staking.v1beta1.Query/Validators",
-		bz1,
+		bz,
 		sdk.NewInt(200),
 		"",
 		0,
 	)
 
 	// set the query
-	s.GetSimApp(s.chainA).InterchainQueryKeeper.SetQuery(s.chainA.GetContext(), *query)
+	suite.GetSimApp(suite.chainA).InterchainQueryKeeper.SetQuery(suite.chainA.GetContext(), *query)
 
-	icqsrvSrv := icqtypes.QuerySrvrServer(s.GetSimApp(s.chainA).InterchainQueryKeeper)
+	icqsrvSrv := icqtypes.QuerySrvrServer(suite.GetSimApp(suite.chainA).InterchainQueryKeeper)
 
-	res, err := icqsrvSrv.Queries(sdk.WrapSDKContext(s.chainA.GetContext()), &icqtypes.QueryRequestsRequest{ConnectionId: s.path.EndpointB.ConnectionID})
-	s.NoError(err)
-	s.Len(res.Queries, 1)
-	s.Equal(s.path.EndpointB.ConnectionID, res.Queries[0].ConnectionId)
-	s.Equal(s.chainB.ChainID, res.Queries[0].ChainId)
-	s.Equal("cosmos.staking.v1beta1.Query/Validators", res.Queries[0].QueryType)
-	s.Equal(sdk.NewInt(200), res.Queries[0].Period)
-	s.Equal("", res.Queries[0].CallbackId)
+	res, err := icqsrvSrv.Queries(sdk.WrapSDKContext(suite.chainA.GetContext()), &icqtypes.QueryRequestsRequest{ConnectionId: suite.path.EndpointB.ConnectionID})
+	suite.NoError(err)
+	suite.Len(res.Queries, 1)
+	suite.Equal(suite.path.EndpointB.ConnectionID, res.Queries[0].ConnectionId)
+	suite.Equal(suite.chainB.ChainID, res.Queries[0].ChainId)
+	suite.Equal("cosmos.staking.v1beta1.Query/Validators", res.Queries[0].QueryType)
+	suite.Equal(sdk.NewInt(200), res.Queries[0].Period)
+	suite.Equal("", res.Queries[0].CallbackId)
 }
