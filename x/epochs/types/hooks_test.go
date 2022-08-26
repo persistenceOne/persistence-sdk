@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -26,6 +27,22 @@ func (suite *KeeperTestSuite) SetupTest() {
 	suite.queryClient = types.NewQueryClient(suite.QueryHelper)
 }
 
+func dummyAfterEpochEndEvent(epochIdentifier string, epochNumber int64) sdk.Event {
+	return sdk.NewEvent(
+		"afterEpochEnd",
+		sdk.NewAttribute("epochIdentifier", epochIdentifier),
+		sdk.NewAttribute("epochNumber", strconv.FormatInt(epochNumber, 10)),
+	)
+}
+
+func dummyBeforeEpochStartEvent(epochIdentifier string, epochNumber int64) sdk.Event {
+	return sdk.NewEvent(
+		"beforeEpochStart",
+		sdk.NewAttribute("epochIdentifier", epochIdentifier),
+		sdk.NewAttribute("epochNumber", strconv.FormatInt(epochNumber, 10)),
+	)
+}
+
 // dummyEpochHook is a struct satisfying the epoch hook interface,
 // that maintains a counter for how many times its been successfully called,
 // and a boolean for whether it should panic during its execution.
@@ -38,14 +55,20 @@ func (hook *dummyEpochHook) AfterEpochEnd(ctx sdk.Context, epochIdentifier strin
 	if hook.shouldPanic {
 		panic("dummyEpochHook is panicking")
 	}
+
 	hook.successCounter++
+
+	ctx.EventManager().EmitEvent(dummyAfterEpochEndEvent(epochIdentifier, epochNumber))
 }
 
 func (hook *dummyEpochHook) BeforeEpochStart(ctx sdk.Context, epochIdentifier string, epochNumber int64) {
 	if hook.shouldPanic {
 		panic("dummyEpochHook is panicking")
 	}
+
 	hook.successCounter++
+
+	ctx.EventManager().EmitEvent(dummyBeforeEpochStartEvent(epochIdentifier, epochNumber))
 }
 
 func (hook *dummyEpochHook) Clone() *dummyEpochHook {
@@ -55,7 +78,7 @@ func (hook *dummyEpochHook) Clone() *dummyEpochHook {
 
 var _ types.EpochHooks = &dummyEpochHook{}
 
-func (suite *KeeperTestSuite) TestHooksPanicRecovery() {
+func (suite *KeeperTestSuite) TestHooksPanicRecoveryAndEvents() {
 	panicHook := dummyEpochHook{shouldPanic: true}
 	noPanicHook := dummyEpochHook{shouldPanic: false}
 	simpleHooks := []dummyEpochHook{panicHook, noPanicHook}
@@ -84,8 +107,13 @@ func (suite *KeeperTestSuite) TestHooksPanicRecovery() {
 				//nolint:scopelint,testfile
 				if epochActionSelector == 0 {
 					hooks.BeforeEpochStart(suite.Ctx, "id", 0)
+					suite.Require().Equal(suite.Ctx.EventManager().Events(), sdk.Events{dummyBeforeEpochStartEvent("id", 0)},
+						"test case index %d, before epoch event check", tcIndex)
 				} else if epochActionSelector == 1 {
 					hooks.AfterEpochEnd(suite.Ctx, "id", 0)
+					suite.Require().Equal(suite.Ctx.EventManager().Events(), sdk.Events{dummyAfterEpochEndEvent("id", 0)},
+						"test case index %d, after epoch event check", tcIndex)
+
 				}
 			})
 
