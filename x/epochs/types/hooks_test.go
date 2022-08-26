@@ -57,6 +57,7 @@ func (hook *dummyEpochHook) AfterEpochEnd(ctx sdk.Context, epochIdentifier strin
 	}
 
 	hook.successCounter++
+
 	ctx.EventManager().EmitEvent(dummyAfterEpochEndEvent(epochIdentifier, epochNumber))
 }
 
@@ -66,6 +67,7 @@ func (hook *dummyEpochHook) BeforeEpochStart(ctx sdk.Context, epochIdentifier st
 	}
 
 	hook.successCounter++
+
 	ctx.EventManager().EmitEvent(dummyBeforeEpochStartEvent(epochIdentifier, epochNumber))
 }
 
