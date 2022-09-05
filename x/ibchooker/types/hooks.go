@@ -32,7 +32,6 @@ func (h MultiIBCHandshakeHooks) OnAcknowledgementPacket(ctx sdk.Context, packet 
 		wrappedHookFn := func(ctx sdk.Context) error {
 			return h[i].OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer, transferAckErr)
 		}
-		// error is already logged
 		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
 		ctx.Logger().Error("Error occurred in calling OnAcknowledgementPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
 	}
@@ -44,7 +43,6 @@ func (h MultiIBCHandshakeHooks) OnTimeoutPacket(ctx sdk.Context, packet types.Pa
 		wrappedHookFn := func(ctx sdk.Context) error {
 			return h[i].OnTimeoutPacket(ctx, packet, relayer, transferTimeoutErr)
 		}
-		// error is already logged
 		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
 		ctx.Logger().Error("Error occurred in calling OnTimeoutPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
 	}
