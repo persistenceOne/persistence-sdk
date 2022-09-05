@@ -16,77 +16,37 @@ func NewMultiStakingHooks(hooks ...IBCHandshakeHooks) MultiIBCHandshakeHooks {
 	return hooks
 }
 
-func (h MultiIBCHandshakeHooks) OnRecvPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferAck exported.Acknowledgement) {
+func (h MultiIBCHandshakeHooks) OnRecvPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferAck exported.Acknowledgement) error {
 	for i := range h {
-		panicCatchingOnRecvPacketFnHook(ctx, h[i].OnRecvPacket, packet, relayer, transferAck)
+		wrappedHookFn := func(ctx sdk.Context) error {
+			return h[i].OnRecvPacket(ctx, packet, relayer, transferAck)
+		}
+		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
+		ctx.Logger().Error("Error occurred in calling OnRecvPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
 	}
+	return nil
 }
 
-func (h MultiIBCHandshakeHooks) OnAcknowledgementPacket(ctx sdk.Context, packet types.Packet, acknowledgement []byte, relayer sdk.AccAddress, transferAckErr error) {
+func (h MultiIBCHandshakeHooks) OnAcknowledgementPacket(ctx sdk.Context, packet types.Packet, acknowledgement []byte, relayer sdk.AccAddress, transferAckErr error) error {
 	for i := range h {
-		panicCatchingOnAcknowledgementPacketFnHook(ctx, h[i].OnAcknowledgementPacket, packet, acknowledgement, relayer, transferAckErr)
+		wrappedHookFn := func(ctx sdk.Context) error {
+			return h[i].OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer, transferAckErr)
+		}
+		// error is already logged
+		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
+		ctx.Logger().Error("Error occurred in calling OnAcknowledgementPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
 	}
+	return nil
 }
 
-func (h MultiIBCHandshakeHooks) OnTimeoutPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferTimeoutErr error) {
+func (h MultiIBCHandshakeHooks) OnTimeoutPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferTimeoutErr error) error {
 	for i := range h {
-		panicCatchingOnTimeoutPacketFnHook(ctx, h[i].OnTimeoutPacket, packet, relayer, transferTimeoutErr)
+		wrappedHookFn := func(ctx sdk.Context) error {
+			return h[i].OnTimeoutPacket(ctx, packet, relayer, transferTimeoutErr)
+		}
+		// error is already logged
+		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
+		ctx.Logger().Error("Error occurred in calling OnTimeoutPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
 	}
-}
-
-// Panic catching Fn implementations
-// We want to be using cacheContext in case of failure not to write entire code block
-func panicCatchingOnRecvPacketFnHook(
-	ctx sdk.Context,
-	onRecvPacketFn func(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferAck exported.Acknowledgement),
-	packet types.Packet,
-	relayer sdk.AccAddress,
-	transferAck exported.Acknowledgement,
-) {
-	defer func() {
-		if recovErr := recover(); recovErr != nil {
-			utils.PrintPanicRecoveryError(ctx, recovErr)
-		}
-	}()
-
-	cacheCtx, write := ctx.CacheContext()
-	onRecvPacketFn(cacheCtx, packet, relayer, transferAck)
-	write()
-}
-
-func panicCatchingOnAcknowledgementPacketFnHook(
-	ctx sdk.Context,
-	onAcknowledgementPacketFn func(ctx sdk.Context, packet types.Packet, acknowledgement []byte, relayer sdk.AccAddress, transferAckErr error),
-	packet types.Packet,
-	acknowledgement []byte,
-	relayer sdk.AccAddress,
-	transferAckErr error,
-) {
-	defer func() {
-		if recovErr := recover(); recovErr != nil {
-			utils.PrintPanicRecoveryError(ctx, recovErr)
-		}
-	}()
-
-	cacheCtx, write := ctx.CacheContext()
-	onAcknowledgementPacketFn(cacheCtx, packet, acknowledgement, relayer, transferAckErr)
-	write()
-}
-
-func panicCatchingOnTimeoutPacketFnHook(
-	ctx sdk.Context,
-	onTimeoutPacketFn func(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferTimeoutErr error),
-	packet types.Packet,
-	relayer sdk.AccAddress,
-	transferTimeoutErr error,
-) {
-	defer func() {
-		if recovErr := recover(); recovErr != nil {
-			utils.PrintPanicRecoveryError(ctx, recovErr)
-		}
-	}()
-
-	cacheCtx, write := ctx.CacheContext()
-	onTimeoutPacketFn(cacheCtx, packet, relayer, transferTimeoutErr)
-	write()
+	return nil
 }
