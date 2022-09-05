@@ -18,11 +18,13 @@ func ApplyFuncIfNoError(ctx sdk.Context, f func(ctx sdk.Context) error) (err err
 	defer func() {
 		if recoveryError := recover(); recoveryError != nil {
 			PrintPanicRecoveryError(ctx, recoveryError)
+
 			err = errors.New("panic occurred during execution")
 		}
 	}()
 	// makes a new cache context, which all state changes get wrapped inside of.
 	cacheCtx, write := ctx.CacheContext()
+
 	err = f(cacheCtx)
 	if err != nil {
 		ctx.Logger().Error(err.Error())
@@ -32,6 +34,7 @@ func ApplyFuncIfNoError(ctx sdk.Context, f func(ctx sdk.Context) error) (err err
 		// Temporary, should be removed once: https://github.com/cosmos/cosmos-sdk/issues/12912
 		ctx.EventManager().EmitEvents(cacheCtx.EventManager().Events())
 	}
+
 	return err
 }
 
@@ -39,6 +42,7 @@ func ApplyFuncIfNoError(ctx sdk.Context, f func(ctx sdk.Context) error) (err err
 // If not emits them to stdout.
 func PrintPanicRecoveryError(ctx sdk.Context, recoveryError interface{}) {
 	errStackTrace := string(debug.Stack())
+
 	switch e := recoveryError.(type) {
 	case string:
 		ctx.Logger().Error("Recovering from (string) panic: " + e)
@@ -49,7 +53,9 @@ func PrintPanicRecoveryError(ctx sdk.Context, recoveryError interface{}) {
 	default:
 		ctx.Logger().Error("recovered (default) panic. Could not capture logs in ctx, see stdout")
 		fmt.Println("Recovering from panic ", recoveryError)
+
 		debug.PrintStack()
+
 		return
 	}
 	ctx.Logger().Error("stack trace: " + errStackTrace)

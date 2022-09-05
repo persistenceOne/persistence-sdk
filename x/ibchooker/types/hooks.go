@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
 	"github.com/cosmos/ibc-go/v3/modules/core/exported"
+
 	"github.com/persistenceOne/persistence-sdk/utils"
 )
 
@@ -24,6 +25,7 @@ func (h MultiIBCHandshakeHooks) OnRecvPacket(ctx sdk.Context, packet types.Packe
 		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
 		ctx.Logger().Error("Error occurred in calling OnRecvPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
 	}
+
 	return nil
 }
 
@@ -35,6 +37,7 @@ func (h MultiIBCHandshakeHooks) OnAcknowledgementPacket(ctx sdk.Context, packet 
 		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
 		ctx.Logger().Error("Error occurred in calling OnAcknowledgementPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
 	}
+
 	return nil
 }
 
@@ -46,5 +49,6 @@ func (h MultiIBCHandshakeHooks) OnTimeoutPacket(ctx sdk.Context, packet types.Pa
 		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
 		ctx.Logger().Error("Error occurred in calling OnTimeoutPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
 	}
+
 	return nil
 }
