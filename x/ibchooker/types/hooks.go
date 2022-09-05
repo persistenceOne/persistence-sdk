@@ -20,6 +20,7 @@ func NewMultiStakingHooks(hooks ...IBCHandshakeHooks) MultiIBCHandshakeHooks {
 func (h MultiIBCHandshakeHooks) OnRecvPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferAck exported.Acknowledgement) error {
 	for i := range h {
 		wrappedHookFn := func(ctx sdk.Context) error {
+			//nolint:scopelint
 			return h[i].OnRecvPacket(ctx, packet, relayer, transferAck)
 		}
 		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
@@ -32,6 +33,7 @@ func (h MultiIBCHandshakeHooks) OnRecvPacket(ctx sdk.Context, packet types.Packe
 func (h MultiIBCHandshakeHooks) OnAcknowledgementPacket(ctx sdk.Context, packet types.Packet, acknowledgement []byte, relayer sdk.AccAddress, transferAckErr error) error {
 	for i := range h {
 		wrappedHookFn := func(ctx sdk.Context) error {
+			//nolint:scopelint
 			return h[i].OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer, transferAckErr)
 		}
 		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
@@ -44,6 +46,7 @@ func (h MultiIBCHandshakeHooks) OnAcknowledgementPacket(ctx sdk.Context, packet 
 func (h MultiIBCHandshakeHooks) OnTimeoutPacket(ctx sdk.Context, packet types.Packet, relayer sdk.AccAddress, transferTimeoutErr error) error {
 	for i := range h {
 		wrappedHookFn := func(ctx sdk.Context) error {
+			//nolint:scopelint
 			return h[i].OnTimeoutPacket(ctx, packet, relayer, transferTimeoutErr)
 		}
 		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
