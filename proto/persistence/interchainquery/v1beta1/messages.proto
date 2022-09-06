@@ -31,7 +31,7 @@ message MsgSubmitQueryResponse {
   tendermint.crypto.ProofOps proof_ops = 4
   [(gogoproto.moretags) = "yaml:\"proof_ops\""];
   int64 height = 5 [(gogoproto.moretags) = "yaml:\"height\""];
-  string from_address = 6;
+  string from_address = 6 [(gogoproto.moretags) = "yaml:\"from_address\""];
 }
 
 // MsgSubmitQueryResponseResponse defines the MsgSubmitQueryResponse response
