@@ -29,7 +29,7 @@ func (suite *KeeperTestSuite) TestQueries() {
 
 	icqsrvSrv := icqtypes.QuerySrvrServer(suite.GetSimApp(suite.chainA).InterchainQueryKeeper)
 
-	res, err := icqsrvSrv.Queries(sdk.WrapSDKContext(suite.chainA.GetContext()), &icqtypes.QueryRequestsRequest{ConnectionId: suite.path.EndpointB.ConnectionID})
+	res, err := icqsrvSrv.Queries(sdk.WrapSDKContext(suite.chainA.GetContext()), &icqtypes.QueryRequestsRequest{ChainId: suite.chainB.ChainID})
 	suite.NoError(err)
 	suite.Len(res.Queries, 1)
 	suite.Equal(suite.path.EndpointB.ConnectionID, res.Queries[0].ConnectionId)
