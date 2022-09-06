@@ -31,7 +31,6 @@ import (
 	"github.com/persistenceOne/persistence-sdk/x/epochs/client/cli"
 	"github.com/persistenceOne/persistence-sdk/x/epochs/keeper"
 	"github.com/persistenceOne/persistence-sdk/x/epochs/types"
-	"github.com/persistenceOne/persistence-sdk/x/halving/client/rest"
 )
 
 var (
@@ -78,9 +77,7 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncod
 }
 
 // RegisterRESTRoutes registers the capability module's REST service handlers.
-func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {
-	rest.RegisterRoutes(clientCtx, rtr)
-}
+func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {}
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
