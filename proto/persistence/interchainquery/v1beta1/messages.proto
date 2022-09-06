@@ -2,7 +2,6 @@ syntax = "proto3";
 package persistence.interchainquery.v1beta1;
 
 import "gogoproto/gogo.proto";
-import "cosmos_proto/cosmos.proto";
 import "google/api/annotations.proto";
 import "tendermint/crypto/proof.proto";
 
@@ -14,7 +13,7 @@ service Msg {
   rpc SubmitQueryResponse(MsgSubmitQueryResponse)
       returns (MsgSubmitQueryResponseResponse) {
     option (google.api.http) = {
-      post : "/persistence/interchainquery/tx/v1beta1/submitquery"
+      post : "/interchainquery/tx/v1beta1/submitquery"
       body : "*"
     };
   };
@@ -26,13 +25,13 @@ message MsgSubmitQueryResponse {
   option (gogoproto.goproto_getters) = false;
   option (gogoproto.goproto_stringer) = true;
 
-  string chain_id = 1 [ (gogoproto.moretags) = "yaml:\"chain_id\"" ];
-  string query_id = 2 [ (gogoproto.moretags) = "yaml:\"query_id\"" ];
-  bytes result = 3 [ (gogoproto.moretags) = "yaml:\"result\"" ];
+  string chain_id = 1 [(gogoproto.moretags) = "yaml:\"chain_id\""];
+  string query_id = 2 [(gogoproto.moretags) = "yaml:\"query_id\""];
+  bytes result = 3 [(gogoproto.moretags) = "yaml:\"result\""];
   tendermint.crypto.ProofOps proof_ops = 4
-      [ (gogoproto.moretags) = "yaml:\"proof_ops\"" ];
-  int64 height = 5 [ (gogoproto.moretags) = "yaml:\"height\"" ];
-  string from_address = 6 [ (gogoproto.moretags) = "yaml:\"from_address\"" ];
+  [(gogoproto.moretags) = "yaml:\"proof_ops\""];
+  int64 height = 5 [(gogoproto.moretags) = "yaml:\"height\""];
+  string from_address = 6;
 }
 
 // MsgSubmitQueryResponseResponse defines the MsgSubmitQueryResponse response

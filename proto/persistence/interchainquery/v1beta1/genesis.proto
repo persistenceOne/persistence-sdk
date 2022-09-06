@@ -2,7 +2,6 @@ syntax = "proto3";
 package persistence.interchainquery.v1beta1;
 
 import "gogoproto/gogo.proto";
-import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/persistenceOne/persistence-sdk/x/interchainquery/types";
 
@@ -40,10 +39,10 @@ message DataPoint {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  bytes value = 4 [ (gogoproto.jsontag) = "result,omitempty" ];
+  bytes value = 4 [(gogoproto.jsontag) = "result,omitempty"];
 }
 
 // GenesisState defines the epochs module's genesis state.
 message GenesisState {
-  repeated Query queries = 1 [ (gogoproto.nullable) = false ];
+  repeated Query queries = 1 [(gogoproto.nullable) = false];
 }
