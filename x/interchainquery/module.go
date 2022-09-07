@@ -20,7 +20,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 
 	"github.com/persistenceOne/persistence-sdk/x/interchainquery/keeper"
-
 	"github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
 )
 
