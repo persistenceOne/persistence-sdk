@@ -60,13 +60,13 @@ func (s *QueryTestSuite) TestQueriesNeverAlterState() {
 	}{
 		{
 			"Query current epoch",
-			"/osmosis.epochs.v1beta1.Query/CurrentEpoch",
+			"/persistence.epochs.v1beta1.Query/CurrentEpoch",
 			&types.QueryCurrentEpochRequest{Identifier: "weekly"},
 			&types.QueryCurrentEpochResponse{},
 		},
 		{
 			"Query epochs info",
-			"/osmosis.epochs.v1beta1.Query/EpochInfos",
+			"/persistence.epochs.v1beta1.Query/EpochInfos",
 			&types.QueryEpochsInfoRequest{},
 			&types.QueryEpochsInfoResponse{},
 		},
