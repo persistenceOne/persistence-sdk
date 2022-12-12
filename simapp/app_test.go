@@ -34,6 +34,8 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
+	"github.com/persistenceOne/persistence-sdk/x/oracle"
+
 	"github.com/persistenceOne/persistence-sdk/x/epochs"
 	"github.com/persistenceOne/persistence-sdk/x/halving"
 	"github.com/persistenceOne/persistence-sdk/x/interchainquery"
@@ -191,6 +193,7 @@ func TestRunMigrations(t *testing.T) {
 					"halving":         halving.AppModule{}.ConsensusVersion(),
 					"ibc":             ibc.AppModule{}.ConsensusVersion(),
 					"interchainquery": interchainquery.AppModule{}.ConsensusVersion(),
+					"oracle": oracle.AppModule{}.ConsensusVersion(),
 				},
 			)
 
