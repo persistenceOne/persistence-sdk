@@ -94,9 +94,22 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
 	interchainquerykeeper "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/keeper"
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
+
+	customante "github.com/persistenceOne/persistence-sdk/v2/simapp/ante"
+	oraclekeeper "github.com/persistenceOne/persistence-sdk/v2/x/oracle/keeper"
+	oracletypes "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
 
-const appName = "SimApp"
+const (
+	appName = "SimApp"
+
+	// BondDenom defines the native staking token denomination.
+	BondDenom = "xprt"
+
+	// DisplayDenom defines the name, symbol, and display value of the persistence token.
+	DisplayDenom = "persistence"
+)
 
 var (
 	// DefaultNodeHome default home directories for the application daemon
@@ -128,6 +141,7 @@ var (
 		halving.AppModuleBasic{},
 		ibc.AppModuleBasic{},
 		interchainquery.AppModuleBasic{},
+		oracle.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -139,6 +153,7 @@ var (
 		stakingtypes.NotBondedPoolName:  {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:             {authtypes.Burner},
 		interchainquerytypes.ModuleName: nil,
+		oracletypes.ModuleName:          nil,
 	}
 )
 
@@ -183,6 +198,7 @@ type SimApp struct {
 	EpochsKeeper          *epochsKeeper.Keeper
 	IBCKeeper             *ibckeeper.Keeper
 	InterchainQueryKeeper interchainquerykeeper.Keeper
+	OracleKeeper          oraclekeeper.Keeper
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
 
 	// the module manager
@@ -225,7 +241,7 @@ func NewSimApp(
 		govtypes.StoreKey, paramstypes.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, capabilitytypes.StoreKey, halving.StoreKey,
 		authzkeeper.StoreKey, interchainquerytypes.StoreKey,
-		ibchost.StoreKey, epochsTypes.StoreKey,
+		ibchost.StoreKey, epochsTypes.StoreKey, oracletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	// NOTE: The testingkey is just mounted for testing purposes. Actual applications should
@@ -281,6 +297,16 @@ func NewSimApp(
 	epochKeeper := epochsKeeper.NewKeeper(keys[epochsTypes.StoreKey])
 	app.EpochsKeeper = epochKeeper.SetHooks(
 		epochsTypes.NewMultiEpochHooks(),
+	)
+
+	app.OracleKeeper = oraclekeeper.NewKeeper(
+		appCodec,
+		keys[oracletypes.ModuleName],
+		app.GetSubspace(oracletypes.ModuleName),
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.DistrKeeper,
+		stakingKeeper,
 	)
 
 	app.FeeGrantKeeper = feegrantkeeper.NewKeeper(appCodec, keys[feegrant.StoreKey], app.AccountKeeper)
@@ -358,6 +384,7 @@ func NewSimApp(
 		ibc.NewAppModule(app.IBCKeeper),
 		interchainquery.NewAppModule(appCodec, app.InterchainQueryKeeper),
 		epochs.NewAppModule(*app.EpochsKeeper),
+		oracle.NewAppModule(appCodec, app.OracleKeeper, app.AccountKeeper, app.BankKeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -371,7 +398,7 @@ func NewSimApp(
 		authtypes.ModuleName, banktypes.ModuleName, govtypes.ModuleName, crisistypes.ModuleName, genutiltypes.ModuleName,
 		authz.ModuleName, feegrant.ModuleName, ibchost.ModuleName,
 		paramstypes.ModuleName, vestingtypes.ModuleName, halving.ModuleName,
-		interchainquerytypes.ModuleName, epochsTypes.ModuleName,
+		interchainquerytypes.ModuleName, epochsTypes.ModuleName, oracletypes.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
 		crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName,
@@ -380,7 +407,7 @@ func NewSimApp(
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
 		feegrant.ModuleName, ibchost.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, halving.ModuleName,
-		interchainquerytypes.ModuleName, epochsTypes.ModuleName,
+		interchainquerytypes.ModuleName, epochsTypes.ModuleName, oracletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -394,7 +421,7 @@ func NewSimApp(
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
 		feegrant.ModuleName, ibchost.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, halving.ModuleName,
-		interchainquerytypes.ModuleName, epochsTypes.ModuleName,
+		interchainquerytypes.ModuleName, epochsTypes.ModuleName, oracletypes.ModuleName,
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -428,13 +455,16 @@ func NewSimApp(
 	app.SetInitChainer(app.InitChainer)
 	app.SetBeginBlocker(app.BeginBlocker)
 
-	anteHandler, err := ante.NewAnteHandler(
-		ante.HandlerOptions{
-			AccountKeeper:   app.AccountKeeper,
-			BankKeeper:      app.BankKeeper,
-			SignModeHandler: encodingConfig.TxConfig.SignModeHandler(),
-			FeegrantKeeper:  app.FeeGrantKeeper,
-			SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
+	anteHandler, err := customante.NewAnteHandler(
+		customante.HandlerOptions{
+			HandlerOptions: ante.HandlerOptions{
+				AccountKeeper:   app.AccountKeeper,
+				BankKeeper:      app.BankKeeper,
+				FeegrantKeeper:  app.FeeGrantKeeper,
+				SignModeHandler: encodingConfig.TxConfig.SignModeHandler(),
+				SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
+			},
+			OracleKeeper: app.OracleKeeper,
 		},
 	)
 
@@ -619,6 +649,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(epochsTypes.ModuleName)
 	paramsKeeper.Subspace(interchainquerytypes.ModuleName)
+	paramsKeeper.Subspace(oracletypes.ModuleName)
 
 	return paramsKeeper
 }
