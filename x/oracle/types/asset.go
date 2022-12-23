@@ -5,6 +5,7 @@ import (
 )
 
 const (
+	// PersistenceSymbol TODO: Update the symbol to XPRT, currently submol is set for ATOM for providers sake in price-feeder
 	PersistenceDenom    string = "ATOM"
 	PersistenceSymbol   string = "ATOM"
 	PersistenceExponent        = uint32(6)
