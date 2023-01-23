@@ -89,6 +89,15 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) error {
 			k.SetMissCounter(ctx, claim.Recipient, k.GetMissCounter(ctx, claim.Recipient)+1)
 		}
 
+		// Distribute rewards to ballot winners
+		k.RewardBallotWinners(
+			ctx,
+			int64(params.VotePeriod),
+			int64(params.RewardDistributionWindow),
+			voteTargetDenoms,
+			claimSlice,
+		)
+
 		// Clear the ballot
 		k.ClearBallots(ctx, params.VotePeriod)
 	}

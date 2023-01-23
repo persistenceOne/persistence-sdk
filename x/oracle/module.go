@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -16,8 +15,6 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/client/cli"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
@@ -26,7 +23,6 @@ import (
 var (
 	_ module.AppModule           = AppModule{}
 	_ module.AppModuleBasic      = AppModuleBasic{}
-	_ module.AppModuleSimulation = AppModule{}
 )
 
 // AppModuleBasic implements the AppModuleBasic interface for the x/oracle module.
@@ -181,35 +177,4 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 	}
 
 	return []abci.ValidatorUpdate{}
-}
-
-// GenerateGenesisState creates a randomized GenState of the distribution module.
-func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-
-}
-
-// WeightedOperations returns the all the gravity module operations with their respective weights.
-func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
-	//return simulation.WeightedOperations(
-	//	simState.AppParams, simState.Cdc, am.accountKeeper, am.bankKeeper, am.keeper,
-	//)
-
-	return nil
-}
-
-// ProposalContents returns all the oracle content functions used to
-// simulate governance proposals.
-func (am AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedProposalContent {
-	return nil
-}
-
-// RandomizedParams creates randomized oracle param changes for the simulator.
-func (AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
-	//return simulation.ParamChanges(r)
-	return nil
-}
-
-// RegisterStoreDecoder registers a decoder for oracle module's types
-func (am AppModule) RegisterStoreDecoder(sdr sdk.StoreDecoderRegistry) {
-	//sdr[types.StoreKey] = simulation.NewDecodeStore(am.cdc)
 }

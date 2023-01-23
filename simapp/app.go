@@ -307,6 +307,7 @@ func NewSimApp(
 		app.BankKeeper,
 		app.DistrKeeper,
 		stakingKeeper,
+		distrtypes.ModuleName,
 	)
 
 	app.FeeGrantKeeper = feegrantkeeper.NewKeeper(appCodec, keys[feegrant.StoreKey], app.AccountKeeper)

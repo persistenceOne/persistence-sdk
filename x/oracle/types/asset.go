@@ -5,9 +5,11 @@ import (
 )
 
 const (
-	// PersistenceSymbol TODO: Update the symbol to XPRT, currently submol is set for ATOM for providers sake in price-feeder
+	// PersistenceDenom and  PersistenceSymbol TODO: Update the symbol and denom to XPRT, currently submol is set for ATOM for providers sake in price-feeder
 	PersistenceDenom    string = "ATOM"
 	PersistenceSymbol   string = "ATOM"
+	// BondDenom defines the native staking token denomination.
+	BondDenom = "uxprt"
 	PersistenceExponent        = uint32(6)
 	BlocksPerMinute            = uint64(10)
 	BlocksPerHour              = BlocksPerMinute * 60

@@ -27,6 +27,8 @@ type Keeper struct {
 	bankKeeper    types.BankKeeper
 	distrKeeper   types.DistributionKeeper
 	StakingKeeper types.StakingKeeper
+
+	recipientModule string
 }
 
 // NewKeeper constructs a new keeper for oracle
@@ -38,6 +40,7 @@ func NewKeeper(
 	bankKeeper types.BankKeeper,
 	distrKeeper types.DistributionKeeper,
 	stakingKeeper types.StakingKeeper,
+	recipientModule string,
 ) Keeper {
 
 	// ensure oracle module account is set
@@ -58,6 +61,7 @@ func NewKeeper(
 		bankKeeper:    bankKeeper,
 		distrKeeper:   distrKeeper,
 		StakingKeeper: stakingKeeper,
+		recipientModule: recipientModule,
 	}
 }
 
