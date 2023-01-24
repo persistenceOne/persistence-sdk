@@ -29,6 +29,7 @@ func GetAggregateVoteHash(salt string, exchangeRatesStr string, voter sdk.ValAdd
 	}
 
 	bz := hash.Sum(nil)
+
 	return bz
 }
 
@@ -107,6 +108,7 @@ func (h AggregateVoteHash) MarshalYAML() (interface{}, error) {
 // UnmarshalJSON unmarshals from JSON assuming Bech32 encoding.
 func (h *AggregateVoteHash) UnmarshalJSON(data []byte) error {
 	var s string
+
 	err := json.Unmarshal(data, &s)
 	if err != nil {
 		return err
@@ -118,5 +120,6 @@ func (h *AggregateVoteHash) UnmarshalJSON(data []byte) error {
 	}
 
 	*h = h2
+
 	return nil
 }

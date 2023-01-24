@@ -38,5 +38,6 @@ func (dl DenomList) Contains(symbolDenom string) bool {
 			return true
 		}
 	}
+
 	return false
 }

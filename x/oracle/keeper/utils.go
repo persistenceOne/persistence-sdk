@@ -7,6 +7,6 @@ func contains[T comparable](x T, ls []T) bool {
 			return true
 		}
 	}
+
 	return false
 }
-

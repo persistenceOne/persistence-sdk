@@ -54,6 +54,7 @@ func (spd *SpamPreventionDecorator) CheckOracleSpam(ctx sdk.Context, msgs []sdk.
 	defer spd.mu.Unlock()
 
 	curHeight := ctx.BlockHeight()
+
 	for _, msg := range msgs {
 		switch msg := msg.(type) {
 		case *oracletypes.MsgAggregateExchangeRatePrevote:
@@ -80,6 +81,7 @@ func (spd *SpamPreventionDecorator) CheckOracleSpam(ctx sdk.Context, msgs []sdk.
 			}
 
 			spd.oraclePrevoteMap[msg.Validator] = curHeight
+
 			continue
 		case *oracletypes.MsgAggregateExchangeRateVote:
 			feederAddr, err := sdk.AccAddressFromBech32(msg.Feeder)
@@ -105,6 +107,7 @@ func (spd *SpamPreventionDecorator) CheckOracleSpam(ctx sdk.Context, msgs []sdk.
 			}
 
 			spd.oracleVoteMap[msg.Validator] = curHeight
+
 			continue
 		default:
 			return nil

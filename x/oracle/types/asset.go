@@ -6,18 +6,18 @@ import (
 
 const (
 	// PersistenceDenom and  PersistenceSymbol TODO: Update the symbol and denom to XPRT, currently submol is set for ATOM for providers sake in price-feeder
-	PersistenceDenom    string = "ATOM"
-	PersistenceSymbol   string = "ATOM"
+	PersistenceDenom  string = "ATOM"
+	PersistenceSymbol string = "ATOM"
 	// BondDenom defines the native staking token denomination.
-	BondDenom = "uxprt"
-	PersistenceExponent        = uint32(6)
-	BlocksPerMinute            = uint64(10)
-	BlocksPerHour              = BlocksPerMinute * 60
-	BlocksPerDay               = BlocksPerHour * 24
-	BlocksPerWeek              = BlocksPerDay * 7
-	BlocksPerMonth             = BlocksPerDay * 30
-	BlocksPerYear              = BlocksPerDay * 365
-	MicroUnit                  = int64(1e6)
+	BondDenom           = "uxprt"
+	PersistenceExponent = uint32(6)
+	BlocksPerMinute     = uint64(10)
+	BlocksPerHour       = BlocksPerMinute * 60
+	BlocksPerDay        = BlocksPerHour * 24
+	BlocksPerWeek       = BlocksPerDay * 7
+	BlocksPerMonth      = BlocksPerDay * 30
+	BlocksPerYear       = BlocksPerDay * 365
+	MicroUnit           = int64(1e6)
 )
 
 type (

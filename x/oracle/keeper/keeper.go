@@ -35,32 +35,31 @@ type Keeper struct {
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeKey sdk.StoreKey,
-	paramspace paramstypes.Subspace,
+	paramSpace paramstypes.Subspace,
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 	distrKeeper types.DistributionKeeper,
 	stakingKeeper types.StakingKeeper,
 	recipientModule string,
 ) Keeper {
-
 	// ensure oracle module account is set
 	if addr := accountKeeper.GetModuleAddress(types.ModuleName); addr == nil {
 		panic(fmt.Sprintf("%s module account has not been set", types.ModuleName))
 	}
 
 	// set KeyTable if it has not already been set
-	if !paramspace.HasKeyTable() {
-		paramspace = paramspace.WithKeyTable(types.ParamKeyTable())
+	if !paramSpace.HasKeyTable() {
+		paramSpace = paramSpace.WithKeyTable(types.ParamKeyTable())
 	}
 
 	return Keeper{
-		cdc:           cdc,
-		storeKey:      storeKey,
-		paramSpace:    paramspace,
-		accountKeeper: accountKeeper,
-		bankKeeper:    bankKeeper,
-		distrKeeper:   distrKeeper,
-		StakingKeeper: stakingKeeper,
+		cdc:             cdc,
+		storeKey:        storeKey,
+		paramSpace:      paramSpace,
+		accountKeeper:   accountKeeper,
+		bankKeeper:      bankKeeper,
+		distrKeeper:     distrKeeper,
+		StakingKeeper:   stakingKeeper,
 		recipientModule: recipientModule,
 	}
 }
@@ -75,6 +74,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 func (k Keeper) GetExchangeRate(ctx sdk.Context, symbol string) (sdk.Dec, error) {
 	store := ctx.KVStore(k.storeKey)
 	symbol = strings.ToUpper(symbol)
+
 	b := store.Get(types.GetExchangeRateKey(symbol))
 	if b == nil {
 		return sdk.ZeroDec(), sdkerrors.Wrap(types.ErrUnknownDenom, symbol)
@@ -99,6 +99,7 @@ func (k Keeper) GetExchangeRateBase(ctx sdk.Context, denom string) (sdk.Dec, err
 			break
 		}
 	}
+
 	if len(symbol) == 0 {
 		return sdk.ZeroDec(), sdkerrors.Wrap(types.ErrUnknownDenom, denom)
 	}
@@ -160,6 +161,7 @@ func (k Keeper) IterateExchangeRates(ctx sdk.Context, handler func(string, sdk.D
 		dp := sdk.DecProto{}
 
 		k.cdc.MustUnmarshal(iter.Value(), &dp)
+
 		if handler(denom, dp.Dec) {
 			break
 		}
@@ -175,6 +177,7 @@ func (k Keeper) GetFeederDelegation(ctx sdk.Context, operator sdk.ValAddress) (s
 	}
 
 	store := ctx.KVStore(k.storeKey)
+
 	bz := store.Get(types.GetFeederDelegationKey(operator))
 	if bz == nil {
 		// by default the right is delegated to the validator itself
@@ -223,6 +226,7 @@ func (k Keeper) GetMissCounter(ctx sdk.Context, operator sdk.ValAddress) uint64 
 	}
 
 	var missCounter gogotypes.UInt64Value
+
 	k.cdc.MustUnmarshal(bz, &missCounter)
 
 	return missCounter.Value
@@ -254,6 +258,7 @@ func (k Keeper) IterateMissCounters(ctx sdk.Context, handler func(sdk.ValAddress
 		operator := sdk.ValAddress(iter.Key()[2:])
 
 		var missCounter gogotypes.UInt64Value
+
 		k.cdc.MustUnmarshal(iter.Value(), &missCounter)
 
 		if handler(operator, missCounter.Value) {
@@ -267,7 +272,6 @@ func (k Keeper) GetAggregateExchangeRatePrevote(
 	ctx sdk.Context,
 	voter sdk.ValAddress,
 ) (types.AggregateExchangeRatePrevote, error) {
-
 	store := ctx.KVStore(k.storeKey)
 
 	bz := store.Get(types.GetAggregateExchangeRatePrevoteKey(voter))
@@ -276,6 +280,7 @@ func (k Keeper) GetAggregateExchangeRatePrevote(
 	}
 
 	var aggregatePrevote types.AggregateExchangeRatePrevote
+
 	k.cdc.MustUnmarshal(bz, &aggregatePrevote)
 
 	return aggregatePrevote, nil
@@ -322,6 +327,7 @@ func (k Keeper) IterateAggregateExchangeRatePrevotes(
 		voterAddr := sdk.ValAddress(iter.Key()[2:])
 
 		var aggregatePrevote types.AggregateExchangeRatePrevote
+
 		k.cdc.MustUnmarshal(iter.Value(), &aggregatePrevote)
 
 		if handler(voterAddr, aggregatePrevote) {
@@ -343,6 +349,7 @@ func (k Keeper) GetAggregateExchangeRateVote(
 	}
 
 	var aggregateVote types.AggregateExchangeRateVote
+
 	k.cdc.MustUnmarshal(bz, &aggregateVote)
 
 	return aggregateVote, nil
@@ -385,6 +392,7 @@ func (k Keeper) IterateAggregateExchangeRateVotes(
 		voterAddr := sdk.ValAddress(iter.Key()[2:])
 
 		var aggregateVote types.AggregateExchangeRateVote
+
 		k.cdc.MustUnmarshal(iter.Value(), &aggregateVote)
 
 		if handler(voterAddr, aggregateVote) {
@@ -399,6 +407,7 @@ func (k Keeper) ValidateFeeder(ctx sdk.Context, feederAddr sdk.AccAddress, valAd
 	if err != nil {
 		return err
 	}
+
 	if !delegate.Equals(feederAddr) {
 		return sdkerrors.Wrap(types.ErrNoVotingPermission, feederAddr.String())
 	}

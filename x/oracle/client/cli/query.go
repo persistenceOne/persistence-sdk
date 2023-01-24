@@ -58,6 +58,7 @@ func GetCmdQueryParams() *cobra.Command {
 	}
 
 	flags.AddQueryFlagsToCmd(cmd)
+
 	return cmd
 }
 
@@ -98,6 +99,7 @@ func GetCmdQueryAggregateVote() *cobra.Command {
 	}
 
 	flags.AddQueryFlagsToCmd(cmd)
+
 	return cmd
 }
 
@@ -138,6 +140,7 @@ func GetCmdQueryAggregatePrevote() *cobra.Command {
 	}
 
 	flags.AddQueryFlagsToCmd(cmd)
+
 	return cmd
 }
 
@@ -167,6 +170,7 @@ func GetCmdQueryExchangeRates() *cobra.Command {
 	}
 
 	flags.AddQueryFlagsToCmd(cmd)
+
 	return cmd
 }
 
@@ -198,6 +202,7 @@ func GetCmdQueryExchangeRate() *cobra.Command {
 	}
 
 	flags.AddQueryFlagsToCmd(cmd)
+
 	return cmd
 }
 
@@ -231,5 +236,6 @@ func GetCmdQueryFeederDelegation() *cobra.Command {
 	}
 
 	flags.AddQueryFlagsToCmd(cmd)
+
 	return cmd
 }

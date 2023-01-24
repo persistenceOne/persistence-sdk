@@ -30,6 +30,7 @@ type ExchangeRateBallot []VoteForTally
 // ToMap return organized exchange rate map by validator.
 func (pb ExchangeRateBallot) ToMap() map[string]sdk.Dec {
 	exchangeRateMap := make(map[string]sdk.Dec)
+
 	for _, vote := range pb {
 		if vote.ExchangeRate.IsPositive() {
 			exchangeRateMap[vote.Voter.String()] = vote.ExchangeRate
@@ -55,10 +56,12 @@ func (pb ExchangeRateBallot) WeightedMedian() (sdk.Dec, error) {
 	if !sort.IsSorted(pb) {
 		return sdk.ZeroDec(), ErrBallotNotSorted
 	}
+
 	totalPower := pb.Power()
 
 	if pb.Len() > 0 {
 		var pivot int64
+
 		for _, v := range pb {
 			votePower := v.Power
 
@@ -85,6 +88,7 @@ func (pb ExchangeRateBallot) StandardDeviation() (sdk.Dec, error) {
 
 	sum := sdk.ZeroDec()
 	ballotLength := int64(len(pb))
+
 	for _, v := range pb {
 		func() {
 			defer func() {
@@ -92,6 +96,7 @@ func (pb ExchangeRateBallot) StandardDeviation() (sdk.Dec, error) {
 					ballotLength--
 				}
 			}()
+
 			deviation := v.ExchangeRate.Sub(median)
 			sum = sum.Add(deviation.Mul(deviation))
 		}()
@@ -133,16 +138,20 @@ type BallotDenom struct {
 func BallotMapToSlice(votes map[string]ExchangeRateBallot) []BallotDenom {
 	b := make([]BallotDenom, len(votes))
 	i := 0
+
 	for denom, ballot := range votes {
 		b[i] = BallotDenom{
 			Denom:  denom,
 			Ballot: ballot,
 		}
+
 		i++
 	}
+
 	sort.Slice(b, func(i, j int) bool {
 		return b[i].Denom < b[j].Denom
 	})
+
 	return b
 }
 
@@ -168,6 +177,7 @@ func NewClaim(power, weight, winCount int64, recipient sdk.ValAddress) Claim {
 func ClaimMapToSlice(claims map[string]Claim) []Claim {
 	c := make([]Claim, len(claims))
 	i := 0
+
 	for _, claim := range claims {
 		c[i] = Claim{
 			Power:     claim.Power,
@@ -175,10 +185,13 @@ func ClaimMapToSlice(claims map[string]Claim) []Claim {
 			WinCount:  claim.WinCount,
 			Recipient: claim.Recipient,
 		}
+
 		i++
 	}
+
 	sort.Slice(c, func(i, j int) bool {
 		return c[i].Recipient.String() < c[j].Recipient.String()
 	})
+
 	return c
 }

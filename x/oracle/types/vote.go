@@ -13,7 +13,6 @@ func NewAggregateExchangeRatePrevote(
 	voter sdk.ValAddress,
 	submitBlock uint64,
 ) AggregateExchangeRatePrevote {
-
 	return AggregateExchangeRatePrevote{
 		Hash:        hash.String(),
 		Voter:       voter.String(),
@@ -31,7 +30,6 @@ func NewAggregateExchangeRateVote(
 	exchangeRateTuples ExchangeRateTuples,
 	voter sdk.ValAddress,
 ) AggregateExchangeRateVote {
-
 	return AggregateExchangeRateVote{
 		ExchangeRateTuples: exchangeRateTuples,
 		Voter:              voter.String(),
@@ -77,6 +75,7 @@ func ParseExchangeRateTuples(tuplesStr string) (ExchangeRateTuples, error) {
 	tuples := make(ExchangeRateTuples, len(tupleStrs))
 
 	duplicateCheckMap := make(map[string]bool)
+
 	for i, tupleStr := range tupleStrs {
 		denomAmountStr := strings.Split(tupleStr, ":")
 		if len(denomAmountStr) != 2 {
@@ -87,6 +86,7 @@ func ParseExchangeRateTuples(tuplesStr string) (ExchangeRateTuples, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		if !decCoin.IsPositive() {
 			return nil, ErrInvalidOraclePrice
 		}

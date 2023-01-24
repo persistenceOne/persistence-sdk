@@ -1,8 +1,9 @@
 package keeper_test
 
 import (
+	"crypto/rand"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"strings"
 	"testing"
 
@@ -136,7 +137,10 @@ func (s *IntegrationTestSuite) TestGetFeederDelegation() {
 
 func (s *IntegrationTestSuite) TestMissCounter() {
 	app, ctx := s.app, s.ctx
-	missCounter := uint64(rand.Intn(100))
+	num, err := rand.Int(rand.Reader, new(big.Int).SetInt64(int64(100)))
+	s.Require().NoError(err)
+
+	missCounter := num.Uint64()
 
 	s.Require().Equal(app.OracleKeeper.GetMissCounter(ctx, valAddr), uint64(0))
 	app.OracleKeeper.SetMissCounter(ctx, valAddr, missCounter)

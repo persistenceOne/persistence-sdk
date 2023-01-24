@@ -19,19 +19,23 @@ func (s *IntegrationTestSuite) TestRewardBallotWinners() {
 	givingAmt := sdk.NewCoins(sdk.NewInt64Coin(types.PersistenceDenom, 30000000))
 	err := s.app.BankKeeper.MintCoins(s.ctx, minttypes.ModuleName, givingAmt)
 	s.Require().NoError(err)
-	err = s.app.BankKeeper.SendCoinsFromModuleToModule(s.ctx,  minttypes.ModuleName, types.ModuleName, givingAmt)
+	err = s.app.BankKeeper.SendCoinsFromModuleToModule(s.ctx, minttypes.ModuleName, types.ModuleName, givingAmt)
 	s.Require().NoError(err)
 
-	var voteTargets []string
 	params := s.app.OracleKeeper.GetParams(s.ctx)
-	for _, v := range params.AcceptList {
-		voteTargets = append(voteTargets, v.SymbolDenom)
+
+	var voteTargets = make([]string, len(params.AcceptList))
+
+	for i, v := range params.AcceptList {
+		voteTargets[i] = v.SymbolDenom
 	}
 
 	votePeriodsPerWindow := sdk.NewDec((int64)(s.app.OracleKeeper.RewardDistributionWindow(s.ctx))).
 		QuoInt64((int64)(s.app.OracleKeeper.VotePeriod(s.ctx))).
 		TruncateInt64()
+
 	s.app.OracleKeeper.RewardBallotWinners(s.ctx, (int64)(s.app.OracleKeeper.VotePeriod(s.ctx)), (int64)(s.app.OracleKeeper.RewardDistributionWindow(s.ctx)), voteTargets, claims)
+
 	outstandingRewardsDec := s.app.DistrKeeper.GetValidatorOutstandingRewardsCoins(s.ctx, valAddr)
 	outstandingRewards, _ := outstandingRewardsDec.TruncateDecimal()
 	s.Require().Equal(sdk.NewDecFromInt(givingAmt.AmountOf(types.PersistenceDenom)).QuoInt64(votePeriodsPerWindow).QuoInt64(3).TruncateInt(),

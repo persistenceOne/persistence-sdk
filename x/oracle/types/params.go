@@ -121,6 +121,7 @@ func (p Params) Validate() error {
 	if p.VotePeriod == 0 {
 		return fmt.Errorf("oracle parameter VotePeriod must be > 0, is %d", p.VotePeriod)
 	}
+
 	if p.VoteThreshold.LTE(sdk.NewDecWithPrec(33, 2)) {
 		return fmt.Errorf("oracle parameter VoteThreshold must be greater than 33 percent")
 	}
@@ -149,10 +150,12 @@ func (p Params) Validate() error {
 		if len(denom.BaseDenom) == 0 {
 			return fmt.Errorf("oracle parameter AcceptList Denom must have BaseDenom")
 		}
+
 		if len(denom.SymbolDenom) == 0 {
 			return fmt.Errorf("oracle parameter AcceptList Denom must have SymbolDenom")
 		}
 	}
+
 	return nil
 }
 
@@ -226,6 +229,7 @@ func validateAcceptList(i interface{}) error {
 		if len(d.BaseDenom) == 0 {
 			return fmt.Errorf("oracle parameter AcceptList Denom must have BaseDenom")
 		}
+
 		if len(d.SymbolDenom) == 0 {
 			return fmt.Errorf("oracle parameter AcceptList Denom must have SymbolDenom")
 		}

@@ -25,7 +25,6 @@ func NewMsgAggregateExchangeRatePrevote(
 	feeder sdk.AccAddress,
 	validator sdk.ValAddress,
 ) *MsgAggregateExchangeRatePrevote {
-
 	return &MsgAggregateExchangeRatePrevote{
 		Hash:      hash.String(),
 		Feeder:    feeder.String(),
@@ -81,7 +80,6 @@ func NewMsgAggregateExchangeRateVote(
 	feeder sdk.AccAddress,
 	validator sdk.ValAddress,
 ) *MsgAggregateExchangeRateVote {
-
 	return &MsgAggregateExchangeRateVote{
 		Salt:          salt,
 		ExchangeRates: exchangeRates,
@@ -140,6 +138,7 @@ func (msg MsgAggregateExchangeRateVote) ValidateBasic() error {
 	if len(msg.Salt) != 64 {
 		return ErrInvalidSaltLength
 	}
+
 	_, err = AggregateVoteHashFromHexString(msg.Salt)
 	if err != nil {
 		return sdkerrors.Wrap(ErrInvalidSaltFormat, "salt must be a valid hex string")

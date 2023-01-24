@@ -26,6 +26,7 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) error {
 
 		maxValidators := k.StakingKeeper.MaxValidators(ctx)
 		iterator := k.StakingKeeper.ValidatorsPowerStoreIterator(ctx)
+
 		defer iterator.Close()
 
 		powerReduction := k.StakingKeeper.PowerReduction(ctx)
@@ -47,6 +48,7 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) error {
 			voteTargets      []string
 			voteTargetDenoms []string
 		)
+
 		for _, v := range params.AcceptList {
 			voteTargets = append(voteTargets, v.SymbolDenom)
 			voteTargetDenoms = append(voteTargetDenoms, v.BaseDenom)
@@ -78,6 +80,7 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) error {
 
 		// update miss counting & slashing
 		voteTargetsLen := len(voteTargets)
+
 		claimSlice := types.ClaimMapToSlice(validatorClaimMap)
 		for _, claim := range claimSlice {
 			// Skip valid voters
@@ -121,9 +124,11 @@ func Tally(
 	validatorClaimMap map[string]types.Claim,
 ) (sdk.Dec, error) {
 	weightedMedian, err := ballot.WeightedMedian()
+
 	if err != nil {
 		return sdk.ZeroDec(), err
 	}
+
 	standardDeviation, err := ballot.StandardDeviation()
 	if err != nil {
 		return sdk.ZeroDec(), err
@@ -139,7 +144,6 @@ func Tally(
 		if (tallyVote.ExchangeRate.GTE(weightedMedian.Sub(rewardSpread)) &&
 			tallyVote.ExchangeRate.LTE(weightedMedian.Add(rewardSpread))) ||
 			!tallyVote.ExchangeRate.IsPositive() {
-
 			key := tallyVote.Voter.String()
 			claim := validatorClaimMap[key]
 

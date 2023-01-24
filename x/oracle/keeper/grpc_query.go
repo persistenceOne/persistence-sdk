@@ -80,7 +80,8 @@ func (q querier) ActiveExchangeRates(
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	denoms := []string{}
+	var denoms []string
+
 	q.IterateExchangeRates(ctx, func(denom string, _ sdk.Dec) (stop bool) {
 		denoms = append(denoms, denom)
 		return false
@@ -105,6 +106,7 @@ func (q querier) FeederDelegation(
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
+
 	feederAddr, err := q.GetFeederDelegation(ctx, valAddr)
 	if err != nil {
 		return nil, err
@@ -174,6 +176,7 @@ func (q querier) AggregatePrevotes(
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var prevotes []types.AggregateExchangeRatePrevote
+
 	q.IterateAggregateExchangeRatePrevotes(ctx, func(_ sdk.ValAddress, prevote types.AggregateExchangeRatePrevote) bool {
 		prevotes = append(prevotes, prevote)
 		return false
@@ -222,6 +225,7 @@ func (q querier) AggregateVotes(
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var votes []types.AggregateExchangeRateVote
+
 	q.IterateAggregateExchangeRateVotes(ctx, func(_ sdk.ValAddress, vote types.AggregateExchangeRateVote) bool {
 		votes = append(votes, vote)
 		return false

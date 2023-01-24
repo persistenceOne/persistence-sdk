@@ -71,6 +71,7 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 	params := keeper.GetParams(ctx)
 
 	feederDelegations := []types.FeederDelegation{}
+
 	keeper.IterateFeederDelegations(ctx, func(valAddr sdk.ValAddress, feederAddr sdk.AccAddress) (stop bool) {
 		feederDelegations = append(feederDelegations, types.FeederDelegation{
 			ValidatorAddress: valAddr.String(),
@@ -81,6 +82,7 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 	})
 
 	exchangeRates := []types.ExchangeRateTuple{}
+
 	keeper.IterateExchangeRates(ctx, func(denom string, rate sdk.Dec) (stop bool) {
 		exchangeRates = append(exchangeRates, types.ExchangeRateTuple{
 			Denom:        denom,
@@ -90,7 +92,8 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 		return false
 	})
 
-	missCounters := []types.MissCounter{}
+	var missCounters []types.MissCounter
+
 	keeper.IterateMissCounters(ctx, func(operator sdk.ValAddress, missCounter uint64) (stop bool) {
 		missCounters = append(missCounters, types.MissCounter{
 			ValidatorAddress: operator.String(),
@@ -101,6 +104,7 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 	})
 
 	aggregateExchangeRatePrevotes := []types.AggregateExchangeRatePrevote{}
+
 	keeper.IterateAggregateExchangeRatePrevotes(
 		ctx,
 		func(_ sdk.ValAddress, aggregatePrevote types.AggregateExchangeRatePrevote) (stop bool) {
@@ -109,7 +113,8 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 		},
 	)
 
-	aggregateExchangeRateVotes := []types.AggregateExchangeRateVote{}
+	var aggregateExchangeRateVotes []types.AggregateExchangeRateVote
+
 	keeper.IterateAggregateExchangeRateVotes(
 		ctx,
 		func(_ sdk.ValAddress, aggregateVote types.AggregateExchangeRateVote) bool {

@@ -17,6 +17,7 @@ func prependXPRTIfUnique(voteTargets []string) []string {
 	rewardDenoms := make([]string, len(voteTargets)+1)
 	rewardDenoms[0] = types.PersistenceDenom
 	copy(rewardDenoms[1:], voteTargets)
+
 	return rewardDenoms
 }
 
@@ -42,7 +43,9 @@ func (k Keeper) RewardBallotWinners(
 	}
 
 	distributionRatio := sdk.NewDec(votePeriod).QuoInt64(rewardDistributionWindow)
+
 	var periodRewards sdk.DecCoins
+
 	rewardDenoms := prependXPRTIfUnique(voteTargets)
 	for _, denom := range rewardDenoms {
 		rewardPool := k.GetRewardPool(ctx, denom)
