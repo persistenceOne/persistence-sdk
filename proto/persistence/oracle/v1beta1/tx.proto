@@ -2,6 +2,7 @@ syntax = "proto3";
 package persistence.oracle.v1beta1;
 
 import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types";
 
@@ -17,6 +18,9 @@ service Msg {
 
   // DelegateFeedConsent defines a method for setting the feeder delegation.
   rpc DelegateFeedConsent(MsgDelegateFeedConsent) returns (MsgDelegateFeedConsentResponse);
+
+  // AddFundsToRewardPool
+  rpc AddFundsToRewardPool(MsgAddFundsToRewardPool) returns (MsgAddFundsToRewardPoolResponse);
 }
 
 // MsgAggregateExchangeRatePrevote represents a message to submit an aggregate
@@ -63,3 +67,19 @@ message MsgDelegateFeedConsent {
 // MsgDelegateFeedConsentResponse defines the Msg/DelegateFeedConsent response
 // type.
 message MsgDelegateFeedConsentResponse {}
+
+message MsgAddFundsToRewardPool {
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string from = 1 [(gogoproto.moretags) = "yaml:\"from\""];
+
+  // rewards are the coin(s) to add to reward pool
+  repeated cosmos.base.v1beta1.Coin funds = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
+
+// MsgAddFundsToRewardPoolResponse
+message MsgAddFundsToRewardPoolResponse {}

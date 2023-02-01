@@ -414,3 +414,16 @@ func (k Keeper) ValidateFeeder(ctx sdk.Context, feederAddr sdk.Address, valAddr 
 
 	return nil
 }
+
+func (k Keeper) FundRewardPool(ctx sdk.Context, from sdk.AccAddress, funds sdk.Coins) error {
+	err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, from, types.ModuleName, funds)
+	if err != nil {
+		return fmt.Errorf("failed to fund the reward pool: %v", err)
+	}
+
+	return nil
+}
+
+func (k Keeper) GetRewardPoolBalance(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins {
+	return k.bankKeeper.GetAllBalances(ctx, addr)
+}

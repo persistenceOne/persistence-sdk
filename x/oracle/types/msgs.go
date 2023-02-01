@@ -20,6 +20,7 @@ const (
 	TypeMsgDelegateFeedConsent          = "delegate_feeder"
 	TypeMsgAggregateExchangeRatePrevote = "aggregate_exchange_rate_prevote"
 	TypeMsgAggregateExchangeRateVote    = "aggregate_exchange_rate_vote"
+	TypeMsgAddFundsToRewardPool         = "add_funds_to_reward_pool"
 )
 
 func NewMsgAggregateExchangeRatePrevote(
@@ -182,6 +183,44 @@ func (msg MsgDelegateFeedConsent) ValidateBasic() error {
 	_, err = sdk.AccAddressFromBech32(msg.Delegate)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid delegate address (%s)", err)
+	}
+
+	return nil
+}
+
+func NewMsgAddFundsToRewardPool(from sdk.AccAddress, funds sdk.Coins) *MsgAddFundsToRewardPool {
+	return &MsgAddFundsToRewardPool{
+		From:  from.String(),
+		Funds: funds,
+	}
+}
+
+// Route implements sdk.Msg
+func (m MsgAddFundsToRewardPool) Route() string { return RouterKey }
+
+// Type implements sdk.Msg
+func (m MsgAddFundsToRewardPool) Type() string { return TypeMsgAddFundsToRewardPool }
+
+// GetSignBytes implements sdk.Msg
+func (m MsgAddFundsToRewardPool) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&m))
+}
+
+// GetSigners implements sdk.Msg
+func (m MsgAddFundsToRewardPool) GetSigners() []sdk.AccAddress {
+	operator, _ := sdk.ValAddressFromBech32(m.From)
+	return []sdk.AccAddress{sdk.AccAddress(operator)}
+}
+
+// ValidateBasic implements sdk.Msg
+func (m MsgAddFundsToRewardPool) ValidateBasic() error {
+	_, err := sdk.ValAddressFromBech32(m.From)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid operator address (%s)", err)
+	}
+
+	if coins := sdk.NewCoins(m.Funds...); coins.Empty() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, err.Error())
 	}
 
 	return nil

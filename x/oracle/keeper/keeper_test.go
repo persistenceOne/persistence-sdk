@@ -38,7 +38,9 @@ type IntegrationTestSuite struct {
 }
 
 const (
-	initialPower = int64(10000000000)
+	initialPower     = int64(10000000000)
+	rewardPoolAmount = int64(5)
+	testBalance      = int64(50000000)
 )
 
 func (s *IntegrationTestSuite) SetupTest() {
@@ -250,6 +252,46 @@ func (s *IntegrationTestSuite) TestDeleteExchangeRate() {
 	app.OracleKeeper.DeleteExchangeRate(ctx, exchangeRate)
 	_, err := app.OracleKeeper.GetExchangeRate(ctx, exchangeRate)
 	s.Require().Error(err)
+}
+
+func (s *IntegrationTestSuite) balanceSetup() {
+	// Prepare account balance
+	givingAmt := sdk.NewCoins(sdk.NewInt64Coin(types.PersistenceDenom, testBalance))
+	err := s.app.BankKeeper.MintCoins(s.ctx, minttypes.ModuleName, givingAmt)
+	s.Require().NoError(err)
+
+	err = s.app.BankKeeper.SendCoinsFromModuleToAccount(s.ctx, minttypes.ModuleName, addr, givingAmt)
+	s.Require().NoError(err)
+}
+
+func (s *IntegrationTestSuite) TestFundRewardPool() {
+	s.balanceSetup()
+	app, ctx := s.app, s.ctx
+
+	// Fund reward pool form account
+	coins := sdk.NewCoins(sdk.NewInt64Coin(types.PersistenceDenom, rewardPoolAmount))
+	err := app.OracleKeeper.FundRewardPool(ctx, addr, coins)
+	s.Require().NoError(err)
+
+	moduleAddr := app.AccountKeeper.GetModuleAddress(types.ModuleName)
+	balance := app.BankKeeper.GetAllBalances(ctx, moduleAddr)
+	denomAmount := balance.AmountOf(types.PersistenceDenom)
+	s.Require().Equal(denomAmount.Int64(), rewardPoolAmount)
+}
+
+func (s *IntegrationTestSuite) TestGetRewardPoolBalance() {
+	s.balanceSetup()
+	app, ctx := s.app, s.ctx
+
+	// Fund reward pool form account
+	coins := sdk.NewCoins(sdk.NewInt64Coin(types.PersistenceDenom, rewardPoolAmount))
+	err := app.OracleKeeper.FundRewardPool(ctx, addr, coins)
+	s.Require().NoError(err)
+
+	moduleAddr := app.AccountKeeper.GetModuleAddress(types.ModuleName)
+	balance := app.OracleKeeper.GetRewardPoolBalance(ctx, moduleAddr)
+	denomAmount := balance.AmountOf(types.PersistenceDenom)
+	s.Require().Equal(denomAmount.Int64(), rewardPoolAmount)
 }
 
 func TestKeeperTestSuite(t *testing.T) {

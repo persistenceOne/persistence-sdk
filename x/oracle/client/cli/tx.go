@@ -24,6 +24,7 @@ func GetTxCmd() *cobra.Command {
 
 	cmd.AddCommand(
 		GetCmdDelegateFeedConsent(),
+		AddFundsToRewardPool(),
 	)
 
 	return cmd
@@ -52,6 +53,37 @@ func GetCmdDelegateFeedConsent() *cobra.Command {
 			}
 
 			msg := types.NewMsgDelegateFeedConsent(sdk.ValAddress(clientCtx.GetFromAddress()), feederAddr)
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func AddFundsToRewardPool() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "fund-reward-pool [operator] [amount]",
+		Args:  cobra.ExactArgs(2),
+		Short: "Send the funds to the oracle reward pool from operator account",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := cmd.Flags().Set(flags.FlagFrom, args[0]); err != nil {
+				return err
+			}
+
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			funds, err := sdk.ParseCoinsNormalized(args[1])
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgAddFundsToRewardPool(clientCtx.GetFromAddress(), funds)
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

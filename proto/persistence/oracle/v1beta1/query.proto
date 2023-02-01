@@ -55,6 +55,11 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/persistence/oracle/v1beta1/params";
   }
+
+  // QueryFundsInRewardPool queries funds left in the reward pool.
+  rpc QueryFundsInRewardPool(QueryFundsInRewardPoolRequest) returns (QueryFundsInRewardPoolResponse) {
+    option (google.api.http).get = "/persistence/oracle/v1beta/reward_pool_funds";
+  }
 }
 
 // QueryExchangeRatesRequest is the request type for the Query/ExchangeRate RPC
@@ -192,4 +197,11 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params defines the parameters of the module.
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryFundsInRewardPoolRequest {}
+
+message QueryFundsInRewardPoolResponse {
+  // funds left in the reward pool
+  string remaining_funds = 1;
 }

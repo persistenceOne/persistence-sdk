@@ -178,3 +178,26 @@ func (ms msgServer) DelegateFeedConsent(
 
 	return &types.MsgDelegateFeedConsentResponse{}, nil
 }
+
+// AddFundsToRewardPool add funds to the reward pool
+func (ms msgServer) AddFundsToRewardPool(
+	goCtx context.Context,
+	msg *types.MsgAddFundsToRewardPool) (*types.MsgAddFundsToRewardPoolResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	fromAddr, err := sdk.AccAddressFromBech32(msg.From)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = ms.FundRewardPool(ctx, fromAddr, msg.Funds); err != nil {
+		return nil, err
+	}
+
+	err = ctx.EventManager().EmitTypedEvent(msg)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgAddFundsToRewardPoolResponse{}, nil
+}

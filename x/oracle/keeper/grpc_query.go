@@ -235,3 +235,20 @@ func (q querier) AggregateVotes(
 		AggregateVotes: votes,
 	}, nil
 }
+
+func (q querier) QueryFundsInRewardPool(
+	goCtx context.Context,
+	request *types.QueryFundsInRewardPoolRequest) (*types.QueryFundsInRewardPoolResponse, error) {
+	if request == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	moduleAddr := q.accountKeeper.GetModuleAddress(types.ModuleName)
+	balance := q.GetRewardPoolBalance(ctx, moduleAddr)
+
+	return &types.QueryFundsInRewardPoolResponse{
+		RemainingFunds: balance.String(),
+	}, nil
+}
