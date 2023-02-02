@@ -29,6 +29,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		GetCmdQueryExchangeRates(),
 		GetCmdQueryExchangeRate(),
 		GetCmdQueryFeederDelegation(),
+		GetCmdQueryRewardPoolBalance(),
 	)
 
 	return cmd
@@ -229,6 +230,31 @@ func GetCmdQueryFeederDelegation() *cobra.Command {
 			})
 			if err != nil {
 				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func GetCmdQueryRewardPoolBalance() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "reward-pool-balance",
+		Short: "Get the current reward pool balance",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.QueryRewardPoolBalance(cmd.Context(), &types.QueryRewardPoolBalanceRequest{})
+			if err != nil {
+				return fmt.Errorf("failed to run get reward pool balance query: %v", err)
 			}
 
 			return clientCtx.PrintProto(res)

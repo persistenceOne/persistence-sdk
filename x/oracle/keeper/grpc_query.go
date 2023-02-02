@@ -236,9 +236,10 @@ func (q querier) AggregateVotes(
 	}, nil
 }
 
-func (q querier) QueryFundsInRewardPool(
+// QueryRewardPoolBalance queries the reward pool balance
+func (q querier) QueryRewardPoolBalance(
 	goCtx context.Context,
-	request *types.QueryFundsInRewardPoolRequest) (*types.QueryFundsInRewardPoolResponse, error) {
+	request *types.QueryRewardPoolBalanceRequest) (*types.QueryRewardPoolBalanceResponse, error) {
 	if request == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
@@ -248,7 +249,7 @@ func (q querier) QueryFundsInRewardPool(
 	moduleAddr := q.accountKeeper.GetModuleAddress(types.ModuleName)
 	balance := q.GetRewardPoolBalance(ctx, moduleAddr)
 
-	return &types.QueryFundsInRewardPoolResponse{
+	return &types.QueryRewardPoolBalanceResponse{
 		RemainingFunds: balance.String(),
 	}, nil
 }

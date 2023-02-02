@@ -56,8 +56,8 @@ service Query {
     option (google.api.http).get = "/persistence/oracle/v1beta1/params";
   }
 
-  // QueryFundsInRewardPool queries funds left in the reward pool.
-  rpc QueryFundsInRewardPool(QueryFundsInRewardPoolRequest) returns (QueryFundsInRewardPoolResponse) {
+  // QueryRewardPoolBalance queries funds left in the reward pool.
+  rpc QueryRewardPoolBalance(QueryRewardPoolBalanceRequest) returns (QueryRewardPoolBalanceResponse) {
     option (google.api.http).get = "/persistence/oracle/v1beta/reward_pool_funds";
   }
 }
@@ -199,9 +199,9 @@ message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryFundsInRewardPoolRequest {}
+message QueryRewardPoolBalanceRequest {}
 
-message QueryFundsInRewardPoolResponse {
+message QueryRewardPoolBalanceResponse {
   // funds left in the reward pool
   string remaining_funds = 1;
 }

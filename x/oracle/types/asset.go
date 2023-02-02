@@ -19,7 +19,7 @@ const (
 	// TODO: discuss the denom values, took the denoms from: https://docs.osmosis.zone/osmosis-core/asset-info/
 	// atomDenom supported by oracle
 	atomDenom    string = "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2"
-	atomSymbol   string = "atom"
+	atomSymbol   string = "ATOM"
 	atomExponent        = uint32(6)
 
 	// osmosisDenom supported by oracle
