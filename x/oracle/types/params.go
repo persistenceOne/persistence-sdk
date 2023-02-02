@@ -33,9 +33,19 @@ var (
 	DefaultRewardBand    = sdk.NewDecWithPrec(2, 2)  // 2% (-1, 1)
 	DefaultAcceptList    = DenomList{
 		{
-			BaseDenom:   PersistenceDenom,
-			SymbolDenom: PersistenceSymbol,
-			Exponent:    PersistenceExponent,
+			BaseDenom:   atomDenom,
+			SymbolDenom: atomSymbol,
+			Exponent:    atomExponent,
+		},
+		{
+			BaseDenom:   osmosisDenom,
+			SymbolDenom: osmosisSymbol,
+			Exponent:    osmosisExponent,
+		},
+		{
+			BaseDenom:   usdcDenom,
+			SymbolDenom: usdcSymbol,
+			Exponent:    usdcExponent,
 		},
 	}
 	DefaultSlashFraction     = sdk.NewDecWithPrec(1, 4) // 0.01%
