@@ -6,6 +6,7 @@
 package simulation
 
 import (
+	"cosmossdk.io/math"
 	"encoding/json"
 	"math/rand"
 	"testing"
@@ -31,7 +32,7 @@ func TestRandomizedGenState(t *testing.T) {
 		Rand:         r,
 		NumBonded:    3,
 		Accounts:     simtypes.RandomAccounts(r, 3),
-		InitialStake: 1000,
+		InitialStake: new(math.Int).SubRaw(1000),
 		GenState:     make(map[string]json.RawMessage),
 	}
 

@@ -30,7 +30,7 @@ func queryParamsHandlerFn(cliCtx client.Context) http.HandlerFunc {
 		if !ok {
 			return
 		}
-
+									
 		res, height, err := cliCtx.QueryWithData(route, nil)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
