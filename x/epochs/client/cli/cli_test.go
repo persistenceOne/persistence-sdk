@@ -23,7 +23,7 @@ func (s *IntegrationTestSuite) SetupSuite() {
 
 	s.cfg = network.DefaultConfig()
 
-	s.network = network.New(s.T(), s.cfg)
+	s.network, _ = network.New(s.T(), "", s.cfg)
 
 	_, err := s.network.WaitForHeight(1)
 	s.Require().NoError(err)
