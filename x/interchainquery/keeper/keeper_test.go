@@ -5,10 +5,11 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	ibctesting "github.com/cosmos/ibc-go/v3/testing"
+	ibctesting "github.com/cosmos/ibc-go/v6/testing"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/persistenceOne/persistence-sdk/simapp"
+	//"github.com/cosmos/ibc-go/v6/testing/simapp"
 	"github.com/persistenceOne/persistence-sdk/x/interchainquery/keeper"
 	icqtypes "github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
 )
