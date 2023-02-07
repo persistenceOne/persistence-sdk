@@ -188,7 +188,7 @@ func (msg MsgDelegateFeedConsent) ValidateBasic() error {
 	return nil
 }
 
-func NewMsgAddFundsToRewardPool(from sdk.AccAddress, funds sdk.Coins) *MsgAddFundsToRewardPool {
+func NewMsgAddFundsToRewardPool(from fmt.Stringer, funds sdk.Coins) *MsgAddFundsToRewardPool {
 	return &MsgAddFundsToRewardPool{
 		From:  from.String(),
 		Funds: funds,
