@@ -1,6 +1,7 @@
 package simapp
 
 import (
+	"cosmossdk.io/math"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -190,7 +191,7 @@ func AppStateRandomizedFn(
 		Rand:         r,
 		GenState:     genesisState,
 		Accounts:     accs,
-		InitialStake: initialStake,
+		InitialStake: new(math.Int).SubRaw(initialStake),
 		NumBonded:    numInitiallyBonded,
 		GenTimestamp: genesisTimestamp,
 	}

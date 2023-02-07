@@ -3,6 +3,7 @@ package simapp
 import (
 	"encoding/json"
 	"fmt"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	"math/rand"
 	"os"
 	"testing"
@@ -29,7 +30,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
+	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
 	"github.com/persistenceOne/persistence-sdk/simapp/helpers"
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
 )
@@ -40,8 +41,8 @@ func init() {
 }
 
 type StoreKeysPrefixes struct {
-	A        sdk.StoreKey
-	B        sdk.StoreKey
+	A        storetypes.StoreKey
+	B        storetypes.StoreKey
 	Prefixes [][]byte
 }
 
