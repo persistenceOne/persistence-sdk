@@ -6,5 +6,5 @@ import (
 
 // OracleKeeper for feeder validation
 type OracleKeeper interface {
-	ValidateFeeder(ctx sdk.Context, feederAddr sdk.AccAddress, validatorAddr sdk.ValAddress) error
+	ValidateFeeder(ctx sdk.Context, feederAddr sdk.Address, validatorAddr sdk.ValAddress) error
 }

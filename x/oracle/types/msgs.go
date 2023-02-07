@@ -1,6 +1,8 @@
 package types
 
 import (
+	"fmt"
+
 	"github.com/tendermint/tendermint/crypto/tmhash"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -21,9 +23,9 @@ const (
 )
 
 func NewMsgAggregateExchangeRatePrevote(
-	hash AggregateVoteHash,
-	feeder sdk.AccAddress,
-	validator sdk.ValAddress,
+	hash fmt.Stringer,
+	feeder fmt.Stringer,
+	validator fmt.Stringer,
 ) *MsgAggregateExchangeRatePrevote {
 	return &MsgAggregateExchangeRatePrevote{
 		Hash:      hash.String(),
@@ -76,15 +78,13 @@ func (msg MsgAggregateExchangeRatePrevote) ValidateBasic() error {
 
 func NewMsgAggregateExchangeRateVote(
 	salt string,
-	exchangeRates string,
-	feeder sdk.AccAddress,
-	validator sdk.ValAddress,
+	exchangeRates, feeder, validator string,
 ) *MsgAggregateExchangeRateVote {
 	return &MsgAggregateExchangeRateVote{
 		Salt:          salt,
 		ExchangeRates: exchangeRates,
-		Feeder:        feeder.String(),
-		Validator:     validator.String(),
+		Feeder:        feeder,
+		Validator:     validator,
 	}
 }
 
@@ -148,7 +148,7 @@ func (msg MsgAggregateExchangeRateVote) ValidateBasic() error {
 }
 
 // NewMsgDelegateFeedConsent creates a MsgDelegateFeedConsent instance
-func NewMsgDelegateFeedConsent(operatorAddress sdk.ValAddress, feederAddress sdk.AccAddress) *MsgDelegateFeedConsent {
+func NewMsgDelegateFeedConsent(operatorAddress, feederAddress fmt.Stringer) *MsgDelegateFeedConsent {
 	return &MsgDelegateFeedConsent{
 		Operator: operatorAddress.String(),
 		Delegate: feederAddress.String(),

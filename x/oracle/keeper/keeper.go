@@ -402,7 +402,7 @@ func (k Keeper) IterateAggregateExchangeRateVotes(
 }
 
 // ValidateFeeder returns the given feeder is allowed to feed the message or not.
-func (k Keeper) ValidateFeeder(ctx sdk.Context, feederAddr sdk.AccAddress, valAddr sdk.ValAddress) error {
+func (k Keeper) ValidateFeeder(ctx sdk.Context, feederAddr sdk.Address, valAddr sdk.ValAddress) error {
 	delegate, err := k.GetFeederDelegation(ctx, valAddr)
 	if err != nil {
 		return err

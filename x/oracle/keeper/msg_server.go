@@ -52,7 +52,6 @@ func (ms msgServer) AggregateExchangeRatePrevote(
 	}
 
 	aggregatePrevote := types.NewAggregateExchangeRatePrevote(voteHash, valAddr, uint64(ctx.BlockHeight()))
-
 	ms.SetAggregateExchangeRatePrevote(ctx, valAddr, aggregatePrevote)
 
 	ctx.EventManager().EmitEvents(sdk.Events{

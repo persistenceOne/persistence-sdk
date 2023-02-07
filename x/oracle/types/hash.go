@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/crypto/tmhash"
 	"gopkg.in/yaml.v3"
 )
@@ -20,7 +19,7 @@ type AggregateVoteHash []byte
 
 // GetAggregateVoteHash computes hash value of ExchangeRateVote to avoid
 // redundant DecCoins stringify operation.
-func GetAggregateVoteHash(salt string, exchangeRatesStr string, voter sdk.ValAddress) AggregateVoteHash {
+func GetAggregateVoteHash(salt string, exchangeRatesStr string, voter fmt.Stringer) AggregateVoteHash {
 	hash := tmhash.NewTruncated()
 	sourceStr := fmt.Sprintf("%s:%s:%s", salt, exchangeRatesStr, voter.String())
 
