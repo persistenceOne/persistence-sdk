@@ -278,7 +278,7 @@ func NewSimApp(
 	app.CrisisKeeper = crisiskeeper.NewKeeper(
 		app.GetSubspace(crisistypes.ModuleName), invCheckPeriod, app.BankKeeper, authtypes.FeeCollectorName,
 	)
-	epochKeeper := epochsKeeper.NewKeeper(appCodec, keys[epochsTypes.StoreKey])
+	epochKeeper := epochsKeeper.NewKeeper(keys[epochsTypes.StoreKey])
 	app.EpochsKeeper = epochKeeper.SetHooks(
 		epochsTypes.NewMultiEpochHooks(),
 	)
