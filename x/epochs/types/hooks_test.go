@@ -8,8 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/persistenceOne/persistence-sdk/simapp"
-	"github.com/persistenceOne/persistence-sdk/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
 )
 
 type KeeperTestSuite struct {

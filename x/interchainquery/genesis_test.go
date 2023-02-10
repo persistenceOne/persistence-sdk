@@ -8,10 +8,10 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v4/testing"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/persistenceOne/persistence-sdk/simapp"
-	"github.com/persistenceOne/persistence-sdk/x/interchainquery"
-	"github.com/persistenceOne/persistence-sdk/x/interchainquery/keeper"
-	"github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
+	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/keeper"
+	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
 )
 
 func init() {

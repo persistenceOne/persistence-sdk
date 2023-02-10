@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 
 	// "github.com/cosmos/cosmos-sdk/client/flags".
-	"github.com/persistenceOne/persistence-sdk/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
 )
 
 // GetTxCmd returns the transaction commands for this module.

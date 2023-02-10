@@ -3,7 +3,7 @@ package persistence.interchainquery.v1beta1;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/persistenceOne/persistence-sdk/x/interchainquery/types";
+option go_package = "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types";
 
 message Query {
   string id = 1;

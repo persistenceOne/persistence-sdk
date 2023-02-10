@@ -14,7 +14,7 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/persistenceOne/persistence-sdk/x/halving/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/halving/types"
 	"github.com/stretchr/testify/require"
 )
 

@@ -1,4 +1,4 @@
-module github.com/persistenceOne/persistence-sdk
+module github.com/persistenceOne/persistence-sdk/v2
 
 go 1.19
 

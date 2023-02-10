@@ -16,8 +16,8 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/persistenceOne/persistence-sdk/x/interchainquery/keeper"
-	"github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/keeper"
+	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
 )
 
 var (
