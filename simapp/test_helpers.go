@@ -31,7 +31,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctesting "github.com/cosmos/ibc-go/v4/testing"
 
-	"github.com/persistenceOne/persistence-sdk/simapp/helpers"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp/helpers"
 )
 
 // DefaultConsensusParams defines the default Tendermint consensus params used in

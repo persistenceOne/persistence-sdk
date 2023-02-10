@@ -34,9 +34,9 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/persistenceOne/persistence-sdk/x/epochs"
-	"github.com/persistenceOne/persistence-sdk/x/halving"
-	"github.com/persistenceOne/persistence-sdk/x/interchainquery"
+	"github.com/persistenceOne/persistence-sdk/v2/x/epochs"
+	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
+	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
 )
 
 func TestSimAppExportAndBlockedAddrs(t *testing.T) {
