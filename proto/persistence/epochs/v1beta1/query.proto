@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "persistence/epochs/v1beta1/genesis.proto";
 
-option go_package = "github.com/persistenceOne/persistence-sdk/x/epochs/types";
+option go_package = "github.com/persistenceOne/persistence-sdk/v2/x/epochs/types";
 
 // Query defines the gRPC querier service.
 service Query {

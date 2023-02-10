@@ -17,8 +17,8 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	ibchookerkeeper "github.com/persistenceOne/persistence-sdk/x/ibchooker/keeper"
-	"github.com/persistenceOne/persistence-sdk/x/ibchooker/types"
+	ibchookerkeeper "github.com/persistenceOne/persistence-sdk/v2/x/ibchooker/keeper"
+	"github.com/persistenceOne/persistence-sdk/v2/x/ibchooker/types"
 )
 
 var (

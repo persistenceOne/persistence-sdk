@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/persistenceOne/persistence-sdk/x/interchainquery/keeper"
+	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/keeper"
 )
 
 func (suite *KeeperTestSuite) TestEndBlocker() {
