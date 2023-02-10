@@ -29,7 +29,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
+	ibchost "github.com/cosmos/ibc-go/v4/modules/core/24-host"
 	"github.com/persistenceOne/persistence-sdk/simapp/helpers"
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/x/interchainquery/types"
 )
