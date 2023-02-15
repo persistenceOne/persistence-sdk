@@ -1,6 +1,6 @@
 /*
- Copyright [2019] - [2021], PERSISTENCE TECHNOLOGIES PTE. LTD. and the persistenceCore contributors
- SPDX-License-Identifier: Apache-2.0
+Copyright [2019] - [2021], PERSISTENCE TECHNOLOGIES PTE. LTD. and the persistenceCore contributors
+SPDX-License-Identifier: Apache-2.0
 */
 
 package rest
@@ -10,7 +10,7 @@ import (
 	"net/http"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/types/rest"
+	//"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
 	"github.com/persistenceOne/persistence-sdk/x/halving/types"
 )
@@ -26,18 +26,18 @@ func queryParamsHandlerFn(cliCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		route := fmt.Sprintf("custom/%s/%s", types.QuerierRoute, types.QueryParameters)
 
-		cliCtx, ok := rest.ParseQueryHeightOrReturnBadRequest(w, cliCtx, r)
+		cliCtx, ok := ParseQueryHeightOrReturnBadRequest(w, cliCtx, r)
 		if !ok {
 			return
 		}
-									
+
 		res, height, err := cliCtx.QueryWithData(route, nil)
 		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
 		cliCtx = cliCtx.WithHeight(height)
-		rest.PostProcessResponse(w, cliCtx, res)
+		PostProcessResponse(w, cliCtx, res)
 	}
 }
