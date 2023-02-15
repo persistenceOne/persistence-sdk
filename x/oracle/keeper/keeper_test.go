@@ -17,7 +17,11 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
 
-type IntegrationTestSuite struct {
+const (
+	exchangeRate string = persistenceapp.DisplayDenom
+)
+
+type KeeperTestSuite struct {
 	suite.Suite
 
 	valAccAddresses []sdk.AccAddress
@@ -33,7 +37,7 @@ const (
 	initialValidatorsNum = 2
 )
 
-func (s *IntegrationTestSuite) SetupTest() {
+func (s *KeeperTestSuite) SetupTest() {
 	app := persistenceapp.Setup(false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{
 		Height: 100,
@@ -53,7 +57,7 @@ func (s *IntegrationTestSuite) SetupTest() {
 	s.ctx = ctx
 }
 
-func (s *IntegrationTestSuite) TestSetFeederDelegation() {
+func (s *KeeperTestSuite) TestSetFeederDelegation() {
 	app, ctx := s.app, s.ctx
 	addr, valAddr := s.valAccAddresses[0], s.valAddresses[0]
 
@@ -76,7 +80,7 @@ func (s *IntegrationTestSuite) TestSetFeederDelegation() {
 	s.Require().NoError(err)
 }
 
-func (s *IntegrationTestSuite) TestGetFeederDelegation() {
+func (s *KeeperTestSuite) TestGetFeederDelegation() {
 	app, ctx := s.app, s.ctx
 	valAddr := s.valAddresses[0]
 
@@ -90,7 +94,7 @@ func (s *IntegrationTestSuite) TestGetFeederDelegation() {
 	s.Require().Equal(resp, feederAddr)
 }
 
-func (s *IntegrationTestSuite) TestMissCounter() {
+func (s *KeeperTestSuite) TestMissCounter() {
 	app, ctx := s.app, s.ctx
 	valAddr := s.valAddresses[0]
 
@@ -107,7 +111,7 @@ func (s *IntegrationTestSuite) TestMissCounter() {
 	s.Require().Equal(app.OracleKeeper.GetMissCounter(ctx, valAddr), uint64(0))
 }
 
-func (s *IntegrationTestSuite) TestAggregateExchangeRatePrevote() {
+func (s *KeeperTestSuite) TestAggregateExchangeRatePrevote() {
 	app, ctx := s.app, s.ctx
 	addr, valAddr := s.valAccAddresses[0], s.valAddresses[0]
 
@@ -127,7 +131,7 @@ func (s *IntegrationTestSuite) TestAggregateExchangeRatePrevote() {
 	s.Require().Error(err)
 }
 
-func (s *IntegrationTestSuite) TestAggregateExchangeRatePrevoteError() {
+func (s *KeeperTestSuite) TestAggregateExchangeRatePrevoteError() {
 	app, ctx := s.app, s.ctx
 	valAddr := s.valAddresses[0]
 
@@ -135,7 +139,7 @@ func (s *IntegrationTestSuite) TestAggregateExchangeRatePrevoteError() {
 	s.Require().Errorf(err, types.ErrNoAggregatePrevote.Error())
 }
 
-func (s *IntegrationTestSuite) TestAggregateExchangeRateVote() {
+func (s *KeeperTestSuite) TestAggregateExchangeRateVote() {
 	app, ctx := s.app, s.ctx
 	addr, valAddr := s.valAccAddresses[0], s.valAddresses[0]
 
@@ -160,7 +164,7 @@ func (s *IntegrationTestSuite) TestAggregateExchangeRateVote() {
 	s.Require().Error(err)
 }
 
-func (s *IntegrationTestSuite) TestAggregateExchangeRateVoteError() {
+func (s *KeeperTestSuite) TestAggregateExchangeRateVoteError() {
 	app, ctx := s.app, s.ctx
 	valAddr := s.valAddresses[0]
 
@@ -168,7 +172,7 @@ func (s *IntegrationTestSuite) TestAggregateExchangeRateVoteError() {
 	s.Require().Errorf(err, types.ErrNoAggregateVote.Error())
 }
 
-func (s *IntegrationTestSuite) TestSetExchangeRateWithEvent() {
+func (s *KeeperTestSuite) TestSetExchangeRateWithEvent() {
 	app, ctx := s.app, s.ctx
 	app.OracleKeeper.SetExchangeRateWithEvent(ctx, types.PersistenceDenom, sdk.OneDec())
 	rate, err := app.OracleKeeper.GetExchangeRate(ctx, types.PersistenceDenom)
@@ -176,21 +180,21 @@ func (s *IntegrationTestSuite) TestSetExchangeRateWithEvent() {
 	s.Require().Equal(rate, sdk.OneDec())
 }
 
-func (s *IntegrationTestSuite) TestGetExchangeRate_UnknownDenom() {
+func (s *KeeperTestSuite) TestGetExchangeRate_UnknownDenom() {
 	app, ctx := s.app, s.ctx
 
 	_, err := app.OracleKeeper.GetExchangeRate(ctx, "uxyz")
 	s.Require().ErrorContains(err, types.ErrUnknownDenom.Error())
 }
 
-func (s *IntegrationTestSuite) TestGetExchangeRate_NotSet() {
+func (s *KeeperTestSuite) TestGetExchangeRate_NotSet() {
 	app, ctx := s.app, s.ctx
 
 	_, err := app.OracleKeeper.GetExchangeRate(ctx, types.PersistenceDenom)
 	s.Require().Error(err)
 }
 
-func (s *IntegrationTestSuite) TestGetExchangeRate_Valid() {
+func (s *KeeperTestSuite) TestGetExchangeRate_Valid() {
 	app, ctx := s.app, s.ctx
 
 	app.OracleKeeper.SetExchangeRate(ctx, types.PersistenceDenom, sdk.OneDec())
@@ -204,7 +208,7 @@ func (s *IntegrationTestSuite) TestGetExchangeRate_Valid() {
 	s.Require().Equal(rate, sdk.OneDec())
 }
 
-func (s *IntegrationTestSuite) TestDeleteExchangeRate() {
+func (s *KeeperTestSuite) TestDeleteExchangeRate() {
 	app, ctx := s.app, s.ctx
 
 	app.OracleKeeper.SetExchangeRate(ctx, types.PersistenceDenom, sdk.OneDec())
@@ -213,7 +217,7 @@ func (s *IntegrationTestSuite) TestDeleteExchangeRate() {
 	s.Require().Error(err)
 }
 
-func (s *IntegrationTestSuite) balanceSetup() {
+func (s *KeeperTestSuite) balanceSetup() {
 	app, ctx := s.app, s.ctx
 	addr := s.valAccAddresses[0]
 
@@ -226,7 +230,7 @@ func (s *IntegrationTestSuite) balanceSetup() {
 	s.Require().NoError(err)
 }
 
-func (s *IntegrationTestSuite) TestFundRewardPool() {
+func (s *KeeperTestSuite) TestFundRewardPool() {
 	s.balanceSetup()
 	app, ctx := s.app, s.ctx
 	addr := s.valAccAddresses[0]
@@ -242,7 +246,7 @@ func (s *IntegrationTestSuite) TestFundRewardPool() {
 	s.Require().Equal(denomAmount.Int64(), rewardPoolAmount)
 }
 
-func (s *IntegrationTestSuite) TestGetRewardPoolBalance() {
+func (s *KeeperTestSuite) TestGetRewardPoolBalance() {
 	s.balanceSetup()
 	app, ctx := s.app, s.ctx
 	addr := s.valAccAddresses[0]
@@ -259,5 +263,5 @@ func (s *IntegrationTestSuite) TestGetRewardPoolBalance() {
 }
 
 func TestKeeperTestSuite(t *testing.T) {
-	suite.Run(t, new(IntegrationTestSuite))
+	suite.Run(t, new(KeeperTestSuite))
 }

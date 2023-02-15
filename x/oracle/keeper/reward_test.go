@@ -8,7 +8,7 @@ import (
 )
 
 // Test the reward giving mechanism
-func (s *IntegrationTestSuite) TestRewardBallotWinners() {
+func (s *KeeperTestSuite) TestRewardBallotWinners() {
 	valAddr, valAddr2 := s.valAddresses[0], s.valAddresses[1]
 
 	// Add claim pools
@@ -44,7 +44,7 @@ func (s *IntegrationTestSuite) TestRewardBallotWinners() {
 		outstandingRewards.AmountOf(types.PersistenceDenom))
 }
 
-func (s *IntegrationTestSuite) TestRewardBallotWinnersZeroPower() {
+func (s *KeeperTestSuite) TestRewardBallotWinnersZeroPower() {
 	valAddr := s.valAddresses[0]
 	zeroClaim := types.NewClaim(0, 0, 0, valAddr)
 	s.app.OracleKeeper.RewardBallotWinners(s.ctx, 0, 0, []string{}, []types.Claim{zeroClaim})
