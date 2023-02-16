@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
 	"github.com/tendermint/tendermint/libs/log"
 
@@ -12,13 +13,13 @@ import (
 
 type (
 	Keeper struct {
-		storeKey sdk.StoreKey
+		storeKey storetypes.StoreKey
 		hooks    types.EpochHooks
 	}
 )
 
 // NewKeeper returns a new keeper by codec and storeKey inputs.
-func NewKeeper(storeKey sdk.StoreKey) *Keeper {
+func NewKeeper(storeKey storetypes.StoreKey) *Keeper {
 	return &Keeper{
 		storeKey: storeKey,
 	}

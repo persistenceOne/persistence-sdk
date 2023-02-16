@@ -7,6 +7,7 @@ package keeper
 
 import (
 	"fmt"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	mintTypes "github.com/cosmos/cosmos-sdk/x/mint/types"
@@ -17,14 +18,14 @@ import (
 
 // Keeper of the halving store
 type Keeper struct {
-	storeKey   sdk.StoreKey
+	storeKey   storetypes.StoreKey
 	paramSpace paramsTypes.Subspace
 	mintKeeper types.MintKeeper
 }
 
 // NewKeeper creates a new halving Keeper instance
 func NewKeeper(
-	key sdk.StoreKey, paramSpace paramsTypes.Subspace,
+	key storetypes.StoreKey, paramSpace paramsTypes.Subspace,
 	mintKeeper types.MintKeeper,
 ) Keeper {
 	return Keeper{

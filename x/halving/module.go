@@ -20,7 +20,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving/client/cli"
-	"github.com/persistenceOne/persistence-sdk/v2/x/halving/client/rest"
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving/simulation"
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving/types"
@@ -69,9 +68,7 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, _ client.TxEncodingCo
 }
 
 // RegisterRESTRoutes registers the REST routes for the halving module.
-func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {
-	rest.RegisterRoutes(clientCtx, rtr)
-}
+func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {}
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the halving module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
