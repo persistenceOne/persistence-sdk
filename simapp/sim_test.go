@@ -3,19 +3,13 @@ package simapp
 import (
 	"encoding/json"
 	"fmt"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	"math/rand"
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	dbm "github.com/tendermint/tm-db"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/store"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -33,6 +27,11 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
 	"github.com/persistenceOne/persistence-sdk/v2/simapp/helpers"
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
+	"github.com/stretchr/testify/require"
+	abci "github.com/tendermint/tendermint/abci/types"
+	"github.com/tendermint/tendermint/libs/log"
+	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+	dbm "github.com/tendermint/tm-db"
 )
 
 // Get flags every time the simulator is run

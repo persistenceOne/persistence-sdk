@@ -2,13 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"github.com/cosmos/cosmos-sdk/client/pruning"
-	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
-	"github.com/spf13/cast"
-	"github.com/spf13/cobra"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"github.com/tendermint/tendermint/libs/log"
-	dbm "github.com/tendermint/tm-db"
 	"io"
 	"os"
 
@@ -17,8 +10,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/debug"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
+	"github.com/cosmos/cosmos-sdk/client/pruning"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
 	"github.com/cosmos/cosmos-sdk/server"
+	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
@@ -26,9 +21,15 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+	"github.com/spf13/cast"
+	"github.com/spf13/cobra"
+	tmcfg "github.com/tendermint/tendermint/config"
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+	"github.com/tendermint/tendermint/libs/log"
+	dbm "github.com/tendermint/tm-db"
+
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
 	"github.com/persistenceOne/persistence-sdk/v2/simapp/params"
-	tmcfg "github.com/tendermint/tendermint/config"
 )
 
 // NewRootCmd creates a new root command for simd. It is called once in the
@@ -93,9 +94,8 @@ func initTendermintConfig() *tmcfg.Config {
 
 // initAppConfig helps to override default appConfig template and configs.
 // return "", nil if no custom configuration is required for the application.
+// The following code snippet is just for reference.
 func initAppConfig() (string, interface{}) {
-	// The following code snippet is just for reference.
-
 	// WASMConfig defines configuration for the wasm module.
 	type WASMConfig struct {
 		// This is the maximum sdk gas (wasm and storage) that we allow for any x/wasm "smart" queries
@@ -264,7 +264,9 @@ func (a appCreator) appExport(
 	logger log.Logger, db dbm.DB, traceStore io.Writer, height int64, forZeroHeight bool, jailAllowedAddrs []string, appOpts servertypes.AppOptions,
 ) (servertypes.ExportedApp, error) {
 	var simApp *simapp.SimApp
+
 	homePath, ok := appOpts.Get(flags.FlagHome).(string)
+
 	if !ok || homePath == "" {
 		return servertypes.ExportedApp{}, errors.New("application home not set")
 	}

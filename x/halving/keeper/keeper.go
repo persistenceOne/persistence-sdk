@@ -7,8 +7,8 @@ package keeper
 
 import (
 	"fmt"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	mintTypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"

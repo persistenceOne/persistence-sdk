@@ -2,13 +2,12 @@ package keeper
 
 import (
 	"fmt"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 type (

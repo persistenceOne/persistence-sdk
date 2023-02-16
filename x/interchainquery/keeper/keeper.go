@@ -2,10 +2,11 @@ package keeper
 
 import (
 	"fmt"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibckeeper "github.com/cosmos/ibc-go/v6/modules/core/keeper"
 	"github.com/tendermint/tendermint/libs/log"
@@ -47,7 +48,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
-func (k *Keeper) SetDatapointForID(ctx sdk.Context, id string, result []byte, height sdk.Int) error {
+func (k *Keeper) SetDatapointForID(ctx sdk.Context, id string, result []byte, height sdkmath.Int) error {
 	mapping := types.DataPoint{Id: id, RemoteHeight: height, LocalHeight: sdk.NewInt(ctx.BlockHeight()), Value: result}
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixData)
 	bz := k.cdc.MustMarshal(&mapping)
@@ -118,7 +119,7 @@ func (k *Keeper) GetDatapointOrRequest(ctx sdk.Context, module string, connectio
 	return val, nil
 }
 
-func (k *Keeper) MakeRequest(ctx sdk.Context, connectionID string, chainID string, queryType string, request []byte, period sdk.Int, module string, callbackID string, ttl uint64) {
+func (k *Keeper) MakeRequest(ctx sdk.Context, connectionID string, chainID string, queryType string, request []byte, period sdkmath.Int, module string, callbackID string, ttl uint64) {
 	k.Logger(ctx).Info(
 		"MakeRequest",
 		"connection_id", connectionID,
