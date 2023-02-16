@@ -2,11 +2,44 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/staking"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/testutil"
+	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
 
-func (s *IntegrationTestSuite) TestSlashAndResetMissCounters() {
+// TestSlashAndResetMissCounters is a test for the slashing mechanism
+func (s *KeeperTestSuite) TestSlashAndResetMissCounters() {
+	app, ctx := s.app, s.ctx
+	valAddr := s.valAddresses[0]
+
+	// override the params with values that are easy for testing
+	params := types.DefaultParams()
+	params.VotePeriod = 10                                  // 10 blocks
+	params.SlashFraction = sdk.NewDecWithPrec(5, 1)         // 50%
+	params.SlashWindow = 100                                // 100 blocks (10 vote periods)
+	params.MinValidPerWindow = sdk.MustNewDecFromStr("0.5") // 50%
+	app.OracleKeeper.SetParams(ctx, params)
+
+	// missCounter is a special value that:
+	// 	missCounter / votePeriodsPerWindow < minValidPerWindow
+	missCounter := uint64(6)
+
+	app.OracleKeeper.SetMissCounter(ctx, valAddr, missCounter)
+	app.OracleKeeper.SlashAndResetMissCounters(ctx)
+
+	// ensure slashing effects are applied
+	app.StakingKeeper.ApplyAndReturnValidatorSetUpdates(ctx)
+
+	validator, found := app.StakingKeeper.GetValidator(ctx, valAddr)
+	s.Require().True(found, "ensure that validator is found")
+	s.Require().Equal(stakingtypes.Unbonding, validator.Status, "ensure its status is unbonding")
+	s.Require().Equal(testutil.ValidatorAmountBonded.QuoRaw(2), validator.Tokens, "ensure its tokens are slashed")
+
+	missCounter = app.OracleKeeper.GetMissCounter(ctx, valAddr)
+	s.Require().Zero(missCounter, "ensure miss counter must be zero now")
+}
+
+func (s *KeeperTestSuite) TestSlashAndResetMissCounters2() {
 	// initial setup
 	addr, addr2 := valAddr, valAddr2
 	amt := sdk.TokensFromConsensusPower(100, sdk.DefaultPowerReduction)

@@ -12,6 +12,13 @@ import (
 	"github.com/tendermint/tendermint/crypto/secp256k1"
 )
 
+var (
+	ValidatorInitPower    = int64(10000000000)
+	ValidatorInitTokens   = sdk.TokensFromConsensusPower(ValidatorInitPower, sdk.DefaultPowerReduction)
+	ValidatorInitCoins    = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, ValidatorInitTokens))
+	ValidatorAmountBonded = sdk.TokensFromConsensusPower(100, sdk.DefaultPowerReduction)
+)
+
 // FundAccount is a utility function that funds an account by minting and
 // sending the coins to the address. This should be used for testing purposes
 // only!
@@ -47,14 +54,7 @@ func StakingAddValidators(
 ) {
 	stakingHandler := staking.NewHandler(stakingKeeper)
 
-	var (
-		valPubKeys   = simapp.CreateTestPubKeys(num)
-		initPower    = int64(10000000000)
-		initTokens   = sdk.TokensFromConsensusPower(initPower, sdk.DefaultPowerReduction)
-		initCoins    = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, initTokens))
-		amountBonded = sdk.TokensFromConsensusPower(100, sdk.DefaultPowerReduction)
-	)
-
+	valPubKeys := simapp.CreateTestPubKeys(num)
 	for i := 0; i < num; i++ {
 		var (
 			valPubKey = valPubKeys[i]
@@ -64,10 +64,10 @@ func StakingAddValidators(
 		)
 
 		// fund the validator account with initial coins
-		orPanic(FundAccount(bankKeeper, ctx, accAddr, initCoins))
+		orPanic(FundAccount(bankKeeper, ctx, accAddr, ValidatorInitCoins))
 
 		// create validator in staking keeper with amount bonded
-		createValidatorMsg := newTestMsgCreateValidator(valAddr, valPubKey, amountBonded)
+		createValidatorMsg := newTestMsgCreateValidator(valAddr, valPubKey, ValidatorAmountBonded)
 		_, err := stakingHandler(ctx, createValidatorMsg)
 		orPanic(err)
 
