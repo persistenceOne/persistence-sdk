@@ -464,6 +464,7 @@ func SignCheckDeliver(
 func GenSequenceOfTxs(txGen client.TxConfig, msgs []sdk.Msg, accNums []uint64, initSeqNums []uint64, numToGenerate int, priv ...cryptotypes.PrivKey) ([]sdk.Tx, error) {
 	txs := make([]sdk.Tx, numToGenerate)
 	var err error
+
 	for i := 0; i < numToGenerate; i++ {
 		txs[i], err = helpers.GenSignedMockTx(
 			rand.New(rand.NewSource(time.Now().UnixNano())),
@@ -476,6 +477,7 @@ func GenSequenceOfTxs(txGen client.TxConfig, msgs []sdk.Msg, accNums []uint64, i
 			initSeqNums,
 			priv...,
 		)
+
 		if err != nil {
 			break
 		}
@@ -499,6 +501,7 @@ func CreateTestPubKeys(numPubKeys int) []cryptotypes.PubKey {
 	// start at 10 to avoid changing 1 to 01, 2 to 02, etc
 	for i := 100; i < (numPubKeys + 100); i++ {
 		numString := strconv.Itoa(i)
+
 		buffer.WriteString("0B485CFC0EECC619440448436F8FC9DF40566F2369E72400281454CB552AF") // base pubkey string
 		buffer.WriteString(numString)                                                       // adding on final two digits to make pubkeys unique
 		publicKeys = append(publicKeys, NewPubKeyFromHex(buffer.String()))
@@ -514,9 +517,11 @@ func NewPubKeyFromHex(pk string) (res cryptotypes.PubKey) {
 	if err != nil {
 		panic(err)
 	}
+
 	if len(pkBytes) != ed25519.PubKeySize {
 		panic(errors.Wrap(errors.ErrInvalidPubKey, "invalid pubkey size"))
 	}
+
 	return &ed25519.PubKey{Key: pkBytes}
 }
 
