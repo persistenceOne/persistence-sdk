@@ -125,8 +125,7 @@ func (suite *KeeperTestSuite) TestHooksPanicRecovery() {
 			events := func(epochID string, epochNumber int64, dummyEvent func(id string, number int64) sdk.Event) sdk.Events {
 				//nolint:scopelint,testfile
 				evts := make(sdk.Events, tc.lenEvents)
-
-				//nolint:scopelint,testfile
+				//nolint:	scopelint,testfile
 				for i := 0; i < tc.lenEvents; i++ {
 					evts[i] = dummyEvent(epochID, epochNumber)
 				}

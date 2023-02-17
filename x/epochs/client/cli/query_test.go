@@ -26,7 +26,7 @@ type QueryTestSuite struct {
 }
 
 func (s *QueryTestSuite) SetupSuite() {
-	s.app = simapp.Setup(false)
+	s.app = simapp.Setup(s.T(), false)
 	s.ctx = s.app.NewContext(false, tmproto.Header{})
 	s.queryHelper = &baseapp.QueryServiceTestHelper{
 		GRPCQueryRouter: s.app.GRPCQueryRouter(),
