@@ -250,6 +250,6 @@ func (q querier) QueryRewardPoolBalance(
 	balance := q.GetRewardPoolBalance(ctx, moduleAddr)
 
 	return &types.QueryRewardPoolBalanceResponse{
-		RemainingFunds: balance.String(),
+		RemainingFunds: balance,
 	}, nil
 }

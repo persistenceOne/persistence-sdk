@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"sort"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -190,7 +191,11 @@ func ClaimMapToSlice(claims map[string]Claim) []Claim {
 	}
 
 	sort.Slice(c, func(i, j int) bool {
-		return c[i].Recipient.String() < c[j].Recipient.String()
+		if val := bytes.Compare(c[i].Recipient.Bytes(), c[j].Recipient.Bytes()); val == -1 {
+			return true
+		}
+
+		return false
 	})
 
 	return c

@@ -11,8 +11,6 @@ import (
 var (
 	ErrInvalidOraclePrice  = sdkerrors.Register(ModuleName, 1112, "invalid oracle price")
 	ErrInvalidExchangeRate = sdkerrors.Register(ModuleName, 1, "invalid exchange rate")
-	ErrNoPrevote           = sdkerrors.Register(ModuleName, 2, "no prevote")
-	ErrNoVote              = sdkerrors.Register(ModuleName, 3, "no vote")
 	ErrNoVotingPermission  = sdkerrors.Register(ModuleName, 4, "unauthorized voter")
 	ErrInvalidHash         = sdkerrors.Register(ModuleName, 5, "invalid hash")
 	ErrInvalidHashLength   = sdkerrors.Register(ModuleName, 6,
@@ -25,7 +23,6 @@ var (
 	ErrNoAggregatePrevote = sdkerrors.Register(ModuleName, 11, "no aggregate prevote")
 	ErrNoAggregateVote    = sdkerrors.Register(ModuleName, 12, "no aggregate vote")
 	ErrUnknownDenom       = sdkerrors.Register(ModuleName, 13, "unknown denom")
-	ErrNegativeOrZeroRate = sdkerrors.Register(ModuleName, 14, "invalid exchange rate; should be positive")
 	ErrExistingPrevote    = sdkerrors.Register(ModuleName, 15, "prevote already submitted for this voting period")
 	ErrBallotNotSorted    = sdkerrors.Register(ModuleName, 16, "ballot must be sorted before this operation")
 )

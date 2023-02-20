@@ -13,8 +13,8 @@ import (
 func (k Keeper) OrganizeBallotByDenom(
 	ctx sdk.Context,
 	validatorClaimMap map[string]types.Claim,
-) (votes map[string]types.ExchangeRateBallot) {
-	votes = map[string]types.ExchangeRateBallot{}
+) []types.BallotDenom {
+	votes := map[string]types.ExchangeRateBallot{}
 
 	// collect aggregate votes
 	aggregateHandler := func(voterAddr sdk.ValAddress, vote types.AggregateExchangeRateVote) bool {
@@ -44,7 +44,7 @@ func (k Keeper) OrganizeBallotByDenom(
 		votes[denom] = ballot
 	}
 
-	return votes
+	return types.BallotMapToSlice(votes)
 }
 
 // ClearBallots clears all tallied prevotes and votes from the store.

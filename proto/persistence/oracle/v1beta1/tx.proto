@@ -3,6 +3,7 @@ package persistence.oracle.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types";
 
@@ -30,7 +31,10 @@ message MsgAggregateExchangeRatePrevote {
   option (gogoproto.goproto_getters) = false;
 
   string hash      = 1 [(gogoproto.moretags) = "yaml:\"hash\""];
-  string feeder    = 2 [(gogoproto.moretags) = "yaml:\"feeder\""];
+  string feeder    = 2 [
+    (gogoproto.moretags) = "yaml:\"feeder\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+  ];
   string validator = 3 [(gogoproto.moretags) = "yaml:\"validator\""];
 }
 
@@ -46,8 +50,14 @@ message MsgAggregateExchangeRateVote {
 
   string salt           = 1 [(gogoproto.moretags) = "yaml:\"salt\""];
   string exchange_rates = 2 [(gogoproto.moretags) = "yaml:\"exchange_rates\""];
-  string feeder         = 3 [(gogoproto.moretags) = "yaml:\"feeder\""];
-  string validator      = 4 [(gogoproto.moretags) = "yaml:\"validator\""];
+  string feeder         = 3 [
+    (gogoproto.moretags) = "yaml:\"feeder\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+  ];
+  string validator      = 4 [
+    (gogoproto.moretags) = "yaml:\"validator\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+  ];
 }
 
 // MsgAggregateExchangeRateVoteResponse defines the
@@ -60,8 +70,14 @@ message MsgDelegateFeedConsent {
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
-  string operator = 1 [(gogoproto.moretags) = "yaml:\"operator\""];
-  string delegate = 2 [(gogoproto.moretags) = "yaml:\"delegate\""];
+  string operator = 1 [
+    (gogoproto.moretags) = "yaml:\"operator\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+  ];
+  string delegate = 2 [
+    (gogoproto.moretags) = "yaml:\"delegate\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+  ];
 }
 
 // MsgDelegateFeedConsentResponse defines the Msg/DelegateFeedConsent response
@@ -72,7 +88,10 @@ message MsgAddFundsToRewardPool {
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
-  string from = 1 [(gogoproto.moretags) = "yaml:\"from\""];
+  string from = 1 [
+    (gogoproto.moretags) = "yaml:\"from\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+  ];
 
   // rewards are the coin(s) to add to reward pool
   repeated cosmos.base.v1beta1.Coin funds = 2 [

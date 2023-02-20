@@ -33,9 +33,9 @@ var (
 	DefaultRewardBand    = sdk.NewDecWithPrec(2, 2)  // 2% (-1, 1)
 	DefaultAcceptList    = DenomList{
 		{
-			BaseDenom:   atomDenom,
-			SymbolDenom: atomSymbol,
-			Exponent:    atomExponent,
+			BaseDenom:   AtomDenom,
+			SymbolDenom: AtomSymbol,
+			Exponent:    AtomExponent,
 		},
 		{
 			BaseDenom:   osmosisDenom,

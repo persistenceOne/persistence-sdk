@@ -27,8 +27,6 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) error {
 		maxValidators := k.StakingKeeper.MaxValidators(ctx)
 		iterator := k.StakingKeeper.ValidatorsPowerStoreIterator(ctx)
 
-		defer iterator.Close()
-
 		powerReduction := k.StakingKeeper.PowerReduction(ctx)
 
 		i := 0
@@ -42,6 +40,8 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) error {
 				i++
 			}
 		}
+
+		iterator.Close()
 
 		var (
 			// voteTargets defines the symbol (ticker) denoms that we require votes on
@@ -62,9 +62,7 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) error {
 
 		// Organize votes to ballot by denom
 		// NOTE: **Filter out inactive or jailed validators**
-		voteMap := k.OrganizeBallotByDenom(ctx, validatorClaimMap)
-
-		ballotDenomSlice := types.BallotMapToSlice(voteMap)
+		ballotDenomSlice := k.OrganizeBallotByDenom(ctx, validatorClaimMap)
 
 		// Iterate through ballots and update exchange rates; drop if not enough votes have been achieved.
 		for _, ballotDenom := range ballotDenomSlice {
@@ -117,6 +115,7 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) error {
 // Tally calculates the median and returns it. It sets the set of voters to be
 // rewarded, i.e. voted within a reasonable spread from the weighted median to
 // the store. Note, the ballot is sorted by ExchangeRate.
+// https://classic-docs.terra.money/docs/develop/module-specifications/spec-oracle.html#tally
 func Tally(
 	ctx sdk.Context,
 	ballot types.ExchangeRateBallot,

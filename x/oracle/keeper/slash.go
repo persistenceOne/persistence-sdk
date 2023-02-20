@@ -10,6 +10,7 @@ import (
 //
 // If the valid vote rate is below the minValidPerWindow, the validator will be
 // slashed and jailed.
+// https://classic-docs.terra.money/docs/develop/module-specifications/spec-oracle.html#slashandresetmisscounters
 func (k Keeper) SlashAndResetMissCounters(ctx sdk.Context) {
 	height := ctx.BlockHeight()
 	distributionHeight := height - sdk.ValidatorUpdateDelay - 1

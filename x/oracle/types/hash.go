@@ -5,7 +5,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"strings"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/crypto/tmhash"
 	"gopkg.in/yaml.v3"
 )
@@ -19,27 +21,14 @@ type AggregateVoteHash []byte
 
 // GetAggregateVoteHash computes hash value of ExchangeRateVote to avoid
 // redundant DecCoins stringify operation.
-func GetAggregateVoteHash(salt string, exchangeRatesStr string, voter fmt.Stringer) AggregateVoteHash {
-	hash := tmhash.NewTruncated()
-	sourceStr := fmt.Sprintf("%s:%s:%s", salt, exchangeRatesStr, voter.String())
-
-	if _, err := hash.Write([]byte(sourceStr)); err != nil {
-		panic(err)
-	}
-
-	bz := hash.Sum(nil)
-
-	return bz
+func GetAggregateVoteHash(salt string, exchangeRatesStr string, voter sdk.ValAddress) AggregateVoteHash {
+	sourceStr := strings.Join([]string{salt, exchangeRatesStr, voter.String()}, ":")
+	return tmhash.SumTruncated([]byte(sourceStr))
 }
 
 // AggregateVoteHashFromHexString convert hex string to AggregateVoteHash.
 func AggregateVoteHashFromHexString(s string) (AggregateVoteHash, error) {
-	h, err := hex.DecodeString(s)
-	if err != nil {
-		return nil, err
-	}
-
-	return h, nil
+	return hex.DecodeString(s)
 }
 
 // String implements fmt.Stringer interface

@@ -2,10 +2,12 @@ syntax = "proto3";
 package persistence.oracle.v1beta1;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types";
 
 // Params defines the parameters for the oracle module.
+// https://classic-docs.terra.money/docs/develop/module-specifications/spec-oracle.html#parameters
 message Params {
   option (gogoproto.equal)            = true;
   option (gogoproto.goproto_stringer) = false;
@@ -62,7 +64,10 @@ message AggregateExchangeRatePrevote {
   option (gogoproto.goproto_stringer) = false;
 
   string hash         = 1 [(gogoproto.moretags) = "yaml:\"hash\""];
-  string voter        = 2 [(gogoproto.moretags) = "yaml:\"voter\""];
+  string voter        = 2 [
+    (gogoproto.moretags) = "yaml:\"voter\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+  ];
   uint64 submit_block = 3 [(gogoproto.moretags) = "yaml:\"submit_block\""];
 }
 
@@ -79,7 +84,10 @@ message AggregateExchangeRateVote {
     (gogoproto.nullable)     = false
   ];
 
-  string voter = 2 [(gogoproto.moretags) = "yaml:\"voter\""];
+  string voter = 2 [
+    (gogoproto.moretags) = "yaml:\"voter\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+    ];
 }
 
 // ExchangeRateTuple - struct to store interpreted exchange rates data to store

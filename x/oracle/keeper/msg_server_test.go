@@ -1,0 +1,197 @@
+package keeper_test
+
+import (
+	"crypto/rand"
+	"encoding/hex"
+	"fmt"
+	"strings"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+)
+
+// generateSalt generates a random salt, size length/2,  as a HEX encoded string.
+func generateSalt(length int) (string, error) {
+	if length == 0 {
+		return "", fmt.Errorf("failed to generate salt: zero length")
+	}
+
+	bytes := make([]byte, length)
+
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(bytes), nil
+}
+
+func (s *IntegrationTestSuite) TestMsgServer_AggregateExchangeRatePrevote() {
+	ctx := s.ctx
+
+	exchangeRatesStr := "123.2:ATOM"
+	salt, err := generateSalt(32)
+	s.Require().NoError(err)
+
+	hash := types.GetAggregateVoteHash(salt, exchangeRatesStr, valAddr)
+
+	invalidHash := &types.MsgAggregateExchangeRatePrevote{
+		Hash:      "invalid_hash",
+		Feeder:    addr.String(),
+		Validator: valAddr.String(),
+	}
+
+	invalidFeeder := &types.MsgAggregateExchangeRatePrevote{
+		Hash:      hash.String(),
+		Feeder:    "invalid_feeder",
+		Validator: valAddr.String(),
+	}
+
+	invalidValidator := &types.MsgAggregateExchangeRatePrevote{
+		Hash:      hash.String(),
+		Feeder:    addr.String(),
+		Validator: "invalid_val",
+	}
+
+	validMsg := &types.MsgAggregateExchangeRatePrevote{
+		Hash:      hash.String(),
+		Feeder:    addr.String(),
+		Validator: valAddr.String(),
+	}
+
+	_, err = s.msgServer.AggregateExchangeRatePrevote(sdk.WrapSDKContext(ctx), invalidHash)
+	s.Require().ErrorContains(err, types.ErrInvalidHash.Error())
+
+	_, err = s.msgServer.AggregateExchangeRatePrevote(sdk.WrapSDKContext(ctx), invalidFeeder)
+	s.Require().Error(err)
+
+	_, err = s.msgServer.AggregateExchangeRatePrevote(sdk.WrapSDKContext(ctx), invalidValidator)
+	s.Require().Error(err)
+
+	_, err = s.msgServer.AggregateExchangeRatePrevote(sdk.WrapSDKContext(ctx), validMsg)
+	s.Require().NoError(err)
+}
+
+func (s *IntegrationTestSuite) TestMsgServer_AggregateExchangeRateVote() {
+	ctx := s.ctx
+
+	ratesStr := "xprt:123.2"
+	ratesStrInvalidCoin := "xprt:123.2,badcoin:234.5"
+
+	salt, err := generateSalt(32)
+	s.Require().NoError(err)
+
+	hash := types.GetAggregateVoteHash(salt, ratesStr, valAddr)
+	hashInvalidRate := types.GetAggregateVoteHash(salt, ratesStrInvalidCoin, valAddr)
+
+	prevoteMsg := &types.MsgAggregateExchangeRatePrevote{
+		Hash:      hash.String(),
+		Feeder:    addr.String(),
+		Validator: valAddr.String(),
+	}
+
+	voteMsg := &types.MsgAggregateExchangeRateVote{
+		Feeder:        addr.String(),
+		Validator:     valAddr.String(),
+		Salt:          salt,
+		ExchangeRates: ratesStr,
+	}
+
+	voteMsgInvalidRate := &types.MsgAggregateExchangeRateVote{
+		Feeder:        addr.String(),
+		Validator:     valAddr.String(),
+		Salt:          salt,
+		ExchangeRates: ratesStrInvalidCoin,
+	}
+
+	voteMsgInvalidSalt := &types.MsgAggregateExchangeRateVote{
+		Feeder:        addr.String(),
+		Validator:     valAddr.String(),
+		Salt:          "invalid_salt",
+		ExchangeRates: ratesStr,
+	}
+
+	// Flattened acceptList symbols to make checks easier
+	acceptList := s.app.OracleKeeper.GetParams(ctx).AcceptList
+
+	acceptListFlat := make([]string, len(acceptList))
+	for i, v := range acceptList {
+		acceptListFlat[i] = v.SymbolDenom
+	}
+
+	// No existing prevote
+	_, err = s.msgServer.AggregateExchangeRateVote(sdk.WrapSDKContext(ctx), voteMsg)
+	s.Require().EqualError(err, sdkerrors.Wrap(types.ErrNoAggregatePrevote, valAddr.String()).Error())
+
+	_, err = s.msgServer.AggregateExchangeRatePrevote(sdk.WrapSDKContext(ctx), prevoteMsg)
+	s.Require().NoError(err)
+
+	_, err = s.msgServer.AggregateExchangeRatePrevote(sdk.WrapSDKContext(ctx), prevoteMsg)
+	s.Require().EqualError(err, types.ErrExistingPrevote.Error())
+
+	// Reveal period mismatch
+	_, err = s.msgServer.AggregateExchangeRateVote(sdk.WrapSDKContext(ctx), voteMsg)
+	s.Require().EqualError(err, types.ErrRevealPeriodMissMatch.Error())
+
+	// Valid
+	s.app.OracleKeeper.SetAggregateExchangeRatePrevote(
+		ctx,
+		valAddr,
+		types.NewAggregateExchangeRatePrevote(
+			hash, valAddr, 1,
+		))
+
+	_, err = s.msgServer.AggregateExchangeRateVote(sdk.WrapSDKContext(ctx), voteMsg)
+	s.Require().NoError(err)
+
+	vote, err := s.app.OracleKeeper.GetAggregateExchangeRateVote(ctx, valAddr)
+	s.Require().Nil(err)
+
+	for _, v := range vote.ExchangeRateTuples {
+		s.Require().Contains(acceptListFlat, strings.ToLower(v.Denom))
+	}
+
+	// Valid, but with an exchange rate which isn't in AcceptList
+	s.app.OracleKeeper.SetAggregateExchangeRatePrevote(
+		ctx,
+		valAddr,
+		types.NewAggregateExchangeRatePrevote(
+			hashInvalidRate, valAddr, 1,
+		))
+
+	_, err = s.msgServer.AggregateExchangeRateVote(sdk.WrapSDKContext(ctx), voteMsgInvalidRate)
+	s.Require().NoError(err)
+
+	vote, err = s.app.OracleKeeper.GetAggregateExchangeRateVote(ctx, valAddr)
+	s.Require().NoError(err)
+
+	for _, v := range vote.ExchangeRateTuples {
+		s.Require().Contains(acceptListFlat, strings.ToLower(v.Denom))
+	}
+
+	// Valid pre-vote but invalid salt
+	s.app.OracleKeeper.SetAggregateExchangeRatePrevote(
+		ctx,
+		valAddr,
+		types.NewAggregateExchangeRatePrevote(
+			hash, valAddr, 1,
+		))
+
+	_, err = s.msgServer.AggregateExchangeRateVote(sdk.WrapSDKContext(ctx), voteMsgInvalidSalt)
+	s.Require().ErrorContains(err, types.ErrVerificationFailed.Error())
+}
+
+func (s *IntegrationTestSuite) TestMsgServer_DelegateFeedConsent() {
+	app, ctx := s.app, s.ctx
+
+	feederAddr := sdk.AccAddress([]byte("addr________________"))
+	feederAcc := app.AccountKeeper.NewAccountWithAddress(ctx, feederAddr)
+	app.AccountKeeper.SetAccount(ctx, feederAcc)
+
+	_, err := s.msgServer.DelegateFeedConsent(sdk.WrapSDKContext(ctx), &types.MsgDelegateFeedConsent{
+		Operator: valAddr.String(),
+		Delegate: feederAddr.String(),
+	})
+	s.Require().NoError(err)
+}

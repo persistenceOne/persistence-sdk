@@ -70,7 +70,7 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, genState types.GenesisSt
 func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 	params := keeper.GetParams(ctx)
 
-	feederDelegations := []types.FeederDelegation{}
+	var feederDelegations []types.FeederDelegation
 
 	keeper.IterateFeederDelegations(ctx, func(valAddr sdk.ValAddress, feederAddr sdk.AccAddress) (stop bool) {
 		feederDelegations = append(feederDelegations, types.FeederDelegation{
@@ -81,7 +81,7 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 		return false
 	})
 
-	exchangeRates := []types.ExchangeRateTuple{}
+	var exchangeRates []types.ExchangeRateTuple
 
 	keeper.IterateExchangeRates(ctx, func(denom string, rate sdk.Dec) (stop bool) {
 		exchangeRates = append(exchangeRates, types.ExchangeRateTuple{
@@ -103,7 +103,7 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 		return false
 	})
 
-	aggregateExchangeRatePrevotes := []types.AggregateExchangeRatePrevote{}
+	var aggregateExchangeRatePrevotes []types.AggregateExchangeRatePrevote
 
 	keeper.IterateAggregateExchangeRatePrevotes(
 		ctx,

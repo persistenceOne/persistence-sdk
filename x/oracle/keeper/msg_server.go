@@ -36,7 +36,7 @@ func (ms msgServer) AggregateExchangeRatePrevote(
 		return nil, err
 	}
 
-	if err := ms.ValidateFeeder(ctx, feederAddr, valAddr); err != nil {
+	if err := ms.ValidateFeeder(ctx, valAddr, feederAddr); err != nil {
 		return nil, err
 	}
 
@@ -85,7 +85,7 @@ func (ms msgServer) AggregateExchangeRateVote(
 		return nil, err
 	}
 
-	if err := ms.ValidateFeeder(ctx, feederAddr, valAddr); err != nil {
+	if err := ms.ValidateFeeder(ctx, valAddr, feederAddr); err != nil {
 		return nil, err
 	}
 
@@ -191,11 +191,6 @@ func (ms msgServer) AddFundsToRewardPool(
 	}
 
 	if err = ms.FundRewardPool(ctx, fromAddr, msg.Funds); err != nil {
-		return nil, err
-	}
-
-	err = ctx.EventManager().EmitTypedEvent(msg)
-	if err != nil {
 		return nil, err
 	}
 

@@ -9,8 +9,8 @@ import (
 )
 
 func NewAggregateExchangeRatePrevote(
-	hash fmt.Stringer,
-	voter fmt.Stringer,
+	hash AggregateVoteHash,
+	voter sdk.ValAddress,
 	submitBlock uint64,
 ) AggregateExchangeRatePrevote {
 	return AggregateExchangeRatePrevote{
@@ -28,7 +28,7 @@ func (v AggregateExchangeRatePrevote) String() string {
 
 func NewAggregateExchangeRateVote(
 	exchangeRateTuples ExchangeRateTuples,
-	voter fmt.Stringer,
+	voter sdk.ValAddress,
 ) AggregateExchangeRateVote {
 	return AggregateExchangeRateVote{
 		ExchangeRateTuples: exchangeRateTuples,

@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "persistence/oracle/v1beta1/oracle.proto";
 import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types";
 
@@ -102,7 +103,7 @@ message QueryFeederDelegationRequest {
   option (gogoproto.goproto_getters) = false;
 
   // validator defines the validator address to query for.
-  string validator_addr = 1;
+  string validator_addr = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // QueryFeederDelegationResponse is response type for the
@@ -119,7 +120,7 @@ message QueryMissCounterRequest {
   option (gogoproto.goproto_getters) = false;
 
   // validator defines the validator address to query for.
-  string validator_addr = 1;
+  string validator_addr = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // QueryMissCounterResponse is response type for the
@@ -136,7 +137,7 @@ message QueryAggregatePrevoteRequest {
   option (gogoproto.goproto_getters) = false;
 
   // validator defines the validator address to query for.
-  string validator_addr = 1;
+  string validator_addr = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // QueryAggregatePrevoteResponse is response type for the
@@ -167,7 +168,7 @@ message QueryAggregateVoteRequest {
   option (gogoproto.goproto_getters) = false;
 
   // validator defines the validator address to query for.
-  string validator_addr = 1;
+  string validator_addr = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // QueryAggregateVoteResponse is response type for the
@@ -203,5 +204,8 @@ message QueryRewardPoolBalanceRequest {}
 
 message QueryRewardPoolBalanceResponse {
   // funds left in the reward pool
-  string remaining_funds = 1;
+  repeated cosmos.base.v1beta1.Coin remaining_funds = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
 }

@@ -24,6 +24,7 @@ func prependXPRTIfUnique(voteTargets []string) []string {
 // RewardBallotWinners is executed at the end of every voting period, where we
 // give out a portion of seigniorage reward(reward-weight) to the oracle voters
 // that voted correctly.
+// https://classic-docs.terra.money/docs/develop/module-specifications/spec-oracle.html#k-rewardballotwinners
 func (k Keeper) RewardBallotWinners(
 	ctx sdk.Context,
 	votePeriod int64,

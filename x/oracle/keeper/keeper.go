@@ -15,8 +15,6 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
 
-var ten = sdk.MustNewDecFromStr("10")
-
 // Keeper of the oracle store
 type Keeper struct {
 	cdc        codec.BinaryCodec
@@ -71,52 +69,19 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 
 // GetExchangeRate gets the consensus exchange rate of USD denominated in the
 // denom asset from the store.
-func (k Keeper) GetExchangeRate(ctx sdk.Context, symbol string) (sdk.Dec, error) {
+func (k Keeper) GetExchangeRate(ctx sdk.Context, denom string) (sdk.Dec, error) {
 	store := ctx.KVStore(k.storeKey)
-	symbol = strings.ToUpper(symbol)
+	denom = strings.ToUpper(denom)
 
-	b := store.Get(types.GetExchangeRateKey(symbol))
+	b := store.Get(types.GetExchangeRateKey(denom))
 	if b == nil {
-		return sdk.ZeroDec(), sdkerrors.Wrap(types.ErrUnknownDenom, symbol)
+		return sdk.ZeroDec(), sdkerrors.Wrap(types.ErrUnknownDenom, denom)
 	}
 
 	decProto := sdk.DecProto{}
 	k.cdc.MustUnmarshal(b, &decProto)
 
 	return decProto.Dec, nil
-}
-
-// GetExchangeRateBase gets the consensus exchange rate of an asset
-// in the base denom (e.g. ATOM -> uatom)
-func (k Keeper) GetExchangeRateBase(ctx sdk.Context, denom string) (sdk.Dec, error) {
-	var symbol string
-
-	// Translate the base denom -> symbol
-	params := k.GetParams(ctx)
-	for _, listDenom := range params.AcceptList {
-		if listDenom.BaseDenom == denom {
-			symbol = listDenom.SymbolDenom
-			break
-		}
-	}
-
-	if len(symbol) == 0 {
-		return sdk.ZeroDec(), sdkerrors.Wrap(types.ErrUnknownDenom, denom)
-	}
-
-	exchangeRate, err := k.GetExchangeRate(ctx, symbol)
-	if err != nil {
-		return sdk.ZeroDec(), err
-	}
-
-	for _, acceptedDenom := range params.AcceptList {
-		if denom == acceptedDenom.BaseDenom {
-			powerReduction := ten.Power(uint64(acceptedDenom.Exponent))
-			return exchangeRate.Quo(powerReduction), nil
-		}
-	}
-
-	return sdk.ZeroDec(), sdkerrors.Wrap(types.ErrUnknownDenom, denom)
 }
 
 // SetExchangeRate sets the consensus exchange rate of USD denominated in the
@@ -205,7 +170,7 @@ func (k Keeper) IterateFeederDelegations(ctx sdk.Context, handler IterateFeederD
 	defer iter.Close()
 
 	for ; iter.Valid(); iter.Next() {
-		delegator := sdk.ValAddress(iter.Key()[2:])
+		delegator := getValAddrFromIteratorKey(iter.Key())
 		delegate := sdk.AccAddress(iter.Value())
 
 		if handler(delegator, delegate) {
@@ -255,7 +220,7 @@ func (k Keeper) IterateMissCounters(ctx sdk.Context, handler func(sdk.ValAddress
 	defer iter.Close()
 
 	for ; iter.Valid(); iter.Next() {
-		operator := sdk.ValAddress(iter.Key()[2:])
+		operator := getValAddrFromIteratorKey(iter.Key())
 
 		var missCounter gogotypes.UInt64Value
 
@@ -324,13 +289,11 @@ func (k Keeper) IterateAggregateExchangeRatePrevotes(
 	defer iter.Close()
 
 	for ; iter.Valid(); iter.Next() {
-		voterAddr := sdk.ValAddress(iter.Key()[2:])
-
 		var aggregatePrevote types.AggregateExchangeRatePrevote
 
 		k.cdc.MustUnmarshal(iter.Value(), &aggregatePrevote)
 
-		if handler(voterAddr, aggregatePrevote) {
+		if handler(getValAddrFromIteratorKey(iter.Key()), aggregatePrevote) {
 			break
 		}
 	}
@@ -373,7 +336,7 @@ func (k Keeper) DeleteAggregateExchangeRateVote(ctx sdk.Context, voter sdk.ValAd
 	store.Delete(types.GetAggregateExchangeRateVoteKey(voter))
 }
 
-type IterateExchangeRateVote = func(
+type IterateExchangeRateVoteFunc func(
 	voterAddr sdk.ValAddress,
 	aggregateVote types.AggregateExchangeRateVote,
 ) (stop bool)
@@ -381,7 +344,7 @@ type IterateExchangeRateVote = func(
 // IterateAggregateExchangeRateVotes iterates rate over prevotes in the store.
 func (k Keeper) IterateAggregateExchangeRateVotes(
 	ctx sdk.Context,
-	handler IterateExchangeRateVote,
+	handler IterateExchangeRateVoteFunc,
 ) {
 	store := ctx.KVStore(k.storeKey)
 
@@ -389,20 +352,18 @@ func (k Keeper) IterateAggregateExchangeRateVotes(
 	defer iter.Close()
 
 	for ; iter.Valid(); iter.Next() {
-		voterAddr := sdk.ValAddress(iter.Key()[2:])
-
 		var aggregateVote types.AggregateExchangeRateVote
 
 		k.cdc.MustUnmarshal(iter.Value(), &aggregateVote)
 
-		if handler(voterAddr, aggregateVote) {
+		if handler(getValAddrFromIteratorKey(iter.Key()), aggregateVote) {
 			break
 		}
 	}
 }
 
 // ValidateFeeder returns the given feeder is allowed to feed the message or not.
-func (k Keeper) ValidateFeeder(ctx sdk.Context, feederAddr sdk.Address, valAddr sdk.ValAddress) error {
+func (k Keeper) ValidateFeeder(ctx sdk.Context, valAddr sdk.ValAddress, feederAddr sdk.AccAddress) error {
 	delegate, err := k.GetFeederDelegation(ctx, valAddr)
 	if err != nil {
 		return err

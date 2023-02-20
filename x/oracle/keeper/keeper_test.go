@@ -24,10 +24,6 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
 
-const (
-	exchangeRate string = persistenceapp.DisplayDenom
-)
-
 type IntegrationTestSuite struct {
 	suite.Suite
 
@@ -111,16 +107,18 @@ func (s *IntegrationTestSuite) TestSetFeederDelegation() {
 	feederAcc := app.AccountKeeper.NewAccountWithAddress(ctx, feederAddr)
 	app.AccountKeeper.SetAccount(ctx, feederAcc)
 
-	err := s.app.OracleKeeper.ValidateFeeder(ctx, addr, valAddr)
+	err := s.app.OracleKeeper.ValidateFeeder(ctx, valAddr, addr)
 	s.Require().NoError(err)
-	err = s.app.OracleKeeper.ValidateFeeder(ctx, feederAddr, valAddr)
-	s.Require().Error(err)
+
+	err = s.app.OracleKeeper.ValidateFeeder(ctx, valAddr, feederAddr)
+	s.Require().ErrorContains(err, types.ErrNoVotingPermission.Error())
 
 	s.app.OracleKeeper.SetFeederDelegation(ctx, valAddr, feederAddr)
 
-	err = s.app.OracleKeeper.ValidateFeeder(ctx, addr, valAddr)
-	s.Require().Error(err)
-	err = s.app.OracleKeeper.ValidateFeeder(ctx, feederAddr, valAddr)
+	err = s.app.OracleKeeper.ValidateFeeder(ctx, valAddr, addr)
+	s.Require().ErrorContains(err, types.ErrNoVotingPermission.Error())
+
+	err = s.app.OracleKeeper.ValidateFeeder(ctx, valAddr, feederAddr)
 	s.Require().NoError(err)
 }
 
@@ -183,7 +181,7 @@ func (s *IntegrationTestSuite) TestAggregateExchangeRateVote() {
 
 	var tuples types.ExchangeRateTuples
 	tuples = append(tuples, types.ExchangeRateTuple{
-		Denom:        exchangeRate,
+		Denom:        types.PersistenceDenom,
 		ExchangeRate: sdk.ZeroDec(),
 	})
 
@@ -211,36 +209,36 @@ func (s *IntegrationTestSuite) TestAggregateExchangeRateVoteError() {
 
 func (s *IntegrationTestSuite) TestSetExchangeRateWithEvent() {
 	app, ctx := s.app, s.ctx
-	app.OracleKeeper.SetExchangeRateWithEvent(ctx, exchangeRate, sdk.OneDec())
-	rate, err := app.OracleKeeper.GetExchangeRate(ctx, exchangeRate)
+	app.OracleKeeper.SetExchangeRateWithEvent(ctx, types.PersistenceDenom, sdk.OneDec())
+	rate, err := app.OracleKeeper.GetExchangeRate(ctx, types.PersistenceDenom)
 	s.Require().NoError(err)
 	s.Require().Equal(rate, sdk.OneDec())
 }
 
-func (s *IntegrationTestSuite) TestGetExchangeRate_InvalidDenom() {
+func (s *IntegrationTestSuite) TestGetExchangeRate_UnknownDenom() {
 	app, ctx := s.app, s.ctx
 
 	_, err := app.OracleKeeper.GetExchangeRate(ctx, "uxyz")
-	s.Require().Error(err)
+	s.Require().ErrorContains(err, types.ErrUnknownDenom.Error())
 }
 
 func (s *IntegrationTestSuite) TestGetExchangeRate_NotSet() {
 	app, ctx := s.app, s.ctx
 
-	_, err := app.OracleKeeper.GetExchangeRate(ctx, exchangeRate)
+	_, err := app.OracleKeeper.GetExchangeRate(ctx, types.PersistenceDenom)
 	s.Require().Error(err)
 }
 
 func (s *IntegrationTestSuite) TestGetExchangeRate_Valid() {
 	app, ctx := s.app, s.ctx
 
-	app.OracleKeeper.SetExchangeRate(ctx, exchangeRate, sdk.OneDec())
-	rate, err := app.OracleKeeper.GetExchangeRate(ctx, exchangeRate)
+	app.OracleKeeper.SetExchangeRate(ctx, types.PersistenceDenom, sdk.OneDec())
+	rate, err := app.OracleKeeper.GetExchangeRate(ctx, types.PersistenceDenom)
 	s.Require().NoError(err)
 	s.Require().Equal(rate, sdk.OneDec())
 
-	app.OracleKeeper.SetExchangeRate(ctx, strings.ToLower(exchangeRate), sdk.OneDec())
-	rate, err = app.OracleKeeper.GetExchangeRate(ctx, exchangeRate)
+	app.OracleKeeper.SetExchangeRate(ctx, strings.ToLower(types.PersistenceDenom), sdk.OneDec())
+	rate, err = app.OracleKeeper.GetExchangeRate(ctx, types.PersistenceDenom)
 	s.Require().NoError(err)
 	s.Require().Equal(rate, sdk.OneDec())
 }
@@ -248,9 +246,9 @@ func (s *IntegrationTestSuite) TestGetExchangeRate_Valid() {
 func (s *IntegrationTestSuite) TestDeleteExchangeRate() {
 	app, ctx := s.app, s.ctx
 
-	app.OracleKeeper.SetExchangeRate(ctx, exchangeRate, sdk.OneDec())
-	app.OracleKeeper.DeleteExchangeRate(ctx, exchangeRate)
-	_, err := app.OracleKeeper.GetExchangeRate(ctx, exchangeRate)
+	app.OracleKeeper.SetExchangeRate(ctx, types.PersistenceDenom, sdk.OneDec())
+	app.OracleKeeper.DeleteExchangeRate(ctx, types.PersistenceDenom)
+	_, err := app.OracleKeeper.GetExchangeRate(ctx, types.PersistenceDenom)
 	s.Require().Error(err)
 }
 

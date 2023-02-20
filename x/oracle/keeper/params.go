@@ -19,30 +19,11 @@ func (k Keeper) VoteThreshold(ctx sdk.Context) (res sdk.Dec) {
 	return
 }
 
-// RewardBand returns the ratio of allowable exchange rate error that a validator
-// can be rewarded.
-func (k Keeper) RewardBand(ctx sdk.Context) (res sdk.Dec) {
-	k.paramSpace.Get(ctx, types.KeyRewardBand, &res)
-	return
-}
-
 // RewardDistributionWindow returns the number of vote periods during which
 // seigniorage reward comes in and then is distributed.
 func (k Keeper) RewardDistributionWindow(ctx sdk.Context) (res uint64) {
 	k.paramSpace.Get(ctx, types.KeyRewardDistributionWindow, &res)
 	return
-}
-
-// AcceptList returns the denom list that can be activated
-func (k Keeper) AcceptList(ctx sdk.Context) (res types.DenomList) {
-	k.paramSpace.Get(ctx, types.KeyAcceptList, &res)
-	return
-}
-
-// SetAcceptList updates the accepted list of assets supported by the x/oracle
-// module.
-func (k Keeper) SetAcceptList(ctx sdk.Context, acceptList types.DenomList) {
-	k.paramSpace.Set(ctx, types.KeyAcceptList, acceptList)
 }
 
 // SlashFraction returns oracle voting penalty rate

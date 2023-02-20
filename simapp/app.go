@@ -96,7 +96,6 @@ import (
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
 
-	customante "github.com/persistenceOne/persistence-sdk/v2/simapp/ante"
 	oraclekeeper "github.com/persistenceOne/persistence-sdk/v2/x/oracle/keeper"
 	oracletypes "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
@@ -456,16 +455,13 @@ func NewSimApp(
 	app.SetInitChainer(app.InitChainer)
 	app.SetBeginBlocker(app.BeginBlocker)
 
-	anteHandler, err := customante.NewAnteHandler(
-		customante.HandlerOptions{
-			HandlerOptions: ante.HandlerOptions{
-				AccountKeeper:   app.AccountKeeper,
-				BankKeeper:      app.BankKeeper,
-				FeegrantKeeper:  app.FeeGrantKeeper,
-				SignModeHandler: encodingConfig.TxConfig.SignModeHandler(),
-				SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
-			},
-			OracleKeeper: app.OracleKeeper,
+	anteHandler, err := ante.NewAnteHandler(
+		ante.HandlerOptions{
+			AccountKeeper:   app.AccountKeeper,
+			BankKeeper:      app.BankKeeper,
+			FeegrantKeeper:  app.FeeGrantKeeper,
+			SignModeHandler: encodingConfig.TxConfig.SignModeHandler(),
+			SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
 		},
 	)
 
