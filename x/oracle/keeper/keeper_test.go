@@ -38,23 +38,27 @@ const (
 )
 
 func (s *KeeperTestSuite) SetupTest() {
-	app := persistenceapp.Setup(false)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{
+	s.app, s.ctx = s.initAppAndContext()
+
+	var err error
+	s.valAccAddresses, s.valAddresses, err = testutil.StakingAddValidators(
+		s.app.BankKeeper,
+		s.app.StakingKeeper,
+		s.ctx,
+		initialValidatorsNum,
+	)
+
+	s.Require().NoError(err)
+}
+
+func (s *KeeperTestSuite) initAppAndContext() (app *persistenceapp.SimApp, ctx sdk.Context) {
+	app = persistenceapp.Setup(false)
+	ctx = app.BaseApp.NewContext(false, tmproto.Header{
 		Height: 100,
 		Time:   tmtime.Now(),
 	})
 
-	var err error
-	s.valAccAddresses, s.valAddresses, err = testutil.StakingAddValidators(
-		app.BankKeeper,
-		app.StakingKeeper,
-		ctx,
-		initialValidatorsNum,
-	)
-	s.Require().NoError(err)
-
-	s.app = app
-	s.ctx = ctx
+	return app, ctx
 }
 
 func (s *KeeperTestSuite) TestSetFeederDelegation() {

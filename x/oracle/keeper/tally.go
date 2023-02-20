@@ -63,7 +63,7 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 	// Iterate through ballots and update exchange rates; drop if not enough votes have been achieved.
 	for _, ballotDenom := range ballotDenomSlice {
 		// Get weighted median of exchange rates
-		exchangeRate, err := Tally(ctx, ballotDenom.Ballot, params.RewardBand, validatorClaimMap)
+		exchangeRate, err := Tally(ballotDenom.Ballot, params.RewardBand, validatorClaimMap)
 		if err != nil {
 			return err
 		}
@@ -105,7 +105,6 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 // rewarded, i.e. voted within a reasonable spread from the weighted median to
 // the store. Note, the ballot is sorted by ExchangeRate.
 func Tally(
-	ctx sdk.Context,
 	ballot types.ExchangeRateBallot,
 	rewardBand sdk.Dec,
 	validatorClaimMap map[string]types.Claim,
@@ -124,6 +123,14 @@ func Tally(
 	// rewardSpread is the MAX((weightedMedian * (rewardBand/2)), standardDeviation)
 	rewardSpread := weightedMedian.Mul(rewardBand.QuoInt64(2))
 	rewardSpread = sdk.MaxDec(rewardSpread, standardDeviation)
+
+	// fmt.Println(
+	// 	"Tally", len(ballot), "votes",
+	// 	"\nrewardBand:", rewardBand.String(),
+	// 	"\nweightedMedian:", weightedMedian.String(),
+	// 	"\nstandardDeviation:", standardDeviation.String(),
+	// 	"\nrewardSpread:", rewardSpread.String(),
+	// )
 
 	for _, tallyVote := range ballot {
 		// Filter ballot winners. For voters, we filter out the tally vote iff:
