@@ -26,8 +26,8 @@ func NewMultiEpochHooks(hooks ...EpochHooks) MultiEpochHooks {
 
 // AfterEpochEnd is called when epoch is going to be ended, epochNumber is the number of epoch that is ending.
 func (h MultiEpochHooks) AfterEpochEnd(ctx sdk.Context, epochIdentifier string, epochNumber int64) error {
-	for i := range h {
-		panicCatchingEpochHook(ctx, h[i].AfterEpochEnd, epochIdentifier, epochNumber)
+	for _, i := range h {
+		panicCatchingEpochHook(ctx, i.AfterEpochEnd, epochIdentifier, epochNumber)
 	}
 
 	return nil
@@ -35,8 +35,8 @@ func (h MultiEpochHooks) AfterEpochEnd(ctx sdk.Context, epochIdentifier string, 
 
 // BeforeEpochStart is called when epoch is going to be started, epochNumber is the number of epoch that is starting.
 func (h MultiEpochHooks) BeforeEpochStart(ctx sdk.Context, epochIdentifier string, epochNumber int64) error {
-	for i := range h {
-		panicCatchingEpochHook(ctx, h[i].BeforeEpochStart, epochIdentifier, epochNumber)
+	for _, i := range h {
+		panicCatchingEpochHook(ctx, i.BeforeEpochStart, epochIdentifier, epochNumber)
 	}
 
 	return nil
