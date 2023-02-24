@@ -1,10 +1,6 @@
 package simapp
 
 import (
-	"github.com/persistenceOne/persistence-sdk/v2/x/epochs"
-	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
-	"github.com/persistenceOne/persistence-sdk/v2/x/ibchooker"
-	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
 	"os"
 	"testing"
 
@@ -33,6 +29,11 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
+
+	"github.com/persistenceOne/persistence-sdk/v2/x/epochs"
+	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
+	"github.com/persistenceOne/persistence-sdk/v2/x/ibchooker"
+	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
 )
 
 func TestSimAppExportAndBlockedAddrs(t *testing.T) {
@@ -101,7 +102,7 @@ func TestRunMigrations(t *testing.T) {
 	app.InitChain(abci.RequestInitChain{})
 	app.Commit()
 
-	testCases := []struct {
+	testCases := []struct { //nolint:gosec
 		name         string
 		moduleName   string
 		fromVersion  uint64
@@ -139,7 +140,8 @@ func TestRunMigrations(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
+		tc2 := tc
+		t.Run(tc2.name, func(t *testing.T) {
 			var err error
 
 			// Since it's very hard to test actual in-place store migrations in
@@ -148,16 +150,16 @@ func TestRunMigrations(t *testing.T) {
 			// called.
 			called := 0
 
-			if tc.moduleName != "" {
+			if tc2.moduleName != "" {
 				// Register migration for module from version `fromVersion` to `fromVersion+1`.
-				err = app.configurator.RegisterMigration(tc.moduleName, tc.fromVersion, func(sdk.Context) error {
+				err = app.configurator.RegisterMigration(tc2.moduleName, tc2.fromVersion, func(sdk.Context) error {
 					called++
 
 					return nil
 				})
 
-				if tc.expRegErr {
-					require.EqualError(t, err, tc.expRegErrMsg)
+				if tc2.expRegErr {
+					require.EqualError(t, err, tc2.expRegErrMsg)
 
 					return
 				}
@@ -193,12 +195,12 @@ func TestRunMigrations(t *testing.T) {
 					"ibchooker":       ibchooker.AppModule{}.ConsensusVersion(),
 				},
 			)
-			if tc.expRunErr {
-				require.EqualError(t, err, tc.expRunErrMsg)
+			if tc2.expRunErr {
+				require.EqualError(t, err, tc2.expRunErrMsg)
 			} else {
 				require.NoError(t, err)
 				// Make sure bank's migration is called.
-				require.Equal(t, tc.expCalled, called)
+				require.Equal(t, tc2.expCalled, called)
 			}
 		})
 	}

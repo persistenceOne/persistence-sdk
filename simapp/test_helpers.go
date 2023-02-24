@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	ibctesting "github.com/cosmos/ibc-go/v6/testing"
 	"math/rand"
 	"strconv"
 	"testing"
@@ -28,6 +27,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	ibctesting "github.com/cosmos/ibc-go/v6/testing"
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
@@ -73,9 +73,11 @@ func setup(withGenesis bool, invCheckPeriod uint) (*SimApp, GenesisState) {
 	db := dbm.NewMemDB()
 	encCdc := MakeTestEncodingConfig()
 	app := NewSimApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, DefaultNodeHome, invCheckPeriod, encCdc, EmptyAppOptions{})
+
 	if withGenesis {
 		return app, NewDefaultGenesisState(encCdc.Marshaler)
 	}
+
 	return app, GenesisState{}
 }
 
@@ -164,6 +166,7 @@ func genesisStateWithValSet(t *testing.T,
 		require.NoError(t, err)
 		pkAny, err := codectypes.NewAnyWithValue(pk)
 		require.NoError(t, err)
+
 		validator := stakingtypes.Validator{
 			OperatorAddress:   sdk.ValAddress(val.Address).String(),
 			ConsensusPubkey:   pkAny,
@@ -179,8 +182,8 @@ func genesisStateWithValSet(t *testing.T,
 		}
 		validators = append(validators, validator)
 		delegations = append(delegations, stakingtypes.NewDelegation(genAccs[0].GetAddress(), val.Address.Bytes(), sdk.OneDec()))
-
 	}
+
 	// set validators and delegations
 	stakingGenesis := stakingtypes.NewGenesisState(stakingtypes.DefaultParams(), validators, delegations)
 	genesisState[stakingtypes.ModuleName] = app.AppCodec().MustMarshalJSON(stakingGenesis)
@@ -293,6 +296,7 @@ type GenerateAccountStrategy func(int) []sdk.AccAddress
 // createRandomAccounts is a strategy used by addTestAddrs() in order to generated addresses in random order.
 func createRandomAccounts(accNum int) []sdk.AccAddress {
 	testAddrs := make([]sdk.AccAddress, accNum)
+
 	for i := 0; i < accNum; i++ {
 		pk := ed25519.GenPrivKey().PubKey()
 		testAddrs[i] = sdk.AccAddress(pk.Address())
@@ -304,11 +308,13 @@ func createRandomAccounts(accNum int) []sdk.AccAddress {
 // createIncrementalAccounts is a strategy used by addTestAddrs() in order to generated addresses in ascending order.
 func createIncrementalAccounts(accNum int) []sdk.AccAddress {
 	var addresses []sdk.AccAddress
+
 	var buffer bytes.Buffer
 
 	// start at 100 so we can make up to 999 test addresses with valid test addresses
 	for i := 100; i < (accNum + 100); i++ {
 		numString := strconv.Itoa(i)
+
 		buffer.WriteString("A58856F0FD53BF058B4909A21AEC019107BA6") // base address string
 
 		buffer.WriteString(numString) // adding on final two digits to make addresses unique
@@ -317,6 +323,7 @@ func createIncrementalAccounts(accNum int) []sdk.AccAddress {
 		addr, _ := TestAddr(buffer.String(), bech)
 
 		addresses = append(addresses, addr)
+
 		buffer.Reset()
 	}
 
@@ -384,7 +391,9 @@ func TestAddr(addr string, bech string) (sdk.AccAddress, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	bechexpected := res.String()
+
 	if bech != bechexpected {
 		return nil, fmt.Errorf("bech encoding doesn't match reference")
 	}
@@ -393,6 +402,7 @@ func TestAddr(addr string, bech string) (sdk.AccAddress, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	if !bytes.Equal(bechres, res) {
 		return nil, err
 	}
@@ -415,7 +425,7 @@ func SignCheckDeliver(
 	chainID string, accNums, accSeqs []uint64, expSimPass, expPass bool, priv ...cryptotypes.PrivKey,
 ) (sdk.GasInfo, *sdk.Result, error) {
 	tx, err := helpers.GenSignedMockTx(
-		rand.New(rand.NewSource(time.Now().UnixNano())),
+		rand.New(rand.NewSource(time.Now().UnixNano())), //nolint:gosec,testfile
 		txCfg,
 		msgs,
 		sdk.Coins{sdk.NewInt64Coin(sdk.DefaultBondDenom, 0)},
@@ -463,11 +473,12 @@ func SignCheckDeliver(
 // every transaction.
 func GenSequenceOfTxs(txGen client.TxConfig, msgs []sdk.Msg, accNums []uint64, initSeqNums []uint64, numToGenerate int, priv ...cryptotypes.PrivKey) ([]sdk.Tx, error) {
 	txs := make([]sdk.Tx, numToGenerate)
+
 	var err error
 
 	for i := 0; i < numToGenerate; i++ {
 		txs[i], err = helpers.GenSignedMockTx(
-			rand.New(rand.NewSource(time.Now().UnixNano())),
+			rand.New(rand.NewSource(time.Now().UnixNano())), //nolint:gosec,testfile
 			txGen,
 			msgs,
 			sdk.Coins{sdk.NewInt64Coin(sdk.DefaultBondDenom, 0)},
@@ -481,6 +492,7 @@ func GenSequenceOfTxs(txGen client.TxConfig, msgs []sdk.Msg, accNums []uint64, i
 		if err != nil {
 			break
 		}
+
 		incrementAllSequenceNumbers(initSeqNums)
 	}
 
@@ -496,6 +508,7 @@ func incrementAllSequenceNumbers(initSeqNums []uint64) {
 // CreateTestPubKeys returns a total of numPubKeys public keys in ascending order.
 func CreateTestPubKeys(numPubKeys int) []cryptotypes.PubKey {
 	var publicKeys []cryptotypes.PubKey
+
 	var buffer bytes.Buffer
 
 	// start at 10 to avoid changing 1 to 01, 2 to 02, etc
