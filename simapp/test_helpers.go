@@ -235,13 +235,13 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 	)
 
 	// commit genesis changes
-	app.Commit()
-	app.BeginBlock(abci.RequestBeginBlock{Header: tmproto.Header{
-		Height:             app.LastBlockHeight() + 1,
-		AppHash:            app.LastCommitID().Hash,
-		ValidatorsHash:     valSet.Hash(),
-		NextValidatorsHash: valSet.Hash(),
-	}})
+	//app.Commit()
+	//app.BeginBlock(abci.RequestBeginBlock{Header: tmproto.Header{
+	//	Height:             app.LastBlockHeight() + 1,
+	//	AppHash:            app.LastCommitID().Hash,
+	//	ValidatorsHash:     valSet.Hash(),
+	//	NextValidatorsHash: valSet.Hash(),
+	//}})
 
 	return app
 }
