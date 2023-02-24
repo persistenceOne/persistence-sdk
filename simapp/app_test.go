@@ -102,7 +102,7 @@ func TestRunMigrations(t *testing.T) {
 	app.InitChain(abci.RequestInitChain{})
 	app.Commit()
 
-	testCases := []struct { //nolint:gosec
+	testCases := []struct { //nolint:maligned,testfile
 		name         string
 		moduleName   string
 		fromVersion  uint64
