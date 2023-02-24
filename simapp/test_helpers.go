@@ -147,6 +147,44 @@ func Setup(t *testing.T, isCheckTx bool) *SimApp {
 	return app
 }
 
+// Setup initializes a new SimApp. A Nop logger is set in SimApp.
+func SetupNoBlocks(t *testing.T, isCheckTx bool) *SimApp {
+	t.Helper()
+
+	privVal := mock.NewPV()
+	pubKey, err := privVal.GetPubKey()
+	require.NoError(t, err)
+
+	// create validator set with single validator
+	validator := tmtypes.NewValidator(pubKey, 1)
+	valSet := tmtypes.NewValidatorSet([]*tmtypes.Validator{validator})
+
+	// generate genesis account
+	senderPrivKey := secp256k1.GenPrivKey()
+	acc := authtypes.NewBaseAccount(senderPrivKey.PubKey().Address().Bytes(), senderPrivKey.PubKey(), 0, 0)
+	balance := banktypes.Balance{
+		Address: acc.GetAddress().String(),
+		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100000000000000))),
+	}
+
+	app, genesisState := setup(true, 5)
+	genesisState = genesisStateWithValSet(t, app, genesisState, valSet, []authtypes.GenesisAccount{acc}, balance)
+
+	stateBytes, err := json.MarshalIndent(genesisState, "", " ")
+	require.NoError(t, err)
+
+	// init chain will set the validator set and initialize the genesis accounts
+	app.InitChain(
+		abci.RequestInitChain{
+			Validators:      []abci.ValidatorUpdate{},
+			ConsensusParams: DefaultConsensusParams,
+			AppStateBytes:   stateBytes,
+		},
+	)
+
+	return app
+}
+
 func genesisStateWithValSet(t *testing.T,
 	app *SimApp, genesisState GenesisState,
 	valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount,
@@ -234,14 +272,14 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 		},
 	)
 
-	// commit genesis changes
-	//app.Commit()
-	//app.BeginBlock(abci.RequestBeginBlock{Header: tmproto.Header{
-	//	Height:             app.LastBlockHeight() + 1,
-	//	AppHash:            app.LastCommitID().Hash,
-	//	ValidatorsHash:     valSet.Hash(),
-	//	NextValidatorsHash: valSet.Hash(),
-	//}})
+	//commit genesis changes
+	app.Commit()
+	app.BeginBlock(abci.RequestBeginBlock{Header: tmproto.Header{
+		Height:             app.LastBlockHeight() + 1,
+		AppHash:            app.LastCommitID().Hash,
+		ValidatorsHash:     valSet.Hash(),
+		NextValidatorsHash: valSet.Hash(),
+	}})
 
 	return app
 }

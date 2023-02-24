@@ -13,7 +13,7 @@ import (
 )
 
 func TestEpochsExportGenesis(t *testing.T) {
-	app := simapp.Setup(t, false)
+	app := simapp.SetupNoBlocks(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	chainStartTime := ctx.BlockTime()
