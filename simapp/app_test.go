@@ -24,6 +24,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
+	ibc "github.com/cosmos/ibc-go/v6/modules/core"
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -191,6 +192,7 @@ func TestRunMigrations(t *testing.T) {
 					"capability":      capability.AppModule{}.ConsensusVersion(),
 					"epochs":          epochs.AppModule{}.ConsensusVersion(),
 					"halving":         halving.AppModule{}.ConsensusVersion(),
+					"ibc":             ibc.AppModule{}.ConsensusVersion(),
 					"interchainquery": interchainquery.AppModule{}.ConsensusVersion(),
 					"ibchooker":       ibchooker.AppModule{}.ConsensusVersion(),
 				},
