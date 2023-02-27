@@ -35,6 +35,7 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
 	"github.com/persistenceOne/persistence-sdk/v2/x/ibchooker"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
+	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
 )
 
 func TestSimAppExportAndBlockedAddrs(t *testing.T) {
@@ -195,6 +196,7 @@ func TestRunMigrations(t *testing.T) {
 					"ibc":             ibc.AppModule{}.ConsensusVersion(),
 					"interchainquery": interchainquery.AppModule{}.ConsensusVersion(),
 					"ibchooker":       ibchooker.AppModule{}.ConsensusVersion(),
+					"oracle":          oracle.AppModule{}.ConsensusVersion(),
 				},
 			)
 			if tc2.expRunErr {
