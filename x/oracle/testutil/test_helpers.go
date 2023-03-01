@@ -52,6 +52,8 @@ func StakingAddValidators(
 	valAddresses []sdk.ValAddress,
 	err error,
 ) {
+	accAddresses = make([]sdk.AccAddress, num)
+	valAddresses = make([]sdk.ValAddress, num)
 	stakingHandler := staking.NewHandler(stakingKeeper)
 
 	valPubKeys := simapp.CreateTestPubKeys(num)
@@ -64,15 +66,22 @@ func StakingAddValidators(
 		)
 
 		// fund the validator account with initial coins
-		orPanic(FundAccount(bankKeeper, ctx, accAddr, ValidatorInitCoins))
+		if err := FundAccount(bankKeeper, ctx, accAddr, ValidatorInitCoins); err != nil {
+			return nil, nil, err
+		}
 
 		// create validator in staking keeper with amount bonded
-		createValidatorMsg := newTestMsgCreateValidator(valAddr, valPubKey, ValidatorAmountBonded)
-		_, err := stakingHandler(ctx, createValidatorMsg)
-		orPanic(err)
+		createValidatorMsg, err := newTestMsgCreateValidator(valAddr, valPubKey, ValidatorAmountBonded)
+		if err != nil {
+			return nil, nil, err
+		}
 
-		accAddresses = append(accAddresses, accAddr)
-		valAddresses = append(valAddresses, valAddr)
+		if _, err := stakingHandler(ctx, createValidatorMsg); err != nil {
+			return nil, nil, err
+		}
+
+		accAddresses[i] = accAddr
+		valAddresses[i] = valAddr
 	}
 
 	// ensure that validators are updated
@@ -80,20 +89,16 @@ func StakingAddValidators(
 	return
 }
 
-func newTestMsgCreateValidator(address sdk.ValAddress, pubKey cryptotypes.PubKey, amt sdk.Int) *stakingtypes.MsgCreateValidator {
+func newTestMsgCreateValidator(address sdk.ValAddress, pubKey cryptotypes.PubKey, amt sdk.Int) (*stakingtypes.MsgCreateValidator, error) {
 	commission := stakingtypes.NewCommissionRates(sdk.ZeroDec(), sdk.ZeroDec(), sdk.ZeroDec())
 
 	msg, err := stakingtypes.NewMsgCreateValidator(
 		address, pubKey, sdk.NewCoin(sdk.DefaultBondDenom, amt),
 		stakingtypes.Description{}, commission, sdk.OneInt(),
 	)
-	orPanic(err)
-
-	return msg
-}
-
-func orPanic(err error) {
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
+
+	return msg, nil
 }

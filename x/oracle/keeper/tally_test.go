@@ -134,8 +134,8 @@ func val(n int) sdk.ValAddress {
 	return sdk.ValAddress(fmt.Sprintf("val%08d__________", n))
 }
 
-// TestsBuildClaimsMapAndTally is a test for collection clams map and tallying.
-func (s *KeeperTestSuite) TestsBuildClaimsMapAndTally() {
+// TestBuildClaimsMapAndTally is a test for collection clams map and tallying.
+func (s *KeeperTestSuite) TestBuildClaimsMapAndTally() {
 	// custom app and context for this test
 	app, ctx := s.initAppAndContext()
 
@@ -161,7 +161,7 @@ func (s *KeeperTestSuite) TestsBuildClaimsMapAndTally() {
 	app.OracleKeeper.SetExchangeRate(ctx, "ATOM", sdk.MustNewDecFromStr("1.0"))
 
 	{
-		fmt.Println("TestsBuildClaimsMapAndTally: 1 vote out of 100 counts (?)")
+		fmt.Println("TestBuildClaimsMapAndTally: 1 vote out of 100 counts (?)")
 		app.OracleKeeper.SetAggregateExchangeRateVote(ctx, valAddresses[0], types.NewAggregateExchangeRateVote([]types.ExchangeRateTuple{{
 			Denom: "ATOM", ExchangeRate: sdk.MustNewDecFromStr("999.0"),
 		}}, valAddresses[0]))

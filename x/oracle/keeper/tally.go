@@ -15,8 +15,6 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 	maxValidators := k.StakingKeeper.MaxValidators(ctx)
 	iterator := k.StakingKeeper.ValidatorsPowerStoreIterator(ctx)
 
-	defer iterator.Close()
-
 	powerReduction := k.StakingKeeper.PowerReduction(ctx)
 
 	addedValidators := 0
@@ -32,10 +30,11 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 				WinCount:  0,
 				Recipient: valAddr,
 			}
-
 			addedValidators++
 		}
 	}
+
+	iterator.Close()
 
 	var (
 		// voteTargets defines the symbol (ticker) denoms that we require votes on
@@ -56,9 +55,7 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 
 	// Organize votes to ballot by denom
 	// NOTE: **Filter out inactive or jailed validators**
-	voteMap := k.OrganizeBallotByDenom(ctx, validatorClaimMap)
-
-	ballotDenomSlice := types.BallotMapToSlice(voteMap)
+	ballotDenomSlice := k.OrganizeBallotByDenom(ctx, validatorClaimMap)
 
 	// Iterate through ballots and update exchange rates; drop if not enough votes have been achieved.
 	for _, ballotDenom := range ballotDenomSlice {
@@ -68,7 +65,7 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 			return err
 		}
 
-		// Set the exchange rate, emit event
+		// Set the exchange rate, emit ABCI event
 		k.SetExchangeRateWithEvent(ctx, ballotDenom.Denom, exchangeRate)
 	}
 
@@ -104,6 +101,7 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 // Tally calculates the median and returns it. It sets the set of voters to be
 // rewarded, i.e. voted within a reasonable spread from the weighted median to
 // the store. Note, the ballot is sorted by ExchangeRate.
+// https://classic-docs.terra.money/docs/develop/module-specifications/spec-oracle.html#tally
 func Tally(
 	ballot types.ExchangeRateBallot,
 	rewardBand sdk.Dec,
@@ -123,14 +121,6 @@ func Tally(
 	// rewardSpread is the MAX((weightedMedian * (rewardBand/2)), standardDeviation)
 	rewardSpread := weightedMedian.Mul(rewardBand.QuoInt64(2))
 	rewardSpread = sdk.MaxDec(rewardSpread, standardDeviation)
-
-	// fmt.Println(
-	// 	"Tally", len(ballot), "votes",
-	// 	"\nrewardBand:", rewardBand.String(),
-	// 	"\nweightedMedian:", weightedMedian.String(),
-	// 	"\nstandardDeviation:", standardDeviation.String(),
-	// 	"\nrewardSpread:", rewardSpread.String(),
-	// )
 
 	for _, tallyVote := range ballot {
 		// Filter ballot winners. For voters, we filter out the tally vote iff:

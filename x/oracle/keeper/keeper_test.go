@@ -13,35 +13,34 @@ import (
 	tmtime "github.com/tendermint/tendermint/types/time"
 
 	persistenceapp "github.com/persistenceOne/persistence-sdk/v2/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/testutil"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
-)
-
-const (
-	exchangeRate string = persistenceapp.DisplayDenom
 )
 
 type KeeperTestSuite struct {
 	suite.Suite
 
-	valAccAddresses []sdk.AccAddress
-	valAddresses    []sdk.ValAddress
+	accAddresses []sdk.AccAddress
+	valAddresses []sdk.ValAddress
 
-	ctx sdk.Context
-	app *persistenceapp.SimApp
+	ctx       sdk.Context
+	app       *persistenceapp.SimApp
+	msgServer types.MsgServer
 }
 
 const (
 	rewardPoolAmount     = int64(5)
 	testBalance          = int64(50000000)
 	initialValidatorsNum = 2
+	initialHeight        = 100
 )
 
 func (s *KeeperTestSuite) SetupTest() {
 	s.app, s.ctx = s.initAppAndContext()
 
 	var err error
-	s.valAccAddresses, s.valAddresses, err = testutil.StakingAddValidators(
+	s.accAddresses, s.valAddresses, err = testutil.StakingAddValidators(
 		s.app.BankKeeper,
 		s.app.StakingKeeper,
 		s.ctx,
@@ -49,12 +48,14 @@ func (s *KeeperTestSuite) SetupTest() {
 	)
 
 	s.Require().NoError(err)
+
+	s.msgServer = keeper.NewMsgServerImpl(s.app.OracleKeeper)
 }
 
 func (s *KeeperTestSuite) initAppAndContext() (app *persistenceapp.SimApp, ctx sdk.Context) {
 	app = persistenceapp.Setup(false)
 	ctx = app.BaseApp.NewContext(false, tmproto.Header{
-		Height: 100,
+		Height: initialHeight,
 		Time:   tmtime.Now(),
 	})
 
@@ -63,7 +64,7 @@ func (s *KeeperTestSuite) initAppAndContext() (app *persistenceapp.SimApp, ctx s
 
 func (s *KeeperTestSuite) TestSetFeederDelegation() {
 	app, ctx := s.app, s.ctx
-	addr, valAddr := s.valAccAddresses[0], s.valAddresses[0]
+	addr, valAddr := s.accAddresses[0], s.valAddresses[0]
 
 	feederAddr := sdk.AccAddress([]byte("addr________________"))
 	feederAcc := app.AccountKeeper.NewAccountWithAddress(ctx, feederAddr)
@@ -117,7 +118,7 @@ func (s *KeeperTestSuite) TestMissCounter() {
 
 func (s *KeeperTestSuite) TestAggregateExchangeRatePrevote() {
 	app, ctx := s.app, s.ctx
-	addr, valAddr := s.valAccAddresses[0], s.valAddresses[0]
+	addr, valAddr := s.accAddresses[0], s.valAddresses[0]
 
 	prevote := types.AggregateExchangeRatePrevote{
 		Hash:        "hash",
@@ -145,7 +146,7 @@ func (s *KeeperTestSuite) TestAggregateExchangeRatePrevoteError() {
 
 func (s *KeeperTestSuite) TestAggregateExchangeRateVote() {
 	app, ctx := s.app, s.ctx
-	addr, valAddr := s.valAccAddresses[0], s.valAddresses[0]
+	addr, valAddr := s.accAddresses[0], s.valAddresses[0]
 
 	var tuples types.ExchangeRateTuples
 	tuples = append(tuples, types.ExchangeRateTuple{
@@ -223,7 +224,7 @@ func (s *KeeperTestSuite) TestDeleteExchangeRate() {
 
 func (s *KeeperTestSuite) balanceSetup() {
 	app, ctx := s.app, s.ctx
-	addr := s.valAccAddresses[0]
+	addr := s.accAddresses[0]
 
 	// Prepare account balance
 	givingAmt := sdk.NewCoins(sdk.NewInt64Coin(types.PersistenceDenom, testBalance))
@@ -237,7 +238,7 @@ func (s *KeeperTestSuite) balanceSetup() {
 func (s *KeeperTestSuite) TestFundRewardPool() {
 	s.balanceSetup()
 	app, ctx := s.app, s.ctx
-	addr := s.valAccAddresses[0]
+	addr := s.accAddresses[0]
 
 	// Fund reward pool form account
 	coins := sdk.NewCoins(sdk.NewInt64Coin(types.PersistenceDenom, rewardPoolAmount))
@@ -253,7 +254,7 @@ func (s *KeeperTestSuite) TestFundRewardPool() {
 func (s *KeeperTestSuite) TestGetRewardPoolBalance() {
 	s.balanceSetup()
 	app, ctx := s.app, s.ctx
-	addr := s.valAccAddresses[0]
+	addr := s.accAddresses[0]
 
 	// Fund reward pool form account
 	coins := sdk.NewCoins(sdk.NewInt64Coin(types.PersistenceDenom, rewardPoolAmount))
