@@ -1,6 +1,9 @@
 package keeper_test
 
 import (
+	"github.com/tendermint/tendermint/libs/log"
+	dbm "github.com/tendermint/tm-db"
+	"os"
 	"testing"
 	"time"
 
@@ -13,7 +16,18 @@ import (
 )
 
 func TestEpochsExportGenesis(t *testing.T) {
-	app := simapp.Setup(false)
+	encCfg := simapp.MakeTestEncodingConfig()
+	db := dbm.NewMemDB()
+	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
+	app := simapp.NewSimappWithCustomOptions(t, false, simapp.SetupOptions{
+		Logger:             logger,
+		DB:                 db,
+		InvCheckPeriod:     0,
+		EncConfig:          encCfg,
+		HomePath:           simapp.DefaultNodeHome,
+		SkipUpgradeHeights: map[int64]bool{},
+		AppOpts:            simapp.EmptyAppOptions{},
+	})
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	chainStartTime := ctx.BlockTime()
@@ -31,7 +45,18 @@ func TestEpochsExportGenesis(t *testing.T) {
 }
 
 func TestEpochsInitGenesis(t *testing.T) {
-	app := simapp.Setup(false)
+	encCfg := simapp.MakeTestEncodingConfig()
+	db := dbm.NewMemDB()
+	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
+	app := simapp.NewSimappWithCustomOptions(t, false, simapp.SetupOptions{
+		Logger:             logger,
+		DB:                 db,
+		InvCheckPeriod:     0,
+		EncConfig:          encCfg,
+		HomePath:           simapp.DefaultNodeHome,
+		SkipUpgradeHeights: map[int64]bool{},
+		AppOpts:            simapp.EmptyAppOptions{},
+	})
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	// On init genesis, default epochs information is set
