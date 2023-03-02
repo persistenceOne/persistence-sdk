@@ -161,7 +161,7 @@ func (s *KeeperTestSuite) TestBuildClaimsMapAndTally() {
 	app.OracleKeeper.SetExchangeRate(ctx, "ATOM", sdk.MustNewDecFromStr("1.0"))
 
 	{
-		fmt.Println("TestBuildClaimsMapAndTally: 1 vote out of 100 counts (?)")
+		s.T().Log("TestBuildClaimsMapAndTally: 1 vote out of 100 counts (?)")
 		app.OracleKeeper.SetAggregateExchangeRateVote(ctx, valAddresses[0], types.NewAggregateExchangeRateVote([]types.ExchangeRateTuple{{
 			Denom: "ATOM", ExchangeRate: sdk.MustNewDecFromStr("999.0"),
 		}}, valAddresses[0]))
