@@ -38,7 +38,7 @@ func (s *KeeperTestSuite) TestTally() {
 			},
 		},
 		{
-			Description: "basic test for picking a all winners in reward spread",
+			Description: "basic test for picking all winners in reward spread",
 			// Tally 2 votes
 			// rewardBand: 1.000000000000000000
 			// weightedMedian: 1.000000000000000000
@@ -61,7 +61,7 @@ func (s *KeeperTestSuite) TestTally() {
 			},
 		},
 		{
-			Description: "basic test for >50%% attack",
+			Description: "basic test for >50% attack",
 			// Tally 5 votes
 			// rewardBand: 1.000000000000000000
 			// weightedMedian: 999.000000000000000000
