@@ -5,7 +5,7 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
 
-func (s *IntegrationTestSuite) TestVoteThreshold() {
+func (s *KeeperTestSuite) TestVoteThreshold() {
 	app, ctx := s.app, s.ctx
 
 	voteDec := app.OracleKeeper.VoteThreshold(ctx)
