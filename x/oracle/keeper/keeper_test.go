@@ -2,106 +2,69 @@ package keeper_test
 
 import (
 	"crypto/rand"
-	"fmt"
 	"math/big"
 	"strings"
 	"testing"
 
-	"github.com/cosmos/cosmos-sdk/baseapp"
-	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
-	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	"github.com/cosmos/cosmos-sdk/x/staking"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/stretchr/testify/suite"
-	"github.com/tendermint/tendermint/crypto/secp256k1"
-	tmrand "github.com/tendermint/tendermint/libs/rand"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+	tmtime "github.com/tendermint/tendermint/types/time"
 
 	persistenceapp "github.com/persistenceOne/persistence-sdk/v2/simapp"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/keeper"
+	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/testutil"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
 
-type IntegrationTestSuite struct {
+type KeeperTestSuite struct {
 	suite.Suite
 
-	ctx         sdk.Context
-	app         *persistenceapp.SimApp
-	queryClient types.QueryClient
-	msgServer   types.MsgServer
+	accAddresses []sdk.AccAddress
+	valAddresses []sdk.ValAddress
+
+	ctx       sdk.Context
+	app       *persistenceapp.SimApp
+	msgServer types.MsgServer
 }
 
 const (
-	initialPower     = int64(10000000000)
-	rewardPoolAmount = int64(5)
-	testBalance      = int64(50000000)
+	rewardPoolAmount     = int64(5)
+	testBalance          = int64(50000000)
+	initialValidatorsNum = 2
+	initialHeight        = 100
 )
 
-func (s *IntegrationTestSuite) SetupTest() {
-	app := persistenceapp.Setup(false)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{
-		ChainID: fmt.Sprintf("test-chain-%s", tmrand.Str(4)),
-		Height:  9,
-	})
+func (s *KeeperTestSuite) SetupTest() {
+	s.app, s.ctx = s.initAppAndContext()
 
-	queryHelper := baseapp.NewQueryServerTestHelper(ctx, app.InterfaceRegistry())
-	types.RegisterQueryServer(queryHelper, keeper.NewQuerier(app.OracleKeeper))
-
-	sh := staking.NewHandler(app.StakingKeeper)
-	amt := sdk.TokensFromConsensusPower(100, sdk.DefaultPowerReduction)
-
-	// mint and send coins to validators
-	s.Require().NoError(app.BankKeeper.MintCoins(ctx, minttypes.ModuleName, initCoins))
-	s.Require().NoError(app.BankKeeper.SendCoinsFromModuleToAccount(ctx, minttypes.ModuleName, addr, initCoins))
-	s.Require().NoError(app.BankKeeper.MintCoins(ctx, minttypes.ModuleName, initCoins))
-	s.Require().NoError(app.BankKeeper.SendCoinsFromModuleToAccount(ctx, minttypes.ModuleName, addr2, initCoins))
-
-	_, err := sh(ctx, NewTestMsgCreateValidator(valAddr, valPubKey, amt))
-	s.Require().NoError(err)
-	_, err = sh(ctx, NewTestMsgCreateValidator(valAddr2, valPubKey2, amt))
-	s.Require().NoError(err)
-
-	staking.EndBlocker(ctx, app.StakingKeeper)
-
-	s.app = app
-	s.ctx = ctx
-	s.queryClient = types.NewQueryClient(queryHelper)
-	s.msgServer = keeper.NewMsgServerImpl(app.OracleKeeper)
-}
-
-// Test addresses
-var (
-	valPubKeys = simapp.CreateTestPubKeys(2)
-
-	valPubKey = valPubKeys[0]
-	pubKey    = secp256k1.GenPrivKey().PubKey()
-	addr      = sdk.AccAddress(pubKey.Address())
-	valAddr   = sdk.ValAddress(pubKey.Address())
-
-	valPubKey2 = valPubKeys[1]
-	pubKey2    = secp256k1.GenPrivKey().PubKey()
-	addr2      = sdk.AccAddress(pubKey2.Address())
-	valAddr2   = sdk.ValAddress(pubKey2.Address())
-
-	initTokens = sdk.TokensFromConsensusPower(initialPower, sdk.DefaultPowerReduction)
-	initCoins  = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, initTokens))
-)
-
-// NewTestMsgCreateValidator test msg creator
-func NewTestMsgCreateValidator(address sdk.ValAddress, pubKey cryptotypes.PubKey, amt sdk.Int) *stakingtypes.MsgCreateValidator {
-	commission := stakingtypes.NewCommissionRates(sdk.ZeroDec(), sdk.ZeroDec(), sdk.ZeroDec())
-	msg, _ := stakingtypes.NewMsgCreateValidator(
-		address, pubKey, sdk.NewCoin(sdk.DefaultBondDenom, amt),
-		stakingtypes.Description{}, commission, sdk.OneInt(),
+	var err error
+	s.accAddresses, s.valAddresses, err = testutil.StakingAddValidators(
+		s.app.BankKeeper,
+		s.app.StakingKeeper,
+		s.ctx,
+		initialValidatorsNum,
 	)
 
-	return msg
+	s.Require().NoError(err)
+
+	s.msgServer = keeper.NewMsgServerImpl(s.app.OracleKeeper)
 }
 
-func (s *IntegrationTestSuite) TestSetFeederDelegation() {
+func (s *KeeperTestSuite) initAppAndContext() (app *persistenceapp.SimApp, ctx sdk.Context) {
+	app = persistenceapp.Setup(false)
+	ctx = app.BaseApp.NewContext(false, tmproto.Header{
+		Height: initialHeight,
+		Time:   tmtime.Now(),
+	})
+
+	return app, ctx
+}
+
+func (s *KeeperTestSuite) TestSetFeederDelegation() {
 	app, ctx := s.app, s.ctx
+	addr, valAddr := s.accAddresses[0], s.valAddresses[0]
 
 	feederAddr := sdk.AccAddress([]byte("addr________________"))
 	feederAcc := app.AccountKeeper.NewAccountWithAddress(ctx, feederAddr)
@@ -122,8 +85,9 @@ func (s *IntegrationTestSuite) TestSetFeederDelegation() {
 	s.Require().NoError(err)
 }
 
-func (s *IntegrationTestSuite) TestGetFeederDelegation() {
+func (s *KeeperTestSuite) TestGetFeederDelegation() {
 	app, ctx := s.app, s.ctx
+	valAddr := s.valAddresses[0]
 
 	feederAddr := sdk.AccAddress([]byte("addr________________"))
 	feederAcc := app.AccountKeeper.NewAccountWithAddress(ctx, feederAddr)
@@ -135,8 +99,10 @@ func (s *IntegrationTestSuite) TestGetFeederDelegation() {
 	s.Require().Equal(resp, feederAddr)
 }
 
-func (s *IntegrationTestSuite) TestMissCounter() {
+func (s *KeeperTestSuite) TestMissCounter() {
 	app, ctx := s.app, s.ctx
+	valAddr := s.valAddresses[0]
+
 	num, err := rand.Int(rand.Reader, new(big.Int).SetInt64(int64(100)))
 	s.Require().NoError(err)
 
@@ -150,8 +116,9 @@ func (s *IntegrationTestSuite) TestMissCounter() {
 	s.Require().Equal(app.OracleKeeper.GetMissCounter(ctx, valAddr), uint64(0))
 }
 
-func (s *IntegrationTestSuite) TestAggregateExchangeRatePrevote() {
+func (s *KeeperTestSuite) TestAggregateExchangeRatePrevote() {
 	app, ctx := s.app, s.ctx
+	addr, valAddr := s.accAddresses[0], s.valAddresses[0]
 
 	prevote := types.AggregateExchangeRatePrevote{
 		Hash:        "hash",
@@ -169,15 +136,17 @@ func (s *IntegrationTestSuite) TestAggregateExchangeRatePrevote() {
 	s.Require().Error(err)
 }
 
-func (s *IntegrationTestSuite) TestAggregateExchangeRatePrevoteError() {
+func (s *KeeperTestSuite) TestAggregateExchangeRatePrevoteError() {
 	app, ctx := s.app, s.ctx
+	valAddr := s.valAddresses[0]
 
 	_, err := app.OracleKeeper.GetAggregateExchangeRatePrevote(ctx, valAddr)
 	s.Require().Errorf(err, types.ErrNoAggregatePrevote.Error())
 }
 
-func (s *IntegrationTestSuite) TestAggregateExchangeRateVote() {
+func (s *KeeperTestSuite) TestAggregateExchangeRateVote() {
 	app, ctx := s.app, s.ctx
+	addr, valAddr := s.accAddresses[0], s.valAddresses[0]
 
 	var tuples types.ExchangeRateTuples
 	tuples = append(tuples, types.ExchangeRateTuple{
@@ -200,14 +169,15 @@ func (s *IntegrationTestSuite) TestAggregateExchangeRateVote() {
 	s.Require().Error(err)
 }
 
-func (s *IntegrationTestSuite) TestAggregateExchangeRateVoteError() {
+func (s *KeeperTestSuite) TestAggregateExchangeRateVoteError() {
 	app, ctx := s.app, s.ctx
+	valAddr := s.valAddresses[0]
 
 	_, err := app.OracleKeeper.GetAggregateExchangeRateVote(ctx, valAddr)
 	s.Require().Errorf(err, types.ErrNoAggregateVote.Error())
 }
 
-func (s *IntegrationTestSuite) TestSetExchangeRateWithEvent() {
+func (s *KeeperTestSuite) TestSetExchangeRateWithEvent() {
 	app, ctx := s.app, s.ctx
 	app.OracleKeeper.SetExchangeRateWithEvent(ctx, types.PersistenceDenom, sdk.OneDec())
 	rate, err := app.OracleKeeper.GetExchangeRate(ctx, types.PersistenceDenom)
@@ -215,21 +185,21 @@ func (s *IntegrationTestSuite) TestSetExchangeRateWithEvent() {
 	s.Require().Equal(rate, sdk.OneDec())
 }
 
-func (s *IntegrationTestSuite) TestGetExchangeRate_UnknownDenom() {
+func (s *KeeperTestSuite) TestGetExchangeRate_UnknownDenom() {
 	app, ctx := s.app, s.ctx
 
 	_, err := app.OracleKeeper.GetExchangeRate(ctx, "uxyz")
 	s.Require().ErrorContains(err, types.ErrUnknownDenom.Error())
 }
 
-func (s *IntegrationTestSuite) TestGetExchangeRate_NotSet() {
+func (s *KeeperTestSuite) TestGetExchangeRate_NotSet() {
 	app, ctx := s.app, s.ctx
 
 	_, err := app.OracleKeeper.GetExchangeRate(ctx, types.PersistenceDenom)
 	s.Require().Error(err)
 }
 
-func (s *IntegrationTestSuite) TestGetExchangeRate_Valid() {
+func (s *KeeperTestSuite) TestGetExchangeRate_Valid() {
 	app, ctx := s.app, s.ctx
 
 	app.OracleKeeper.SetExchangeRate(ctx, types.PersistenceDenom, sdk.OneDec())
@@ -243,7 +213,7 @@ func (s *IntegrationTestSuite) TestGetExchangeRate_Valid() {
 	s.Require().Equal(rate, sdk.OneDec())
 }
 
-func (s *IntegrationTestSuite) TestDeleteExchangeRate() {
+func (s *KeeperTestSuite) TestDeleteExchangeRate() {
 	app, ctx := s.app, s.ctx
 
 	app.OracleKeeper.SetExchangeRate(ctx, types.PersistenceDenom, sdk.OneDec())
@@ -252,19 +222,23 @@ func (s *IntegrationTestSuite) TestDeleteExchangeRate() {
 	s.Require().Error(err)
 }
 
-func (s *IntegrationTestSuite) balanceSetup() {
+func (s *KeeperTestSuite) balanceSetup() {
+	app, ctx := s.app, s.ctx
+	addr := s.accAddresses[0]
+
 	// Prepare account balance
 	givingAmt := sdk.NewCoins(sdk.NewInt64Coin(types.PersistenceDenom, testBalance))
-	err := s.app.BankKeeper.MintCoins(s.ctx, minttypes.ModuleName, givingAmt)
+	err := app.BankKeeper.MintCoins(ctx, minttypes.ModuleName, givingAmt)
 	s.Require().NoError(err)
 
-	err = s.app.BankKeeper.SendCoinsFromModuleToAccount(s.ctx, minttypes.ModuleName, addr, givingAmt)
+	err = app.BankKeeper.SendCoinsFromModuleToAccount(ctx, minttypes.ModuleName, addr, givingAmt)
 	s.Require().NoError(err)
 }
 
-func (s *IntegrationTestSuite) TestFundRewardPool() {
+func (s *KeeperTestSuite) TestFundRewardPool() {
 	s.balanceSetup()
 	app, ctx := s.app, s.ctx
+	addr := s.accAddresses[0]
 
 	// Fund reward pool form account
 	coins := sdk.NewCoins(sdk.NewInt64Coin(types.PersistenceDenom, rewardPoolAmount))
@@ -277,9 +251,10 @@ func (s *IntegrationTestSuite) TestFundRewardPool() {
 	s.Require().Equal(denomAmount.Int64(), rewardPoolAmount)
 }
 
-func (s *IntegrationTestSuite) TestGetRewardPoolBalance() {
+func (s *KeeperTestSuite) TestGetRewardPoolBalance() {
 	s.balanceSetup()
 	app, ctx := s.app, s.ctx
+	addr := s.accAddresses[0]
 
 	// Fund reward pool form account
 	coins := sdk.NewCoins(sdk.NewInt64Coin(types.PersistenceDenom, rewardPoolAmount))
@@ -293,5 +268,5 @@ func (s *IntegrationTestSuite) TestGetRewardPoolBalance() {
 }
 
 func TestKeeperTestSuite(t *testing.T) {
-	suite.Run(t, new(IntegrationTestSuite))
+	suite.Run(t, new(KeeperTestSuite))
 }
