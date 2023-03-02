@@ -159,22 +159,21 @@ func (s *KeeperTestSuite) TestBuildClaimsMapAndTally() {
 	// initial exchange rate
 	app.OracleKeeper.SetExchangeRate(ctx, "ATOM", sdk.MustNewDecFromStr("1.0"))
 
-	{
-		s.T().Log("TestBuildClaimsMapAndTally: 1 vote out of 100 counts (?)")
-		app.OracleKeeper.SetAggregateExchangeRateVote(ctx, valAddresses[0], types.NewAggregateExchangeRateVote([]types.ExchangeRateTuple{{
-			Denom: "ATOM", ExchangeRate: sdk.MustNewDecFromStr("999.0"),
-		}}, valAddresses[0]))
+	s.T().Log("TestBuildClaimsMapAndTally: 1 vote out of 100 counts (?)")
 
-		err = app.OracleKeeper.BuildClaimsMapAndTally(ctx, params)
-		s.Require().NoError(err)
+	app.OracleKeeper.SetAggregateExchangeRateVote(ctx, valAddresses[0], types.NewAggregateExchangeRateVote([]types.ExchangeRateTuple{{
+		Denom: "ATOM", ExchangeRate: sdk.MustNewDecFromStr("999.0"),
+	}}, valAddresses[0]))
 
-		// we haven't reached the vote threshold yet,
-		_, err = app.OracleKeeper.GetExchangeRate(ctx, "ATOM")
-		s.Require().Error(err)
+	err = app.OracleKeeper.BuildClaimsMapAndTally(ctx, params)
+	s.Require().NoError(err)
 
-		// rest of validators marked with misses
-		for i := 1; i < len(valAddresses); i++ {
-			s.Require().Equal(uint64(1), app.OracleKeeper.GetMissCounter(ctx, valAddresses[i]))
-		}
+	// we haven't reached the vote threshold yet, so no exchange rate update should have happened yet.
+	_, err = app.OracleKeeper.GetExchangeRate(ctx, "ATOM")
+	s.Require().Error(err)
+
+	// rest of validators marked with misses
+	for i := 1; i < len(valAddresses); i++ {
+		s.Require().Equal(uint64(1), app.OracleKeeper.GetMissCounter(ctx, valAddresses[i]))
 	}
 }

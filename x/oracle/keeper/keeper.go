@@ -109,7 +109,9 @@ func (k Keeper) SetExchangeRateWithEvent(ctx sdk.Context, denom string, exchange
 func (k Keeper) ClearExchangeRates(ctx sdk.Context) {
 	store := ctx.KVStore(k.storeKey)
 	iter := sdk.KVStorePrefixIterator(store, types.KeyPrefixExchangeRate)
+
 	defer iter.Close()
+
 	for ; iter.Valid(); iter.Next() {
 		store.Delete(iter.Key())
 	}

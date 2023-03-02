@@ -16,6 +16,7 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 
 	// Calculate total validator power
 	var totalBondedValidatorPower int64
+
 	for _, v := range k.StakingKeeper.GetBondedValidatorsByPower(ctx) {
 		addr := v.GetOperator()
 		valConsensusPower := v.GetConsensusPower(powerReduction)
@@ -25,8 +26,8 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 
 	var (
 		// voteTargets defines the symbol (ticker) denoms that we require votes on
-		voteTargets      []string
-		voteTargetDenoms []string
+		voteTargets      = make([]string, len(params.AcceptList))
+		voteTargetDenoms = make([]string, len(params.AcceptList))
 	)
 
 	for _, v := range params.AcceptList {
@@ -41,7 +42,7 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 	// NOTE: **Filter out inactive or jailed validators**
 	ballotDenomSlice := k.OrganizeBallotByDenom(ctx, validatorClaimMap)
 
-	threshold := k.VoteThreshold(ctx).MulInt64(types.MaxVoteThresholdMultiplier).TruncateInt64()
+	threshold := k.GetVoteThreshold(ctx).MulInt64(types.MaxVoteThresholdMultiplier).TruncateInt64()
 
 	// Iterate through ballots and update exchange rates; drop if not enough votes have been achieved.
 	for _, ballotDenom := range ballotDenomSlice {

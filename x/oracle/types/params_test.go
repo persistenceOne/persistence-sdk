@@ -47,7 +47,7 @@ func TestValidateVoteThreshold(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		err := ValidateVoteThreshold(tc.threshold)
+		err := validateVoteThreshold(tc.threshold)
 		if tc.errMsg == "" {
 			require.NoError(t, err, "test_case", tc.name)
 		} else {

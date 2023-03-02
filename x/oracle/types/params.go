@@ -93,7 +93,7 @@ func (p *Params) ParamSetPairs() paramstypes.ParamSetPairs {
 		paramstypes.NewParamSetPair(
 			KeyVoteThreshold,
 			&p.VoteThreshold,
-			ValidateVoteThreshold,
+			validateVoteThreshold,
 		),
 		paramstypes.NewParamSetPair(
 			KeyRewardBand,
@@ -140,7 +140,7 @@ func (p Params) Validate() error {
 		return fmt.Errorf("oracle parameter VotePeriod must be > 0, is %d", p.VotePeriod)
 	}
 
-	if p.VoteThreshold.LTE(sdk.NewDecWithPrec(33, 2)) {
+	if p.VoteThreshold.LTE(minVoteThreshold) {
 		return fmt.Errorf("oracle parameter VoteThreshold must be greater than 33 percent")
 	}
 
@@ -190,11 +190,11 @@ func validateVotePeriod(i interface{}) error {
 	return nil
 }
 
-// ValidateVoteThreshold validates oracle exchange rates power vote threshold.
+// validateVoteThreshold validates oracle exchange rates power vote threshold.
 // Must be
 // * a decimal value > 0.33 and <= 1.
 // * max precision is 2 (so 0.501 is not allowed)
-func ValidateVoteThreshold(i interface{}) error {
+func validateVoteThreshold(i interface{}) error {
 	v, ok := i.(sdk.Dec)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
@@ -206,6 +206,7 @@ func ValidateVoteThreshold(i interface{}) error {
 
 	val := v.MulInt64(MaxVoteThresholdMultiplier).TruncateInt64()
 	x2 := sdk.NewDecWithPrec(val, MaxVoteThresholdPrecision)
+
 	if !x2.Equal(v) {
 		return sdkerrors.ErrInvalidRequest.Wrap("threshold precision must be maximum 2 decimals")
 	}
