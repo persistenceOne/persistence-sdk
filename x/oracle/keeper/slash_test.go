@@ -2,6 +2,8 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/cosmos/cosmos-sdk/x/staking"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/testutil"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
@@ -39,19 +41,32 @@ func (s *KeeperTestSuite) TestSlashAndResetMissCounters() {
 	s.Require().Zero(missCounter, "ensure miss counter must be zero now")
 }
 
+// TestSlashAndResetMissCounters2 added more test cases for slashing, incl. unbonded validators.
 func (s *KeeperTestSuite) TestSlashAndResetMissCounters2() {
-	// initial setup
-	addr, addr2 := valAddr, valAddr2
+	app, ctx := s.app, s.ctx
+	valAddr := s.valAddresses[0]
+
 	amt := sdk.TokensFromConsensusPower(100, sdk.DefaultPowerReduction)
+	s.Require().Equal(amt, s.app.StakingKeeper.Validator(s.ctx, valAddr).GetBondedTokens())
 
-	s.Require().Equal(amt, s.app.StakingKeeper.Validator(s.ctx, addr).GetBondedTokens())
-	s.Require().Equal(amt, s.app.StakingKeeper.Validator(s.ctx, addr2).GetBondedTokens())
+	// override the params with values that are easy for testing
+	params := types.DefaultParams()
+	params.VotePeriod = 10                                  // 10 blocks
+	params.SlashFraction = sdk.NewDecWithPrec(5, 1)         // 50%
+	params.SlashWindow = 100                                // 100 blocks (10 vote periods)
+	params.MinValidPerWindow = sdk.MustNewDecFromStr("0.5") // 50%
+	app.OracleKeeper.SetParams(ctx, params)
 
-	votePeriodsPerWindow := sdk.NewDec(int64(s.app.OracleKeeper.SlashWindow(s.ctx))).QuoInt64(int64(s.app.OracleKeeper.VotePeriod(s.ctx))).TruncateInt64()
-	slashFraction := s.app.OracleKeeper.SlashFraction(s.ctx)
-	minValidVotes := s.app.OracleKeeper.MinValidPerWindow(s.ctx).MulInt64(votePeriodsPerWindow).TruncateInt64()
+	// missCounterSlash is a special value that:
+	// 	missCounterSlash / votePeriodsPerWindow < minValidPerWindow
+	missCounterSlash := uint64(6)
+
+	// missCounterNoSlash is a special value that:
+	// 	missCounterNoSlash / votePeriodsPerWindow >= minValidPerWindow
+	missCounterNoSlash := uint64(5)
+
 	// Case 1, no slash
-	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, uint64(votePeriodsPerWindow-minValidVotes))
+	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, missCounterNoSlash)
 	s.app.OracleKeeper.SlashAndResetMissCounters(s.ctx)
 	staking.EndBlocker(s.ctx, s.app.StakingKeeper)
 
@@ -59,10 +74,10 @@ func (s *KeeperTestSuite) TestSlashAndResetMissCounters2() {
 	s.Require().Equal(amt, validator.GetBondedTokens())
 
 	// Case 2, slash
-	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, uint64(votePeriodsPerWindow-minValidVotes+1))
+	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, missCounterSlash)
 	s.app.OracleKeeper.SlashAndResetMissCounters(s.ctx)
 	validator, _ = s.app.StakingKeeper.GetValidator(s.ctx, valAddr)
-	s.Require().Equal(amt.Sub(slashFraction.MulInt(amt).TruncateInt()), validator.GetBondedTokens())
+	s.Require().Equal(amt.Sub(params.SlashFraction.MulInt(amt).TruncateInt()), validator.GetBondedTokens())
 	s.Require().True(validator.Jailed)
 
 	// Case 3, slash unbonded validator
@@ -72,7 +87,7 @@ func (s *KeeperTestSuite) TestSlashAndResetMissCounters2() {
 	validator.Tokens = amt
 	s.app.StakingKeeper.SetValidator(s.ctx, validator)
 
-	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, uint64(votePeriodsPerWindow-minValidVotes+1))
+	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, missCounterSlash)
 	s.app.OracleKeeper.SlashAndResetMissCounters(s.ctx)
 	validator, _ = s.app.StakingKeeper.GetValidator(s.ctx, valAddr)
 	s.Require().Equal(amt, validator.Tokens)
@@ -85,7 +100,7 @@ func (s *KeeperTestSuite) TestSlashAndResetMissCounters2() {
 	validator.Tokens = amt
 	s.app.StakingKeeper.SetValidator(s.ctx, validator)
 
-	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, uint64(votePeriodsPerWindow-minValidVotes+1))
+	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, missCounterSlash)
 	s.app.OracleKeeper.SlashAndResetMissCounters(s.ctx)
 	validator, _ = s.app.StakingKeeper.GetValidator(s.ctx, valAddr)
 	s.Require().Equal(amt, validator.Tokens)
