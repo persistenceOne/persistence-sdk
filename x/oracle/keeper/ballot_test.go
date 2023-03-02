@@ -6,15 +6,14 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
 
-func (s *IntegrationTestSuite) TestBallot_OrganizeBallotByDenom() {
-	require := s.Require()
-
+func (s *KeeperTestSuite) TestBallot_OrganizeBallotByDenom() {
+	valAddr := s.valAddresses[0]
 	s.app.OracleKeeper.SetExchangeRate(s.ctx, types.PersistenceDenom, sdk.OneDec())
 
 	// Empty Map
 	claimMap := make(map[string]types.Claim)
 	res := s.app.OracleKeeper.OrganizeBallotByDenom(s.ctx, claimMap)
-	require.Empty(res)
+	s.Require().Empty(res)
 
 	s.app.OracleKeeper.SetAggregateExchangeRateVote(
 		s.ctx, valAddr, types.AggregateExchangeRateVote{
@@ -35,7 +34,7 @@ func (s *IntegrationTestSuite) TestBallot_OrganizeBallotByDenom() {
 		Recipient: valAddr,
 	}
 	res = s.app.OracleKeeper.OrganizeBallotByDenom(s.ctx, claimMap)
-	require.Equal([]types.BallotDenom{
+	s.Require().Equal([]types.BallotDenom{
 		{
 			Ballot: types.ExchangeRateBallot{types.NewVoteForTally(sdk.OneDec(), "XPRT", valAddr, 1)},
 			Denom:  "XPRT",
@@ -43,7 +42,8 @@ func (s *IntegrationTestSuite) TestBallot_OrganizeBallotByDenom() {
 	}, res)
 }
 
-func (s *IntegrationTestSuite) TestBallot_ClearBallots() {
+func (s *KeeperTestSuite) TestBallot_ClearBallots() {
+	addr, valAddr := s.accAddresses[0], s.valAddresses[0]
 	prevote := types.AggregateExchangeRatePrevote{
 		Hash:        "hash",
 		Voter:       addr.String(),
