@@ -24,11 +24,9 @@ func (k Keeper) OrganizeBallotByDenom(
 			power := claim.Power
 
 			for _, tuple := range vote.ExchangeRateTuples {
-				tmpPower := power
-
 				votes[tuple.Denom] = append(
 					votes[tuple.Denom],
-					types.NewVoteForTally(tuple.ExchangeRate, tuple.Denom, voterAddr, tmpPower),
+					types.NewVoteForTally(tuple.ExchangeRate, tuple.Denom, voterAddr, power),
 				)
 			}
 		}
@@ -47,13 +45,14 @@ func (k Keeper) OrganizeBallotByDenom(
 	return types.BallotMapToSlice(votes)
 }
 
-// ClearBallots clears all tallied prevotes and votes from the store.
-func (k Keeper) ClearBallots(ctx sdk.Context, votePeriod uint64) {
+// ClearVotes clears all tallied prevotes and votes from the store.
+func (k Keeper) ClearVotes(ctx sdk.Context, votePeriod uint64) {
+	currentHeight := uint64(ctx.BlockHeight())
 	// clear all aggregate prevotes
 	k.IterateAggregateExchangeRatePrevotes(
 		ctx,
 		func(voterAddr sdk.ValAddress, aggPrevote types.AggregateExchangeRatePrevote) bool {
-			if ctx.BlockHeight() > int64(aggPrevote.SubmitBlock+votePeriod) {
+			if currentHeight > aggPrevote.SubmitBlock+votePeriod {
 				k.DeleteAggregateExchangeRatePrevote(ctx, voterAddr)
 			}
 

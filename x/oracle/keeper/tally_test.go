@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/testutil"
@@ -134,7 +133,7 @@ func val(n int) sdk.ValAddress {
 	return sdk.ValAddress(fmt.Sprintf("val%08d__________", n))
 }
 
-// TestBuildClaimsMapAndTally is a test for collection clams map and tallying.
+// TestsBuildClaimsMapAndTally is a test for collection clams map and tallying.
 func (s *KeeperTestSuite) TestBuildClaimsMapAndTally() {
 	// custom app and context for this test
 	app, ctx := s.initAppAndContext()
@@ -148,7 +147,7 @@ func (s *KeeperTestSuite) TestBuildClaimsMapAndTally() {
 	)
 	s.Require().NoError(err)
 	s.Require().Len(valAddresses, 100)
-	s.Require().Equal(100, countActiveValidators(ctx, app.StakingKeeper))
+	s.Require().Equal(100, len(app.StakingKeeper.GetBondedValidatorsByPower(ctx)))
 
 	// override the params with values that are easy for testing
 	params := types.DefaultParams()
@@ -169,33 +168,13 @@ func (s *KeeperTestSuite) TestBuildClaimsMapAndTally() {
 		err = app.OracleKeeper.BuildClaimsMapAndTally(ctx, params)
 		s.Require().NoError(err)
 
-		finalRate, err := app.OracleKeeper.GetExchangeRate(ctx, "ATOM")
-		s.Require().NoError(err)
-		s.Require().EqualValues(sdk.MustNewDecFromStr("999.0"), finalRate)
+		// we haven't reached the vote threshold yet,
+		_, err = app.OracleKeeper.GetExchangeRate(ctx, "ATOM")
+		s.Require().Error(err)
 
 		// rest of validators marked with misses
 		for i := 1; i < len(valAddresses); i++ {
 			s.Require().Equal(uint64(1), app.OracleKeeper.GetMissCounter(ctx, valAddresses[i]))
 		}
 	}
-}
-
-func countActiveValidators(ctx sdk.Context, k stakingkeeper.Keeper) int {
-	uniqueValidators := make(map[string]struct{})
-
-	maxValidators := k.MaxValidators(ctx)
-	iterator := k.ValidatorsPowerStoreIterator(ctx)
-
-	for ; iterator.Valid() && len(uniqueValidators) < int(maxValidators); iterator.Next() {
-		validator := k.Validator(ctx, iterator.Value())
-
-		if validator.IsBonded() {
-			valOper := validator.GetOperator()
-			uniqueValidators[valOper.String()] = struct{}{}
-		}
-	}
-
-	iterator.Close()
-
-	return len(uniqueValidators)
 }

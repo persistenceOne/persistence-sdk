@@ -58,9 +58,8 @@ func (pb ExchangeRateBallot) WeightedMedian() (sdk.Dec, error) {
 		return sdk.ZeroDec(), ErrBallotNotSorted
 	}
 
-	totalPower := pb.Power()
-
 	if pb.Len() > 0 {
+		totalPower := pb.Power()
 		var pivot int64
 
 		for _, v := range pb {

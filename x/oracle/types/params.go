@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v3"
 )
@@ -25,6 +26,10 @@ const (
 	DefaultVotePeriod               = BlocksPerMinute / 2 // 30 seconds
 	DefaultSlashWindow              = BlocksPerWeek       // window for a week
 	DefaultRewardDistributionWindow = BlocksPerYear       // window for a year
+
+	// maximum number of decimals allowed for VoteThreshold
+	MaxVoteThresholdPrecision  = 2
+	MaxVoteThresholdMultiplier = 100 // must be 10^MaxVoteThresholdPrecision
 )
 
 // Default parameter values
@@ -50,6 +55,9 @@ var (
 	}
 	DefaultSlashFraction     = sdk.NewDecWithPrec(1, 4) // 0.01%
 	DefaultMinValidPerWindow = sdk.NewDecWithPrec(5, 2) // 5%
+
+	oneDec           = sdk.OneDec()
+	minVoteThreshold = sdk.NewDecWithPrec(33, 2) // 0.33
 )
 
 var _ paramstypes.ParamSet = &Params{}
@@ -85,7 +93,7 @@ func (p *Params) ParamSetPairs() paramstypes.ParamSetPairs {
 		paramstypes.NewParamSetPair(
 			KeyVoteThreshold,
 			&p.VoteThreshold,
-			validateVoteThreshold,
+			ValidateVoteThreshold,
 		),
 		paramstypes.NewParamSetPair(
 			KeyRewardBand,
@@ -182,18 +190,24 @@ func validateVotePeriod(i interface{}) error {
 	return nil
 }
 
-func validateVoteThreshold(i interface{}) error {
+// ValidateVoteThreshold validates oracle exchange rates power vote threshold.
+// Must be
+// * a decimal value > 0.33 and <= 1.
+// * max precision is 2 (so 0.501 is not allowed)
+func ValidateVoteThreshold(i interface{}) error {
 	v, ok := i.(sdk.Dec)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if v.LT(sdk.NewDecWithPrec(33, 2)) {
-		return fmt.Errorf("vote threshold must be bigger than 33%%: %s", v)
+	if v.LTE(minVoteThreshold) || v.GT(oneDec) {
+		return sdkerrors.ErrInvalidRequest.Wrapf("threshold must be bigger than %s and <= 1", minVoteThreshold)
 	}
 
-	if v.GT(sdk.OneDec()) {
-		return fmt.Errorf("vote threshold too large: %s", v)
+	val := v.MulInt64(MaxVoteThresholdMultiplier).TruncateInt64()
+	x2 := sdk.NewDecWithPrec(val, MaxVoteThresholdPrecision)
+	if !x2.Equal(v) {
+		return sdkerrors.ErrInvalidRequest.Wrap("threshold precision must be maximum 2 decimals")
 	}
 
 	return nil
