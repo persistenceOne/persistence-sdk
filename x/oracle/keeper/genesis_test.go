@@ -1,13 +1,10 @@
 package keeper_test
 
 import (
-	"testing"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simapp "github.com/persistenceOne/persistence-sdk/v2/simapp"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
-	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )
 
@@ -16,30 +13,30 @@ var (
 	persistenceExchangeRate = sdk.MustNewDecFromStr("0.0000005")
 )
 
-func TestOracleExportGenesis(t *testing.T) {
+func (s *KeeperTestSuite) TestOracleExportGenesis() {
 	app := simapp.Setup(false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	genesisState := oracle.ExportGenesis(ctx, app.OracleKeeper)
 	params := genesisState.GetParams()
-	require.NotNil(t, params)
+	s.Require().NotNil(params)
 
 	expectedOracleParams := types.DefaultGenesisState().GetParams()
-	require.Equal(t, expectedOracleParams, params)
+	s.Require().Equal(expectedOracleParams, params)
 }
 
-func TestOracleInitGenesis(t *testing.T) {
-	app := simapp.Setup(false)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
+func (s *KeeperTestSuite) TestOracleInitGenesis() {
+	app, ctx := s.app, s.ctx
+	addr, valAddr, valAddr2 := s.accAddresses[0], s.valAddresses[0], s.valAddresses[1]
 
 	currGenesisState := oracle.ExportGenesis(ctx, app.OracleKeeper)
 	params := currGenesisState.GetParams()
-	require.NotNil(t, params)
+	s.Require().NotNil(params)
 
 	expectedOracleParams := types.DefaultGenesisState().GetParams()
 	// On init genesis, default oracle information is set.
 	// Confirm that the current genesis state param are default genesis state params.
-	require.Equal(t, expectedOracleParams, params)
+	s.Require().Equal(expectedOracleParams, params)
 
 	// new genesis state with different params and data
 	newGenesisState := types.GenesisState{
@@ -131,10 +128,10 @@ func TestOracleInitGenesis(t *testing.T) {
 	oracle.InitGenesis(ctx, app.OracleKeeper, newGenesisState)
 	newlyExportedState := oracle.ExportGenesis(ctx, app.OracleKeeper)
 
-	require.Equal(t, newGenesisState.GetParams(), newlyExportedState.GetParams())
-	require.Equal(t, len(newGenesisState.GetExchangeRates()), len(newlyExportedState.GetExchangeRates()))
-	require.Equal(t, len(newGenesisState.GetMissCounters()), len(newlyExportedState.GetMissCounters()))
-	require.Equal(t, len(newGenesisState.GetFeederDelegations()), len(newlyExportedState.GetFeederDelegations()))
-	require.EqualValues(t, len(newGenesisState.GetAggregateExchangeRatePrevotes()), len(newlyExportedState.GetAggregateExchangeRatePrevotes()))
-	require.Equal(t, len(newGenesisState.GetAggregateExchangeRateVotes()), len(newlyExportedState.GetAggregateExchangeRateVotes()))
+	s.Require().Equal(newGenesisState.GetParams(), newlyExportedState.GetParams())
+	s.Require().Equal(len(newGenesisState.GetExchangeRates()), len(newlyExportedState.GetExchangeRates()))
+	s.Require().Equal(len(newGenesisState.GetMissCounters()), len(newlyExportedState.GetMissCounters()))
+	s.Require().Equal(len(newGenesisState.GetFeederDelegations()), len(newlyExportedState.GetFeederDelegations()))
+	s.Require().EqualValues(len(newGenesisState.GetAggregateExchangeRatePrevotes()), len(newlyExportedState.GetAggregateExchangeRatePrevotes()))
+	s.Require().Equal(len(newGenesisState.GetAggregateExchangeRateVotes()), len(newlyExportedState.GetAggregateExchangeRateVotes()))
 }
