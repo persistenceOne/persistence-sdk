@@ -133,8 +133,9 @@ func val(n int) sdk.ValAddress {
 	return sdk.ValAddress(fmt.Sprintf("val%08d__________", n))
 }
 
-// TestsBuildClaimsMapAndTally is a test for collection clams map and tallying.
-func (s *KeeperTestSuite) TestBuildClaimsMapAndTally() {
+// TestBuildClaimsMapAndTallyBelowThreshold is a test for collection claims map and tallying for
+// validators votes amount below VoteThreshold.
+func (s *KeeperTestSuite) TestBuildClaimsMapAndTallyBelowThreshold() {
 	// custom app and context for this test
 	app, ctx := s.initAppAndContext()
 
@@ -154,26 +155,103 @@ func (s *KeeperTestSuite) TestBuildClaimsMapAndTally() {
 	params.VotePeriod = 1                            // 10 block
 	params.VoteThreshold = sdk.NewDecWithPrec(50, 2) // 50%
 	params.RewardBand = sdk.NewDecWithPrec(50, 2)    // 50%
+	params.AcceptList = types.DenomList{{
+		BaseDenom:   types.AtomDenom,
+		SymbolDenom: types.AtomSymbol,
+		Exponent:    6,
+	}}
 	app.OracleKeeper.SetParams(ctx, params)
 
 	// initial exchange rate
-	app.OracleKeeper.SetExchangeRate(ctx, "ATOM", sdk.MustNewDecFromStr("1.0"))
+	app.OracleKeeper.SetExchangeRate(ctx, types.AtomDenom, sdk.MustNewDecFromStr("1.0"))
 
-	s.T().Log("TestBuildClaimsMapAndTally: 1 vote out of 100 counts (?)")
+	s.T().Log("TestBuildClaimsMapAndTally: 1 vote out of 100 doesn't count (below the threshold of 50%)")
 
 	app.OracleKeeper.SetAggregateExchangeRateVote(ctx, valAddresses[0], types.NewAggregateExchangeRateVote([]types.ExchangeRateTuple{{
-		Denom: "ATOM", ExchangeRate: sdk.MustNewDecFromStr("999.0"),
+		Denom: types.AtomDenom, ExchangeRate: sdk.MustNewDecFromStr("999.0"),
 	}}, valAddresses[0]))
 
 	err = app.OracleKeeper.BuildClaimsMapAndTally(ctx, params)
 	s.Require().NoError(err)
 
-	// we haven't reached the vote threshold yet, so no exchange rate update should have happened yet.
-	_, err = app.OracleKeeper.GetExchangeRate(ctx, "ATOM")
-	s.Require().Error(err)
+	// we haven't reached the vote threshold yet, so the exchange rate not updated and is reset
+	_, err = app.OracleKeeper.GetExchangeRate(ctx, types.AtomDenom)
+	s.Require().ErrorContains(err, types.ErrUnknownDenom.Error())
 
 	// rest of validators marked with misses
-	for i := 1; i < len(valAddresses); i++ {
-		s.Require().Equal(uint64(1), app.OracleKeeper.GetMissCounter(ctx, valAddresses[i]))
+	for valN := 1; valN < len(valAddresses); valN++ {
+		s.Require().Equal(
+			uint64(1),
+			app.OracleKeeper.GetMissCounter(ctx, valAddresses[valN]),
+			fmt.Sprintf("validator: %d", valN),
+		)
+	}
+}
+
+// TestBuildClaimsMapAndTallyAboveThreshold is a test for collection claims map and tallying for
+// validators votes amount up to or above VoteThreshold.
+func (s *KeeperTestSuite) TestBuildClaimsMapAndTallyAboveThreshold() {
+	// custom app and context for this test
+	app, ctx := s.initAppAndContext()
+
+	// generate 100 equal validators in consensus
+	_, valAddresses, err := testutil.StakingAddValidators(
+		app.BankKeeper,
+		app.StakingKeeper,
+		ctx,
+		100,
+	)
+	s.Require().NoError(err)
+	s.Require().Len(valAddresses, 100)
+	s.Require().Equal(100, len(app.StakingKeeper.GetBondedValidatorsByPower(ctx)))
+
+	// override the params with values that are easy for testing
+	params := types.DefaultParams()
+	params.VotePeriod = 1                            // 10 block
+	params.VoteThreshold = sdk.NewDecWithPrec(50, 2) // 50%
+	params.RewardBand = sdk.NewDecWithPrec(50, 2)    // 50%
+	params.AcceptList = types.DenomList{{
+		BaseDenom:   types.AtomDenom,
+		SymbolDenom: types.AtomSymbol,
+		Exponent:    6,
+	}}
+	app.OracleKeeper.SetParams(ctx, params)
+
+	// initial exchange rate
+	app.OracleKeeper.SetExchangeRate(ctx, types.AtomDenom, sdk.MustNewDecFromStr("1.0"))
+
+	s.T().Log("TestBuildClaimsMapAndTally: >=50 votes out of 100 (above the threshold of 50%)")
+
+	const halfOfBondedValidatorsCount = 50
+
+	for valN := 0; valN < halfOfBondedValidatorsCount; valN++ {
+		app.OracleKeeper.SetAggregateExchangeRateVote(ctx, valAddresses[valN], types.NewAggregateExchangeRateVote([]types.ExchangeRateTuple{{
+			Denom: types.AtomDenom, ExchangeRate: sdk.MustNewDecFromStr("999.0"),
+		}}, valAddresses[valN]))
+	}
+
+	err = app.OracleKeeper.BuildClaimsMapAndTally(ctx, params)
+	s.Require().NoError(err)
+
+	// have reached the vote threshold yet, so the exchange rate is updated
+	newRate, err := app.OracleKeeper.GetExchangeRate(ctx, types.AtomDenom)
+	s.Require().NoError(err)
+	s.Require().EqualValues(sdk.MustNewDecFromStr("999.0"), newRate)
+
+	// first half of validators doesn't have a miss
+	for valN := 0; valN < halfOfBondedValidatorsCount; valN++ {
+		s.Require().Zero(
+			app.OracleKeeper.GetMissCounter(ctx, valAddresses[valN]),
+			fmt.Sprintf("validator: %d", valN),
+		)
+	}
+
+	// rest of validators marked with misses
+	for valN := halfOfBondedValidatorsCount; valN < len(valAddresses); valN++ {
+		s.Require().Equal(
+			uint64(1),
+			app.OracleKeeper.GetMissCounter(ctx, valAddresses[valN]),
+			fmt.Sprintf("validator: %d", valN),
+		)
 	}
 }
