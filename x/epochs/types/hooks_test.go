@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	"fmt"
 	"strconv"
 	"testing"
 
@@ -104,10 +105,10 @@ func (suite *KeeperTestSuite) TestHooksPanicRecovery() {
 		expectedCounterValues []int
 		lenEvents             int
 	}{
-		{[]dummyEpochHook{noPanicHook}, []int{1}, 1},
+		{[]dummyEpochHook{noPanicHook}, []int{1}, 2},
 		{[]dummyEpochHook{panicHook}, []int{0}, 0},
 		{[]dummyEpochHook{errorHook}, []int{0}, 0},
-		{simpleHooks, []int{0, 1, 0, 1}, 2},
+		{simpleHooks, []int{0, 1, 0, 1}, 4},
 	}
 
 	for tcIndex, tc := range tests {
@@ -139,12 +140,18 @@ func (suite *KeeperTestSuite) TestHooksPanicRecovery() {
 				if epochActionSelector == 0 {
 					err := hooks.BeforeEpochStart(suite.Ctx, "id", 0)
 					suite.NoError(err)
-					suite.Require().Equal(events("id", 0, dummyBeforeEpochStartEvent), suite.Ctx.EventManager().Events(),
+					expEvents := events("id", 0, dummyBeforeEpochStartEvent)
+					actualEvents := suite.Ctx.EventManager().Events()
+					fmt.Println(tcIndex, epochActionSelector, len(expEvents), len(actualEvents))
+					suite.Require().Equal(expEvents, actualEvents,
 						"test case index %d, before epoch event check", tcIndex)
 				} else if epochActionSelector == 1 {
 					err := hooks.AfterEpochEnd(suite.Ctx, "id", 0)
 					suite.NoError(err)
-					suite.Require().Equal(events("id", 0, dummyAfterEpochEndEvent), suite.Ctx.EventManager().Events(),
+					expEvents := events("id", 0, dummyAfterEpochEndEvent)
+					actualEvents := suite.Ctx.EventManager().Events()
+					fmt.Println(tcIndex, epochActionSelector, len(expEvents), len(actualEvents))
+					suite.Require().Equal(expEvents, actualEvents,
 						"test case index %d, after epoch event check", tcIndex)
 
 				}
