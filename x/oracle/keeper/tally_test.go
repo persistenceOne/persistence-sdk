@@ -211,7 +211,7 @@ func (s *KeeperTestSuite) TestBuildClaimsMapAndTallyAboveThreshold() {
 	params.VoteThreshold = sdk.NewDecWithPrec(50, 2) // 50%
 	params.RewardBand = sdk.NewDecWithPrec(50, 2)    // 50%
 	params.AcceptList = types.DenomList{{
-		BaseDenom:   types.AtomSymbol,
+		BaseDenom:   types.AtomDenom,
 		SymbolDenom: types.AtomSymbol,
 		Exponent:    6,
 	}}
