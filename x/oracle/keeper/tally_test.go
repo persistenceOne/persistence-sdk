@@ -156,26 +156,26 @@ func (s *KeeperTestSuite) TestBuildClaimsMapAndTallyBelowThreshold() {
 	params.VoteThreshold = sdk.NewDecWithPrec(50, 2) // 50%
 	params.RewardBand = sdk.NewDecWithPrec(50, 2)    // 50%
 	params.AcceptList = types.DenomList{{
-		BaseDenom:   types.AtomDenom,
+		BaseDenom:   types.AtomSymbol,
 		SymbolDenom: types.AtomSymbol,
 		Exponent:    6,
 	}}
 	app.OracleKeeper.SetParams(ctx, params)
 
 	// initial exchange rate
-	app.OracleKeeper.SetExchangeRate(ctx, types.AtomDenom, sdk.MustNewDecFromStr("1.0"))
+	app.OracleKeeper.SetExchangeRate(ctx, types.AtomSymbol, sdk.MustNewDecFromStr("1.0"))
 
 	s.T().Log("TestBuildClaimsMapAndTally: 1 vote out of 100 doesn't count (below the threshold of 50%)")
 
 	app.OracleKeeper.SetAggregateExchangeRateVote(ctx, valAddresses[0], types.NewAggregateExchangeRateVote([]types.ExchangeRateTuple{{
-		Denom: types.AtomDenom, ExchangeRate: sdk.MustNewDecFromStr("999.0"),
+		Denom: types.AtomSymbol, ExchangeRate: sdk.MustNewDecFromStr("999.0"),
 	}}, valAddresses[0]))
 
 	err = app.OracleKeeper.BuildClaimsMapAndTally(ctx, params)
 	s.Require().NoError(err)
 
 	// we haven't reached the vote threshold yet, so the exchange rate not updated and is reset
-	_, err = app.OracleKeeper.GetExchangeRate(ctx, types.AtomDenom)
+	_, err = app.OracleKeeper.GetExchangeRate(ctx, types.AtomSymbol)
 	s.Require().ErrorContains(err, types.ErrUnknownDenom.Error())
 
 	// rest of validators marked with misses
@@ -211,14 +211,14 @@ func (s *KeeperTestSuite) TestBuildClaimsMapAndTallyAboveThreshold() {
 	params.VoteThreshold = sdk.NewDecWithPrec(50, 2) // 50%
 	params.RewardBand = sdk.NewDecWithPrec(50, 2)    // 50%
 	params.AcceptList = types.DenomList{{
-		BaseDenom:   types.AtomDenom,
+		BaseDenom:   types.AtomSymbol,
 		SymbolDenom: types.AtomSymbol,
 		Exponent:    6,
 	}}
 	app.OracleKeeper.SetParams(ctx, params)
 
 	// initial exchange rate
-	app.OracleKeeper.SetExchangeRate(ctx, types.AtomDenom, sdk.MustNewDecFromStr("1.0"))
+	app.OracleKeeper.SetExchangeRate(ctx, types.AtomSymbol, sdk.MustNewDecFromStr("1.0"))
 
 	s.T().Log("TestBuildClaimsMapAndTally: >=50 votes out of 100 (above the threshold of 50%)")
 
@@ -226,7 +226,7 @@ func (s *KeeperTestSuite) TestBuildClaimsMapAndTallyAboveThreshold() {
 
 	for valN := 0; valN < halfOfBondedValidatorsCount; valN++ {
 		app.OracleKeeper.SetAggregateExchangeRateVote(ctx, valAddresses[valN], types.NewAggregateExchangeRateVote([]types.ExchangeRateTuple{{
-			Denom: types.AtomDenom, ExchangeRate: sdk.MustNewDecFromStr("999.0"),
+			Denom: types.AtomSymbol, ExchangeRate: sdk.MustNewDecFromStr("999.0"),
 		}}, valAddresses[valN]))
 	}
 
@@ -234,7 +234,7 @@ func (s *KeeperTestSuite) TestBuildClaimsMapAndTallyAboveThreshold() {
 	s.Require().NoError(err)
 
 	// have reached the vote threshold yet, so the exchange rate is updated
-	newRate, err := app.OracleKeeper.GetExchangeRate(ctx, types.AtomDenom)
+	newRate, err := app.OracleKeeper.GetExchangeRate(ctx, types.AtomSymbol)
 	s.Require().NoError(err)
 	s.Require().EqualValues(sdk.MustNewDecFromStr("999.0"), newRate)
 
