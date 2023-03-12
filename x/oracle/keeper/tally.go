@@ -26,8 +26,8 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 
 	var (
 		// voteTargets defines the symbol (ticker) denoms that we require votes on
-		voteTargets      = make([]string, len(params.AcceptList))
-		voteTargetDenoms = make([]string, len(params.AcceptList))
+		voteTargets      = make([]string, 0, len(params.AcceptList))
+		voteTargetDenoms = make([]string, 0, len(params.AcceptList))
 	)
 
 	for _, v := range params.AcceptList {
