@@ -189,7 +189,7 @@ func GetCmdQueryExchangeRate() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			symbol := args[0]
-			if "" == symbol {
+			if symbol == "" {
 				return fmt.Errorf("denom cannot be empty")
 			}
 
