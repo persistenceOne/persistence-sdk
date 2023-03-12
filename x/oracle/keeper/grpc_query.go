@@ -38,12 +38,11 @@ func (q querier) Params(
 	return &types.QueryParamsResponse{Params: params}, nil
 }
 
-// ExchangeRates queries exchange rates of all denoms, or, if specified, returns
-// a single denom.
-func (q querier) ExchangeRates(
+// ExchangeRates queries exchange rates of all denom.
+func (q querier) AllExchangeRates(
 	goCtx context.Context,
-	req *types.QueryExchangeRatesRequest,
-) (*types.QueryExchangeRatesResponse, error) {
+	req *types.QueryAllExchangeRatesRequest,
+) (*types.QueryAllExchangeRatesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
@@ -52,21 +51,35 @@ func (q querier) ExchangeRates(
 
 	var exchangeRates sdk.DecCoins
 
-	if len(req.Denom) > 0 {
-		exchangeRate, err := q.GetExchangeRate(ctx, req.Denom)
-		if err != nil {
-			return nil, err
-		}
+	q.IterateExchangeRates(ctx, func(denom string, rate sdk.Dec) (stop bool) {
+		exchangeRates = exchangeRates.Add(sdk.NewDecCoinFromDec(denom, rate))
+		return false
+	})
 
-		exchangeRates = exchangeRates.Add(sdk.NewDecCoinFromDec(req.Denom, exchangeRate))
-	} else {
-		q.IterateExchangeRates(ctx, func(denom string, rate sdk.Dec) (stop bool) {
-			exchangeRates = exchangeRates.Add(sdk.NewDecCoinFromDec(denom, rate))
-			return false
-		})
+	return &types.QueryAllExchangeRatesResponse{ExchangeRates: exchangeRates}, nil
+}
+
+// ExchangeRate queries exchange rates of specified denom.
+func (q querier) ExchangeRate(
+	goCtx context.Context,
+	req *types.QueryExchangeRateRequest,
+) (*types.QueryExchangeRateResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	return &types.QueryExchangeRatesResponse{ExchangeRates: exchangeRates}, nil
+	if req.Denom == "" {
+		return nil, status.Error(codes.InvalidArgument, "invalid denom")
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	exchangeRate, err := q.GetExchangeRate(ctx, req.Denom)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryExchangeRateResponse{ExchangeRate: exchangeRate.String()}, nil
 }
 
 // ActiveExchangeRates queries all denoms for which exchange rates exist.
