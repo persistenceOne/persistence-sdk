@@ -32,11 +32,11 @@ func (s *KeeperTestSuite) TestRewardBallotWinners() {
 		voteTargets[i] = v.SymbolDenom
 	}
 
-	votePeriodsPerWindow := sdk.NewDec((int64)(s.app.OracleKeeper.RewardDistributionWindow(s.ctx))).
-		QuoInt64((int64)(s.app.OracleKeeper.VotePeriod(s.ctx))).
+	votePeriodsPerWindow := sdk.NewDec((int64)(s.app.OracleKeeper.GetRewardDistributionWindow(s.ctx))).
+		QuoInt64((int64)(s.app.OracleKeeper.GetVotePeriod(s.ctx))).
 		TruncateInt64()
 
-	s.app.OracleKeeper.RewardBallotWinners(s.ctx, (int64)(s.app.OracleKeeper.VotePeriod(s.ctx)), (int64)(s.app.OracleKeeper.RewardDistributionWindow(s.ctx)), voteTargets, claims)
+	s.app.OracleKeeper.RewardBallotWinners(s.ctx, (int64)(s.app.OracleKeeper.GetVotePeriod(s.ctx)), (int64)(s.app.OracleKeeper.GetRewardDistributionWindow(s.ctx)), voteTargets, claims)
 
 	outstandingRewardsDec := s.app.DistrKeeper.GetValidatorOutstandingRewardsCoins(s.ctx, valAddr)
 	outstandingRewards, _ := outstandingRewardsDec.TruncateDecimal()

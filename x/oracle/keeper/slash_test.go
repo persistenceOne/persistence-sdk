@@ -44,9 +44,11 @@ func (s *KeeperTestSuite) TestSlashAndResetMissCounters() {
 	// Case 2, slash
 	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, missCounterSlash)
 	s.app.OracleKeeper.SlashAndResetMissCounters(s.ctx)
+
 	validator, _ = s.app.StakingKeeper.GetValidator(s.ctx, valAddr)
 	s.Require().Equal(amt.Sub(params.SlashFraction.MulInt(amt).TruncateInt()), validator.GetBondedTokens())
 	s.Require().True(validator.Jailed)
+
 	missCounter := app.OracleKeeper.GetMissCounter(ctx, valAddr)
 	s.Require().Zero(missCounter)
 

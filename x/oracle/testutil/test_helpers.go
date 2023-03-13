@@ -48,15 +48,16 @@ func StakingAddValidators(
 	ctx sdk.Context,
 	num int,
 ) (
-	accAddresses []sdk.AccAddress,
-	valAddresses []sdk.ValAddress,
-	err error,
+	[]sdk.AccAddress,
+	[]sdk.ValAddress,
+	error,
 ) {
-	accAddresses = make([]sdk.AccAddress, num)
-	valAddresses = make([]sdk.ValAddress, num)
+	accAddresses := make([]sdk.AccAddress, num)
+	valAddresses := make([]sdk.ValAddress, num)
 	stakingHandler := staking.NewHandler(stakingKeeper)
 
 	valPubKeys := simapp.CreateTestPubKeys(num)
+
 	for i := 0; i < num; i++ {
 		var (
 			valPubKey = valPubKeys[i]
@@ -86,7 +87,8 @@ func StakingAddValidators(
 
 	// ensure that validators are updated
 	staking.EndBlocker(ctx, stakingKeeper)
-	return
+
+	return accAddresses, valAddresses, nil
 }
 
 func newTestMsgCreateValidator(address sdk.ValAddress, pubKey cryptotypes.PubKey, amt sdk.Int) (*stakingtypes.MsgCreateValidator, error) {
