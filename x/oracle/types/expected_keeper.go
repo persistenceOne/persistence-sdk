@@ -11,6 +11,7 @@ import (
 // module.
 type StakingKeeper interface {
 	Validator(ctx sdk.Context, address sdk.ValAddress) stakingtypes.ValidatorI
+	GetBondedValidatorsByPower(ctx sdk.Context) []stakingtypes.Validator
 	TotalBondedTokens(sdk.Context) sdk.Int
 	Slash(sdk.Context, sdk.ConsAddress, int64, int64, sdk.Dec)
 	Jail(sdk.Context, sdk.ConsAddress)

@@ -16,14 +16,14 @@ func (k Keeper) SlashAndResetMissCounters(ctx sdk.Context) {
 	distributionHeight := height - sdk.ValidatorUpdateDelay - 1
 
 	var (
-		slashWindow          = int64(k.SlashWindow(ctx))
-		votePeriod           = int64(k.VotePeriod(ctx))
+		slashWindow          = int64(k.GetSlashWindow(ctx))
+		votePeriod           = int64(k.GetVotePeriod(ctx))
 		votePeriodsPerWindow = sdk.NewDec(slashWindow).QuoInt64(votePeriod).TruncateInt64()
 	)
 
 	var (
-		minValidPerWindow = k.MinValidPerWindow(ctx)
-		slashFraction     = k.SlashFraction(ctx)
+		minValidPerWindow = k.GetMinValidPerWindow(ctx)
+		slashFraction     = k.GetSlashFraction(ctx)
 		powerReduction    = k.StakingKeeper.PowerReduction(ctx)
 	)
 

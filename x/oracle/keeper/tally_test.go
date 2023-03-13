@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/testutil"
@@ -134,8 +133,9 @@ func val(n int) sdk.ValAddress {
 	return sdk.ValAddress(fmt.Sprintf("val%08d__________", n))
 }
 
-// TestBuildClaimsMapAndTally is a test for collection clams map and tallying.
-func (s *KeeperTestSuite) TestBuildClaimsMapAndTally() {
+// TestBuildClaimsMapAndTallyBelowThreshold is a test for collection claims map and tallying for
+// validators votes amount below VoteThreshold.
+func (s *KeeperTestSuite) TestBuildClaimsMapAndTallyBelowThreshold() {
 	// custom app and context for this test
 	app, ctx := s.initAppAndContext()
 
@@ -148,54 +148,110 @@ func (s *KeeperTestSuite) TestBuildClaimsMapAndTally() {
 	)
 	s.Require().NoError(err)
 	s.Require().Len(valAddresses, 100)
-	s.Require().Equal(100, countActiveValidators(ctx, app.StakingKeeper))
+	s.Require().Equal(100, len(app.StakingKeeper.GetBondedValidatorsByPower(ctx)))
 
 	// override the params with values that are easy for testing
 	params := types.DefaultParams()
 	params.VotePeriod = 1                            // 10 block
 	params.VoteThreshold = sdk.NewDecWithPrec(50, 2) // 50%
 	params.RewardBand = sdk.NewDecWithPrec(50, 2)    // 50%
+	params.AcceptList = types.DenomList{{
+		BaseDenom:   types.AtomSymbol,
+		SymbolDenom: types.AtomSymbol,
+		Exponent:    6,
+	}}
 	app.OracleKeeper.SetParams(ctx, params)
 
 	// initial exchange rate
-	app.OracleKeeper.SetExchangeRate(ctx, "ATOM", sdk.MustNewDecFromStr("1.0"))
+	app.OracleKeeper.SetExchangeRate(ctx, types.AtomSymbol, sdk.MustNewDecFromStr("1.0"))
 
-	{
-		s.T().Log("TestBuildClaimsMapAndTally: 1 vote out of 100 counts (?)")
-		app.OracleKeeper.SetAggregateExchangeRateVote(ctx, valAddresses[0], types.NewAggregateExchangeRateVote([]types.ExchangeRateTuple{{
-			Denom: "ATOM", ExchangeRate: sdk.MustNewDecFromStr("999.0"),
-		}}, valAddresses[0]))
+	s.T().Log("TestBuildClaimsMapAndTally: 1 vote out of 100 doesn't count (below the threshold of 50%)")
 
-		err = app.OracleKeeper.BuildClaimsMapAndTally(ctx, params)
-		s.Require().NoError(err)
+	app.OracleKeeper.SetAggregateExchangeRateVote(ctx, valAddresses[0], types.NewAggregateExchangeRateVote([]types.ExchangeRateTuple{{
+		Denom: types.AtomSymbol, ExchangeRate: sdk.MustNewDecFromStr("999.0"),
+	}}, valAddresses[0]))
 
-		finalRate, err := app.OracleKeeper.GetExchangeRate(ctx, "ATOM")
-		s.Require().NoError(err)
-		s.Require().EqualValues(sdk.MustNewDecFromStr("999.0"), finalRate)
+	err = app.OracleKeeper.BuildClaimsMapAndTally(ctx, params)
+	s.Require().NoError(err)
 
-		// rest of validators marked with misses
-		for i := 1; i < len(valAddresses); i++ {
-			s.Require().Equal(uint64(1), app.OracleKeeper.GetMissCounter(ctx, valAddresses[i]))
-		}
+	// we haven't reached the vote threshold yet, so the exchange rate not updated and is reset
+	_, err = app.OracleKeeper.GetExchangeRate(ctx, types.AtomSymbol)
+	s.Require().ErrorContains(err, types.ErrUnknownDenom.Error())
+
+	// rest of validators marked with misses
+	for valN := 1; valN < len(valAddresses); valN++ {
+		s.Require().Equal(
+			uint64(1),
+			app.OracleKeeper.GetMissCounter(ctx, valAddresses[valN]),
+			fmt.Sprintf("validator: %d", valN),
+		)
 	}
 }
 
-func countActiveValidators(ctx sdk.Context, k stakingkeeper.Keeper) int {
-	uniqueValidators := make(map[string]struct{})
+// TestBuildClaimsMapAndTallyAboveThreshold is a test for collection claims map and tallying for
+// validators votes amount up to or above VoteThreshold.
+func (s *KeeperTestSuite) TestBuildClaimsMapAndTallyAboveThreshold() {
+	// custom app and context for this test
+	app, ctx := s.initAppAndContext()
 
-	maxValidators := k.MaxValidators(ctx)
-	iterator := k.ValidatorsPowerStoreIterator(ctx)
+	// generate 100 equal validators in consensus
+	_, valAddresses, err := testutil.StakingAddValidators(
+		app.BankKeeper,
+		app.StakingKeeper,
+		ctx,
+		100,
+	)
+	s.Require().NoError(err)
+	s.Require().Len(valAddresses, 100)
+	s.Require().Equal(100, len(app.StakingKeeper.GetBondedValidatorsByPower(ctx)))
 
-	for ; iterator.Valid() && len(uniqueValidators) < int(maxValidators); iterator.Next() {
-		validator := k.Validator(ctx, iterator.Value())
+	// override the params with values that are easy for testing
+	params := types.DefaultParams()
+	params.VotePeriod = 1                            // 10 block
+	params.VoteThreshold = sdk.NewDecWithPrec(50, 2) // 50%
+	params.RewardBand = sdk.NewDecWithPrec(50, 2)    // 50%
+	params.AcceptList = types.DenomList{{
+		BaseDenom:   types.AtomDenom,
+		SymbolDenom: types.AtomSymbol,
+		Exponent:    6,
+	}}
+	app.OracleKeeper.SetParams(ctx, params)
 
-		if validator.IsBonded() {
-			valOper := validator.GetOperator()
-			uniqueValidators[valOper.String()] = struct{}{}
-		}
+	// initial exchange rate
+	app.OracleKeeper.SetExchangeRate(ctx, types.AtomSymbol, sdk.MustNewDecFromStr("1.0"))
+
+	s.T().Log("TestBuildClaimsMapAndTally: >=50 votes out of 100 (above the threshold of 50%)")
+
+	const halfOfBondedValidatorsCount = 50
+
+	for valN := 0; valN < halfOfBondedValidatorsCount; valN++ {
+		app.OracleKeeper.SetAggregateExchangeRateVote(ctx, valAddresses[valN], types.NewAggregateExchangeRateVote([]types.ExchangeRateTuple{{
+			Denom: types.AtomSymbol, ExchangeRate: sdk.MustNewDecFromStr("999.0"),
+		}}, valAddresses[valN]))
 	}
 
-	iterator.Close()
+	err = app.OracleKeeper.BuildClaimsMapAndTally(ctx, params)
+	s.Require().NoError(err)
 
-	return len(uniqueValidators)
+	// have reached the vote threshold yet, so the exchange rate is updated
+	newRate, err := app.OracleKeeper.GetExchangeRate(ctx, types.AtomSymbol)
+	s.Require().NoError(err)
+	s.Require().EqualValues(sdk.MustNewDecFromStr("999.0"), newRate)
+
+	// first half of validators doesn't have a miss
+	for valN := 0; valN < halfOfBondedValidatorsCount; valN++ {
+		s.Require().Zero(
+			app.OracleKeeper.GetMissCounter(ctx, valAddresses[valN]),
+			fmt.Sprintf("validator: %d", valN),
+		)
+	}
+
+	// rest of validators marked with misses
+	for valN := halfOfBondedValidatorsCount; valN < len(valAddresses); valN++ {
+		s.Require().Equal(
+			uint64(1),
+			app.OracleKeeper.GetMissCounter(ctx, valAddresses[valN]),
+			fmt.Sprintf("validator: %d", valN),
+		)
+	}
 }
