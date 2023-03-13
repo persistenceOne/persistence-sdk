@@ -44,6 +44,7 @@ func (s *KeeperTestSuite) TestBallot_OrganizeBallotByDenom() {
 
 func (s *KeeperTestSuite) TestBallot_ClearBallots() {
 	addr, valAddr := s.accAddresses[0], s.valAddresses[0]
+
 	prevote := types.AggregateExchangeRatePrevote{
 		Hash:        "hash",
 		Voter:       addr.String(),
@@ -68,7 +69,7 @@ func (s *KeeperTestSuite) TestBallot_ClearBallots() {
 	s.Require().NoError(err)
 	s.Require().Equal(voteRes, vote)
 
-	s.app.OracleKeeper.ClearBallots(s.ctx, 0)
+	s.app.OracleKeeper.ClearVotes(s.ctx, 0)
 	_, err = s.app.OracleKeeper.GetAggregateExchangeRatePrevote(s.ctx, valAddr)
 	s.Require().Error(err)
 	_, err = s.app.OracleKeeper.GetAggregateExchangeRateVote(s.ctx, valAddr)
