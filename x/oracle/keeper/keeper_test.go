@@ -213,11 +213,11 @@ func (s *KeeperTestSuite) TestGetExchangeRate_Valid() {
 	s.Require().Equal(rate, sdk.OneDec())
 }
 
-func (s *KeeperTestSuite) TestDeleteExchangeRate() {
+func (s *KeeperTestSuite) TestClearExchangeRate() {
 	app, ctx := s.app, s.ctx
 
 	app.OracleKeeper.SetExchangeRate(ctx, types.PersistenceDenom, sdk.OneDec())
-	app.OracleKeeper.DeleteExchangeRate(ctx, types.PersistenceDenom)
+	app.OracleKeeper.ClearExchangeRates(ctx)
 	_, err := app.OracleKeeper.GetExchangeRate(ctx, types.PersistenceDenom)
 	s.Require().Error(err)
 }
