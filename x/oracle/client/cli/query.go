@@ -26,7 +26,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		GetCmdQueryAggregatePrevote(),
 		GetCmdQueryAggregateVote(),
 		GetCmdQueryParams(),
-		GetCmdQueryExchangeRates(),
+		GetCmdQueryAllExchangeRates(),
 		GetCmdQueryExchangeRate(),
 		GetCmdQueryFeederDelegation(),
 		GetCmdQueryRewardPoolBalance(),
@@ -145,8 +145,8 @@ func GetCmdQueryAggregatePrevote() *cobra.Command {
 	return cmd
 }
 
-// GetCmdQueryExchangeRates implements the query rate command.
-func GetCmdQueryExchangeRates() *cobra.Command {
+// GetCmdQueryAllExchangeRates implements the query all exchange rate command.
+func GetCmdQueryAllExchangeRates() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "exchange-rates",
 		Args:  cobra.NoArgs,
@@ -158,9 +158,9 @@ func GetCmdQueryExchangeRates() *cobra.Command {
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			res, err := queryClient.ExchangeRates(
+			res, err := queryClient.AllExchangeRates(
 				context.Background(),
-				&types.QueryExchangeRatesRequest{},
+				&types.QueryAllExchangeRatesRequest{},
 			)
 			if err != nil {
 				return err
@@ -175,7 +175,7 @@ func GetCmdQueryExchangeRates() *cobra.Command {
 	return cmd
 }
 
-// GetCmdQueryExchangeRates implements the query rate command.
+// GetCmdQueryExchangeRates implements the query specified exchange rate command.
 func GetCmdQueryExchangeRate() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "exchange-rate [denom]",
@@ -188,10 +188,15 @@ func GetCmdQueryExchangeRate() *cobra.Command {
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			res, err := queryClient.ExchangeRates(
+			symbol := args[0]
+			if symbol == "" {
+				return fmt.Errorf("denom cannot be empty")
+			}
+
+			res, err := queryClient.ExchangeRate(
 				context.Background(),
-				&types.QueryExchangeRatesRequest{
-					Denom: args[0],
+				&types.QueryExchangeRateRequest{
+					Denom: symbol,
 				},
 			)
 			if err != nil {

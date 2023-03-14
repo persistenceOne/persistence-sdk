@@ -22,15 +22,15 @@ const (
 	AtomSymbol   string = "ATOM"
 	AtomExponent        = uint32(6)
 
-	// osmosisDenom supported by oracle
-	osmosisDenom    string = "uosmo"
-	osmosisSymbol   string = "OSMO"
-	osmosisExponent        = uint32(6)
+	// OsmosisDenom supported by oracle
+	OsmosisDenom    string = "uosmo"
+	OsmosisSymbol   string = "OSMO"
+	OsmosisExponent        = uint32(6)
 
 	// USDCDenom supported by oracle
-	usdcDenom    string = "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858"
-	usdcSymbol   string = "USDC"
-	usdcExponent        = uint32(6)
+	USDCDenom    string = "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858"
+	USDCSymbol   string = "USDC"
+	UsdcExponent        = uint32(6)
 )
 
 type (

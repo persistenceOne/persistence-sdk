@@ -11,10 +11,14 @@ option go_package = "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types
 
 // Query defines the gRPC querier service.
 service Query {
-  // ExchangeRates returns exchange rates of all denoms,
-  // or, if specified, returns a single denom
-  rpc ExchangeRates(QueryExchangeRatesRequest) returns (QueryExchangeRatesResponse) {
-    option (google.api.http).get = "/persistence/oracle/v1beta1/denoms/exchange_rates/{denom}";
+  // ExchangeRates returns exchange rates of all denoms.
+  rpc AllExchangeRates(QueryAllExchangeRatesRequest) returns (QueryAllExchangeRatesResponse) {
+    option (google.api.http).get = "/persistence/oracle/v1beta1/denoms/all_exchange_rates";
+  }
+
+  // ExchangeRate returns exchange rates of a specified denom.
+  rpc ExchangeRate(QueryExchangeRateRequest) returns (QueryExchangeRateResponse) {
+    option (google.api.http).get = "/persistence/oracle/v1beta1/denoms/exchange_rate/{denom}";
   }
 
   // ActiveExchangeRates returns all active denoms
@@ -63,9 +67,9 @@ service Query {
   }
 }
 
-// QueryExchangeRatesRequest is the request type for the Query/ExchangeRate RPC
+// QueryExchangeRateRequest is the request type for the Query/ExchangeRate RPC
 // method.
-message QueryExchangeRatesRequest {
+message QueryExchangeRateRequest {
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
@@ -73,16 +77,28 @@ message QueryExchangeRatesRequest {
   string denom = 1;
 }
 
+// QueryExchangeRateResponse is the request type for the Query/ExchangeRate RPC
+// method.
+message QueryExchangeRateResponse {
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
 
-// QueryExchangeRatesResponse is response type for the
+  // denom defines the denomination to query for.
+  string exchange_rate = 1;
+}
+
+// QueryAllExchangeRatesRequest is the request type for the Query/ExchangeRate RPC
+// method.
+message QueryAllExchangeRatesRequest {}
+
+// QueryAllExchangeRatesResponse is response type for the
 // Query/ExchangeRates RPC method.
-message QueryExchangeRatesResponse {
+message QueryAllExchangeRatesResponse {
   // exchange_rates defines a list of the exchange rate for all whitelisted
   // denoms.
   repeated cosmos.base.v1beta1.DecCoin exchange_rates = 1
-      [(gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins", (gogoproto.nullable) = false];
+  [(gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins", (gogoproto.nullable) = false];
 }
-
 
 // QueryActiveExchangeRatesRequest is the request type for the Query/ActiveExchangeRates RPC method.
 message QueryActiveExchangeRatesRequest {}

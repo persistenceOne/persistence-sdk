@@ -43,14 +43,14 @@ var (
 			Exponent:    AtomExponent,
 		},
 		{
-			BaseDenom:   osmosisDenom,
-			SymbolDenom: osmosisSymbol,
-			Exponent:    osmosisExponent,
+			BaseDenom:   OsmosisDenom,
+			SymbolDenom: OsmosisSymbol,
+			Exponent:    OsmosisExponent,
 		},
 		{
-			BaseDenom:   usdcDenom,
-			SymbolDenom: usdcSymbol,
-			Exponent:    usdcExponent,
+			BaseDenom:   USDCDenom,
+			SymbolDenom: USDCSymbol,
+			Exponent:    UsdcExponent,
 		},
 	}
 	DefaultSlashFraction     = sdk.NewDecWithPrec(1, 4) // 0.01%
