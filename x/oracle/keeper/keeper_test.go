@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/stretchr/testify/suite"
@@ -24,9 +25,10 @@ type KeeperTestSuite struct {
 	accAddresses []sdk.AccAddress
 	valAddresses []sdk.ValAddress
 
-	ctx       sdk.Context
-	app       *persistenceapp.SimApp
-	msgServer types.MsgServer
+	ctx         sdk.Context
+	app         *persistenceapp.SimApp
+	queryClient types.QueryClient
+	msgServer   types.MsgServer
 }
 
 const (
@@ -50,6 +52,12 @@ func (s *KeeperTestSuite) SetupTest() {
 	s.Require().NoError(err)
 
 	s.msgServer = keeper.NewMsgServerImpl(s.app.OracleKeeper)
+	queryHelper := &baseapp.QueryServiceTestHelper{
+		GRPCQueryRouter: s.app.GRPCQueryRouter(),
+		Ctx:             s.ctx,
+	}
+
+	s.queryClient = types.NewQueryClient(queryHelper)
 }
 
 func (s *KeeperTestSuite) initAppAndContext() (app *persistenceapp.SimApp, ctx sdk.Context) {
