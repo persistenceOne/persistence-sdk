@@ -24,7 +24,9 @@ func (h MultiIBCHandshakeHooks) OnRecvPacket(ctx sdk.Context, packet types.Packe
 			return h[i].OnRecvPacket(ctx, packet, relayer, transferAck)
 		}
 		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
-		ctx.Logger().Error("Error occurred in calling OnRecvPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
+		if err != nil {
+			ctx.Logger().Error("Error occurred in calling OnRecvPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
+		}
 	}
 
 	return nil
@@ -37,7 +39,9 @@ func (h MultiIBCHandshakeHooks) OnAcknowledgementPacket(ctx sdk.Context, packet 
 			return h[i].OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer, transferAckErr)
 		}
 		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
-		ctx.Logger().Error("Error occurred in calling OnAcknowledgementPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
+		if err != nil {
+			ctx.Logger().Error("Error occurred in calling OnAcknowledgementPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
+		}
 	}
 
 	return nil
@@ -50,7 +54,9 @@ func (h MultiIBCHandshakeHooks) OnTimeoutPacket(ctx sdk.Context, packet types.Pa
 			return h[i].OnTimeoutPacket(ctx, packet, relayer, transferTimeoutErr)
 		}
 		err := utils.ApplyFuncIfNoError(ctx, wrappedHookFn)
-		ctx.Logger().Error("Error occurred in calling OnTimeoutPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
+		if err != nil {
+			ctx.Logger().Error("Error occurred in calling OnTimeoutPacket hooks, ", "err: ", err, "module:", ModuleName, "index:", i)
+		}
 	}
 
 	return nil
