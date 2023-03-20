@@ -100,15 +100,7 @@ import (
 	oracletypes "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
 
-const (
-	appName = "SimApp"
-
-	// BondDenom defines the native staking token denomination.
-	BondDenom = "xprt"
-
-	// DisplayDenom defines the name, symbol, and display value of the persistence token.
-	DisplayDenom = "persistence"
-)
+const appName = "SimApp"
 
 var (
 	// DefaultNodeHome default home directories for the application daemon
