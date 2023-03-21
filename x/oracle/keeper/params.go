@@ -19,6 +19,19 @@ func (k Keeper) GetVoteThreshold(ctx sdk.Context) (res sdk.Dec) {
 	return
 }
 
+// SetVoteThreshold sets min combined validator power voting on a denom to accept
+// it as valid.
+// TODO: this is used in tests, we should refactor the way how this is handled.
+func (k Keeper) SetVoteThreshold(ctx sdk.Context, threshold sdk.Dec) error {
+	if err := types.ValidateVoteThreshold(threshold); err != nil {
+		return err
+	}
+
+	k.paramSpace.Set(ctx, types.KeyVoteThreshold, &threshold)
+
+	return nil
+}
+
 // GetRewardDistributionWindow returns the number of vote periods during which
 // seigniorage reward comes in and then is distributed.
 func (k Keeper) GetRewardDistributionWindow(ctx sdk.Context) (res uint64) {
@@ -53,4 +66,16 @@ func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
 // SetParams sets the total set of oracle parameters.
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	k.paramSpace.SetParamSet(ctx, &params)
+}
+
+// GetAcceptList returns the denom list that can be activated
+func (k Keeper) GetAcceptList(ctx sdk.Context) (res types.DenomList) {
+	k.paramSpace.Get(ctx, types.KeyAcceptList, &res)
+	return
+}
+
+// SetAcceptList updates the accepted list of assets supported by the x/oracle
+// module.
+func (k Keeper) SetAcceptList(ctx sdk.Context, acceptList types.DenomList) {
+	k.paramSpace.Set(ctx, types.KeyAcceptList, acceptList)
 }

@@ -32,7 +32,7 @@ func (k Keeper) BuildClaimsMapAndTally(ctx sdk.Context, params types.Params) err
 
 	for _, v := range params.AcceptList {
 		voteTargets = append(voteTargets, v.SymbolDenom)
-		voteTargetDenoms = append(voteTargetDenoms, v.BaseDenom)
+		voteTargetDenoms = append(voteTargetDenoms, v.SymbolDenom)
 	}
 
 	// Clear all exchange rates
