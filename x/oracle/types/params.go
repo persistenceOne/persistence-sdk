@@ -93,7 +93,7 @@ func (p *Params) ParamSetPairs() paramstypes.ParamSetPairs {
 		paramstypes.NewParamSetPair(
 			KeyVoteThreshold,
 			&p.VoteThreshold,
-			validateVoteThreshold,
+			ValidateVoteThreshold,
 		),
 		paramstypes.NewParamSetPair(
 			KeyRewardBand,
@@ -190,11 +190,11 @@ func validateVotePeriod(i interface{}) error {
 	return nil
 }
 
-// validateVoteThreshold validates oracle exchange rates power vote threshold.
+// ValidateVoteThreshold validates oracle exchange rates power vote threshold.
 // Must be
 // * a decimal value > 0.33 and <= 1.
 // * max precision is 2 (so 0.501 is not allowed)
-func validateVoteThreshold(i interface{}) error {
+func ValidateVoteThreshold(i interface{}) error {
 	v, ok := i.(sdk.Dec)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)

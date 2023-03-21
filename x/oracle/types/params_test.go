@@ -47,7 +47,7 @@ func TestValidateVoteThreshold(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		err := validateVoteThreshold(tc.threshold)
+		err := ValidateVoteThreshold(tc.threshold)
 		if tc.errMsg == "" {
 			require.NoError(t, err, "test_case", tc.name)
 		} else {
@@ -91,12 +91,12 @@ func TestValidateAcceptList(t *testing.T) {
 	require.ErrorContains(t, err, "oracle parameter AcceptList Denom must have BaseDenom")
 
 	err = validateAcceptList(DenomList{
-		{BaseDenom: denomPersistence.BaseDenom, SymbolDenom: ""},
+		{BaseDenom: DenomPersistence.BaseDenom, SymbolDenom: ""},
 	})
 	require.ErrorContains(t, err, "oracle parameter AcceptList Denom must have SymbolDenom")
 
 	err = validateAcceptList(DenomList{
-		{BaseDenom: denomPersistence.BaseDenom, SymbolDenom: denomPersistence.SymbolDenom},
+		{BaseDenom: DenomPersistence.BaseDenom, SymbolDenom: DenomPersistence.SymbolDenom},
 	})
 	require.Nil(t, err)
 }

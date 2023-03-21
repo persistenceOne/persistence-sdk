@@ -12,14 +12,26 @@ import (
 )
 
 var (
-	denomPersistence = Denom{
+	DenomPersistence = Denom{
 		BaseDenom:   PersistenceDenom,
 		SymbolDenom: PersistenceSymbol,
 		Exponent:    6,
 	}
+
+	DenomAtom = Denom{
+		BaseDenom:   AtomDenom,
+		SymbolDenom: AtomSymbol,
+		Exponent:    6,
+	}
+
+	DenomOsmosis = Denom{
+		BaseDenom:   OsmosisDenom,
+		SymbolDenom: AtomSymbol,
+		Exponent:    6,
+	}
 )
 
-// MockStakingKeeper imlements the StakingKeeper interface.
+// MockStakingKeeper implements the StakingKeeper interface.
 type MockStakingKeeper struct {
 	validators []MockValidator
 }
