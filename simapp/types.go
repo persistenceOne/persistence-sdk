@@ -42,3 +42,5 @@ type App interface {
 	// Helper for the simulation framework.
 	SimulationManager() *module.SimulationManager
 }
+
+const Bech32Prefix = "persistence"

@@ -125,8 +125,7 @@ func (suite *KeeperTestSuite) TestHooksPanicRecovery() {
 			events := func(epochID string, epochNumber int64, dummyEvent func(id string, number int64) sdk.Event) sdk.Events {
 				//nolint:scopelint,testfile
 				evts := make(sdk.Events, tc.lenEvents)
-
-				//nolint:scopelint,testfile
+				//nolint:	scopelint,testfile
 				for i := 0; i < tc.lenEvents; i++ {
 					evts[i] = dummyEvent(epochID, epochNumber)
 				}
@@ -134,16 +133,16 @@ func (suite *KeeperTestSuite) TestHooksPanicRecovery() {
 				return evts
 			}
 
-			suite.NotPanics(func() {
+			suite.Require().NotPanics(func() {
 				//nolint:scopelint,testfile
 				if epochActionSelector == 0 {
 					err := hooks.BeforeEpochStart(suite.Ctx, "id", 0)
-					suite.NoError(err)
+					suite.Require().NoError(err)
 					suite.Require().Equal(events("id", 0, dummyBeforeEpochStartEvent), suite.Ctx.EventManager().Events(),
 						"test case index %d, before epoch event check", tcIndex)
 				} else if epochActionSelector == 1 {
 					err := hooks.AfterEpochEnd(suite.Ctx, "id", 0)
-					suite.NoError(err)
+					suite.Require().NoError(err)
 					suite.Require().Equal(events("id", 0, dummyAfterEpochEndEvent), suite.Ctx.EventManager().Events(),
 						"test case index %d, after epoch event check", tcIndex)
 
