@@ -993,7 +993,7 @@ func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 
 func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error) {
 	out := new(QueryParamsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Query/Params", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/Params", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1002,7 +1002,7 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 
 func (c *queryClient) ValidatorOutstandingRewards(ctx context.Context, in *QueryValidatorOutstandingRewardsRequest, opts ...grpc.CallOption) (*QueryValidatorOutstandingRewardsResponse, error) {
 	out := new(QueryValidatorOutstandingRewardsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Query/ValidatorOutstandingRewards", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/ValidatorOutstandingRewards", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1011,7 +1011,7 @@ func (c *queryClient) ValidatorOutstandingRewards(ctx context.Context, in *Query
 
 func (c *queryClient) ValidatorCommission(ctx context.Context, in *QueryValidatorCommissionRequest, opts ...grpc.CallOption) (*QueryValidatorCommissionResponse, error) {
 	out := new(QueryValidatorCommissionResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Query/ValidatorCommission", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/ValidatorCommission", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1020,7 +1020,7 @@ func (c *queryClient) ValidatorCommission(ctx context.Context, in *QueryValidato
 
 func (c *queryClient) ValidatorSlashes(ctx context.Context, in *QueryValidatorSlashesRequest, opts ...grpc.CallOption) (*QueryValidatorSlashesResponse, error) {
 	out := new(QueryValidatorSlashesResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Query/ValidatorSlashes", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/ValidatorSlashes", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1029,7 +1029,7 @@ func (c *queryClient) ValidatorSlashes(ctx context.Context, in *QueryValidatorSl
 
 func (c *queryClient) DelegationRewards(ctx context.Context, in *types1.QueryDelegationRewardsRequest, opts ...grpc.CallOption) (*types1.QueryDelegationRewardsResponse, error) {
 	out := new(types1.QueryDelegationRewardsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Query/DelegationRewards", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/DelegationRewards", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1038,7 +1038,7 @@ func (c *queryClient) DelegationRewards(ctx context.Context, in *types1.QueryDel
 
 func (c *queryClient) DelegationTotalRewards(ctx context.Context, in *QueryDelegationTotalRewardsRequest, opts ...grpc.CallOption) (*QueryDelegationTotalRewardsResponse, error) {
 	out := new(QueryDelegationTotalRewardsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Query/DelegationTotalRewards", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/DelegationTotalRewards", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1047,7 +1047,7 @@ func (c *queryClient) DelegationTotalRewards(ctx context.Context, in *QueryDeleg
 
 func (c *queryClient) DelegatorValidators(ctx context.Context, in *QueryDelegatorValidatorsRequest, opts ...grpc.CallOption) (*QueryDelegatorValidatorsResponse, error) {
 	out := new(QueryDelegatorValidatorsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Query/DelegatorValidators", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/DelegatorValidators", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1056,7 +1056,7 @@ func (c *queryClient) DelegatorValidators(ctx context.Context, in *QueryDelegato
 
 func (c *queryClient) DelegatorWithdrawAddress(ctx context.Context, in *QueryDelegatorWithdrawAddressRequest, opts ...grpc.CallOption) (*QueryDelegatorWithdrawAddressResponse, error) {
 	out := new(QueryDelegatorWithdrawAddressResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Query/DelegatorWithdrawAddress", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/DelegatorWithdrawAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1065,7 +1065,7 @@ func (c *queryClient) DelegatorWithdrawAddress(ctx context.Context, in *QueryDel
 
 func (c *queryClient) CommunityPool(ctx context.Context, in *QueryCommunityPoolRequest, opts ...grpc.CallOption) (*QueryCommunityPoolResponse, error) {
 	out := new(QueryCommunityPoolResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Query/CommunityPool", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/CommunityPool", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1074,7 +1074,7 @@ func (c *queryClient) CommunityPool(ctx context.Context, in *QueryCommunityPoolR
 
 func (c *queryClient) TokenizeShareRecordReward(ctx context.Context, in *QueryTokenizeShareRecordRewardRequest, opts ...grpc.CallOption) (*QueryTokenizeShareRecordRewardResponse, error) {
 	out := new(QueryTokenizeShareRecordRewardResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Query/TokenizeShareRecordReward", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/TokenizeShareRecordReward", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1155,7 +1155,7 @@ func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Query/Params",
+		FullMethod: "/cosmos.distribution.v1beta1.Query/Params",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Params(ctx, req.(*QueryParamsRequest))
@@ -1173,7 +1173,7 @@ func _Query_ValidatorOutstandingRewards_Handler(srv interface{}, ctx context.Con
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Query/ValidatorOutstandingRewards",
+		FullMethod: "/cosmos.distribution.v1beta1.Query/ValidatorOutstandingRewards",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).ValidatorOutstandingRewards(ctx, req.(*QueryValidatorOutstandingRewardsRequest))
@@ -1191,7 +1191,7 @@ func _Query_ValidatorCommission_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Query/ValidatorCommission",
+		FullMethod: "/cosmos.distribution.v1beta1.Query/ValidatorCommission",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).ValidatorCommission(ctx, req.(*QueryValidatorCommissionRequest))
@@ -1209,7 +1209,7 @@ func _Query_ValidatorSlashes_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Query/ValidatorSlashes",
+		FullMethod: "/cosmos.distribution.v1beta1.Query/ValidatorSlashes",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).ValidatorSlashes(ctx, req.(*QueryValidatorSlashesRequest))
@@ -1227,7 +1227,7 @@ func _Query_DelegationRewards_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Query/DelegationRewards",
+		FullMethod: "/cosmos.distribution.v1beta1.Query/DelegationRewards",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).DelegationRewards(ctx, req.(*types1.QueryDelegationRewardsRequest))
@@ -1245,7 +1245,7 @@ func _Query_DelegationTotalRewards_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Query/DelegationTotalRewards",
+		FullMethod: "/cosmos.distribution.v1beta1.Query/DelegationTotalRewards",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).DelegationTotalRewards(ctx, req.(*QueryDelegationTotalRewardsRequest))
@@ -1263,7 +1263,7 @@ func _Query_DelegatorValidators_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Query/DelegatorValidators",
+		FullMethod: "/cosmos.distribution.v1beta1.Query/DelegatorValidators",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).DelegatorValidators(ctx, req.(*QueryDelegatorValidatorsRequest))
@@ -1281,7 +1281,7 @@ func _Query_DelegatorWithdrawAddress_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Query/DelegatorWithdrawAddress",
+		FullMethod: "/cosmos.distribution.v1beta1.Query/DelegatorWithdrawAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).DelegatorWithdrawAddress(ctx, req.(*QueryDelegatorWithdrawAddressRequest))
@@ -1299,7 +1299,7 @@ func _Query_CommunityPool_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Query/CommunityPool",
+		FullMethod: "/cosmos.distribution.v1beta1.Query/CommunityPool",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).CommunityPool(ctx, req.(*QueryCommunityPoolRequest))
@@ -1317,7 +1317,7 @@ func _Query_TokenizeShareRecordReward_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Query/TokenizeShareRecordReward",
+		FullMethod: "/cosmos.distribution.v1beta1.Query/TokenizeShareRecordReward",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).TokenizeShareRecordReward(ctx, req.(*QueryTokenizeShareRecordRewardRequest))
@@ -1326,7 +1326,7 @@ func _Query_TokenizeShareRecordReward_Handler(srv interface{}, ctx context.Conte
 }
 
 var _Query_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "lsnative.distribution.v1beta1.Query",
+	ServiceName: "cosmos.distribution.v1beta1.Query",
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

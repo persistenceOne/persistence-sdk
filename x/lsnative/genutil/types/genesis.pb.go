@@ -71,7 +71,7 @@ func (m *GenesisState) GetGenTxs() []encoding_json.RawMessage {
 }
 
 func init() {
-	proto.RegisterType((*GenesisState)(nil), "cosmos.genutil.v1beta1.GenesisState")
+	proto.RegisterType((*GenesisState)(nil), "lsnative.genutil.v1beta1.GenesisState")
 }
 
 func init() {

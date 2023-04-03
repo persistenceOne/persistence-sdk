@@ -1197,7 +1197,7 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 
 func (c *msgClient) CreateValidator(ctx context.Context, in *MsgCreateValidator, opts ...grpc.CallOption) (*MsgCreateValidatorResponse, error) {
 	out := new(MsgCreateValidatorResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Msg/CreateValidator", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/CreateValidator", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1206,7 +1206,7 @@ func (c *msgClient) CreateValidator(ctx context.Context, in *MsgCreateValidator,
 
 func (c *msgClient) EditValidator(ctx context.Context, in *MsgEditValidator, opts ...grpc.CallOption) (*MsgEditValidatorResponse, error) {
 	out := new(MsgEditValidatorResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Msg/EditValidator", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/EditValidator", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1215,7 +1215,7 @@ func (c *msgClient) EditValidator(ctx context.Context, in *MsgEditValidator, opt
 
 func (c *msgClient) Delegate(ctx context.Context, in *MsgDelegate, opts ...grpc.CallOption) (*MsgDelegateResponse, error) {
 	out := new(MsgDelegateResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Msg/Delegate", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/Delegate", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1224,7 +1224,7 @@ func (c *msgClient) Delegate(ctx context.Context, in *MsgDelegate, opts ...grpc.
 
 func (c *msgClient) BeginRedelegate(ctx context.Context, in *MsgBeginRedelegate, opts ...grpc.CallOption) (*MsgBeginRedelegateResponse, error) {
 	out := new(MsgBeginRedelegateResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Msg/BeginRedelegate", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/BeginRedelegate", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1233,7 +1233,7 @@ func (c *msgClient) BeginRedelegate(ctx context.Context, in *MsgBeginRedelegate,
 
 func (c *msgClient) Undelegate(ctx context.Context, in *MsgUndelegate, opts ...grpc.CallOption) (*MsgUndelegateResponse, error) {
 	out := new(MsgUndelegateResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Msg/Undelegate", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/Undelegate", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1242,7 +1242,7 @@ func (c *msgClient) Undelegate(ctx context.Context, in *MsgUndelegate, opts ...g
 
 func (c *msgClient) CancelUnbondingDelegation(ctx context.Context, in *MsgCancelUnbondingDelegation, opts ...grpc.CallOption) (*MsgCancelUnbondingDelegationResponse, error) {
 	out := new(MsgCancelUnbondingDelegationResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Msg/CancelUnbondingDelegation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/CancelUnbondingDelegation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1251,7 +1251,7 @@ func (c *msgClient) CancelUnbondingDelegation(ctx context.Context, in *MsgCancel
 
 func (c *msgClient) UnbondValidator(ctx context.Context, in *MsgUnbondValidator, opts ...grpc.CallOption) (*MsgUnbondValidatorResponse, error) {
 	out := new(MsgUnbondValidatorResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Msg/UnbondValidator", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/UnbondValidator", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1260,7 +1260,7 @@ func (c *msgClient) UnbondValidator(ctx context.Context, in *MsgUnbondValidator,
 
 func (c *msgClient) TokenizeShares(ctx context.Context, in *MsgTokenizeShares, opts ...grpc.CallOption) (*MsgTokenizeSharesResponse, error) {
 	out := new(MsgTokenizeSharesResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Msg/TokenizeShares", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/TokenizeShares", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1269,7 +1269,7 @@ func (c *msgClient) TokenizeShares(ctx context.Context, in *MsgTokenizeShares, o
 
 func (c *msgClient) RedeemTokens(ctx context.Context, in *MsgRedeemTokensforShares, opts ...grpc.CallOption) (*MsgRedeemTokensforSharesResponse, error) {
 	out := new(MsgRedeemTokensforSharesResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Msg/RedeemTokens", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/RedeemTokens", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1278,7 +1278,7 @@ func (c *msgClient) RedeemTokens(ctx context.Context, in *MsgRedeemTokensforShar
 
 func (c *msgClient) TransferTokenizeShareRecord(ctx context.Context, in *MsgTransferTokenizeShareRecord, opts ...grpc.CallOption) (*MsgTransferTokenizeShareRecordResponse, error) {
 	out := new(MsgTransferTokenizeShareRecordResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Msg/TransferTokenizeShareRecord", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/TransferTokenizeShareRecord", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1287,7 +1287,7 @@ func (c *msgClient) TransferTokenizeShareRecord(ctx context.Context, in *MsgTran
 
 func (c *msgClient) ExemptDelegation(ctx context.Context, in *MsgExemptDelegation, opts ...grpc.CallOption) (*MsgExemptDelegationResponse, error) {
 	out := new(MsgExemptDelegationResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Msg/ExemptDelegation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/ExemptDelegation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1382,7 +1382,7 @@ func _Msg_CreateValidator_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Msg/CreateValidator",
+		FullMethod: "/cosmos.staking.v1beta1.Msg/CreateValidator",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).CreateValidator(ctx, req.(*MsgCreateValidator))
@@ -1400,7 +1400,7 @@ func _Msg_EditValidator_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Msg/EditValidator",
+		FullMethod: "/cosmos.staking.v1beta1.Msg/EditValidator",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).EditValidator(ctx, req.(*MsgEditValidator))
@@ -1418,7 +1418,7 @@ func _Msg_Delegate_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Msg/Delegate",
+		FullMethod: "/cosmos.staking.v1beta1.Msg/Delegate",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).Delegate(ctx, req.(*MsgDelegate))
@@ -1436,7 +1436,7 @@ func _Msg_BeginRedelegate_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Msg/BeginRedelegate",
+		FullMethod: "/cosmos.staking.v1beta1.Msg/BeginRedelegate",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).BeginRedelegate(ctx, req.(*MsgBeginRedelegate))
@@ -1454,7 +1454,7 @@ func _Msg_Undelegate_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Msg/Undelegate",
+		FullMethod: "/cosmos.staking.v1beta1.Msg/Undelegate",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).Undelegate(ctx, req.(*MsgUndelegate))
@@ -1472,7 +1472,7 @@ func _Msg_CancelUnbondingDelegation_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Msg/CancelUnbondingDelegation",
+		FullMethod: "/cosmos.staking.v1beta1.Msg/CancelUnbondingDelegation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).CancelUnbondingDelegation(ctx, req.(*MsgCancelUnbondingDelegation))
@@ -1490,7 +1490,7 @@ func _Msg_UnbondValidator_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Msg/UnbondValidator",
+		FullMethod: "/cosmos.staking.v1beta1.Msg/UnbondValidator",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).UnbondValidator(ctx, req.(*MsgUnbondValidator))
@@ -1508,7 +1508,7 @@ func _Msg_TokenizeShares_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Msg/TokenizeShares",
+		FullMethod: "/cosmos.staking.v1beta1.Msg/TokenizeShares",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).TokenizeShares(ctx, req.(*MsgTokenizeShares))
@@ -1526,7 +1526,7 @@ func _Msg_RedeemTokens_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Msg/RedeemTokens",
+		FullMethod: "/cosmos.staking.v1beta1.Msg/RedeemTokens",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).RedeemTokens(ctx, req.(*MsgRedeemTokensforShares))
@@ -1544,7 +1544,7 @@ func _Msg_TransferTokenizeShareRecord_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Msg/TransferTokenizeShareRecord",
+		FullMethod: "/cosmos.staking.v1beta1.Msg/TransferTokenizeShareRecord",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).TransferTokenizeShareRecord(ctx, req.(*MsgTransferTokenizeShareRecord))
@@ -1562,7 +1562,7 @@ func _Msg_ExemptDelegation_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Msg/ExemptDelegation",
+		FullMethod: "/cosmos.staking.v1beta1.Msg/ExemptDelegation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).ExemptDelegation(ctx, req.(*MsgExemptDelegation))
@@ -1571,7 +1571,7 @@ func _Msg_ExemptDelegation_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 var _Msg_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "lsnative.staking.v1beta1.Msg",
+	ServiceName: "cosmos.staking.v1beta1.Msg",
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

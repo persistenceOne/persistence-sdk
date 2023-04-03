@@ -767,7 +767,7 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 
 func (c *msgClient) SetWithdrawAddress(ctx context.Context, in *MsgSetWithdrawAddress, opts ...grpc.CallOption) (*MsgSetWithdrawAddressResponse, error) {
 	out := new(MsgSetWithdrawAddressResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Msg/SetWithdrawAddress", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Msg/SetWithdrawAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -776,7 +776,7 @@ func (c *msgClient) SetWithdrawAddress(ctx context.Context, in *MsgSetWithdrawAd
 
 func (c *msgClient) WithdrawDelegatorReward(ctx context.Context, in *MsgWithdrawDelegatorReward, opts ...grpc.CallOption) (*MsgWithdrawDelegatorRewardResponse, error) {
 	out := new(MsgWithdrawDelegatorRewardResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Msg/WithdrawDelegatorReward", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Msg/WithdrawDelegatorReward", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -785,7 +785,7 @@ func (c *msgClient) WithdrawDelegatorReward(ctx context.Context, in *MsgWithdraw
 
 func (c *msgClient) WithdrawValidatorCommission(ctx context.Context, in *MsgWithdrawValidatorCommission, opts ...grpc.CallOption) (*MsgWithdrawValidatorCommissionResponse, error) {
 	out := new(MsgWithdrawValidatorCommissionResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Msg/WithdrawValidatorCommission", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Msg/WithdrawValidatorCommission", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -794,7 +794,7 @@ func (c *msgClient) WithdrawValidatorCommission(ctx context.Context, in *MsgWith
 
 func (c *msgClient) FundCommunityPool(ctx context.Context, in *MsgFundCommunityPool, opts ...grpc.CallOption) (*MsgFundCommunityPoolResponse, error) {
 	out := new(MsgFundCommunityPoolResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Msg/FundCommunityPool", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Msg/FundCommunityPool", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -803,7 +803,7 @@ func (c *msgClient) FundCommunityPool(ctx context.Context, in *MsgFundCommunityP
 
 func (c *msgClient) WithdrawTokenizeShareRecordReward(ctx context.Context, in *MsgWithdrawTokenizeShareRecordReward, opts ...grpc.CallOption) (*MsgWithdrawTokenizeShareRecordRewardResponse, error) {
 	out := new(MsgWithdrawTokenizeShareRecordRewardResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Msg/WithdrawTokenizeShareRecordReward", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Msg/WithdrawTokenizeShareRecordReward", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -812,7 +812,7 @@ func (c *msgClient) WithdrawTokenizeShareRecordReward(ctx context.Context, in *M
 
 func (c *msgClient) WithdrawAllTokenizeShareRecordReward(ctx context.Context, in *MsgWithdrawAllTokenizeShareRecordReward, opts ...grpc.CallOption) (*MsgWithdrawAllTokenizeShareRecordRewardResponse, error) {
 	out := new(MsgWithdrawAllTokenizeShareRecordRewardResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.distribution.v1beta1.Msg/WithdrawAllTokenizeShareRecordReward", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Msg/WithdrawAllTokenizeShareRecordReward", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -876,7 +876,7 @@ func _Msg_SetWithdrawAddress_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Msg/SetWithdrawAddress",
+		FullMethod: "/cosmos.distribution.v1beta1.Msg/SetWithdrawAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).SetWithdrawAddress(ctx, req.(*MsgSetWithdrawAddress))
@@ -894,7 +894,7 @@ func _Msg_WithdrawDelegatorReward_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Msg/WithdrawDelegatorReward",
+		FullMethod: "/cosmos.distribution.v1beta1.Msg/WithdrawDelegatorReward",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).WithdrawDelegatorReward(ctx, req.(*MsgWithdrawDelegatorReward))
@@ -912,7 +912,7 @@ func _Msg_WithdrawValidatorCommission_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Msg/WithdrawValidatorCommission",
+		FullMethod: "/cosmos.distribution.v1beta1.Msg/WithdrawValidatorCommission",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).WithdrawValidatorCommission(ctx, req.(*MsgWithdrawValidatorCommission))
@@ -930,7 +930,7 @@ func _Msg_FundCommunityPool_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Msg/FundCommunityPool",
+		FullMethod: "/cosmos.distribution.v1beta1.Msg/FundCommunityPool",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).FundCommunityPool(ctx, req.(*MsgFundCommunityPool))
@@ -948,7 +948,7 @@ func _Msg_WithdrawTokenizeShareRecordReward_Handler(srv interface{}, ctx context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Msg/WithdrawTokenizeShareRecordReward",
+		FullMethod: "/cosmos.distribution.v1beta1.Msg/WithdrawTokenizeShareRecordReward",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).WithdrawTokenizeShareRecordReward(ctx, req.(*MsgWithdrawTokenizeShareRecordReward))
@@ -966,7 +966,7 @@ func _Msg_WithdrawAllTokenizeShareRecordReward_Handler(srv interface{}, ctx cont
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.distribution.v1beta1.Msg/WithdrawAllTokenizeShareRecordReward",
+		FullMethod: "/cosmos.distribution.v1beta1.Msg/WithdrawAllTokenizeShareRecordReward",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).WithdrawAllTokenizeShareRecordReward(ctx, req.(*MsgWithdrawAllTokenizeShareRecordReward))
@@ -975,7 +975,7 @@ func _Msg_WithdrawAllTokenizeShareRecordReward_Handler(srv interface{}, ctx cont
 }
 
 var _Msg_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "lsnative.distribution.v1beta1.Msg",
+	ServiceName: "cosmos.distribution.v1beta1.Msg",
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

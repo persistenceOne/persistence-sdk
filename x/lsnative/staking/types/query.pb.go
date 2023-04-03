@@ -2128,7 +2128,7 @@ func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 
 func (c *queryClient) Validators(ctx context.Context, in *QueryValidatorsRequest, opts ...grpc.CallOption) (*QueryValidatorsResponse, error) {
 	out := new(QueryValidatorsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/Validators", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/Validators", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2137,7 +2137,7 @@ func (c *queryClient) Validators(ctx context.Context, in *QueryValidatorsRequest
 
 func (c *queryClient) Validator(ctx context.Context, in *QueryValidatorRequest, opts ...grpc.CallOption) (*QueryValidatorResponse, error) {
 	out := new(QueryValidatorResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/Validator", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/Validator", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2146,7 +2146,7 @@ func (c *queryClient) Validator(ctx context.Context, in *QueryValidatorRequest, 
 
 func (c *queryClient) ValidatorDelegations(ctx context.Context, in *QueryValidatorDelegationsRequest, opts ...grpc.CallOption) (*QueryValidatorDelegationsResponse, error) {
 	out := new(QueryValidatorDelegationsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/ValidatorDelegations", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/ValidatorDelegations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2155,7 +2155,7 @@ func (c *queryClient) ValidatorDelegations(ctx context.Context, in *QueryValidat
 
 func (c *queryClient) ValidatorUnbondingDelegations(ctx context.Context, in *QueryValidatorUnbondingDelegationsRequest, opts ...grpc.CallOption) (*QueryValidatorUnbondingDelegationsResponse, error) {
 	out := new(QueryValidatorUnbondingDelegationsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/ValidatorUnbondingDelegations", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/ValidatorUnbondingDelegations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2164,7 +2164,7 @@ func (c *queryClient) ValidatorUnbondingDelegations(ctx context.Context, in *Que
 
 func (c *queryClient) Delegation(ctx context.Context, in *QueryDelegationRequest, opts ...grpc.CallOption) (*QueryDelegationResponse, error) {
 	out := new(QueryDelegationResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/Delegation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/Delegation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2173,7 +2173,7 @@ func (c *queryClient) Delegation(ctx context.Context, in *QueryDelegationRequest
 
 func (c *queryClient) UnbondingDelegation(ctx context.Context, in *QueryUnbondingDelegationRequest, opts ...grpc.CallOption) (*QueryUnbondingDelegationResponse, error) {
 	out := new(QueryUnbondingDelegationResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/UnbondingDelegation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/UnbondingDelegation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2182,7 +2182,7 @@ func (c *queryClient) UnbondingDelegation(ctx context.Context, in *QueryUnbondin
 
 func (c *queryClient) DelegatorDelegations(ctx context.Context, in *QueryDelegatorDelegationsRequest, opts ...grpc.CallOption) (*QueryDelegatorDelegationsResponse, error) {
 	out := new(QueryDelegatorDelegationsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/DelegatorDelegations", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/DelegatorDelegations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2191,7 +2191,7 @@ func (c *queryClient) DelegatorDelegations(ctx context.Context, in *QueryDelegat
 
 func (c *queryClient) DelegatorUnbondingDelegations(ctx context.Context, in *QueryDelegatorUnbondingDelegationsRequest, opts ...grpc.CallOption) (*QueryDelegatorUnbondingDelegationsResponse, error) {
 	out := new(QueryDelegatorUnbondingDelegationsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/DelegatorUnbondingDelegations", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/DelegatorUnbondingDelegations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2200,7 +2200,7 @@ func (c *queryClient) DelegatorUnbondingDelegations(ctx context.Context, in *Que
 
 func (c *queryClient) Redelegations(ctx context.Context, in *QueryRedelegationsRequest, opts ...grpc.CallOption) (*QueryRedelegationsResponse, error) {
 	out := new(QueryRedelegationsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/Redelegations", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/Redelegations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2209,7 +2209,7 @@ func (c *queryClient) Redelegations(ctx context.Context, in *QueryRedelegationsR
 
 func (c *queryClient) DelegatorValidators(ctx context.Context, in *QueryDelegatorValidatorsRequest, opts ...grpc.CallOption) (*QueryDelegatorValidatorsResponse, error) {
 	out := new(QueryDelegatorValidatorsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/DelegatorValidators", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/DelegatorValidators", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2218,7 +2218,7 @@ func (c *queryClient) DelegatorValidators(ctx context.Context, in *QueryDelegato
 
 func (c *queryClient) DelegatorValidator(ctx context.Context, in *QueryDelegatorValidatorRequest, opts ...grpc.CallOption) (*QueryDelegatorValidatorResponse, error) {
 	out := new(QueryDelegatorValidatorResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/DelegatorValidator", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/DelegatorValidator", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2227,7 +2227,7 @@ func (c *queryClient) DelegatorValidator(ctx context.Context, in *QueryDelegator
 
 func (c *queryClient) HistoricalInfo(ctx context.Context, in *QueryHistoricalInfoRequest, opts ...grpc.CallOption) (*QueryHistoricalInfoResponse, error) {
 	out := new(QueryHistoricalInfoResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/HistoricalInfo", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/HistoricalInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2236,7 +2236,7 @@ func (c *queryClient) HistoricalInfo(ctx context.Context, in *QueryHistoricalInf
 
 func (c *queryClient) Pool(ctx context.Context, in *QueryPoolRequest, opts ...grpc.CallOption) (*QueryPoolResponse, error) {
 	out := new(QueryPoolResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/Pool", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/Pool", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2245,7 +2245,7 @@ func (c *queryClient) Pool(ctx context.Context, in *QueryPoolRequest, opts ...gr
 
 func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error) {
 	out := new(QueryParamsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/Params", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/Params", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2254,7 +2254,7 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 
 func (c *queryClient) TokenizeShareRecordById(ctx context.Context, in *QueryTokenizeShareRecordByIdRequest, opts ...grpc.CallOption) (*QueryTokenizeShareRecordByIdResponse, error) {
 	out := new(QueryTokenizeShareRecordByIdResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/TokenizeShareRecordById", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/TokenizeShareRecordById", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2263,7 +2263,7 @@ func (c *queryClient) TokenizeShareRecordById(ctx context.Context, in *QueryToke
 
 func (c *queryClient) TokenizeShareRecordByDenom(ctx context.Context, in *QueryTokenizeShareRecordByDenomRequest, opts ...grpc.CallOption) (*QueryTokenizeShareRecordByDenomResponse, error) {
 	out := new(QueryTokenizeShareRecordByDenomResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/TokenizeShareRecordByDenom", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/TokenizeShareRecordByDenom", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2272,7 +2272,7 @@ func (c *queryClient) TokenizeShareRecordByDenom(ctx context.Context, in *QueryT
 
 func (c *queryClient) TokenizeShareRecordsOwned(ctx context.Context, in *QueryTokenizeShareRecordsOwnedRequest, opts ...grpc.CallOption) (*QueryTokenizeShareRecordsOwnedResponse, error) {
 	out := new(QueryTokenizeShareRecordsOwnedResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/TokenizeShareRecordsOwned", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/TokenizeShareRecordsOwned", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2281,7 +2281,7 @@ func (c *queryClient) TokenizeShareRecordsOwned(ctx context.Context, in *QueryTo
 
 func (c *queryClient) AllTokenizeShareRecords(ctx context.Context, in *QueryAllTokenizeShareRecordsRequest, opts ...grpc.CallOption) (*QueryAllTokenizeShareRecordsResponse, error) {
 	out := new(QueryAllTokenizeShareRecordsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/AllTokenizeShareRecords", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/AllTokenizeShareRecords", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2290,7 +2290,7 @@ func (c *queryClient) AllTokenizeShareRecords(ctx context.Context, in *QueryAllT
 
 func (c *queryClient) LastTokenizeShareRecordId(ctx context.Context, in *QueryLastTokenizeShareRecordIdRequest, opts ...grpc.CallOption) (*QueryLastTokenizeShareRecordIdResponse, error) {
 	out := new(QueryLastTokenizeShareRecordIdResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/LastTokenizeShareRecordId", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/LastTokenizeShareRecordId", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2299,7 +2299,7 @@ func (c *queryClient) LastTokenizeShareRecordId(ctx context.Context, in *QueryLa
 
 func (c *queryClient) TotalTokenizeSharedAssets(ctx context.Context, in *QueryTotalTokenizeSharedAssetsRequest, opts ...grpc.CallOption) (*QueryTotalTokenizeSharedAssetsResponse, error) {
 	out := new(QueryTotalTokenizeSharedAssetsResponse)
-	err := c.cc.Invoke(ctx, "/lsnative.staking.v1beta1.Query/TotalTokenizeSharedAssets", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/TotalTokenizeSharedAssets", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2433,7 +2433,7 @@ func _Query_Validators_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/Validators",
+		FullMethod: "/cosmos.staking.v1beta1.Query/Validators",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Validators(ctx, req.(*QueryValidatorsRequest))
@@ -2451,7 +2451,7 @@ func _Query_Validator_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/Validator",
+		FullMethod: "/cosmos.staking.v1beta1.Query/Validator",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Validator(ctx, req.(*QueryValidatorRequest))
@@ -2469,7 +2469,7 @@ func _Query_ValidatorDelegations_Handler(srv interface{}, ctx context.Context, d
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/ValidatorDelegations",
+		FullMethod: "/cosmos.staking.v1beta1.Query/ValidatorDelegations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).ValidatorDelegations(ctx, req.(*QueryValidatorDelegationsRequest))
@@ -2487,7 +2487,7 @@ func _Query_ValidatorUnbondingDelegations_Handler(srv interface{}, ctx context.C
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/ValidatorUnbondingDelegations",
+		FullMethod: "/cosmos.staking.v1beta1.Query/ValidatorUnbondingDelegations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).ValidatorUnbondingDelegations(ctx, req.(*QueryValidatorUnbondingDelegationsRequest))
@@ -2505,7 +2505,7 @@ func _Query_Delegation_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/Delegation",
+		FullMethod: "/cosmos.staking.v1beta1.Query/Delegation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Delegation(ctx, req.(*QueryDelegationRequest))
@@ -2523,7 +2523,7 @@ func _Query_UnbondingDelegation_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/UnbondingDelegation",
+		FullMethod: "/cosmos.staking.v1beta1.Query/UnbondingDelegation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).UnbondingDelegation(ctx, req.(*QueryUnbondingDelegationRequest))
@@ -2541,7 +2541,7 @@ func _Query_DelegatorDelegations_Handler(srv interface{}, ctx context.Context, d
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/DelegatorDelegations",
+		FullMethod: "/cosmos.staking.v1beta1.Query/DelegatorDelegations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).DelegatorDelegations(ctx, req.(*QueryDelegatorDelegationsRequest))
@@ -2559,7 +2559,7 @@ func _Query_DelegatorUnbondingDelegations_Handler(srv interface{}, ctx context.C
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/DelegatorUnbondingDelegations",
+		FullMethod: "/cosmos.staking.v1beta1.Query/DelegatorUnbondingDelegations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).DelegatorUnbondingDelegations(ctx, req.(*QueryDelegatorUnbondingDelegationsRequest))
@@ -2577,7 +2577,7 @@ func _Query_Redelegations_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/Redelegations",
+		FullMethod: "/cosmos.staking.v1beta1.Query/Redelegations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Redelegations(ctx, req.(*QueryRedelegationsRequest))
@@ -2595,7 +2595,7 @@ func _Query_DelegatorValidators_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/DelegatorValidators",
+		FullMethod: "/cosmos.staking.v1beta1.Query/DelegatorValidators",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).DelegatorValidators(ctx, req.(*QueryDelegatorValidatorsRequest))
@@ -2613,7 +2613,7 @@ func _Query_DelegatorValidator_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/DelegatorValidator",
+		FullMethod: "/cosmos.staking.v1beta1.Query/DelegatorValidator",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).DelegatorValidator(ctx, req.(*QueryDelegatorValidatorRequest))
@@ -2631,7 +2631,7 @@ func _Query_HistoricalInfo_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/HistoricalInfo",
+		FullMethod: "/cosmos.staking.v1beta1.Query/HistoricalInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).HistoricalInfo(ctx, req.(*QueryHistoricalInfoRequest))
@@ -2649,7 +2649,7 @@ func _Query_Pool_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/Pool",
+		FullMethod: "/cosmos.staking.v1beta1.Query/Pool",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Pool(ctx, req.(*QueryPoolRequest))
@@ -2667,7 +2667,7 @@ func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/Params",
+		FullMethod: "/cosmos.staking.v1beta1.Query/Params",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Params(ctx, req.(*QueryParamsRequest))
@@ -2685,7 +2685,7 @@ func _Query_TokenizeShareRecordById_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/TokenizeShareRecordById",
+		FullMethod: "/cosmos.staking.v1beta1.Query/TokenizeShareRecordById",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).TokenizeShareRecordById(ctx, req.(*QueryTokenizeShareRecordByIdRequest))
@@ -2703,7 +2703,7 @@ func _Query_TokenizeShareRecordByDenom_Handler(srv interface{}, ctx context.Cont
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/TokenizeShareRecordByDenom",
+		FullMethod: "/cosmos.staking.v1beta1.Query/TokenizeShareRecordByDenom",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).TokenizeShareRecordByDenom(ctx, req.(*QueryTokenizeShareRecordByDenomRequest))
@@ -2721,7 +2721,7 @@ func _Query_TokenizeShareRecordsOwned_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/TokenizeShareRecordsOwned",
+		FullMethod: "/cosmos.staking.v1beta1.Query/TokenizeShareRecordsOwned",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).TokenizeShareRecordsOwned(ctx, req.(*QueryTokenizeShareRecordsOwnedRequest))
@@ -2739,7 +2739,7 @@ func _Query_AllTokenizeShareRecords_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/AllTokenizeShareRecords",
+		FullMethod: "/cosmos.staking.v1beta1.Query/AllTokenizeShareRecords",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).AllTokenizeShareRecords(ctx, req.(*QueryAllTokenizeShareRecordsRequest))
@@ -2757,7 +2757,7 @@ func _Query_LastTokenizeShareRecordId_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/LastTokenizeShareRecordId",
+		FullMethod: "/cosmos.staking.v1beta1.Query/LastTokenizeShareRecordId",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).LastTokenizeShareRecordId(ctx, req.(*QueryLastTokenizeShareRecordIdRequest))
@@ -2775,7 +2775,7 @@ func _Query_TotalTokenizeSharedAssets_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/lsnative.staking.v1beta1.Query/TotalTokenizeSharedAssets",
+		FullMethod: "/cosmos.staking.v1beta1.Query/TotalTokenizeSharedAssets",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).TotalTokenizeSharedAssets(ctx, req.(*QueryTotalTokenizeSharedAssetsRequest))
@@ -2784,7 +2784,7 @@ func _Query_TotalTokenizeSharedAssets_Handler(srv interface{}, ctx context.Conte
 }
 
 var _Query_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "lsnative.staking.v1beta1.Query",
+	ServiceName: "cosmos.staking.v1beta1.Query",
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
