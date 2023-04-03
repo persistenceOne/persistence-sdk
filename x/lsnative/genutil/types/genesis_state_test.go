@@ -76,7 +76,7 @@ func TestValidateGenesisBadMessage(t *testing.T) {
 func TestGenesisStateFromGenFile(t *testing.T) {
 	cdc := codec.NewLegacyAmino()
 
-	genFile := "../../../tests/fixtures/adr-024-coin-metadata_genesis.json"
+	genFile := "../../../../tests/fixtures/adr-024-coin-metadata_genesis.json"
 	genesisState, _, err := types.GenesisStateFromGenFile(genFile)
 	require.NoError(t, err)
 
