@@ -1,9 +1,10 @@
-Isrun:
+run:
   tests: false
   skip-files:
     - schema/applications/base/application.go
     - utilities/cuckoo/filter.go
-    -
+  skip-dirs:
+    - x/lsnative
 linters:
   disable-all: false
   enable:
