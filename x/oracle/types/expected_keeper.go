@@ -1,6 +1,7 @@
 package types
 
 import (
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -12,12 +13,12 @@ import (
 type StakingKeeper interface {
 	Validator(ctx sdk.Context, address sdk.ValAddress) stakingtypes.ValidatorI
 	GetBondedValidatorsByPower(ctx sdk.Context) []stakingtypes.Validator
-	TotalBondedTokens(sdk.Context) sdk.Int
-	Slash(sdk.Context, sdk.ConsAddress, int64, int64, sdk.Dec)
+	TotalBondedTokens(sdk.Context) math.Int
+	Slash(sdk.Context, sdk.ConsAddress, int64, int64, sdk.Dec) math.Int
 	Jail(sdk.Context, sdk.ConsAddress)
 	ValidatorsPowerStoreIterator(ctx sdk.Context) sdk.Iterator
 	MaxValidators(sdk.Context) uint32
-	PowerReduction(ctx sdk.Context) (res sdk.Int)
+	PowerReduction(ctx sdk.Context) (res math.Int)
 }
 
 // DistributionKeeper defines the expected interface contract defined by the

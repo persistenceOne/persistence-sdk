@@ -1,6 +1,7 @@
 package testutil
 
 import (
+	"cosmossdk.io/math"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -54,7 +55,7 @@ func StakingAddValidators(
 ) {
 	accAddresses := make([]sdk.AccAddress, num)
 	valAddresses := make([]sdk.ValAddress, num)
-	stakingHandler := staking.NewHandler(stakingKeeper)
+	stakingMsgServer := stakingkeeper.NewMsgServerImpl(stakingKeeper)
 
 	valPubKeys := simapp.CreateTestPubKeys(num)
 
@@ -77,7 +78,7 @@ func StakingAddValidators(
 			return nil, nil, err
 		}
 
-		if _, err := stakingHandler(ctx, createValidatorMsg); err != nil {
+		if _, err := stakingMsgServer.CreateValidator(ctx, createValidatorMsg); err != nil {
 			return nil, nil, err
 		}
 
@@ -91,7 +92,7 @@ func StakingAddValidators(
 	return accAddresses, valAddresses, nil
 }
 
-func newTestMsgCreateValidator(address sdk.ValAddress, pubKey cryptotypes.PubKey, amt sdk.Int) (*stakingtypes.MsgCreateValidator, error) {
+func newTestMsgCreateValidator(address sdk.ValAddress, pubKey cryptotypes.PubKey, amt math.Int) (*stakingtypes.MsgCreateValidator, error) {
 	commission := stakingtypes.NewCommissionRates(sdk.ZeroDec(), sdk.ZeroDec(), sdk.ZeroDec())
 
 	msg, err := stakingtypes.NewMsgCreateValidator(
