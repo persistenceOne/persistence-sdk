@@ -14,7 +14,7 @@ var (
 )
 
 func (s *KeeperTestSuite) TestOracleExportGenesis() {
-	app := simapp.Setup(false)
+	app := simapp.Setup(s.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	genesisState := oracle.ExportGenesis(ctx, app.OracleKeeper)

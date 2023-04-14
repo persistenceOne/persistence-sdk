@@ -61,7 +61,7 @@ func (s *KeeperTestSuite) SetupTest() {
 }
 
 func (s *KeeperTestSuite) initAppAndContext() (app *persistenceapp.SimApp, ctx sdk.Context) {
-	app = persistenceapp.Setup(false)
+	app = persistenceapp.Setup(s.T(), false)
 	ctx = app.BaseApp.NewContext(false, tmproto.Header{
 		Height: initialHeight,
 		Time:   tmtime.Now(),
