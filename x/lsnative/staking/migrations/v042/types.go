@@ -10,7 +10,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	v042auth "github.com/cosmos/cosmos-sdk/x/auth/migrations/v042"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 // Staking params default values
