@@ -10,10 +10,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	v042staking "github.com/cosmos/cosmos-sdk/x/staking/migrations/v042"
-	v043staking "github.com/cosmos/cosmos-sdk/x/staking/migrations/v043"
-	"github.com/cosmos/cosmos-sdk/x/staking/teststaking"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+
+	v042staking "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/migrations/v042"
+	v043staking "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/migrations/v043"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/teststaking"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 func TestStoreMigration(t *testing.T) {
@@ -67,7 +68,7 @@ func TestStoreMigration(t *testing.T) {
 		{
 			"DelegationKey",
 			v042staking.GetDelegationKey(addr4, valAddr1),
-			types.GetDelegationKey(addr4, valAddr1),
+			types.GetLiquidDelegationKey(addr4, valAddr1),
 		},
 		{
 			"UnbondingDelegationKey",

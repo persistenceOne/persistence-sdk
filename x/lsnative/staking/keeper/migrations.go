@@ -2,8 +2,8 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	v043 "github.com/cosmos/cosmos-sdk/x/staking/migrations/v043"
 
+	v043 "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/migrations/v043"
 	v046 "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/migrations/v046"
 )
 

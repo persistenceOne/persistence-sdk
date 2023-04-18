@@ -14,9 +14,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
-	v043 "github.com/cosmos/cosmos-sdk/x/genutil/migrations/v043"
-	v046 "github.com/cosmos/cosmos-sdk/x/genutil/migrations/v046"
-	"github.com/cosmos/cosmos-sdk/x/genutil/types"
+
+	v043 "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/migrations/v043"
+	v046 "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/migrations/v046"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/types"
 )
 
 const flagGenesisTime = "genesis-time"
