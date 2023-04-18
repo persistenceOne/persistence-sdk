@@ -12,7 +12,7 @@ import (
 // MigrateStore performs in-place store migrations from v0.43/v0.44/v0.45 to v0.46.
 // The migration includes:
 //
-// - Setting the MinCommissionRate param in the paramstore
+// - Setting the MinCommissionRate & ExemptionFactor params in the paramstore
 func MigrateStore(ctx sdk.Context, storeKey storetypes.StoreKey, cdc codec.BinaryCodec, paramstore paramtypes.Subspace) error {
 	migrateParamsStore(ctx, paramstore)
 
