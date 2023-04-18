@@ -8,8 +8,9 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/simapp"
-	v046 "github.com/cosmos/cosmos-sdk/x/staking/migrations/v046"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+
+	v046 "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/migrations/v046"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 func TestMigrateJSON(t *testing.T) {
@@ -34,14 +35,16 @@ func TestMigrateJSON(t *testing.T) {
 	indentedBz, err := json.MarshalIndent(jsonObj, "", "\t")
 	require.NoError(t, err)
 
-	// Make sure about new param MinCommissionRate.
+	// Make sure about new params MinCommissionRate & ExemptionFactor.
 	expected := `{
 	"delegations": [],
 	"exported": false,
+	"last_tokenize_share_record_id": "0",
 	"last_total_power": "0",
 	"last_validator_powers": [],
 	"params": {
 		"bond_denom": "stake",
+		"exemption_factor": "-1.000000000000000000",
 		"historical_entries": 10000,
 		"max_entries": 7,
 		"max_validators": 100,
@@ -49,6 +52,7 @@ func TestMigrateJSON(t *testing.T) {
 		"unbonding_time": "1814400s"
 	},
 	"redelegations": [],
+	"tokenize_share_records": [],
 	"unbonding_delegations": [],
 	"validators": []
 }`

@@ -9,8 +9,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	v046staking "github.com/cosmos/cosmos-sdk/x/staking/migrations/v046"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+
+	v046staking "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/migrations/v046"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 func TestStoreMigration(t *testing.T) {

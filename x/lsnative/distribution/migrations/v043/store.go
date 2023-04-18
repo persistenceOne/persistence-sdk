@@ -3,7 +3,8 @@ package v043
 import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	v042distribution "github.com/cosmos/cosmos-sdk/x/distribution/migrations/v042"
+
+	v042distribution "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/migrations/v042"
 )
 
 // MigrateStore performs in-place store migrations from v0.40 to v0.43. The
