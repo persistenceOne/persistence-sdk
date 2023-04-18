@@ -5,7 +5,8 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 // MigrateStore performs in-place store migrations from v0.43/v0.44/v0.45 to v0.46.
@@ -21,8 +22,10 @@ func MigrateStore(ctx sdk.Context, storeKey storetypes.StoreKey, cdc codec.Binar
 func migrateParamsStore(ctx sdk.Context, paramstore paramtypes.Subspace) {
 	if paramstore.HasKeyTable() {
 		paramstore.Set(ctx, types.KeyMinCommissionRate, types.DefaultMinCommissionRate)
+		paramstore.Set(ctx, types.KeyExemptionFactor, types.DefaultExemptionFactor)
 	} else {
 		paramstore.WithKeyTable(types.ParamKeyTable())
 		paramstore.Set(ctx, types.KeyMinCommissionRate, types.DefaultMinCommissionRate)
+		paramstore.Set(ctx, types.KeyExemptionFactor, types.DefaultExemptionFactor)
 	}
 }
