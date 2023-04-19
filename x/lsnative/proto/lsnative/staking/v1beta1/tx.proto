@@ -56,9 +56,8 @@ service Msg {
   rpc TransferTokenizeShareRecord(MsgTransferTokenizeShareRecord)
       returns (MsgTransferTokenizeShareRecordResponse);
 
-  // ExemptDelegation defines a method for performing exemption of
-  // delegated coins from a delegator to a validator.
-  rpc ExemptDelegation(MsgExemptDelegation) returns (MsgExemptDelegationResponse);
+  // ValidatorBond defines a method for performing a validator self-bond
+  rpc ValidatorBond(MsgValidatorBond) returns (MsgValidatorBondResponse);
 }
 
 // MsgCreateValidator defines a SDK message for creating a new validator.
@@ -218,13 +217,13 @@ message MsgTransferTokenizeShareRecord {
 
 message MsgTransferTokenizeShareRecordResponse {}
 
-// MsgExemptDelegation defines a SDK message for performing exemption of delegated coins
+// MsgValidatorBond defines a SDK message for performing validator self-bond of delegated coins
 // from a delegator to a validator.
-message MsgExemptDelegation {
+message MsgValidatorBond {
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
   string                   delegator_address = 1 [(gogoproto.moretags) = "yaml:\"delegator_address\""];
   string                   validator_address = 2 [(gogoproto.moretags) = "yaml:\"validator_address\""];
 }
-message MsgExemptDelegationResponse {}
+message MsgValidatorBondResponse {}

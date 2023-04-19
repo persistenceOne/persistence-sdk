@@ -35,7 +35,7 @@ func TestMigrateJSON(t *testing.T) {
 	indentedBz, err := json.MarshalIndent(jsonObj, "", "\t")
 	require.NoError(t, err)
 
-	// Make sure about new params MinCommissionRate & ExemptionFactor.
+	// Make sure about new params MinCommissionRate & ValidatorBondFactor.
 	expected := `{
 	"delegations": [],
 	"exported": false,
@@ -44,7 +44,7 @@ func TestMigrateJSON(t *testing.T) {
 	"last_validator_powers": [],
 	"params": {
 		"bond_denom": "stake",
-		"exemption_factor": "-1.000000000000000000",
+		"validator_bond_factor": "-1.000000000000000000",
 		"historical_entries": 10000,
 		"max_entries": 7,
 		"max_validators": 100,
