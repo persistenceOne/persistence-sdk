@@ -23,7 +23,7 @@ var (
 
 // Default parameter values
 const (
-	DefaultVotePeriod               = BlocksPerMinute / 2 // 30 seconds
+	DefaultVotePeriod               = BlocksPerMinute * 1 // 1 minute
 	DefaultSlashWindow              = BlocksPerWeek       // window for a week
 	DefaultRewardDistributionWindow = BlocksPerYear       // window for a year
 
@@ -42,18 +42,8 @@ var (
 			SymbolDenom: AtomSymbol,
 			Exponent:    AtomExponent,
 		},
-		{
-			BaseDenom:   OsmosisDenom,
-			SymbolDenom: OsmosisSymbol,
-			Exponent:    OsmosisExponent,
-		},
-		{
-			BaseDenom:   USDCDenom,
-			SymbolDenom: USDCSymbol,
-			Exponent:    UsdcExponent,
-		},
 	}
-	DefaultSlashFraction     = sdk.NewDecWithPrec(1, 4) // 0.01%
+	DefaultSlashFraction     = sdk.NewDec(0)            // 0%
 	DefaultMinValidPerWindow = sdk.NewDecWithPrec(5, 2) // 5%
 
 	oneDec           = sdk.OneDec()

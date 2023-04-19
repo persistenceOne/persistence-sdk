@@ -23,12 +23,6 @@ var (
 		SymbolDenom: AtomSymbol,
 		Exponent:    6,
 	}
-
-	DenomOsmosis = Denom{
-		BaseDenom:   OsmosisDenom,
-		SymbolDenom: AtomSymbol,
-		Exponent:    6,
-	}
 )
 
 // MockStakingKeeper implements the StakingKeeper interface.

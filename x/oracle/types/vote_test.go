@@ -45,7 +45,7 @@ func TestExchangeRateTuplesString(t *testing.T) {
 		exchangeRateTuple,
 		NewExchangeRateTuple(AtomDenom, sdk.SmallestDec()),
 	}
-	require.Equal(t, "- denom: uxprt\n  exchange_rate: \"1.000000000000000000\"\n- denom: ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2\n  exchange_rate: \"0.000000000000000001\"\n", exchangeRateTuples.String())
+	require.Equal(t, "- denom: uxprt\n  exchange_rate: \"1.000000000000000000\"\n- denom: ibc/4A17832B26BF318D052563EFFE677C1DE11DF8CE104F00204860F3E3439818B2\n  exchange_rate: \"0.000000000000000001\"\n", exchangeRateTuples.String())
 }
 
 func TestParseExchangeRateTuples(t *testing.T) {
