@@ -30,12 +30,8 @@ func (s *KeeperTestSuite) TestQueryAllExchangeRate() {
 	s.app.OracleKeeper.SetExchangeRate(s.ctx, types.PersistenceSymbol, sdk.OneDec())
 	// Set exchange rate for ATOM.
 	s.app.OracleKeeper.SetExchangeRate(s.ctx, types.AtomSymbol, sdk.OneDec())
-	// Set exchange rate for OSMO.
-	s.app.OracleKeeper.SetExchangeRate(s.ctx, types.OsmosisSymbol, sdk.OneDec())
-	// Set exchange rate for USDC.
-	s.app.OracleKeeper.SetExchangeRate(s.ctx, types.USDCSymbol, sdk.OneDec())
 
 	resp, err = s.queryClient.AllExchangeRates(s.ctx.Context(), &types.QueryAllExchangeRatesRequest{})
 	s.Require().NoError(err)
-	s.Require().Len(resp.ExchangeRates, 4)
+	s.Require().Len(resp.ExchangeRates, 2)
 }

@@ -18,7 +18,7 @@ func TestDenomString(t *testing.T) {
 		},
 		{
 			denom:       types.DenomAtom,
-			expectedStr: "base_denom: ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2\nsymbol_denom: ATOM\nexponent: 6\n",
+			expectedStr: "base_denom: ibc/4A17832B26BF318D052563EFFE677C1DE11DF8CE104F00204860F3E3439818B2\nsymbol_denom: ATOM\nexponent: 6\n",
 		},
 	}
 
@@ -71,7 +71,7 @@ func TestDenomListString(t *testing.T) {
 		},
 		{
 			denomList:   types.DenomList{types.DenomPersistence, types.DenomAtom},
-			expectedStr: "base_denom: uxprt\nsymbol_denom: XPRT\nexponent: 6\n\nbase_denom: ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2\nsymbol_denom: ATOM\nexponent: 6",
+			expectedStr: "base_denom: uxprt\nsymbol_denom: XPRT\nexponent: 6\n\nbase_denom: ibc/4A17832B26BF318D052563EFFE677C1DE11DF8CE104F00204860F3E3439818B2\nsymbol_denom: ATOM\nexponent: 6",
 		},
 	}
 
