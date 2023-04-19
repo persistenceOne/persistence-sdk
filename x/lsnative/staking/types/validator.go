@@ -60,7 +60,7 @@ func NewValidator(operator sdk.ValAddress, pubKey cryptotypes.PubKey, descriptio
 		UnbondingTime:            time.Unix(0, 0).UTC(),
 		Commission:               NewCommission(sdk.ZeroDec(), sdk.ZeroDec(), sdk.ZeroDec()),
 		TotalValidatorBondShares: sdk.ZeroDec(),
-		TotalTokenizedShares:     sdk.ZeroDec(),
+		TotalLiquidShares:        sdk.ZeroDec(),
 	}, nil
 }
 
