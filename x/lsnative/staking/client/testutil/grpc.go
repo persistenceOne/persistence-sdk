@@ -12,8 +12,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	grpctypes "github.com/cosmos/cosmos-sdk/types/grpc"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/cosmos/cosmos-sdk/x/staking/client/cli"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/client/cli"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 func (s *IntegrationTestSuite) TestGRPCQueryValidatorsHandler() {
@@ -148,7 +148,7 @@ func (s *IntegrationTestSuite) TestGRPCQueryValidatorDelegations() {
 			&types.QueryValidatorDelegationsResponse{},
 			&types.QueryValidatorDelegationsResponse{
 				DelegationResponses: types.DelegationResponses{
-					types.NewDelegationResp(val.Address, val.ValAddress, sdk.NewDecFromInt(cli.DefaultTokens), sdk.NewCoin(sdk.DefaultBondDenom, cli.DefaultTokens)),
+					types.NewDelegationResp(val.Address, val.ValAddress, sdk.NewDecFromInt(cli.DefaultTokens), false, sdk.NewCoin(sdk.DefaultBondDenom, cli.DefaultTokens)),
 				},
 				Pagination: &query.PageResponse{Total: 1},
 			},
@@ -348,7 +348,7 @@ func (s *IntegrationTestSuite) TestGRPCQueryUnbondingDelegation() {
 				s.Require().NoError(err)
 				s.Require().Equal(ubd.Unbond.DelegatorAddress, val.Address.String())
 				s.Require().Equal(ubd.Unbond.ValidatorAddress, val.ValAddress.String())
-				s.Require().Len(ubd.Unbond.Entries, 2)
+				s.Require().Len(ubd.Unbond.Entries, 1)
 			}
 		})
 	}
@@ -398,7 +398,7 @@ func (s *IntegrationTestSuite) TestGRPCQueryDelegatorDelegations() {
 			&types.QueryDelegatorDelegationsResponse{},
 			&types.QueryDelegatorDelegationsResponse{
 				DelegationResponses: types.DelegationResponses{
-					types.NewDelegationResp(val.Address, val.ValAddress, sdk.NewDecFromInt(cli.DefaultTokens), sdk.NewCoin(sdk.DefaultBondDenom, cli.DefaultTokens)),
+					types.NewDelegationResp(val.Address, val.ValAddress, sdk.NewDecFromInt(cli.DefaultTokens), false, sdk.NewCoin(sdk.DefaultBondDenom, cli.DefaultTokens)),
 				},
 				Pagination: &query.PageResponse{Total: 1},
 			},

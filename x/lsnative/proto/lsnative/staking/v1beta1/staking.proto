@@ -123,7 +123,8 @@ message Validator {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable)   = false
    ];
-  string total_tokenized_shares = 12[
+  // Total number of shares either tokenized or owned by a liquid staking provider 
+  string total_liquid_shares = 12 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable)   = false
@@ -314,6 +315,13 @@ message Params {
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
+  ];
+  // global_liquid_staking_cap represents a cap on the portion of stake that 
+  // comes from liquid staking providers
+  string global_liquid_staking_cap = 8 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false
   ];
 }
 

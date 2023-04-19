@@ -9,6 +9,7 @@ import "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 func MigrateJSON(oldState types.GenesisState) (types.GenesisState, error) {
 	oldState.Params.MinCommissionRate = types.DefaultMinCommissionRate
 	oldState.Params.ValidatorBondFactor = types.DefaultValidatorBondFactor
+	oldState.Params.GlobalLiquidStakingCap = types.DefaultGlobalLiquidStakingCap
 
 	return oldState, nil
 }
