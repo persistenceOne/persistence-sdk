@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
@@ -25,10 +27,7 @@ func (k Keeper) GetTotalLiquidStakedTokens(ctx sdk.Context) sdk.Int {
 	tokensBz := store.Get(types.TotalLiquidStakedTokensKey)
 
 	if tokensBz == nil {
-		// QUESTION: Should we panic here instead?
-		// This is basically protecting against the case where we failed
-		// to bootstrap the total liquid staked in the upgrade handler
-		return sdk.ZeroInt()
+		panic(errors.New("no total liquid staked tokens in store"))
 	}
 
 	var tokens sdk.Int
