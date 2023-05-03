@@ -9,11 +9,11 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
-	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
-	"github.com/cosmos/cosmos-sdk/x/slashing/simulation"
-	"github.com/cosmos/cosmos-sdk/x/slashing/types"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/slashing/simulation"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/slashing/types"
 )
 
 // nolint:deadcode,unused,varcheck
@@ -25,7 +25,7 @@ var (
 )
 
 func TestDecodeStore(t *testing.T) {
-	cdc := simapp.MakeTestEncodingConfig().Codec
+	cdc := simapp.MakeTestEncodingConfig().Marshaler
 	dec := simulation.NewDecodeStore(cdc)
 
 	info := types.NewValidatorSigningInfo(consAddr1, 0, 1, time.Now().UTC(), false, 0)

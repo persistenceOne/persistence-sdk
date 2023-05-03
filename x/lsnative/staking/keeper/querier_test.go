@@ -9,11 +9,12 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	"github.com/cosmos/cosmos-sdk/x/staking/teststaking"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/keeper"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/teststaking"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 func TestNewQuerier(t *testing.T) {
@@ -144,7 +145,7 @@ func TestQueryValidators(t *testing.T) {
 
 	// Create Validators
 	amts := []sdk.Int{sdk.NewInt(8), sdk.NewInt(7)}
-	status := []types.BondStatus{types.Unbonded, types.Unbonding}
+	status := []sdkstaking.BondStatus{sdkstaking.Unbonded, sdkstaking.Unbonding}
 	var validators [2]types.Validator
 	for i, amt := range amts {
 		validators[i] = teststaking.NewValidator(t, sdk.ValAddress(addrs[i]), PKs[i])
@@ -224,7 +225,7 @@ func TestQueryDelegation(t *testing.T) {
 	app.StakingKeeper.SetValidatorByPowerIndex(ctx, val2)
 
 	delTokens := app.StakingKeeper.TokensFromConsensusPower(ctx, 20)
-	_, err := app.StakingKeeper.Delegate(ctx, addrAcc2, delTokens, types.Unbonded, val1, true)
+	_, err := app.StakingKeeper.Delegate(ctx, addrAcc2, delTokens, sdkstaking.Unbonded, val1, true)
 	require.NoError(t, err)
 
 	// apply TM updates
@@ -468,13 +469,13 @@ func TestQueryValidatorDelegations_Pagination(t *testing.T) {
 
 	// Create Validators and Delegation
 	for _, addr := range addrs {
-		validator, found := app.StakingKeeper.GetValidator(ctx, valAddress)
+		validator, found := app.StakingKeeper.GetLiquidValidator(ctx, valAddress)
 		if !found {
 			t.Error("expected validator not found")
 		}
 
 		delTokens := app.StakingKeeper.TokensFromConsensusPower(ctx, 20)
-		_, err := app.StakingKeeper.Delegate(ctx, addr, delTokens, types.Unbonded, validator, true)
+		_, err := app.StakingKeeper.Delegate(ctx, addr, delTokens, sdkstaking.Unbonded, validator, true)
 		require.NoError(t, err)
 	}
 
@@ -553,7 +554,7 @@ func TestQueryRedelegations(t *testing.T) {
 	app.StakingKeeper.SetValidator(ctx, val2)
 
 	delAmount := app.StakingKeeper.TokensFromConsensusPower(ctx, 100)
-	_, err := app.StakingKeeper.Delegate(ctx, addrAcc2, delAmount, types.Unbonded, val1, true)
+	_, err := app.StakingKeeper.Delegate(ctx, addrAcc2, delAmount, sdkstaking.Unbonded, val1, true)
 	require.NoError(t, err)
 	applyValidatorSetUpdates(t, ctx, app.StakingKeeper, -1)
 
@@ -624,7 +625,7 @@ func TestQueryUnbondingDelegation(t *testing.T) {
 
 	// delegate
 	delAmount := app.StakingKeeper.TokensFromConsensusPower(ctx, 100)
-	_, err := app.StakingKeeper.Delegate(ctx, addrAcc1, delAmount, types.Unbonded, val1, true)
+	_, err := app.StakingKeeper.Delegate(ctx, addrAcc1, delAmount, sdkstaking.Unbonded, val1, true)
 	require.NoError(t, err)
 	applyValidatorSetUpdates(t, ctx, app.StakingKeeper, -1)
 

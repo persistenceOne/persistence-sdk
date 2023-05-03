@@ -7,12 +7,13 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	"github.com/cosmos/cosmos-sdk/x/staking/teststaking"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/keeper"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/teststaking"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 func (suite *KeeperTestSuite) TestGRPCQueryValidators() {
@@ -90,7 +91,7 @@ func (suite *KeeperTestSuite) TestGRPCQueryValidators() {
 
 func (suite *KeeperTestSuite) TestGRPCQueryValidator() {
 	app, ctx, queryClient, vals := suite.app, suite.ctx, suite.queryClient, suite.vals
-	validator, found := app.StakingKeeper.GetValidator(ctx, vals[0].GetOperator())
+	validator, found := app.StakingKeeper.GetLiquidValidator(ctx, vals[0].GetOperator())
 	suite.True(found)
 	var req *types.QueryValidatorRequest
 	testCases := []struct {
@@ -575,7 +576,7 @@ func (suite *KeeperTestSuite) TestGRPCQueryPoolParameters() {
 func (suite *KeeperTestSuite) TestGRPCQueryHistoricalInfo() {
 	app, ctx, queryClient := suite.app, suite.ctx, suite.queryClient
 
-	hi, found := app.StakingKeeper.GetHistoricalInfo(ctx, 5)
+	hi, found := app.StakingKeeper.GetLiquidStakingHistoricalInfo(ctx, 5)
 	suite.True(found)
 
 	var req *types.QueryHistoricalInfoRequest
@@ -637,7 +638,7 @@ func (suite *KeeperTestSuite) TestGRPCQueryRedelegations() {
 	valAddrs := simapp.ConvertAddrsToValAddrs(addrs)
 	val1, val2, val3, val4 := vals[0], vals[1], valAddrs[3], valAddrs[4]
 	delAmount := app.StakingKeeper.TokensFromConsensusPower(ctx, 1)
-	_, err := app.StakingKeeper.Delegate(ctx, addrAcc1, delAmount, types.Unbonded, val1, true)
+	_, err := app.StakingKeeper.Delegate(ctx, addrAcc1, delAmount, sdkstaking.Unbonded, val1, true)
 	suite.NoError(err)
 	applyValidatorSetUpdates(suite.T(), ctx, app.StakingKeeper, -1)
 
@@ -789,7 +790,7 @@ func createValidators(t *testing.T, ctx sdk.Context, app *simapp.SimApp, powers 
 	addrs := simapp.AddTestAddrsIncremental(app, ctx, 5, app.StakingKeeper.TokensFromConsensusPower(ctx, 300))
 	valAddrs := simapp.ConvertAddrsToValAddrs(addrs)
 	pks := simapp.CreateTestPubKeys(5)
-	cdc := simapp.MakeTestEncodingConfig().Codec
+	cdc := simapp.MakeTestEncodingConfig().Marshaler
 	app.StakingKeeper = keeper.NewKeeper(
 		cdc,
 		app.GetKey(types.StoreKey),
@@ -809,11 +810,11 @@ func createValidators(t *testing.T, ctx sdk.Context, app *simapp.SimApp, powers 
 	app.StakingKeeper.SetNewValidatorByPowerIndex(ctx, val1)
 	app.StakingKeeper.SetNewValidatorByPowerIndex(ctx, val2)
 
-	_, err := app.StakingKeeper.Delegate(ctx, addrs[0], app.StakingKeeper.TokensFromConsensusPower(ctx, powers[0]), types.Unbonded, val1, true)
+	_, err := app.StakingKeeper.Delegate(ctx, addrs[0], app.StakingKeeper.TokensFromConsensusPower(ctx, powers[0]), sdkstaking.Unbonded, val1, true)
 	require.NoError(t, err)
-	_, err = app.StakingKeeper.Delegate(ctx, addrs[1], app.StakingKeeper.TokensFromConsensusPower(ctx, powers[1]), types.Unbonded, val2, true)
+	_, err = app.StakingKeeper.Delegate(ctx, addrs[1], app.StakingKeeper.TokensFromConsensusPower(ctx, powers[1]), sdkstaking.Unbonded, val2, true)
 	require.NoError(t, err)
-	_, err = app.StakingKeeper.Delegate(ctx, addrs[0], app.StakingKeeper.TokensFromConsensusPower(ctx, powers[2]), types.Unbonded, val2, true)
+	_, err = app.StakingKeeper.Delegate(ctx, addrs[0], app.StakingKeeper.TokensFromConsensusPower(ctx, powers[2]), sdkstaking.Unbonded, val2, true)
 	require.NoError(t, err)
 	applyValidatorSetUpdates(t, ctx, app.StakingKeeper, -1)
 

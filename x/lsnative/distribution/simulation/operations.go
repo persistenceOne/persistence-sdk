@@ -6,24 +6,23 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/types"
 	stakingkeeper "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/keeper"
 )
 
-const DefaultWeightMsgWithdrawAllTokenizeShareRecordReward int = 50
-
 // Simulation operation weights constants
 const (
-	OpWeightMsgSetWithdrawAddress                = "op_weight_msg_set_withdraw_address"                  //nolint:gosec
-	OpWeightMsgWithdrawDelegationReward          = "op_weight_msg_withdraw_delegation_reward"            //nolint:gosec
-	OpWeightMsgWithdrawValidatorCommission       = "op_weight_msg_withdraw_validator_commission"         //nolint:gosec
-	OpWeightMsgFundCommunityPool                 = "op_weight_msg_fund_community_pool"                   //nolint:gosec
-	OpWeightMsgWithdrawTokenizeShareRecordReward = "op_weight_msg_withdraw_tokenize_share_record_reward" //nolint:gosec
+	OpWeightMsgSetWithdrawAddress                   = "op_weight_msg_set_withdraw_address"                      //nolint:gosec
+	OpWeightMsgWithdrawDelegationReward             = "op_weight_msg_withdraw_delegation_reward"                //nolint:gosec
+	OpWeightMsgWithdrawValidatorCommission          = "op_weight_msg_withdraw_validator_commission"             //nolint:gosec
+	OpWeightMsgFundCommunityPool                    = "op_weight_msg_fund_community_pool"                       //nolint:gosec
+	OpWeightMsgWithdrawTokenizeShareRecordReward    = "op_weight_msg_withdraw_tokenize_share_record_reward"     //nolint:gosec
+	OpWeightMsgWithdrawAllTokenizeShareRecordReward = "op_weight_msg_withdraw_all_tokenize_share_record_reward" //nolint:gosec
 )
 
 // WeightedOperations returns all the operations from the module with their respective weights
@@ -56,10 +55,17 @@ func WeightedOperations(appParams simtypes.AppParams, cdc codec.JSONCodec, ak ty
 		},
 	)
 
-	var weightMsgWithdrawTokenizeShareRecordReward int
-	appParams.GetOrGenerate(cdc, OpWeightMsgWithdrawTokenizeShareRecordReward, &weightMsgWithdrawTokenizeShareRecordReward, nil,
+	// var weightMsgWithdrawTokenizeShareRecordReward int
+	// appParams.GetOrGenerate(cdc, OpWeightMsgWithdrawAllTokenizeShareRecordReward, &weightMsgWithdrawTokenizeShareRecordReward, nil,
+	// 	func(_ *rand.Rand) {
+	// 		weightMsgWithdrawTokenizeShareRecordReward = simappparams.DefaultWeightMsgWithdrawTokenizeShareRecordReward
+	// 	},
+	// )
+
+	var weightMsgWithdrawAllTokenizeShareRecordReward int
+	appParams.GetOrGenerate(cdc, OpWeightMsgWithdrawAllTokenizeShareRecordReward, &weightMsgWithdrawAllTokenizeShareRecordReward, nil,
 		func(_ *rand.Rand) {
-			weightMsgWithdrawTokenizeShareRecordReward = DefaultWeightMsgWithdrawAllTokenizeShareRecordReward
+			weightMsgWithdrawAllTokenizeShareRecordReward = simappparams.DefaultWeightMsgWithdrawAllTokenizeShareRecordReward
 		},
 	)
 
@@ -82,9 +88,13 @@ func WeightedOperations(appParams simtypes.AppParams, cdc codec.JSONCodec, ak ty
 			weightMsgFundCommunityPool,
 			SimulateMsgFundCommunityPool(ak, bk, k, stakeKeeper),
 		),
+		// simulation.NewWeightedOperation(
+		// 	weightMsgWithdrawTokenizeShareRecordReward,
+		// 	SimulateMsgWithdrawTokenizeShareRecordReward(ak, bk, k, stakeKeeper),
+		// ),
 		simulation.NewWeightedOperation(
-			weightMsgWithdrawTokenizeShareRecordReward,
-			SimulateMsgWithdrawTokenizeShareRecordReward(ak, bk, k, stakeKeeper),
+			weightMsgWithdrawAllTokenizeShareRecordReward,
+			SimulateMsgWithdrawAllTokenizeShareRecordReward(ak, bk, k, stakeKeeper),
 		),
 	}
 }
@@ -259,9 +269,9 @@ func SimulateMsgFundCommunityPool(ak types.AccountKeeper, bk types.BankKeeper, k
 	}
 }
 
-// SimulateMsgWithdrawTokenizeShareRecordReward simulates MsgWithdrawTokenizeShareRecordReward execution where
-// a random account claim tokenize share record rewards.
-func SimulateMsgWithdrawTokenizeShareRecordReward(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper, sk stakingkeeper.Keeper) simtypes.Operation {
+// SimulateMsgWithdrawAllTokenizeShareRecordReward simulates MsgWithdrawAllTokenizeShareRecordReward execution where
+// a random account claim tokenize share record rewards from all records.
+func SimulateMsgWithdrawAllTokenizeShareRecordReward(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper, sk stakingkeeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {

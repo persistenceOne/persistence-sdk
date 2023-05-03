@@ -13,18 +13,18 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	"github.com/cosmos/cosmos-sdk/x/staking/simulation"
-	"github.com/cosmos/cosmos-sdk/x/staking/teststaking"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
+	distrtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/simulation"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/teststaking"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 // TestWeightedOperations tests the weights of the operations.
@@ -53,6 +53,9 @@ func TestWeightedOperations(t *testing.T) {
 		{simappparams.DefaultWeightMsgUndelegate, types.ModuleName, types.TypeMsgUndelegate},
 		{simappparams.DefaultWeightMsgBeginRedelegate, types.ModuleName, types.TypeMsgBeginRedelegate},
 		{simappparams.DefaultWeightMsgCancelUnbondingDelegation, types.ModuleName, types.TypeMsgCancelUnbondingDelegation},
+		{simappparams.DefaultWeightMsgTokenizeShares, types.ModuleName, types.TypeMsgTokenizeShares},
+		{simappparams.DefaultWeightMsgRedeemTokensforShares, types.ModuleName, types.TypeMsgRedeemTokensforShares},
+		{simappparams.DefaultWeightMsgTransferTokenizeShareRecord, types.ModuleName, types.TypeMsgTransferTokenizeShareRecord},
 	}
 
 	for i, w := range weightesOps {
@@ -115,7 +118,7 @@ func TestSimulateMsgCancelUnbondingDelegation(t *testing.T) {
 	delTokens := app.StakingKeeper.TokensFromConsensusPower(ctx, 2)
 	validator0, issuedShares := validator0.AddTokensFromDel(delTokens)
 	delegator := accounts[1]
-	delegation := types.NewDelegation(delegator.Address, validator0.GetOperator(), issuedShares)
+	delegation := types.NewDelegation(delegator.Address, validator0.GetOperator(), issuedShares, false)
 	app.StakingKeeper.SetDelegation(ctx, delegation)
 	app.DistrKeeper.SetDelegatorStartingInfo(ctx, validator0.GetOperator(), delegator.Address, distrtypes.NewDelegatorStartingInfo(2, sdk.OneDec(), 200))
 
@@ -229,7 +232,7 @@ func TestSimulateMsgUndelegate(t *testing.T) {
 	delTokens := app.StakingKeeper.TokensFromConsensusPower(ctx, 2)
 	validator0, issuedShares := validator0.AddTokensFromDel(delTokens)
 	delegator := accounts[1]
-	delegation := types.NewDelegation(delegator.Address, validator0.GetOperator(), issuedShares)
+	delegation := types.NewDelegation(delegator.Address, validator0.GetOperator(), issuedShares, false)
 	app.StakingKeeper.SetDelegation(ctx, delegation)
 	app.DistrKeeper.SetDelegatorStartingInfo(ctx, validator0.GetOperator(), delegator.Address, distrtypes.NewDelegatorStartingInfo(2, sdk.OneDec(), 200))
 
@@ -277,7 +280,7 @@ func TestSimulateMsgBeginRedelegate(t *testing.T) {
 
 	// setup accounts[2] as delegator
 	delegator := accounts[2]
-	delegation := types.NewDelegation(delegator.Address, validator1.GetOperator(), issuedShares)
+	delegation := types.NewDelegation(delegator.Address, validator1.GetOperator(), issuedShares, false)
 	app.StakingKeeper.SetDelegation(ctx, delegation)
 	app.DistrKeeper.SetDelegatorStartingInfo(ctx, validator1.GetOperator(), delegator.Address, distrtypes.NewDelegatorStartingInfo(2, sdk.OneDec(), 200))
 

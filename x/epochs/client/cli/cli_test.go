@@ -8,7 +8,7 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/cosmos/cosmos-sdk/testutil/network"
+	"github.com/persistenceOne/persistence-sdk/v2/testutil/network"
 )
 
 type IntegrationTestSuite struct {

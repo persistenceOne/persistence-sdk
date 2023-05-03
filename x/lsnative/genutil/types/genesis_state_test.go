@@ -9,11 +9,11 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
-	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/cosmos/cosmos-sdk/x/genutil/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/types"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 var (
@@ -38,11 +38,11 @@ func TestValidateGenesisMultipleMessages(t *testing.T) {
 	comm := stakingtypes.CommissionRates{}
 
 	msg1, err := stakingtypes.NewMsgCreateValidator(sdk.ValAddress(pk1.Address()), pk1,
-		sdk.NewInt64Coin(sdk.DefaultBondDenom, 50), desc, comm, sdk.OneInt())
+		sdk.NewInt64Coin(sdk.DefaultBondDenom, 50), desc, comm)
 	require.NoError(t, err)
 
 	msg2, err := stakingtypes.NewMsgCreateValidator(sdk.ValAddress(pk2.Address()), pk2,
-		sdk.NewInt64Coin(sdk.DefaultBondDenom, 50), desc, comm, sdk.OneInt())
+		sdk.NewInt64Coin(sdk.DefaultBondDenom, 50), desc, comm)
 	require.NoError(t, err)
 
 	txGen := simapp.MakeTestEncodingConfig().TxConfig
@@ -59,7 +59,7 @@ func TestValidateGenesisMultipleMessages(t *testing.T) {
 func TestValidateGenesisBadMessage(t *testing.T) {
 	desc := stakingtypes.NewDescription("testname", "", "", "", "")
 
-	msg1 := stakingtypes.NewMsgEditValidator(sdk.ValAddress(pk1.Address()), desc, nil, nil)
+	msg1 := stakingtypes.NewMsgEditValidator(sdk.ValAddress(pk1.Address()), desc, nil)
 
 	txGen := simapp.MakeTestEncodingConfig().TxConfig
 	txBuilder := txGen.NewTxBuilder()

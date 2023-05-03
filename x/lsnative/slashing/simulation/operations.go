@@ -6,11 +6,11 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/simapp/helpers"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp/helpers"
+	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/slashing/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/slashing/types"
 	stakingkeeper "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/keeper"

@@ -17,10 +17,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/cosmos/cosmos-sdk/testutil/network"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	banktestutil "github.com/cosmos/cosmos-sdk/x/bank/client/testutil"
+	"github.com/persistenceOne/persistence-sdk/v2/testutil/network"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/client/cli"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )

@@ -8,15 +8,15 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
-	"github.com/cosmos/cosmos-sdk/x/distribution/simulation"
-	"github.com/cosmos/cosmos-sdk/x/distribution/types"
-	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/simulation"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/types"
+	distrtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/types"
+	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 // TestWeightedOperations tests the weights of the operations.
@@ -42,6 +42,8 @@ func (suite *SimTestSuite) TestWeightedOperations() {
 		{simappparams.DefaultWeightMsgWithdrawDelegationReward, types.ModuleName, types.TypeMsgWithdrawDelegatorReward},
 		{simappparams.DefaultWeightMsgWithdrawValidatorCommission, types.ModuleName, types.TypeMsgWithdrawValidatorCommission},
 		{simappparams.DefaultWeightMsgFundCommunityPool, types.ModuleName, types.TypeMsgFundCommunityPool},
+		// {simappparams.DefaultWeightMsgWithdrawTokenizeShareRecordReward, types.ModuleName, types.TypeMsgWithdrawTokenizeShareRecordReward},
+		{simappparams.DefaultWeightMsgWithdrawAllTokenizeShareRecordReward, types.ModuleName, types.TypeMsgWithdrawAllTokenizeShareRecordReward},
 	}
 
 	for i, w := range weightesOps {
@@ -98,7 +100,7 @@ func (suite *SimTestSuite) TestSimulateMsgWithdrawDelegatorReward() {
 	delTokens := suite.app.StakingKeeper.TokensFromConsensusPower(suite.ctx, 2)
 	validator0, issuedShares := validator0.AddTokensFromDel(delTokens)
 	delegator := accounts[1]
-	delegation := stakingtypes.NewDelegation(delegator.Address, validator0.GetOperator(), issuedShares)
+	delegation := stakingtypes.NewDelegation(delegator.Address, validator0.GetOperator(), issuedShares, false)
 	suite.app.StakingKeeper.SetDelegation(suite.ctx, delegation)
 	suite.app.DistrKeeper.SetDelegatorStartingInfo(suite.ctx, validator0.GetOperator(), delegator.Address, distrtypes.NewDelegatorStartingInfo(2, sdk.OneDec(), 200))
 

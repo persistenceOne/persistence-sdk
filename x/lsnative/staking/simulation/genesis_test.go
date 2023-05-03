@@ -13,8 +13,8 @@ import (
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/cosmos/cosmos-sdk/x/staking/simulation"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/simulation"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 // TestRandomizedGenState tests the normal scenario of applying RandomizedGenState.
@@ -64,7 +64,7 @@ func TestRandomizedGenState(t *testing.T) {
 	require.Equal(t, "0.292059246265731326", stakingGenesis.Validators[2].Commission.CommissionRates.Rate.String())
 	require.Equal(t, "0.330000000000000000", stakingGenesis.Validators[2].Commission.CommissionRates.MaxRate.String())
 	require.Equal(t, "0.038337453731274481", stakingGenesis.Validators[2].Commission.CommissionRates.MaxChangeRate.String())
-	require.Equal(t, "1", stakingGenesis.Validators[2].MinSelfDelegation.String())
+	require.Equal(t, "0", stakingGenesis.Validators[2].MinSelfDelegation.String())
 }
 
 // TestRandomizedGenState1 tests abnormal scenarios of applying RandomizedGenState.

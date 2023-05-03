@@ -6,9 +6,9 @@ import (
 	"github.com/spf13/pflag"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simapp/params"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp/params"
 
 	"github.com/stretchr/testify/require"
 
@@ -77,7 +77,7 @@ func TestParseProposal(t *testing.T) {
 }
 `)
 
-	proposal, err := ParseCommunityPoolSpendProposalWithDeposit(encodingConfig.Codec, okJSON.Name())
+	proposal, err := ParseCommunityPoolSpendProposalWithDeposit(encodingConfig.Marshaler, okJSON.Name())
 	require.NoError(t, err)
 
 	require.Equal(t, "Community Pool Spend", proposal.Title)

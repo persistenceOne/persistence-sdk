@@ -7,11 +7,11 @@ import (
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/cosmos/cosmos-sdk/x/distribution/simulation"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/simulation"
 )
 
 func TestProposalContents(t *testing.T) {

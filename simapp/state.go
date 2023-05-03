@@ -19,7 +19,8 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
+	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 
 	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
 )
@@ -97,7 +98,7 @@ func AppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager) simty
 		notBondedTokens := sdk.ZeroInt()
 
 		for _, val := range stakingState.Validators {
-			if val.Status != stakingtypes.Unbonded {
+			if val.Status != sdkstaking.Unbonded {
 				continue
 			}
 

@@ -10,9 +10,9 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/cosmos/cosmos-sdk/testutil/network"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/slashing/client/cli"
+	"github.com/persistenceOne/persistence-sdk/v2/testutil/network"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/slashing/client/cli"
 )
 
 type IntegrationTestSuite struct {

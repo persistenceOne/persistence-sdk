@@ -6,32 +6,26 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
+	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
-const (
-	DefaultWeightMsgTokenizeShares              int = 100
-	DefaultWeightMsgRedeemTokensforShares       int = 100
-	DefaultWeightMsgTransferTokenizeShareRecord int = 50
-)
-
 // Simulation operation weights constants
 const (
-	OpWeightMsgCreateValidator             = "op_weight_msg_create_validator"               //nolint:gosec
-	OpWeightMsgEditValidator               = "op_weight_msg_edit_validator"                 //nolint:gosec
-	OpWeightMsgDelegate                    = "op_weight_msg_delegate"                       //nolint:gosec
-	OpWeightMsgUndelegate                  = "op_weight_msg_undelegate"                     //nolint:gosec
-	OpWeightMsgBeginRedelegate             = "op_weight_msg_begin_redelegate"               //nolint:gosec
-	OpWeightMsgCancelUnbondingDelegation   = "op_weight_msg_cancel_unbonding_delegation"    //nolint:gosec
-	OpWeightMsgTokenizeShares              = "op_weight_msg_tokenize_shares"                //nolint:gosec
-	OpWeightMsgRedeemTokensforShares       = "op_weight_msg_redeem_tokens_for_shares"       //nolint:gosec
-	OpWeightMsgTransferTokenizeShareRecord = "op_weight_msg_transfer_tokenize_share_record" //nolint:gosec
+	OpWeightMsgCreateValidator             = "op_weight_msg_create_validator"
+	OpWeightMsgEditValidator               = "op_weight_msg_edit_validator"
+	OpWeightMsgDelegate                    = "op_weight_msg_delegate"
+	OpWeightMsgUndelegate                  = "op_weight_msg_undelegate"
+	OpWeightMsgBeginRedelegate             = "op_weight_msg_begin_redelegate"
+	OpWeightMsgCancelUnbondingDelegation   = "op_weight_msg_cancel_unbonding_delegation"
+	OpWeightMsgTokenizeShares              = "op_weight_msg_tokenize_shares"
+	OpWeightMsgRedeemTokensforShares       = "op_weight_msg_redeem_tokens_for_shares"
+	OpWeightMsgTransferTokenizeShareRecord = "op_weight_msg_transfer_tokenize_share_record"
 )
 
 // WeightedOperations returns all the operations from the module with their respective weights
@@ -89,19 +83,19 @@ func WeightedOperations(
 
 	appParams.GetOrGenerate(cdc, OpWeightMsgTokenizeShares, &weightMsgTokenizeShares, nil,
 		func(_ *rand.Rand) {
-			weightMsgTokenizeShares = DefaultWeightMsgTokenizeShares
+			weightMsgTokenizeShares = simappparams.DefaultWeightMsgTokenizeShares
 		},
 	)
 
 	appParams.GetOrGenerate(cdc, OpWeightMsgRedeemTokensforShares, &weightMsgRedeemTokensforShares, nil,
 		func(_ *rand.Rand) {
-			weightMsgRedeemTokensforShares = DefaultWeightMsgRedeemTokensforShares
+			weightMsgRedeemTokensforShares = simappparams.DefaultWeightMsgRedeemTokensforShares
 		},
 	)
 
 	appParams.GetOrGenerate(cdc, OpWeightMsgTransferTokenizeShareRecord, &weightMsgTransferTokenizeShareRecord, nil,
 		func(_ *rand.Rand) {
-			weightMsgTransferTokenizeShareRecord = DefaultWeightMsgTransferTokenizeShareRecord
+			weightMsgTransferTokenizeShareRecord = simappparams.DefaultWeightMsgTransferTokenizeShareRecord
 		},
 	)
 
@@ -453,22 +447,8 @@ func SimulateMsgCancelUnbondingDelegate(ak types.AccountKeeper, bk types.BankKee
 			return simtypes.NoOpMsg(types.ModuleName, sdkstaking.TypeMsgCancelUnbondingDelegation, "account does have any unbonding delegation"), nil, nil
 		}
 
-		// This is a temporary fix to make staking simulation pass. We should fetch
-		// the first unbondingDelegationEntry that matches the creationHeight, because
-		// currently the staking msgServer chooses the first unbondingDelegationEntry
-		// with the matching creationHeight.
-		//
-		// ref: https://github.com/cosmos/cosmos-sdk/issues/12932
-		creationHeight := unbondingDelegation.Entries[r.Intn(len(unbondingDelegation.Entries))].CreationHeight
-
-		var unbondingDelegationEntry types.UnbondingDelegationEntry
-
-		for _, entry := range unbondingDelegation.Entries {
-			if entry.CreationHeight == creationHeight {
-				unbondingDelegationEntry = entry
-				break
-			}
-		}
+		// get random unbonding delegation entry at block height
+		unbondingDelegationEntry := unbondingDelegation.Entries[r.Intn(len(unbondingDelegation.Entries))]
 
 		if unbondingDelegationEntry.CompletionTime.Before(ctx.BlockTime()) {
 			return simtypes.NoOpMsg(types.ModuleName, sdkstaking.TypeMsgCancelUnbondingDelegation, "unbonding delegation is already processed"), nil, nil
@@ -484,7 +464,7 @@ func SimulateMsgCancelUnbondingDelegate(ak types.AccountKeeper, bk types.BankKee
 			return simtypes.NoOpMsg(types.ModuleName, sdkstaking.TypeMsgCancelUnbondingDelegation, "cancelBondAmt amount is zero"), nil, nil
 		}
 
-		msg := sdkstaking.NewMsgCancelUnbondingDelegation(
+		msg := types.NewMsgCancelUnbondingDelegation(
 			simAccount.Address, valAddr, unbondingDelegationEntry.CreationHeight, sdk.NewCoin(k.BondDenom(ctx), cancelBondAmt),
 		)
 

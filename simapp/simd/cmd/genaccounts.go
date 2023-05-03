@@ -16,8 +16,8 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	authvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/cosmos/cosmos-sdk/x/genutil"
-	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
+	genutiltypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/types"
 )
 
 const (
@@ -51,7 +51,7 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 				keyringBackend, _ := cmd.Flags().GetString(flags.FlagKeyringBackend)
 				if keyringBackend != "" && clientCtx.Keyring == nil {
 					var err error
-					kr, err = keyring.New(sdk.KeyringServiceName(), keyringBackend, clientCtx.HomeDir, inBuf, clientCtx.Codec)
+					kr, err = keyring.New(sdk.KeyringServiceName(), keyringBackend, clientCtx.HomeDir, inBuf, clientCtx.Marshaler)
 					if err != nil {
 						return err
 					}
@@ -121,7 +121,7 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 				return fmt.Errorf("failed to unmarshal genesis state: %w", err)
 			}
 
-			authGenState := authtypes.GetGenesisStateFromAppState(clientCtx.Codec, appState)
+			authGenState := authtypes.GetGenesisStateFromAppState(clientCtx.Marshaler, appState)
 
 			accs, err := authtypes.UnpackAccounts(authGenState.Accounts)
 			if err != nil {
@@ -143,19 +143,19 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 			}
 			authGenState.Accounts = genAccs
 
-			authGenStateBz, err := clientCtx.Codec.MarshalJSON(&authGenState)
+			authGenStateBz, err := clientCtx.Marshaler.MarshalJSON(&authGenState)
 			if err != nil {
 				return fmt.Errorf("failed to marshal auth genesis state: %w", err)
 			}
 
 			appState[authtypes.ModuleName] = authGenStateBz
 
-			bankGenState := banktypes.GetGenesisStateFromAppState(clientCtx.Codec, appState)
+			bankGenState := banktypes.GetGenesisStateFromAppState(clientCtx.Marshaler, appState)
 			bankGenState.Balances = append(bankGenState.Balances, balances)
 			bankGenState.Balances = banktypes.SanitizeGenesisBalances(bankGenState.Balances)
 			bankGenState.Supply = bankGenState.Supply.Add(balances.Coins...)
 
-			bankGenStateBz, err := clientCtx.Codec.MarshalJSON(bankGenState)
+			bankGenStateBz, err := clientCtx.Marshaler.MarshalJSON(bankGenState)
 			if err != nil {
 				return fmt.Errorf("failed to marshal bank genesis state: %w", err)
 			}

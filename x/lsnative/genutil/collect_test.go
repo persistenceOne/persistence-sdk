@@ -15,8 +15,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/server"
 	"github.com/cosmos/cosmos-sdk/types"
 	bankexported "github.com/cosmos/cosmos-sdk/x/bank/exported"
-	"github.com/cosmos/cosmos-sdk/x/genutil"
-	gtypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
+	gtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/types"
 )
 
 type doNothingUnmarshalJSON struct {

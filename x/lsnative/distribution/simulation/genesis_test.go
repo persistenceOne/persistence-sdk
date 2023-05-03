@@ -13,8 +13,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/cosmos/cosmos-sdk/x/distribution/simulation"
-	"github.com/cosmos/cosmos-sdk/x/distribution/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/simulation"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/types"
 )
 
 // TestRandomizedGenState tests the normal scenario of applying RandomizedGenState.

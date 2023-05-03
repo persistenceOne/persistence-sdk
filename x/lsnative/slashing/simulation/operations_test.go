@@ -12,18 +12,18 @@ import (
 
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	"github.com/cosmos/cosmos-sdk/x/slashing/simulation"
-	"github.com/cosmos/cosmos-sdk/x/slashing/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
+	distrtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/slashing/simulation"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/slashing/types"
+	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 // TestWeightedOperations tests the weights of the operations.
@@ -86,7 +86,7 @@ func TestSimulateMsgUnjail(t *testing.T) {
 	validator0, issuedShares := validator0.AddTokensFromDel(delTokens)
 	val0AccAddress, err := sdk.ValAddressFromBech32(validator0.OperatorAddress)
 	require.NoError(t, err)
-	selfDelegation := stakingtypes.NewDelegation(val0AccAddress.Bytes(), validator0.GetOperator(), issuedShares)
+	selfDelegation := stakingtypes.NewDelegation(val0AccAddress.Bytes(), validator0.GetOperator(), issuedShares, false)
 	app.StakingKeeper.SetDelegation(ctx, selfDelegation)
 	app.DistrKeeper.SetDelegatorStartingInfo(ctx, validator0.GetOperator(), val0AccAddress.Bytes(), distrtypes.NewDelegatorStartingInfo(2, sdk.OneDec(), 200))
 

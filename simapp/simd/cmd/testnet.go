@@ -30,9 +30,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/cosmos/cosmos-sdk/x/genutil"
-	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
+	genutiltypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/types"
+	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 var (
@@ -168,7 +168,7 @@ func InitTestnet(
 
 		genFiles = append(genFiles, nodeConfig.GenesisFile())
 
-		kb, err := keyring.New(sdk.KeyringServiceName(), keyringBackend, clientCtx.HomeDir, inBuf, clientCtx.Codec)
+		kb, err := keyring.New(sdk.KeyringServiceName(), keyringBackend, clientCtx.HomeDir, inBuf, clientCtx.Marshaler)
 		if err != nil {
 			return err
 		}
@@ -274,12 +274,12 @@ func initGenFiles(
 	genAccounts []authtypes.GenesisAccount, genBalances []banktypes.Balance,
 	genFiles []string, numValidators int,
 ) error {
-	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
+	appGenState := mbm.DefaultGenesis(clientCtx.Marshaler)
 
 	// set the accounts in the genesis state
 	var authGenState authtypes.GenesisState
 
-	clientCtx.Codec.MustUnmarshalJSON(appGenState[authtypes.ModuleName], &authGenState)
+	clientCtx.Marshaler.MustUnmarshalJSON(appGenState[authtypes.ModuleName], &authGenState)
 
 	accounts, err := authtypes.PackAccounts(genAccounts)
 	if err != nil {
@@ -287,19 +287,19 @@ func initGenFiles(
 	}
 
 	authGenState.Accounts = accounts
-	appGenState[authtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&authGenState)
+	appGenState[authtypes.ModuleName] = clientCtx.Marshaler.MustMarshalJSON(&authGenState)
 
 	// set the balances in the genesis state
 	var bankGenState banktypes.GenesisState
 
-	clientCtx.Codec.MustUnmarshalJSON(appGenState[banktypes.ModuleName], &bankGenState)
+	clientCtx.Marshaler.MustUnmarshalJSON(appGenState[banktypes.ModuleName], &bankGenState)
 
 	bankGenState.Balances = banktypes.SanitizeGenesisBalances(genBalances)
 	for _, bal := range bankGenState.Balances {
 		bankGenState.Supply = bankGenState.Supply.Add(bal.Coins...)
 	}
 
-	appGenState[banktypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&bankGenState)
+	appGenState[banktypes.ModuleName] = clientCtx.Marshaler.MustMarshalJSON(&bankGenState)
 
 	appGenStateJSON, err := json.MarshalIndent(appGenState, "", "  ")
 	if err != nil {
@@ -347,7 +347,7 @@ func collectGenFiles(
 			return err
 		}
 
-		nodeAppState, err := genutil.GenAppStateFromConfig(clientCtx.Codec, clientCtx.TxConfig, nodeConfig, initCfg, *genDoc, genBalIterator)
+		nodeAppState, err := genutil.GenAppStateFromConfig(clientCtx.Marshaler, clientCtx.TxConfig, nodeConfig, initCfg, *genDoc, genBalIterator)
 		if err != nil {
 			return err
 		}
