@@ -3,7 +3,7 @@ package testutil
 import (
 	"github.com/cosmos/cosmos-sdk/testutil"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/client/cli"
 )
 
 // An example exported genesis file from a 0.37 chain. Note that evidence

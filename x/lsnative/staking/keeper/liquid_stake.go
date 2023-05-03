@@ -27,7 +27,7 @@ func (k Keeper) GetTotalLiquidStakedTokens(ctx sdk.Context) sdk.Int {
 	tokensBz := store.Get(types.TotalLiquidStakedTokensKey)
 
 	if tokensBz == nil {
-		panic(errors.New("no total liquid staked tokens in store"))
+		panic(errors.New("total liquid staked was never initialized"))
 	}
 
 	var tokens sdk.Int

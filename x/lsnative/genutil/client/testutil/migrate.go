@@ -7,7 +7,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/testutil"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/client/cli"
 )
 
 func TestGetMigrationCallback(t *testing.T) {

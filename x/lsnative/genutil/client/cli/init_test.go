@@ -24,10 +24,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/cosmos/cosmos-sdk/x/genutil"
-	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
-	genutiltest "github.com/cosmos/cosmos-sdk/x/genutil/client/testutil"
-	"github.com/cosmos/cosmos-sdk/x/staking"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
+	genutilcli "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/client/cli"
+	genutiltest "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/client/testutil"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking"
 )
 
 var testMbm = module.NewBasicManager(

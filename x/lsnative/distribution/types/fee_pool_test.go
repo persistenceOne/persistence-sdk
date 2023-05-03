@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/distribution/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/types"
 )
 
 func TestValidateGenesis(t *testing.T) {

@@ -13,10 +13,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltest "github.com/cosmos/cosmos-sdk/x/genutil/client/testutil"
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
 	simcmd "github.com/persistenceOne/persistence-sdk/v2/simapp/simd/cmd"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
@@ -80,7 +80,7 @@ func TestAddGenesisAccountCmd(t *testing.T) {
 
 			if tc.withKeyring {
 				path := hd.CreateHDPath(118, 0, 0).String()
-				kr, err := keyring.New(sdk.KeyringServiceName(), keyring.BackendMemory, clientCtx.HomeDir, nil, clientCtx.Codec)
+				kr, err := keyring.New(sdk.KeyringServiceName(), keyring.BackendMemory, clientCtx.HomeDir, nil, clientCtx.Marshaler)
 				require.NoError(t, err)
 				_, _, err = kr.NewMnemonic(tc.addr, keyring.English, path, keyring.DefaultBIP39Passphrase, hd.Secp256k1)
 				require.NoError(t, err)

@@ -7,12 +7,13 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	"github.com/cosmos/cosmos-sdk/testutil"
-	"github.com/cosmos/cosmos-sdk/testutil/network"
 	"github.com/cosmos/cosmos-sdk/testutil/rest"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	grpctypes "github.com/cosmos/cosmos-sdk/types/grpc"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/cosmos/cosmos-sdk/x/distribution/types"
+	sdkdistr "github.com/cosmos/cosmos-sdk/x/distribution/types"
+	"github.com/persistenceOne/persistence-sdk/v2/testutil/network"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/types"
 )
 
 type GRPCQueryTestSuite struct {
@@ -294,8 +295,8 @@ func (s *GRPCQueryTestSuite) TestQueryDelegatorRewardsGRPC() {
 				grpctypes.GRPCBlockHeightHeader: "2",
 			},
 			false,
-			&types.QueryDelegationRewardsResponse{},
-			&types.QueryDelegationRewardsResponse{
+			&sdkdistr.QueryDelegationRewardsResponse{},
+			&sdkdistr.QueryDelegationRewardsResponse{
 				Rewards: rewards,
 			},
 		},

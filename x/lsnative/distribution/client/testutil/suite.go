@@ -13,11 +13,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/cosmos/cosmos-sdk/testutil/network"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/distribution/client/cli"
-	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	"github.com/persistenceOne/persistence-sdk/v2/testutil/network"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/client/cli"
+	distrtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/types"
 )
 
 type IntegrationTestSuite struct {
@@ -486,7 +486,7 @@ func (s *IntegrationTestSuite) TestNewWithdrawRewardsCmd() {
 			},
 			false, 0, &sdk.TxResponse{},
 			[]string{
-				"/cosmos.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse",
+				"/lsnative.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse",
 			},
 		},
 		{
@@ -501,8 +501,8 @@ func (s *IntegrationTestSuite) TestNewWithdrawRewardsCmd() {
 			},
 			false, 0, &sdk.TxResponse{},
 			[]string{
-				"/cosmos.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse",
-				"/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommissionResponse",
+				"/lsnative.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse",
+				"/lsnative.distribution.v1beta1.MsgWithdrawValidatorCommissionResponse",
 			},
 		},
 	}
@@ -533,14 +533,14 @@ func (s *IntegrationTestSuite) TestNewWithdrawRewardsCmd() {
 				for responseIdx, msgResponse := range txMsgData.MsgResponses {
 					s.Require().Equal(tc.expectedResponseType[responseIdx], msgResponse.TypeUrl)
 					switch msgResponse.TypeUrl {
-					case "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse":
+					case "/lsnative.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse":
 						var resp distrtypes.MsgWithdrawDelegatorRewardResponse
 						// can't use unpackAny as response types are not registered.
 						err = s.cfg.Codec.Unmarshal(msgResponse.Value, &resp)
 						s.Require().NoError(err)
 						s.Require().True(resp.Amount.IsAllGT(sdk.NewCoins(sdk.NewCoin("stake", sdk.OneInt()))),
 							fmt.Sprintf("expected a positive coin value, got %v", resp.Amount))
-					case "/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommissionResponse":
+					case "/lsnative.distribution.v1beta1.MsgWithdrawValidatorCommissionResponse":
 						var resp distrtypes.MsgWithdrawValidatorCommissionResponse
 						// can't use unpackAny as response types are not registered.
 						err = s.cfg.Codec.Unmarshal(msgResponse.Value, &resp)
@@ -586,7 +586,7 @@ func (s *IntegrationTestSuite) TestNewWithdrawAllRewardsCmd() {
 			},
 			false, 0, &sdk.TxResponse{},
 			[]string{
-				"/cosmos.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse",
+				"/lsnative.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse",
 			},
 		},
 	}
@@ -619,14 +619,14 @@ func (s *IntegrationTestSuite) TestNewWithdrawAllRewardsCmd() {
 				for responseIdx, msgResponse := range txMsgData.MsgResponses {
 					s.Require().Equal(tc.expectedResponseType[responseIdx], msgResponse.TypeUrl)
 					switch msgResponse.TypeUrl {
-					case "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse":
+					case "/lsnative.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse":
 						var resp distrtypes.MsgWithdrawDelegatorRewardResponse
 						// can't use unpackAny as response types are not registered.
 						err = s.cfg.Codec.Unmarshal(msgResponse.Value, &resp)
 						s.Require().NoError(err)
 						s.Require().True(resp.Amount.IsAllGT(sdk.NewCoins(sdk.NewCoin("stake", sdk.OneInt()))),
 							fmt.Sprintf("expected a positive coin value, got %v", resp.Amount))
-					case "/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommissionResponse":
+					case "/lsnative.distribution.v1beta1.MsgWithdrawValidatorCommissionResponse":
 						var resp distrtypes.MsgWithdrawValidatorCommissionResponse
 						// can't use unpackAny as response types are not registered.
 						err = s.cfg.Codec.Unmarshal(msgResponse.Value, &resp)

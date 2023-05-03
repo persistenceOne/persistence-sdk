@@ -3,20 +3,22 @@ package staking_test
 import (
 	"testing"
 
+	"cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
+	simapp "github.com/persistenceOne/persistence-sdk/v2/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 func checkValidator(t *testing.T, app *simapp.SimApp, addr sdk.ValAddress, expFound bool) types.Validator {
 	ctxCheck := app.BaseApp.NewContext(true, tmproto.Header{})
-	validator, found := app.StakingKeeper.GetValidator(ctxCheck, addr)
+	validator, found := app.StakingKeeper.GetLiquidValidator(ctxCheck, addr)
 
 	require.Equal(t, expFound, found)
 	return validator
@@ -27,7 +29,7 @@ func checkDelegation(
 	validatorAddr sdk.ValAddress, expFound bool, expShares sdk.Dec,
 ) {
 	ctxCheck := app.BaseApp.NewContext(true, tmproto.Header{})
-	delegation, found := app.StakingKeeper.GetDelegation(ctxCheck, delegatorAddr, validatorAddr)
+	delegation, found := app.StakingKeeper.GetLiquidDelegation(ctxCheck, delegatorAddr, validatorAddr)
 	if expFound {
 		require.True(t, found)
 		require.True(sdk.DecEq(t, expShares, delegation.Shares))
@@ -65,7 +67,7 @@ func TestStakingMsgs(t *testing.T) {
 	// create validator
 	description := types.NewDescription("foo_moniker", "", "", "", "")
 	createValidatorMsg, err := types.NewMsgCreateValidator(
-		sdk.ValAddress(addr1), valKey.PubKey(), bondCoin, description, commissionRates, sdk.OneInt(),
+		sdk.ValAddress(addr1), valKey.PubKey(), bondCoin, description, commissionRates,
 	)
 	require.NoError(t, err)
 
@@ -80,15 +82,15 @@ func TestStakingMsgs(t *testing.T) {
 
 	validator := checkValidator(t, app, sdk.ValAddress(addr1), true)
 	require.Equal(t, sdk.ValAddress(addr1).String(), validator.OperatorAddress)
-	require.Equal(t, types.Bonded, validator.Status)
-	require.True(sdk.IntEq(t, bondTokens, validator.BondedTokens()))
+	require.Equal(t, sdkstaking.Bonded, validator.Status)
+	require.True(math.IntEq(t, bondTokens, validator.BondedTokens()))
 
 	header = tmproto.Header{Height: app.LastBlockHeight() + 1}
 	app.BeginBlock(abci.RequestBeginBlock{Header: header})
 
 	// edit the validator
 	description = types.NewDescription("bar_moniker", "", "", "", "")
-	editValidatorMsg := types.NewMsgEditValidator(sdk.ValAddress(addr1), description, nil, nil)
+	editValidatorMsg := types.NewMsgEditValidator(sdk.ValAddress(addr1), description, nil)
 
 	header = tmproto.Header{Height: app.LastBlockHeight() + 1}
 	_, _, err = simapp.SignCheckDeliver(t, txGen, app.BaseApp, header, []sdk.Msg{editValidatorMsg}, "", []uint64{0}, []uint64{1}, true, true, priv1)

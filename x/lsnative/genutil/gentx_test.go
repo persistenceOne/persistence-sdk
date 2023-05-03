@@ -11,15 +11,15 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simapp"
-	"github.com/cosmos/cosmos-sdk/simapp/helpers"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/cosmos/cosmos-sdk/x/genutil"
-	"github.com/cosmos/cosmos-sdk/x/genutil/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp/helpers"
+	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/types"
+	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 var (
@@ -53,12 +53,11 @@ func (suite *GenTxTestSuite) SetupTest() {
 
 	var err error
 	amount := sdk.NewInt64Coin(sdk.DefaultBondDenom, 50)
-	one := sdk.OneInt()
 	suite.msg1, err = stakingtypes.NewMsgCreateValidator(
-		sdk.ValAddress(pk1.Address()), pk1, amount, desc, comm, one)
+		sdk.ValAddress(pk1.Address()), pk1, amount, desc, comm)
 	suite.NoError(err)
 	suite.msg2, err = stakingtypes.NewMsgCreateValidator(
-		sdk.ValAddress(pk2.Address()), pk1, amount, desc, comm, one)
+		sdk.ValAddress(pk2.Address()), pk1, amount, desc, comm)
 	suite.NoError(err)
 }
 
@@ -112,7 +111,7 @@ func (suite *GenTxTestSuite) TestSetGenTxsInAppGenesisState() {
 	for _, tc := range testCases {
 		suite.Run(fmt.Sprintf("Case %s", tc.msg), func() {
 			suite.SetupTest()
-			cdc := suite.encodingConfig.Codec
+			cdc := suite.encodingConfig.Marshaler
 			txJSONEncoder := suite.encodingConfig.TxConfig.TxJSONEncoder()
 
 			tc.malleate()
@@ -179,7 +178,7 @@ func (suite *GenTxTestSuite) TestValidateAccountInGenesis() {
 	for _, tc := range testCases {
 		suite.Run(fmt.Sprintf("Case %s", tc.msg), func() {
 			suite.SetupTest()
-			cdc := suite.encodingConfig.Codec
+			cdc := suite.encodingConfig.Marshaler
 
 			suite.app.StakingKeeper.SetParams(suite.ctx, stakingtypes.DefaultParams())
 			stakingGenesisState := suite.app.StakingKeeper.ExportGenesis(suite.ctx)

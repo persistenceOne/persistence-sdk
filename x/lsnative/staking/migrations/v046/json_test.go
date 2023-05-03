@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
 
 	v046 "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/migrations/v046"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
@@ -18,7 +18,7 @@ func TestMigrateJSON(t *testing.T) {
 	clientCtx := client.Context{}.
 		WithInterfaceRegistry(encodingConfig.InterfaceRegistry).
 		WithTxConfig(encodingConfig.TxConfig).
-		WithCodec(encodingConfig.Codec)
+		WithCodec(encodingConfig.Marshaler)
 
 	oldState := types.DefaultGenesisState()
 

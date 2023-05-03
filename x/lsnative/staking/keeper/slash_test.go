@@ -8,12 +8,13 @@ import (
 	"github.com/stretchr/testify/require"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
-	"github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	"github.com/cosmos/cosmos-sdk/x/staking/teststaking"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/keeper"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/teststaking"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 // bootstrapSlashTest creates 3 validators and bootstrap the app.
@@ -137,11 +138,11 @@ func TestSlashRedelegation(t *testing.T) {
 	app.StakingKeeper.SetRedelegation(ctx, rd)
 
 	// set the associated delegation
-	del := types.NewDelegation(addrDels[0], addrVals[1], sdk.NewDec(10))
+	del := types.NewDelegation(addrDels[0], addrVals[1], sdk.NewDec(10), false)
 	app.StakingKeeper.SetDelegation(ctx, del)
 
 	// started redelegating prior to the current height, stake didn't contribute to infraction
-	validator, found := app.StakingKeeper.GetValidator(ctx, addrVals[1])
+	validator, found := app.StakingKeeper.GetLiquidValidator(ctx, addrVals[1])
 	require.True(t, found)
 	slashAmount := app.StakingKeeper.SlashRedelegation(ctx, validator, rd, 1, fraction)
 	require.True(t, slashAmount.Equal(sdk.NewInt(0)))
@@ -149,7 +150,7 @@ func TestSlashRedelegation(t *testing.T) {
 	// after the expiration time, no longer eligible for slashing
 	ctx = ctx.WithBlockHeader(tmproto.Header{Time: time.Unix(10, 0)})
 	app.StakingKeeper.SetRedelegation(ctx, rd)
-	validator, found = app.StakingKeeper.GetValidator(ctx, addrVals[1])
+	validator, found = app.StakingKeeper.GetLiquidValidator(ctx, addrVals[1])
 	require.True(t, found)
 	slashAmount = app.StakingKeeper.SlashRedelegation(ctx, validator, rd, 0, fraction)
 	require.True(t, slashAmount.Equal(sdk.NewInt(0)))
@@ -159,7 +160,7 @@ func TestSlashRedelegation(t *testing.T) {
 	// test valid slash, before expiration timestamp and to which stake contributed
 	ctx = ctx.WithBlockHeader(tmproto.Header{Time: time.Unix(0, 0)})
 	app.StakingKeeper.SetRedelegation(ctx, rd)
-	validator, found = app.StakingKeeper.GetValidator(ctx, addrVals[1])
+	validator, found = app.StakingKeeper.GetLiquidValidator(ctx, addrVals[1])
 	require.True(t, found)
 	slashAmount = app.StakingKeeper.SlashRedelegation(ctx, validator, rd, 0, fraction)
 	require.True(t, slashAmount.Equal(sdk.NewInt(5)))
@@ -174,7 +175,7 @@ func TestSlashRedelegation(t *testing.T) {
 	require.Equal(t, sdk.NewInt(10), rd.Entries[0].InitialBalance)
 
 	// shares decreased
-	del, found = app.StakingKeeper.GetDelegation(ctx, addrDels[0], addrVals[1])
+	del, found = app.StakingKeeper.GetLiquidDelegation(ctx, addrDels[0], addrVals[1])
 	require.True(t, found)
 	require.Equal(t, int64(5), del.Shares.RoundInt64())
 
@@ -213,7 +214,7 @@ func TestSlashAtNegativeHeight(t *testing.T) {
 	// end block
 	applyValidatorSetUpdates(t, ctx, app.StakingKeeper, 1)
 
-	validator, found = app.StakingKeeper.GetValidator(ctx, validator.GetOperator())
+	validator, found = app.StakingKeeper.GetLiquidValidator(ctx, validator.GetOperator())
 	require.True(t, found)
 	// power decreased
 	require.Equal(t, int64(5), validator.GetConsensusPower(app.StakingKeeper.PowerReduction(ctx)))
@@ -244,7 +245,7 @@ func TestSlashValidatorAtCurrentHeight(t *testing.T) {
 	// end block
 	applyValidatorSetUpdates(t, ctx, app.StakingKeeper, 1)
 
-	validator, found = app.StakingKeeper.GetValidator(ctx, validator.GetOperator())
+	validator, found = app.StakingKeeper.GetLiquidValidator(ctx, validator.GetOperator())
 	assert.True(t, found)
 	// power decreased
 	require.Equal(t, int64(5), validator.GetConsensusPower(app.StakingKeeper.PowerReduction(ctx)))
@@ -378,7 +379,7 @@ func TestSlashWithUnbondingDelegation(t *testing.T) {
 	// power decreased by 1 again, validator is out of stake
 	// validator should be in unbonding period
 	validator, _ = app.StakingKeeper.GetValidatorByConsAddr(ctx, consAddr)
-	require.Equal(t, validator.GetStatus(), types.Unbonding)
+	require.Equal(t, validator.GetStatus(), sdkstaking.Unbonding)
 }
 
 // tests Slash at a previous height with a redelegation
@@ -394,7 +395,7 @@ func TestSlashWithRedelegation(t *testing.T) {
 	app.StakingKeeper.SetRedelegation(ctx, rd)
 
 	// set the associated delegation
-	del := types.NewDelegation(addrDels[0], addrVals[1], sdk.NewDecFromInt(rdTokens))
+	del := types.NewDelegation(addrDels[0], addrVals[1], sdk.NewDecFromInt(rdTokens), false)
 	app.StakingKeeper.SetDelegation(ctx, del)
 
 	// update bonded tokens
@@ -503,14 +504,14 @@ func TestSlashWithRedelegation(t *testing.T) {
 	// read updated validator
 	// validator decreased to zero power, should be in unbonding period
 	validator, _ = app.StakingKeeper.GetValidatorByConsAddr(ctx, consAddr)
-	require.Equal(t, validator.GetStatus(), types.Unbonding)
+	require.Equal(t, validator.GetStatus(), sdkstaking.Unbonding)
 
 	// slash the validator again, by 100%
 	// no stake remains to be slashed
 	ctx = ctx.WithBlockHeight(12)
 	// validator still in unbonding period
 	validator, _ = app.StakingKeeper.GetValidatorByConsAddr(ctx, consAddr)
-	require.Equal(t, validator.GetStatus(), types.Unbonding)
+	require.Equal(t, validator.GetStatus(), sdkstaking.Unbonding)
 
 	require.NotPanics(t, func() { app.StakingKeeper.Slash(ctx, consAddr, 10, 10, sdk.OneDec()) })
 
@@ -530,7 +531,7 @@ func TestSlashWithRedelegation(t *testing.T) {
 	// read updated validator
 	// power still zero, still in unbonding period
 	validator, _ = app.StakingKeeper.GetValidatorByConsAddr(ctx, consAddr)
-	require.Equal(t, validator.GetStatus(), types.Unbonding)
+	require.Equal(t, validator.GetStatus(), sdkstaking.Unbonding)
 }
 
 // tests Slash at a previous height with both an unbonding delegation and a redelegation
@@ -546,7 +547,7 @@ func TestSlashBoth(t *testing.T) {
 	app.StakingKeeper.SetRedelegation(ctx, rdA)
 
 	// set the associated delegation
-	delA := types.NewDelegation(addrDels[0], addrVals[1], sdk.NewDecFromInt(rdATokens))
+	delA := types.NewDelegation(addrDels[0], addrVals[1], sdk.NewDecFromInt(rdATokens), false)
 	app.StakingKeeper.SetDelegation(ctx, delA)
 
 	// set an unbonding delegation with expiration timestamp (beyond which the
