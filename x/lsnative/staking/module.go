@@ -16,6 +16,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
+
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/client/cli"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/simulation"
@@ -52,6 +54,7 @@ func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 // RegisterInterfaces registers the module's interface types
 func (b AppModuleBasic) RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	types.RegisterInterfaces(registry)
+	sdkstaking.RegisterInterfaces(registry)
 }
 
 // DefaultGenesis returns default genesis state as raw bytes for the staking
@@ -133,7 +136,10 @@ func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sd
 
 // RegisterServices registers module services.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
-	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
+	msgServerImpl := keeper.NewMsgServerImpl(am.keeper)
+	types.RegisterMsgServer(cfg.MsgServer(), msgServerImpl)
+	sdkstaking.RegisterMsgServer(cfg.MsgServer(), sdkstaking.MsgServer(keeper.NewSdkMsgHandlerWrapper(msgServerImpl)))
+
 	querier := keeper.Querier{Keeper: am.keeper}
 	types.RegisterQueryServer(cfg.QueryServer(), querier)
 
