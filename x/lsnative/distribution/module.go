@@ -16,6 +16,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	sdkdistr "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/client/cli"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/simulation"
@@ -80,6 +81,7 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 // RegisterInterfaces implements InterfaceModule
 func (b AppModuleBasic) RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	types.RegisterInterfaces(registry)
+	sdkdistr.RegisterInterfaces(registry)
 }
 
 // AppModule implements an application module for the distribution module.
@@ -133,7 +135,10 @@ func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sd
 
 // RegisterServices registers module services.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
+	msgServerImpl := keeper.NewMsgServerImpl(am.keeper)
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
+	sdkdistr.RegisterMsgServer(cfg.MsgServer(), sdkdistr.MsgServer(keeper.NewSdkMsgHandlerWrapper(msgServerImpl)))
+
 	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
 
 	m := keeper.NewMigrator(am.keeper)
