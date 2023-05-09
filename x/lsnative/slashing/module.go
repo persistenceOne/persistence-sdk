@@ -16,6 +16,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	sdkslashing "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/slashing/client/cli"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/slashing/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/slashing/simulation"
@@ -49,6 +50,7 @@ func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 // RegisterInterfaces registers the module's interface types
 func (b AppModuleBasic) RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	types.RegisterInterfaces(registry)
+	sdkslashing.RegisterInterfaces(registry)
 }
 
 // DefaultGenesis returns default genesis state as raw bytes for the slashing
@@ -130,7 +132,10 @@ func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sd
 
 // RegisterServices registers module services.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
+	msgServerImpl := keeper.NewMsgServerImpl(am.keeper)
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
+	sdkslashing.RegisterMsgServer(cfg.MsgServer(), sdkslashing.MsgServer(keeper.NewSdkMsgHandlerWrapper(msgServerImpl)))
+
 	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
 
 	m := keeper.NewMigrator(am.keeper)
