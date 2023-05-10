@@ -114,6 +114,7 @@ func startInProcess(cfg Config, val *Validator) error {
 			}
 		}
 	}
+
 	return nil
 }
 
@@ -132,6 +133,7 @@ func collectGenFiles(cfg Config, vals []*Validator, outputDir string) error {
 		initCfg := genutiltypes.NewInitConfig(cfg.ChainID, gentxsDir, vals[i].NodeID, vals[i].PubKey)
 
 		genFile := tmCfg.GenesisFile()
+
 		genDoc, err := types.GenesisDocFromFile(genFile)
 		if err != nil {
 			return err
@@ -155,6 +157,7 @@ func collectGenFiles(cfg Config, vals []*Validator, outputDir string) error {
 func initGenFiles(cfg Config, genAccounts []authtypes.GenesisAccount, genBalances []banktypes.Balance, genFiles []string) error {
 	// set the accounts in the genesis state
 	var authGenState authtypes.GenesisState
+
 	cfg.Codec.MustUnmarshalJSON(cfg.GenesisState[authtypes.ModuleName], &authGenState)
 
 	accounts, err := authtypes.PackAccounts(genAccounts)
@@ -167,6 +170,7 @@ func initGenFiles(cfg Config, genAccounts []authtypes.GenesisAccount, genBalance
 
 	// set the balances in the genesis state
 	var bankGenState banktypes.GenesisState
+
 	cfg.Codec.MustUnmarshalJSON(cfg.GenesisState[banktypes.ModuleName], &bankGenState)
 
 	bankGenState.Balances = append(bankGenState.Balances, genBalances...)
@@ -202,7 +206,7 @@ func writeFile(name string, dir string, contents []byte) error {
 		return err
 	}
 
-	err = os.WriteFile(file, contents, 0o644) // nolint: gosec
+	err = os.WriteFile(file, contents, 0o644) //nolint: gosec
 	if err != nil {
 		return err
 	}

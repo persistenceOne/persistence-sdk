@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
+	"cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	gogotypes "github.com/gogo/protobuf/types"
@@ -76,7 +76,7 @@ func (k Keeper) GetExchangeRate(ctx sdk.Context, denom string) (sdk.Dec, error) 
 
 	b := store.Get(types.GetExchangeRateKey(denom))
 	if b == nil {
-		return sdk.ZeroDec(), sdkerrors.Wrap(types.ErrUnknownDenom, denom)
+		return sdk.ZeroDec(), errors.Wrap(types.ErrUnknownDenom, denom)
 	}
 
 	decProto := sdk.DecProto{}
@@ -143,7 +143,7 @@ func (k Keeper) IterateExchangeRates(ctx sdk.Context, handler func(string, sdk.D
 func (k Keeper) GetFeederDelegation(ctx sdk.Context, operator sdk.ValAddress) (sdk.AccAddress, error) {
 	// check that the given validator exists
 	if val := k.StakingKeeper.Validator(ctx, operator); val == nil || !val.IsBonded() {
-		return nil, sdkerrors.Wrapf(sdkstaking.ErrNoValidatorFound, "validator %s is not active set", operator.String())
+		return nil, errors.Wrapf(sdkstaking.ErrNoValidatorFound, "validator %s is not active set", operator.String())
 	}
 
 	store := ctx.KVStore(k.storeKey)
@@ -246,7 +246,7 @@ func (k Keeper) GetAggregateExchangeRatePrevote(
 
 	bz := store.Get(types.GetAggregateExchangeRatePrevoteKey(voter))
 	if bz == nil {
-		return types.AggregateExchangeRatePrevote{}, sdkerrors.Wrap(types.ErrNoAggregatePrevote, voter.String())
+		return types.AggregateExchangeRatePrevote{}, errors.Wrap(types.ErrNoAggregatePrevote, voter.String())
 	}
 
 	var aggregatePrevote types.AggregateExchangeRatePrevote
@@ -313,7 +313,7 @@ func (k Keeper) GetAggregateExchangeRateVote(
 
 	bz := store.Get(types.GetAggregateExchangeRateVoteKey(voter))
 	if bz == nil {
-		return types.AggregateExchangeRateVote{}, sdkerrors.Wrap(types.ErrNoAggregateVote, voter.String())
+		return types.AggregateExchangeRateVote{}, errors.Wrap(types.ErrNoAggregateVote, voter.String())
 	}
 
 	var aggregateVote types.AggregateExchangeRateVote
@@ -375,7 +375,7 @@ func (k Keeper) ValidateFeeder(ctx sdk.Context, valAddr sdk.ValAddress, feederAd
 	}
 
 	if !delegate.Equals(feederAddr) {
-		return sdkerrors.Wrap(types.ErrNoVotingPermission, feederAddr.String())
+		return errors.Wrap(types.ErrNoVotingPermission, feederAddr.String())
 	}
 
 	return nil

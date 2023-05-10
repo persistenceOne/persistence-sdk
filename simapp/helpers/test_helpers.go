@@ -39,14 +39,17 @@ func GenSignedMockTx(r *rand.Rand, txConfig client.TxConfig, msgs []sdk.Msg, fee
 	}
 
 	tx := txConfig.NewTxBuilder()
+
 	err := tx.SetMsgs(msgs...)
 	if err != nil {
 		return nil, err
 	}
+
 	err = tx.SetSignatures(sigs...)
 	if err != nil {
 		return nil, err
 	}
+
 	tx.SetMemo(memo)
 	tx.SetFeeAmount(feeAmt)
 	tx.SetGasLimit(gas)
@@ -60,15 +63,19 @@ func GenSignedMockTx(r *rand.Rand, txConfig client.TxConfig, msgs []sdk.Msg, fee
 			Sequence:      accSeqs[i],
 			PubKey:        p.PubKey(),
 		}
+
 		signBytes, err := txConfig.SignModeHandler().GetSignBytes(signMode, signerData, tx.GetTx())
 		if err != nil {
 			panic(err)
 		}
+
 		sig, err := p.Sign(signBytes)
 		if err != nil {
 			panic(err)
 		}
+
 		sigs[i].Data.(*signing.SingleSignatureData).Signature = sig
+
 		err = tx.SetSignatures(sigs...)
 		if err != nil {
 			panic(err)
