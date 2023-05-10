@@ -31,8 +31,8 @@ import (
 	"github.com/cosmos/ibc-go/v6/modules/core/exported"
 	"github.com/cosmos/ibc-go/v6/modules/core/types"
 	ibctmtypes "github.com/cosmos/ibc-go/v6/modules/light-clients/07-tendermint/types"
-	"github.com/persistenceOne/persistence-sdk/v2/simapp"
-	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/testing/mock"
+	"github.com/persistenceOne/persistence-sdk/v2/ibctesting/mock"
+	"github.com/persistenceOne/persistence-sdk/v2/ibctesting/simapp"
 )
 
 var MaxAccounts = 10
@@ -362,7 +362,7 @@ func (chain *TestChain) GetValsAtHeight(height int64) (*tmtypes.ValidatorSet, bo
 		return nil, false
 	}
 
-	valSet := stakingtypes.Validators(histInfo.Valset)
+	valSet := stakingtypes.Validators(SdkValidatorsToValidators(histInfo.Valset))
 
 	tmValidators, err := teststaking.ToTmValidators(valSet, sdk.DefaultPowerReduction)
 	if err != nil {

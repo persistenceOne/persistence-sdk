@@ -13,8 +13,7 @@ import (
 	connectiontypes "github.com/cosmos/ibc-go/v6/modules/core/03-connection/types"
 	commitmenttypes "github.com/cosmos/ibc-go/v6/modules/core/23-commitment/types"
 	ibctmtypes "github.com/cosmos/ibc-go/v6/modules/light-clients/07-tendermint/types"
-	"github.com/persistenceOne/persistence-sdk/v2/simapp"
-	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/testing/mock"
+	"github.com/persistenceOne/persistence-sdk/v2/ibctesting/mock"
 )
 
 const (
@@ -34,7 +33,6 @@ const (
 	// Application Ports
 	TransferPort = ibctransfertypes.ModuleName
 	MockPort     = mock.ModuleName
-	MockFeePort  = simapp.MockFeePort
 
 	// used for testing proposals
 	Title       = "title"
