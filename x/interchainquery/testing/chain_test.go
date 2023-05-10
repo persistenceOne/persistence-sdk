@@ -4,10 +4,10 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/stretchr/testify/require"
 
-	ibctesting "github.com/cosmos/ibc-go/v6/testing"
+	ibctesting "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/testing"
 )
 
 func TestChangeValSet(t *testing.T) {
@@ -26,9 +26,9 @@ func TestChangeValSet(t *testing.T) {
 	val := chainA.GetSimApp().StakingKeeper.GetValidators(chainA.GetContext(), 4)
 
 	chainA.GetSimApp().StakingKeeper.Delegate(chainA.GetContext(), chainA.SenderAccounts[1].SenderAccount.GetAddress(),
-		amount, types.Unbonded, val[1], true)
+		amount, sdkstaking.Unbonded, val[1], true)
 	chainA.GetSimApp().StakingKeeper.Delegate(chainA.GetContext(), chainA.SenderAccounts[3].SenderAccount.GetAddress(),
-		amount2, types.Unbonded, val[3], true)
+		amount2, sdkstaking.Unbonded, val[3], true)
 
 	coord.CommitBlock(chainA)
 

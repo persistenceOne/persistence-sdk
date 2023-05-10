@@ -7,7 +7,7 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v6/modules/core/04-channel/types"
 	"github.com/cosmos/ibc-go/v6/modules/core/exported"
 	ibctmtypes "github.com/cosmos/ibc-go/v6/modules/light-clients/07-tendermint/types"
-	"github.com/cosmos/ibc-go/v6/testing/mock"
+	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/testing/mock"
 )
 
 type ClientConfig interface {
