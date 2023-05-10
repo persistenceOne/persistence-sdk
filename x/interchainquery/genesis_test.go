@@ -4,14 +4,14 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	ibctesting "github.com/cosmos/ibc-go/v6/testing"
 	"github.com/stretchr/testify/suite"
 
+	ibctesting "github.com/persistenceOne/persistence-sdk/v2/ibctesting"
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
+	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 func init() {

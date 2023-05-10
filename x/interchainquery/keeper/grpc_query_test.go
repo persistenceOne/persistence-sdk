@@ -2,7 +2,7 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 
 	icqtypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
 )

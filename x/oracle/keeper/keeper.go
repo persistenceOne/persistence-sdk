@@ -9,7 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	gogotypes "github.com/gogo/protobuf/types"
 	"github.com/tendermint/tendermint/libs/log"
 
@@ -143,7 +143,7 @@ func (k Keeper) IterateExchangeRates(ctx sdk.Context, handler func(string, sdk.D
 func (k Keeper) GetFeederDelegation(ctx sdk.Context, operator sdk.ValAddress) (sdk.AccAddress, error) {
 	// check that the given validator exists
 	if val := k.StakingKeeper.Validator(ctx, operator); val == nil || !val.IsBonded() {
-		return nil, sdkerrors.Wrapf(stakingtypes.ErrNoValidatorFound, "validator %s is not active set", operator.String())
+		return nil, sdkerrors.Wrapf(sdkstaking.ErrNoValidatorFound, "validator %s is not active set", operator.String())
 	}
 
 	store := ctx.KVStore(k.storeKey)

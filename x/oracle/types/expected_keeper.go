@@ -5,14 +5,14 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 // StakingKeeper defines the expected interface contract defined by the x/staking
 // module.
 type StakingKeeper interface {
-	Validator(ctx sdk.Context, address sdk.ValAddress) stakingtypes.ValidatorI
-	GetBondedValidatorsByPower(ctx sdk.Context) []stakingtypes.Validator
+	Validator(ctx sdk.Context, address sdk.ValAddress) sdkstaking.ValidatorI
+	GetBondedValidatorsByPower(ctx sdk.Context) []sdkstaking.Validator
 	TotalBondedTokens(sdk.Context) math.Int
 	Slash(sdk.Context, sdk.ConsAddress, int64, int64, sdk.Dec) math.Int
 	Jail(sdk.Context, sdk.ConsAddress)
@@ -24,7 +24,7 @@ type StakingKeeper interface {
 // DistributionKeeper defines the expected interface contract defined by the
 // x/distribution module.
 type DistributionKeeper interface {
-	AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.ValidatorI, tokens sdk.DecCoins)
+	AllocateTokensToValidator(ctx sdk.Context, val sdkstaking.ValidatorI, tokens sdk.DecCoins)
 	GetValidatorOutstandingRewardsCoins(ctx sdk.Context, val sdk.ValAddress) sdk.DecCoins
 }
 

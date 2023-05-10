@@ -27,7 +27,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
-	ibctesting "github.com/cosmos/ibc-go/v6/testing"
+	"github.com/persistenceOne/persistence-sdk/v2/ibctesting"
 	"github.com/persistenceOne/persistence-sdk/v2/simapp/helpers"
 	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 	"github.com/stretchr/testify/require"

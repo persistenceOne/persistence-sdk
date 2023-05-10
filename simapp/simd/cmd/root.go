@@ -20,7 +20,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
-	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+	genutilcli "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/client/cli"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	tmcfg "github.com/tendermint/tendermint/config"

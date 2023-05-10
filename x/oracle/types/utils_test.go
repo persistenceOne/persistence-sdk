@@ -6,7 +6,7 @@ import (
 
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/tendermint/tendermint/crypto/secp256k1"
 	tmprotocrypto "github.com/tendermint/tendermint/proto/tendermint/crypto"
 )
@@ -40,7 +40,7 @@ func (sk MockStakingKeeper) Validators() []MockValidator {
 	return sk.validators
 }
 
-func (sk MockStakingKeeper) Validator(_ sdk.Context, address sdk.ValAddress) stakingtypes.ValidatorI {
+func (sk MockStakingKeeper) Validator(_ sdk.Context, address sdk.ValAddress) sdkstaking.ValidatorI {
 	for _, validator := range sk.validators {
 		if validator.GetOperator().Equals(address) {
 			return validator
@@ -54,7 +54,7 @@ func (MockStakingKeeper) TotalBondedTokens(sdk.Context) sdk.Int {
 	return sdk.ZeroInt()
 }
 
-func (MockStakingKeeper) GetBondedValidatorsByPower(sdk.Context) []stakingtypes.Validator {
+func (MockStakingKeeper) GetBondedValidatorsByPower(sdk.Context) []sdkstaking.Validator {
 	return nil
 }
 
@@ -101,8 +101,8 @@ func (MockValidator) GetMoniker() string {
 	return ""
 }
 
-func (MockValidator) GetStatus() stakingtypes.BondStatus {
-	return stakingtypes.Bonded
+func (MockValidator) GetStatus() sdkstaking.BondStatus {
+	return sdkstaking.Bonded
 }
 
 func (MockValidator) IsBonded() bool {
