@@ -3,8 +3,8 @@ package keeper_test
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/cosmos/cosmos-sdk/x/staking"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/testutil"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
@@ -38,14 +38,14 @@ func (s *KeeperTestSuite) TestSlashAndResetMissCounters() {
 	s.app.OracleKeeper.SlashAndResetMissCounters(s.ctx)
 	staking.EndBlocker(s.ctx, s.app.StakingKeeper)
 
-	validator, _ := s.app.StakingKeeper.GetValidator(s.ctx, valAddr)
+	validator, _ := s.app.StakingKeeper.GetLiquidValidator(s.ctx, valAddr)
 	s.Require().Equal(amt, validator.GetBondedTokens())
 
 	// Case 2, slash
 	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, missCounterSlash)
 	s.app.OracleKeeper.SlashAndResetMissCounters(s.ctx)
 
-	validator, _ = s.app.StakingKeeper.GetValidator(s.ctx, valAddr)
+	validator, _ = s.app.StakingKeeper.GetLiquidValidator(s.ctx, valAddr)
 	s.Require().Equal(amt.Sub(params.SlashFraction.MulInt(amt).TruncateInt()), validator.GetBondedTokens())
 	s.Require().True(validator.Jailed)
 
@@ -53,27 +53,27 @@ func (s *KeeperTestSuite) TestSlashAndResetMissCounters() {
 	s.Require().Zero(missCounter)
 
 	// Case 3, slash unbonded validator
-	validator, _ = s.app.StakingKeeper.GetValidator(s.ctx, valAddr)
-	validator.Status = stakingtypes.Unbonded
+	validator, _ = s.app.StakingKeeper.GetLiquidValidator(s.ctx, valAddr)
+	validator.Status = sdkstaking.Unbonded
 	validator.Jailed = false
 	validator.Tokens = amt
 	s.app.StakingKeeper.SetValidator(s.ctx, validator)
 
 	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, missCounterSlash)
 	s.app.OracleKeeper.SlashAndResetMissCounters(s.ctx)
-	validator, _ = s.app.StakingKeeper.GetValidator(s.ctx, valAddr)
+	validator, _ = s.app.StakingKeeper.GetLiquidValidator(s.ctx, valAddr)
 	s.Require().Equal(amt, validator.Tokens)
 	s.Require().False(validator.Jailed)
 
 	// Case 4, slash jailed validator
-	validator, _ = s.app.StakingKeeper.GetValidator(s.ctx, valAddr)
-	validator.Status = stakingtypes.Bonded
+	validator, _ = s.app.StakingKeeper.GetLiquidValidator(s.ctx, valAddr)
+	validator.Status = sdkstaking.Bonded
 	validator.Jailed = true
 	validator.Tokens = amt
 	s.app.StakingKeeper.SetValidator(s.ctx, validator)
 
 	s.app.OracleKeeper.SetMissCounter(s.ctx, valAddr, missCounterSlash)
 	s.app.OracleKeeper.SlashAndResetMissCounters(s.ctx)
-	validator, _ = s.app.StakingKeeper.GetValidator(s.ctx, valAddr)
+	validator, _ = s.app.StakingKeeper.GetLiquidValidator(s.ctx, valAddr)
 	s.Require().Equal(amt, validator.Tokens)
 }

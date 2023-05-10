@@ -6,10 +6,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	"github.com/cosmos/cosmos-sdk/x/staking"
-	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking"
+	stakingkeeper "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/keeper"
+	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 	"github.com/tendermint/tendermint/crypto/secp256k1"
 )
 
@@ -97,7 +97,7 @@ func newTestMsgCreateValidator(address sdk.ValAddress, pubKey cryptotypes.PubKey
 
 	msg, err := stakingtypes.NewMsgCreateValidator(
 		address, pubKey, sdk.NewCoin(sdk.DefaultBondDenom, amt),
-		stakingtypes.Description{}, commission, sdk.OneInt(),
+		stakingtypes.Description{}, commission,
 	)
 	if err != nil {
 		return nil, err

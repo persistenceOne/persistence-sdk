@@ -71,9 +71,8 @@ import (
 	ibc "github.com/cosmos/ibc-go/v6/modules/core"
 	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v6/modules/core/keeper"
-	ibctesting "github.com/cosmos/ibc-go/v6/testing"
-	ibctestingtypes "github.com/cosmos/ibc-go/v6/testing/types"
 	"github.com/gorilla/mux"
+	ibctestingtypes "github.com/persistenceOne/persistence-sdk/v2/ibctesting/types"
 	distr "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution"
 	distrclient "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/client"
 	distrkeeper "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/keeper"
@@ -159,7 +158,6 @@ var (
 var (
 	_ App                     = (*SimApp)(nil)
 	_ servertypes.Application = (*SimApp)(nil)
-	_ ibctesting.TestingApp   = (*SimApp)(nil)
 )
 
 // SimApp extends an ABCI application, but with most of its parameters exported.

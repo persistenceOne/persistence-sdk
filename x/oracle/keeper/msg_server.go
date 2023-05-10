@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
@@ -159,7 +159,7 @@ func (ms msgServer) DelegateFeedConsent(
 
 	val := ms.StakingKeeper.Validator(ctx, operatorAddr)
 	if val == nil {
-		return nil, sdkerrors.Wrap(stakingtypes.ErrNoValidatorFound, msg.Operator)
+		return nil, sdkerrors.Wrap(sdkstaking.ErrNoValidatorFound, msg.Operator)
 	}
 
 	ms.SetFeederDelegation(ctx, operatorAddr, delegateAddr)
