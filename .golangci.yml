@@ -3,8 +3,10 @@ run:
   skip-files:
     - schema/applications/base/application.go
     - utilities/cuckoo/filter.go
+    - x/lsnative/distribution/types/distribution.pb.go
   skip-dirs:
     - x/lsnative
+    - ibctesting
 linters:
   disable-all: false
   enable:

@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -48,7 +49,7 @@ func (ms msgServer) AggregateExchangeRatePrevote(
 	// Convert hex string to votehash
 	voteHash, err := types.AggregateVoteHashFromHexString(msg.Hash)
 	if err != nil {
-		return nil, sdkerrors.Wrap(types.ErrInvalidHash, err.Error())
+		return nil, errors.Wrap(types.ErrInvalidHash, err.Error())
 	}
 
 	aggregatePrevote := types.NewAggregateExchangeRatePrevote(voteHash, valAddr, uint64(ctx.BlockHeight()))
@@ -93,7 +94,7 @@ func (ms msgServer) AggregateExchangeRateVote(
 
 	aggregatePrevote, err := ms.GetAggregateExchangeRatePrevote(ctx, valAddr)
 	if err != nil {
-		return nil, sdkerrors.Wrap(types.ErrNoAggregatePrevote, msg.Validator)
+		return nil, errors.Wrap(types.ErrNoAggregatePrevote, msg.Validator)
 	}
 
 	// Check a msg is submitted proper period
@@ -103,13 +104,13 @@ func (ms msgServer) AggregateExchangeRateVote(
 
 	exchangeRateTuples, err := types.ParseExchangeRateTuples(msg.ExchangeRates)
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, err.Error())
+		return nil, errors.Wrap(sdkerrors.ErrInvalidCoins, err.Error())
 	}
 
 	// Verify a exchange rate with aggregate prevote hash
 	hash := types.GetAggregateVoteHash(msg.Salt, msg.ExchangeRates, valAddr)
 	if aggregatePrevote.Hash != hash.String() {
-		return nil, sdkerrors.Wrapf(types.ErrVerificationFailed, "must be given %s not %s", aggregatePrevote.Hash, hash)
+		return nil, errors.Wrapf(types.ErrVerificationFailed, "must be given %s not %s", aggregatePrevote.Hash, hash)
 	}
 
 	// Filter out rates which aren't included in the AcceptList
@@ -159,7 +160,7 @@ func (ms msgServer) DelegateFeedConsent(
 
 	val := ms.StakingKeeper.Validator(ctx, operatorAddr)
 	if val == nil {
-		return nil, sdkerrors.Wrap(sdkstaking.ErrNoValidatorFound, msg.Operator)
+		return nil, errors.Wrap(sdkstaking.ErrNoValidatorFound, msg.Operator)
 	}
 
 	ms.SetFeederDelegation(ctx, operatorAddr, delegateAddr)

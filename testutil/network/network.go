@@ -69,7 +69,7 @@ func NewAppConstructor(encodingCfg params.EncodingConfig) AppConstructor {
 
 // Config defines the necessary configuration used to bootstrap and start an
 // in-process local testing network.
-type Config struct {
+type Config struct { //nolint: maligned // not important
 	Codec             codec.Codec
 	LegacyAmino       *codec.LegacyAmino // TODO: Remove!
 	InterfaceRegistry codectypes.InterfaceRegistry
@@ -250,6 +250,7 @@ func New(l Logger, baseDir string, cfg Config) (*Network, error) {
 		appCfg.GRPC.Enable = false
 		appCfg.GRPCWeb.Enable = false
 		apiListenAddr := ""
+
 		if i == 0 {
 			if cfg.APIAddress != "" {
 				apiListenAddr = cfg.APIAddress
@@ -262,10 +263,12 @@ func New(l Logger, baseDir string, cfg Config) (*Network, error) {
 			}
 
 			appCfg.API.Address = apiListenAddr
+
 			apiURL, err := url.Parse(apiListenAddr)
 			if err != nil {
 				return nil, err
 			}
+
 			apiAddr = fmt.Sprintf("http://%s:%s", apiURL.Hostname(), apiURL.Port())
 
 			if cfg.RPCAddress != "" {
@@ -287,17 +290,20 @@ func New(l Logger, baseDir string, cfg Config) (*Network, error) {
 				}
 				appCfg.GRPC.Address = fmt.Sprintf("0.0.0.0:%s", grpcPort)
 			}
+
 			appCfg.GRPC.Enable = true
 
 			_, grpcWebPort, err := server.FreeTCPAddr()
 			if err != nil {
 				return nil, err
 			}
+
 			appCfg.GRPCWeb.Address = fmt.Sprintf("0.0.0.0:%s", grpcWebPort)
 			appCfg.GRPCWeb.Enable = true
 		}
 
 		logger := server.ZeroLogWrapper{Logger: zerolog.Nop()}
+
 		if cfg.EnableTMLogging {
 			logWriter := zerolog.ConsoleWriter{Out: os.Stderr}
 			logger = server.ZeroLogWrapper{Logger: zerolog.New(logWriter).Level(zerolog.InfoLevel).With().Timestamp().Logger()}
@@ -328,6 +334,7 @@ func New(l Logger, baseDir string, cfg Config) (*Network, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		tmCfg.ProxyApp = proxyAddr
 
 		p2pAddr, _, err := server.FreeTCPAddr()
@@ -353,6 +360,7 @@ func New(l Logger, baseDir string, cfg Config) (*Network, error) {
 		}
 
 		keyringAlgos, _ := kb.SupportedAlgorithms()
+
 		algo, err := keyring.NewSigningAlgoFromString(cfg.SigningAlgo, keyringAlgos)
 		if err != nil {
 			return nil, err
@@ -375,6 +383,7 @@ func New(l Logger, baseDir string, cfg Config) (*Network, error) {
 		}
 
 		info := map[string]string{"secret": secret}
+
 		infoBz, err := json.Marshal(info)
 		if err != nil {
 			return nil, err
@@ -419,10 +428,12 @@ func New(l Logger, baseDir string, cfg Config) (*Network, error) {
 		memo := fmt.Sprintf("%s@%s:%s", nodeIDs[i], p2pURL.Hostname(), p2pURL.Port())
 		fee := sdk.NewCoins(sdk.NewCoin(fmt.Sprintf("%stoken", nodeDirName), sdk.NewInt(0)))
 		txBuilder := cfg.TxConfig.NewTxBuilder()
+
 		err = txBuilder.SetMsgs(createValMsg)
 		if err != nil {
 			return nil, err
 		}
+
 		txBuilder.SetFeeAmount(fee)    // Arbitrary fee
 		txBuilder.SetGasLimit(1000000) // Need at least 100386
 		txBuilder.SetMemo(memo)
@@ -443,6 +454,7 @@ func New(l Logger, baseDir string, cfg Config) (*Network, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		err = writeFile(fmt.Sprintf("%v.json", nodeDirName), gentxsDir, txBz)
 		if err != nil {
 			return nil, err
@@ -481,17 +493,20 @@ func New(l Logger, baseDir string, cfg Config) (*Network, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	err = collectGenFiles(cfg, network.Validators, network.BaseDir)
 	if err != nil {
 		return nil, err
 	}
 
 	l.Log("starting test network...")
+
 	for idx, v := range network.Validators {
 		err := startInProcess(cfg, v)
 		if err != nil {
 			return nil, err
 		}
+
 		l.Log("started validator", idx)
 	}
 
@@ -535,9 +550,11 @@ func (n *Network) WaitForHeight(h int64) (int64, error) {
 // provide a custom timeout.
 func (n *Network) WaitForHeightWithTimeout(h int64, t time.Duration) (int64, error) {
 	ticker := time.NewTicker(time.Second)
+
 	defer ticker.Stop()
 
 	timeout := time.NewTimer(t)
+
 	defer timeout.Stop()
 
 	if len(n.Validators) == 0 {
@@ -545,6 +562,7 @@ func (n *Network) WaitForHeightWithTimeout(h int64, t time.Duration) (int64, err
 	}
 
 	var latestHeight int64
+
 	val := n.Validators[0]
 
 	for {
@@ -602,6 +620,7 @@ func (n *Network) Cleanup() {
 
 		if v.grpc != nil {
 			v.grpc.Stop()
+
 			if v.grpcWeb != nil {
 				_ = v.grpcWeb.Close()
 			}
@@ -645,9 +664,11 @@ func printMnemonic(l Logger, secret string) {
 
 	l.Log("\n")
 	l.Log(strings.Repeat("+", maxLineLength+8))
+
 	for _, line := range lines {
 		l.Logf("++  %s  ++\n", centerText(line, maxLineLength))
 	}
+
 	l.Log(strings.Repeat("+", maxLineLength+8))
 	l.Log("\n")
 }

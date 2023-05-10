@@ -3,10 +3,10 @@ package simulation
 import (
 	"math/rand"
 
-	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution/types"
 )
