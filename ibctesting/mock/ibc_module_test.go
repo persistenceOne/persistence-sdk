@@ -7,7 +7,7 @@ import (
 
 	clienttypes "github.com/cosmos/ibc-go/v6/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v6/modules/core/04-channel/types"
-	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/testing/mock"
+	"github.com/persistenceOne/persistence-sdk/v2/ibctesting/mock"
 )
 
 func TestCreateCapabilityName(t *testing.T) {

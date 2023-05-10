@@ -26,8 +26,8 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/cosmos/ibc-go/v6/modules/core/keeper"
-	"github.com/persistenceOne/persistence-sdk/v2/simapp"
-	ibctestingtypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/testing/types"
+	"github.com/persistenceOne/persistence-sdk/v2/ibctesting/simapp"
+	ibctestingtypes "github.com/persistenceOne/persistence-sdk/v2/ibctesting/types"
 )
 
 var DefaultTestingAppInit = SetupTestingApp
@@ -93,7 +93,7 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 		}
 
 		validators = append(validators, validator)
-		delegations = append(delegations, stakingtypes.NewDelegation(genAccs[0].GetAddress(), val.Address.Bytes(), sdk.OneDec()))
+		delegations = append(delegations, stakingtypes.NewDelegation(genAccs[0].GetAddress(), val.Address.Bytes(), sdk.OneDec(), false))
 	}
 
 	// set validators and delegations
