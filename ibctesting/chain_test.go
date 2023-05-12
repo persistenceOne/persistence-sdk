@@ -33,6 +33,8 @@ func TestChangeValSet(t *testing.T) {
 	coord.CommitBlock(chainA)
 
 	// verify that update clients works even after validator update goes into effect
-	path.EndpointB.UpdateClient()
-	path.EndpointB.UpdateClient()
+	err := path.EndpointB.UpdateClient()
+	require.NoError(t, err)
+	err = path.EndpointB.UpdateClient()
+	require.NoError(t, err)
 }

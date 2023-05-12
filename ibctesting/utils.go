@@ -3,9 +3,9 @@ package ibctesting
 import (
 	"testing"
 
+	abci "github.com/cometbft/cometbft/abci/types"
+	tmtypes "github.com/cometbft/cometbft/types"
 	"github.com/stretchr/testify/require"
-	abci "github.com/tendermint/tendermint/abci/types"
-	tmtypes "github.com/tendermint/tendermint/types"
 
 	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"

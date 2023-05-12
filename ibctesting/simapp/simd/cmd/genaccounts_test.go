@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/server"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
-	genutiltest "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/client/testutil"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/persistenceOne/persistence-sdk/v2/ibctesting/simapp"
 	simcmd "github.com/persistenceOne/persistence-sdk/v2/ibctesting/simapp/simd/cmd"
+	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
+	genutiltest "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/client/testutil"
 )
 
 var testMbm = module.NewBasicManager(genutil.AppModuleBasic{})

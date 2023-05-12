@@ -14,9 +14,10 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	authvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	"github.com/spf13/cobra"
+
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
 	genutiltypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/types"
-	"github.com/spf13/cobra"
 )
 
 const (
