@@ -172,9 +172,13 @@ clean:
 ###                              Proto                              		###
 ###############################################################################
 
+protoVer=0.11.6
+protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
+protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(protoImageName)
+
 proto-gen:
 	@echo "Generating Protobuf files"
-	scripts/protocgen.sh
+	@$(protoImage) sh ./scripts/protocgen.sh
 
 ###############################################################################
 ###                          Tools & Dependencies                           ###
