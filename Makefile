@@ -3,7 +3,7 @@
 PACKAGES_NOSIMULATION=$(shell go list ./... | grep -v '/simulation')
 PACKAGES_SIMTEST=$(shell go list ./... | grep '/simulation')
 VERSION := $(shell echo $(shell git describe --always --match "v*") | sed 's/^v//')
-TMVERSION := $(shell go list -m github.com/tendermint/tendermint | sed 's:.* ::')
+TMVERSION := $(shell go list -m github.com/cometbft/cometbft | sed 's:.* ::')
 COMMIT := $(shell git log -1 --format='%H')
 LEDGER_ENABLED ?= true
 BINDIR ?= $(GOPATH)/bin
@@ -58,7 +58,7 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=sim \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" \
-		  -X github.com/tendermint/tendermint/version.TMCoreSemVer=$(TMVERSION)
+		  -X github.com/cometbft/cometbft/version.TMCoreSemVer=$(TMVERSION)
 
 # DB backend selection
 ifeq (cleveldb,$(findstring cleveldb,$(COSMOS_BUILD_OPTIONS)))
@@ -148,12 +148,12 @@ mockgen_cmd=go run github.com/golang/mock/mockgen
 
 mocks: $(MOCKS_DIR)
 	$(mockgen_cmd) -source=client/account_retriever.go -package mocks -destination tests/mocks/account_retriever.go
-	$(mockgen_cmd) -package mocks -destination tests/mocks/tendermint_tm_db_DB.go github.com/tendermint/tm-db DB
+	$(mockgen_cmd) -package mocks -destination tests/mocks/tendermint_tm_db_DB.go github.com/cometbft/cometbft-db DB
 	$(mockgen_cmd) -source=types/module/module.go -package mocks -destination tests/mocks/types_module_module.go
 	$(mockgen_cmd) -source=types/invariant.go -package mocks -destination tests/mocks/types_invariant.go
 	$(mockgen_cmd) -source=types/router.go -package mocks -destination tests/mocks/types_router.go
-	$(mockgen_cmd) -package mocks -destination tests/mocks/grpc_server.go github.com/gogo/protobuf/grpc Server
-	$(mockgen_cmd) -package mocks -destination tests/mocks/tendermint_tendermint_libs_log_DB.go github.com/tendermint/tendermint/libs/log Logger
+	$(mockgen_cmd) -package mocks -destination tests/mocks/grpc_server.go github.com/cosmos/gogoproto/grpc Server
+	$(mockgen_cmd) -package mocks -destination tests/mocks/tendermint_tendermint_libs_log_DB.go github.com/cometbft/cometbft/libs/log Logger
 .PHONY: mocks
 
 $(MOCKS_DIR):
