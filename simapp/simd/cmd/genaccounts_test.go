@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
@@ -13,13 +14,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/spf13/viper"
+	"github.com/stretchr/testify/require"
+
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
 	simcmd "github.com/persistenceOne/persistence-sdk/v2/simapp/simd/cmd"
 	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
 	genutiltest "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/client/testutil"
-	"github.com/spf13/viper"
-	"github.com/stretchr/testify/require"
-	"github.com/tendermint/tendermint/libs/log"
 )
 
 var testMbm = module.NewBasicManager(genutil.AppModuleBasic{})
