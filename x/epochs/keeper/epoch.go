@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gogo/protobuf/proto"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/gogoproto/proto"
 
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // GetEpochInfo returns epoch info by identifier.

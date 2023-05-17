@@ -1,14 +1,15 @@
 package cli_test
 
 import (
-	"github.com/gogo/protobuf/proto"
+	"github.com/cosmos/gogoproto/proto"
 	"github.com/stretchr/testify/suite"
 
+	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+
+	"github.com/persistenceOne/persistence-sdk/v2/simapp"
+	"github.com/persistenceOne/persistence-sdk/v2/testutil/network"
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/client/cli"
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
-
-	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/persistenceOne/persistence-sdk/v2/testutil/network"
 )
 
 type IntegrationTestSuite struct {
@@ -21,7 +22,7 @@ type IntegrationTestSuite struct {
 func (s *IntegrationTestSuite) SetupSuite() {
 	s.T().Log("setting up integration test suite")
 
-	s.cfg = network.DefaultConfig()
+	s.cfg = network.DefaultConfig(simapp.NewTestNetworkFixture)
 
 	var err error
 	s.network, err = network.New(s.T(), "", s.cfg)

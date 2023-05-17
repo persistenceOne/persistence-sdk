@@ -4,8 +4,9 @@ import (
 	"strconv"
 	"testing"
 
+	"cosmossdk.io/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
