@@ -4,26 +4,49 @@ import (
 	"fmt"
 	"net/url"
 
+	"cosmossdk.io/errors"
+	"github.com/cometbft/cometbft/proto/tendermint/crypto"
+	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	clienttypes "github.com/cosmos/ibc-go/v6/modules/core/02-client/types"
-	commitmenttypes "github.com/cosmos/ibc-go/v6/modules/core/23-commitment/types"
-	ibcKeeper "github.com/cosmos/ibc-go/v6/modules/core/keeper"
-	tmclienttypes "github.com/cosmos/ibc-go/v6/modules/light-clients/07-tendermint/types"
-	"github.com/tendermint/tendermint/proto/tendermint/crypto"
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+	commitmenttypes "github.com/cosmos/ibc-go/v7/modules/core/23-commitment/types"
+	ibcKeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 )
 
-func ValidateProofOps(ctx sdk.Context, ibcKeeper *ibcKeeper.Keeper, connectionID string, chainID string, height int64, module string, key []byte, data []byte, proofOps *crypto.ProofOps) error {
+func convertProof(cdc codec.BinaryCodec, proofOps *crypto.ProofOps) ([]byte, error) {
 	if proofOps == nil {
-		return fmt.Errorf("unable to validate proof. No proof submitted")
+		return nil, fmt.Errorf("unable to validate proof. No proof submitted")
 	}
 
-	connection, _ := ibcKeeper.ConnectionKeeper.GetConnection(ctx, connectionID)
+	merkleProof, err := commitmenttypes.ConvertProofs(proofOps)
+	if err != nil {
+		return nil, errors.Wrap(err, "error converting proofs")
+	}
 
-	csHeight := clienttypes.NewHeight(clienttypes.ParseChainID(chainID), uint64(height)+1)
-	consensusState, found := ibcKeeper.ClientKeeper.GetClientConsensusState(ctx, connection.ClientId, csHeight)
+	proof, err := cdc.Marshal(&merkleProof)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to marshal merkle proof")
+	}
 
+	return proof, nil
+}
+
+func ValidateProofOps(
+	ctx sdk.Context, ibcKeeper *ibcKeeper.Keeper,
+	connectionID string, chainID string,
+	height int64, module string, key []byte,
+	data []byte, proofOps *crypto.ProofOps,
+) error {
+	cdc := ibcKeeper.Codec()
+	proof, err := convertProof(cdc, proofOps)
+	if err != nil {
+		return err
+	}
+
+	path := commitmenttypes.NewMerklePath([]string{module, url.PathEscape(string(key))}...)
+	connection, found := ibcKeeper.ConnectionKeeper.GetConnection(ctx, connectionID)
 	if !found {
-		return fmt.Errorf("unable to fetch consensus state")
+		return fmt.Errorf("connection %s not found", connectionID)
 	}
 
 	clientState, found := ibcKeeper.ClientKeeper.GetClientState(ctx, connection.ClientId)
@@ -31,29 +54,25 @@ func ValidateProofOps(ctx sdk.Context, ibcKeeper *ibcKeeper.Keeper, connectionID
 		return fmt.Errorf("unable to fetch client state")
 	}
 
-	path := commitmenttypes.NewMerklePath([]string{module, url.PathEscape(string(key))}...)
-
-	merkleProof, err := commitmenttypes.ConvertProofs(proofOps)
-	if err != nil {
-		return fmt.Errorf("error converting proofs")
-	}
-
-	tmClientState, ok := clientState.(*tmclienttypes.ClientState)
-	if !ok {
-		return fmt.Errorf("error unmarshaling client state")
-	}
+	clientStore := ibcKeeper.ClientKeeper.ClientStore(ctx, connection.ClientId)
+	csHeight := clienttypes.NewHeight(clienttypes.ParseChainID(chainID), uint64(height)+1)
 
 	if len(data) != 0 {
-		// if we got a non-nil response, verify inclusion proof.
-		if err := merkleProof.VerifyMembership(tmClientState.ProofSpecs, consensusState.GetRoot(), path, data); err != nil {
-			return fmt.Errorf("unable to verify inclusion proof: %s", err)
+		if err := clientState.VerifyMembership(
+			ctx, clientStore, cdc, csHeight,
+			0, 0, // skip delay period checks for non-packet processing verification
+			proof, path, data,
+		); err != nil {
+			return errors.Wrap(err, "unable to verify inclusion proof")
 		}
-
-		return nil
-	}
-	// if we got a nil response, verify non inclusion proof.
-	if err := merkleProof.VerifyNonMembership(tmClientState.ProofSpecs, consensusState.GetRoot(), path); err != nil {
-		return fmt.Errorf("unable to verify non-inclusion proof: %s", err)
+	} else {
+		if err := clientState.VerifyNonMembership(
+			ctx, clientStore, cdc, csHeight,
+			0, 0, // skip delay period checks for non-packet processing verification
+			proof, path,
+		); err != nil {
+			return errors.Wrap(err, "unable to verify non-inclusion proof")
+		}
 	}
 
 	return nil

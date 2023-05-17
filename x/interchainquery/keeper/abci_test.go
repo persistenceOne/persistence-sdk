@@ -2,10 +2,10 @@ package keeper_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 
 	"github.com/persistenceOne/persistence-sdk/v2/ibctesting"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/keeper"
+	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 func (suite *KeeperTestSuite) TestEndBlocker() {
