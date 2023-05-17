@@ -1,3 +1,4 @@
+// TODO(ajeet): once LSM is move to fork of cosmos-sdk, this pkg can be removed and cosmos-sdk/testutil/network can be used
 package network
 
 import (
