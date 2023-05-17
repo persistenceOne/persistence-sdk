@@ -29,7 +29,7 @@ func EndBlocker(ctx sdk.Context, k Keeper) {
 			panic(fmt.Sprintf("max inflation (%s) must be greater than or equal to min inflation (%s)", newMaxInflation.String(), newMinInflation.String()))
 		}
 
-		updatedParams := minttypes.NewParams(mintParams.MintDenom, newMaxInflation.Sub(newMinInflation), newMaxInflation, newMinInflation, mintParams.GoalBonded, mintParams.BlocksPerYear)
+		updatedParams := minttypes.NewParams(mintParams.MintDenom, mintParams.InflationRateChange, newMaxInflation, newMinInflation, mintParams.GoalBonded, mintParams.BlocksPerYear)
 
 		if err := k.SetMintingParams(ctx, updatedParams); err != nil {
 			panic(errors.Wrap(err, "unable to set minting params at halving EndBlocker"))
