@@ -11,12 +11,14 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
+	"github.com/stretchr/testify/require"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestRandomizedGenState(t *testing.T) {
