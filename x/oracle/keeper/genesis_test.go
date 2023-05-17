@@ -1,11 +1,11 @@
 package keeper_test
 
 import (
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simapp "github.com/persistenceOne/persistence-sdk/v2/simapp"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )
 
 var (
