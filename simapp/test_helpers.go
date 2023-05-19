@@ -23,6 +23,7 @@ import (
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	pruningtypes "github.com/cosmos/cosmos-sdk/store/pruning/types"
 	"github.com/cosmos/cosmos-sdk/testutil/mock"
+	"github.com/cosmos/cosmos-sdk/testutil/network"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module/testutil"
@@ -31,9 +32,7 @@ import (
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	simcli "github.com/cosmos/cosmos-sdk/x/simulation/client/cli"
 
-	ibctesting "github.com/persistenceOne/persistence-sdk/v2/ibctesting"
-
-	"github.com/persistenceOne/persistence-sdk/v2/testutil/network"
+	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 )
 
 // SetupOptions defines arguments that are passed into `Simapp` constructor.

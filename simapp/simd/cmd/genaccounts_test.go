@@ -14,13 +14,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/cosmos/cosmos-sdk/x/genutil"
+	genutiltest "github.com/cosmos/cosmos-sdk/x/genutil/client/testutil"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
 	simcmd "github.com/persistenceOne/persistence-sdk/v2/simapp/simd/cmd"
-	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
-	genutiltest "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/client/testutil"
 )
 
 var testMbm = module.NewBasicManager(genutil.AppModuleBasic{})

@@ -8,10 +8,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-
-	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking"
-	stakingkeeper "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/keeper"
-	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
+	"github.com/cosmos/cosmos-sdk/x/staking"
+	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 var (
@@ -56,7 +55,7 @@ func StakingAddValidators(
 ) {
 	accAddresses := make([]sdk.AccAddress, num)
 	valAddresses := make([]sdk.ValAddress, num)
-	stakingMsgServer := stakingkeeper.NewMsgServerImpl(*stakingKeeper)
+	stakingMsgServer := stakingkeeper.NewMsgServerImpl(stakingKeeper)
 
 	valPubKeys := simtestutils.CreateTestPubKeys(num)
 
@@ -88,7 +87,7 @@ func StakingAddValidators(
 	}
 
 	// ensure that validators are updated
-	staking.EndBlocker(ctx, *stakingKeeper)
+	staking.EndBlocker(ctx, stakingKeeper)
 
 	return accAddresses, valAddresses, nil
 }
@@ -98,7 +97,7 @@ func newTestMsgCreateValidator(address sdk.ValAddress, pubKey cryptotypes.PubKey
 
 	msg, err := stakingtypes.NewMsgCreateValidator(
 		address, pubKey, sdk.NewCoin(sdk.DefaultBondDenom, amt),
-		stakingtypes.Description{}, commission,
+		stakingtypes.Description{}, commission, math.OneInt(),
 	)
 	if err != nil {
 		return nil, err

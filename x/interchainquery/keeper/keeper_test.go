@@ -4,14 +4,13 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/persistenceOne/persistence-sdk/v2/ibctesting"
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/keeper"
 	icqtypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
-	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 const TestOwnerAddress = "cosmos17dtl0mjt3t77kpuhg2edqzjpszulwhgzuj9ljs"
@@ -53,7 +52,7 @@ func (suite *KeeperTestSuite) SetupTest() {
 }
 
 func (suite *KeeperTestSuite) TestMakeRequest() {
-	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: sdkstaking.BondStatusBonded}
+	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: stakingtypes.BondStatusBonded}
 	bz, err := bondedQuery.Marshal()
 	suite.NoError(err)
 
@@ -92,13 +91,12 @@ func (suite *KeeperTestSuite) TestMakeRequest() {
 }
 
 func (suite *KeeperTestSuite) TestSubmitQueryResponse() {
-	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: sdkstaking.BondStatusBonded}
+	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: stakingtypes.BondStatusBonded}
 	bz, err := bondedQuery.Marshal()
 	suite.NoError(err)
 
-	validators := suite.GetSimApp(suite.chainB).StakingKeeper.GetBondedValidatorsByPower(suite.chainB.GetContext())
 	qvr := stakingtypes.QueryValidatorsResponse{
-		Validators: ibctesting.SdkValidatorsToValidators(validators),
+		Validators: suite.GetSimApp(suite.chainB).StakingKeeper.GetBondedValidatorsByPower(suite.chainB.GetContext()),
 	}
 
 	tests := []struct {
@@ -194,13 +192,12 @@ func (suite *KeeperTestSuite) TestSubmitQueryResponse() {
 }
 
 func (suite *KeeperTestSuite) TestDataPoints() {
-	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: sdkstaking.BondStatusBonded}
+	bondedQuery := stakingtypes.QueryValidatorsRequest{Status: stakingtypes.BondStatusBonded}
 	bz, err := bondedQuery.Marshal()
 	suite.NoError(err)
 
-	validators := suite.GetSimApp(suite.chainB).StakingKeeper.GetBondedValidatorsByPower(suite.chainB.GetContext())
 	qvr := stakingtypes.QueryValidatorsResponse{
-		Validators: ibctesting.SdkValidatorsToValidators(validators),
+		Validators: suite.GetSimApp(suite.chainB).StakingKeeper.GetBondedValidatorsByPower(suite.chainB.GetContext()),
 	}
 
 	id := keeper.GenerateQueryHash(suite.path.EndpointB.ConnectionID, suite.chainB.ChainID, "cosmos.staking.v1beta1.Query/Validators", bz, "")

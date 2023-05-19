@@ -25,12 +25,16 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
+	"github.com/cosmos/cosmos-sdk/x/distribution"
 	"github.com/cosmos/cosmos-sdk/x/evidence"
 	feegrantmodule "github.com/cosmos/cosmos-sdk/x/feegrant/module"
+	"github.com/cosmos/cosmos-sdk/x/genutil"
 	"github.com/cosmos/cosmos-sdk/x/gov"
 	group "github.com/cosmos/cosmos-sdk/x/group/module"
 	"github.com/cosmos/cosmos-sdk/x/mint"
 	"github.com/cosmos/cosmos-sdk/x/params"
+	"github.com/cosmos/cosmos-sdk/x/slashing"
+	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
 
@@ -38,10 +42,6 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
 	"github.com/persistenceOne/persistence-sdk/v2/x/ibchooker"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
-	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/distribution"
-	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil"
-	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/slashing"
-	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
 )
 

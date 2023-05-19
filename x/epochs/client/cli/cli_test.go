@@ -5,9 +5,9 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+	"github.com/cosmos/cosmos-sdk/testutil/network"
 
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
-	"github.com/persistenceOne/persistence-sdk/v2/testutil/network"
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/client/cli"
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
 )

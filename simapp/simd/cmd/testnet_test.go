@@ -15,11 +15,11 @@ import (
 	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	genutiltest "github.com/cosmos/cosmos-sdk/x/genutil/client/testutil"
+	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
+	"github.com/cosmos/cosmos-sdk/x/staking"
 
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
-	genutiltest "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/client/testutil"
-	genutiltypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/genutil/types"
-	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking"
 )
 
 func Test_TestnetCmd(t *testing.T) {
