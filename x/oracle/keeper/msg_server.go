@@ -60,11 +60,6 @@ func (ms msgServer) AggregateExchangeRatePrevote(
 			types.EventTypeAggregatePrevote,
 			sdk.NewAttribute(types.EventAttrKeyVoter, msg.Validator),
 		),
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.EventAttrValueCategory),
-			sdk.NewAttribute(sdk.AttributeKeySender, msg.Feeder),
-		),
 	})
 
 	return &types.MsgAggregateExchangeRatePrevoteResponse{}, nil
@@ -132,11 +127,6 @@ func (ms msgServer) AggregateExchangeRateVote(
 			sdk.NewAttribute(types.EventAttrKeyVoter, msg.Validator),
 			sdk.NewAttribute(types.EventAttrKeyExchangeRates, msg.ExchangeRates),
 		),
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.EventAttrValueCategory),
-			sdk.NewAttribute(sdk.AttributeKeySender, msg.Feeder),
-		),
 	})
 
 	return &types.MsgAggregateExchangeRateVoteResponse{}, nil
@@ -169,11 +159,6 @@ func (ms msgServer) DelegateFeedConsent(
 		sdk.NewEvent(
 			types.EventTypeFeedDelegate,
 			sdk.NewAttribute(types.EventAttrKeyFeeder, msg.Delegate),
-		),
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.EventAttrValueCategory),
-			sdk.NewAttribute(sdk.AttributeKeySender, msg.Operator),
 		),
 	})
 
