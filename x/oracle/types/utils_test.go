@@ -161,6 +161,10 @@ func (v MockValidator) GetDelegatorShares() sdk.Dec {
 	return sdk.NewDec(v.power)
 }
 
+func (v MockValidator) GetTotalLiquidShares() sdk.Dec {
+	return sdk.ZeroDec()
+}
+
 func (MockValidator) TokensFromShares(sdk.Dec) sdk.Dec {
 	return sdk.ZeroDec()
 }
