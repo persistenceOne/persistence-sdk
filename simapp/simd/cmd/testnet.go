@@ -65,7 +65,7 @@ type initArgs struct {
 	startingIPAddress string
 }
 
-type startArgs struct {
+type startArgs struct { //nolint: maligned
 	algo          string
 	apiAddress    string
 	chainID       string

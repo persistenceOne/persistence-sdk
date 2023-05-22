@@ -681,8 +681,8 @@ func (app *SimApp) LoadHeight(height int64) error {
 	return app.LoadVersion(height)
 }
 
-func (a *SimApp) Configurator() module.Configurator {
-	return a.configurator
+func (app *SimApp) Configurator() module.Configurator {
+	return app.configurator
 }
 
 // LegacyAmino returns SimApp's amino codec.
@@ -707,8 +707,8 @@ func (app *SimApp) InterfaceRegistry() types.InterfaceRegistry {
 }
 
 // DefaultGenesis returns a default genesis from the registered AppModuleBasic's.
-func (a *SimApp) DefaultGenesis() map[string]json.RawMessage {
-	return ModuleBasics.DefaultGenesis(a.appCodec)
+func (app *SimApp) DefaultGenesis() map[string]json.RawMessage {
+	return ModuleBasics.DefaultGenesis(app.appCodec)
 }
 
 // GetKey returns the KVStoreKey for the provided store key.

@@ -98,7 +98,7 @@ func NewSimappWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOptio
 	return app
 }
 
-func simappSetup(t *testing.T, isCheckTx, commitGenesis bool) *SimApp {
+func simappSetup(t *testing.T, _, commitGenesis bool) *SimApp {
 	t.Helper()
 
 	privVal := mock.NewPV()

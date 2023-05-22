@@ -37,7 +37,6 @@ linters:
     - unused
     - unparam
     - misspell
-    - wsl
     - nolintlint
 
 linters-settings:
