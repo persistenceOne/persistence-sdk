@@ -283,8 +283,6 @@ func TestUpgradeStateOnGenesis(t *testing.T) {
 	for v, i := range app.mm.Modules {
 		if i, ok := i.(module.HasConsensusVersion); ok {
 			require.Equal(t, vm[v], i.ConsensusVersion())
-			require.Equal(t, vm[v], i.ConsensusVersion())
-			require.Equal(t, vm[v], i.ConsensusVersion())
 		}
 	}
 
