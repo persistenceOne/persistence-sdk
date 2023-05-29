@@ -36,7 +36,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
 )
 
@@ -65,7 +64,7 @@ type initArgs struct {
 	startingIPAddress string
 }
 
-type startArgs struct { //nolint: maligned
+type startArgs struct {
 	algo          string
 	apiAddress    string
 	chainID       string
