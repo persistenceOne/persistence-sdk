@@ -11,15 +11,13 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
-	"github.com/osmosis-labs/osmosis/x/ibc-hooks/client/cli"
-	"github.com/osmosis-labs/osmosis/x/ibc-hooks/types"
-
+	abci "github.com/cometbft/cometbft/abci/types"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
-
-	"github.com/osmosis-labs/osmosis/osmoutils"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	abci "github.com/tendermint/tendermint/abci/types"
+	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
+
+	"github.com/persistenceOne/persistence-sdk/v2/x/ibc-hooks/client/cli"
+	"github.com/persistenceOne/persistence-sdk/v2/x/ibc-hooks/types"
 )
 
 var (
@@ -75,11 +73,11 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 type AppModule struct {
 	AppModuleBasic
 
-	authKeeper osmoutils.AccountKeeper
+	authKeeper authkeeper.AccountKeeper
 }
 
 // NewAppModule creates a new AppModule object.
-func NewAppModule(ak osmoutils.AccountKeeper) AppModule {
+func NewAppModule(ak authkeeper.AccountKeeper) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		authKeeper:     ak,

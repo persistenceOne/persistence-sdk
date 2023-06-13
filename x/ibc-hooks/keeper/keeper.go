@@ -3,13 +3,11 @@ package keeper
 import (
 	"fmt"
 
+	"github.com/cometbft/cometbft/libs/log"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 
-	"github.com/tendermint/tendermint/libs/log"
-
-	"github.com/osmosis-labs/osmosis/x/ibc-hooks/types"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/persistenceOne/persistence-sdk/v2/x/ibc-hooks/types"
 )
 
 type (

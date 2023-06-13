@@ -5,17 +5,14 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/tidwall/gjson"
-
-	"github.com/stretchr/testify/require"
-
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
-	"github.com/osmosis-labs/osmosis/v15/x/ibc-rate-limit/types"
+	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
+	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+	"github.com/tidwall/gjson"
 )
 
 func (chain *TestChain) StoreContractCode(suite *suite.Suite, path string) {
@@ -100,15 +97,4 @@ func (chain *TestChain) QueryContractJson(suite *suite.Suite, contract sdk.AccAd
 	json := gjson.Parse(string(state))
 	suite.Require().NoError(err)
 	return json
-}
-
-func (chain *TestChain) RegisterRateLimitingContract(addr []byte) {
-	addrStr, err := sdk.Bech32ifyAddressBytes("osmo", addr)
-	require.NoError(chain.T, err)
-	params, err := types.NewParams(addrStr)
-	require.NoError(chain.T, err)
-	osmosisApp := chain.GetOsmosisApp()
-	paramSpace, ok := osmosisApp.AppKeepers.ParamsKeeper.GetSubspace(types.ModuleName)
-	require.True(chain.T, ok)
-	paramSpace.SetParamSet(chain.GetContext(), &params)
 }
