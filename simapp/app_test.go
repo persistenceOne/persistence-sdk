@@ -6,13 +6,14 @@ import (
 	"os"
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
+
+	"github.com/CosmWasm/wasmd/x/wasm"
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/libs/log"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/testutil/mock"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
@@ -24,6 +25,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability"
+	"github.com/cosmos/cosmos-sdk/x/consensus"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	"github.com/cosmos/cosmos-sdk/x/distribution"
 	"github.com/cosmos/cosmos-sdk/x/evidence"
@@ -36,6 +38,16 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
+	ica "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts"
+	ibcfee "github.com/cosmos/ibc-go/v7/modules/apps/29-fee"
+	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
+	ibc "github.com/cosmos/ibc-go/v7/modules/core"
+
+	"github.com/persistenceOne/persistence-sdk/v2/x/epochs"
+	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
+	"github.com/persistenceOne/persistence-sdk/v2/x/ibchooker"
+	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
+	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
 )
 
 func TestSimAppExportAndBlockedAddrs(t *testing.T) {
@@ -184,8 +196,8 @@ func TestRunMigrations(t *testing.T) {
 					"distribution": distribution.AppModule{}.ConsensusVersion(),
 					"slashing":     slashing.AppModule{}.ConsensusVersion(),
 					"gov":          gov.AppModule{}.ConsensusVersion(),
-					"group":        group.AppModule{}.ConsensusVersion(),
 					"params":       params.AppModule{}.ConsensusVersion(),
+					"group":        group.AppModule{}.ConsensusVersion(),
 					"upgrade":      upgrade.AppModule{}.ConsensusVersion(),
 					"vesting":      vesting.AppModule{}.ConsensusVersion(),
 					"feegrant":     feegrantmodule.AppModule{}.ConsensusVersion(),
@@ -193,6 +205,18 @@ func TestRunMigrations(t *testing.T) {
 					"crisis":       crisis.AppModule{}.ConsensusVersion(),
 					"genutil":      genutil.AppModule{}.ConsensusVersion(),
 					"capability":   capability.AppModule{}.ConsensusVersion(),
+
+					"ibc":                ibc.AppModule{}.ConsensusVersion(),
+					"wasm":               wasm.AppModule{}.ConsensusVersion(),
+					"halving":            halving.AppModule{}.ConsensusVersion(),
+					"interchainaccounts": ica.AppModule{}.ConsensusVersion(),
+					"transfer":           transfer.AppModule{}.ConsensusVersion(),
+					"epochs":             epochs.AppModule{}.ConsensusVersion(),
+					"interchainquery":    interchainquery.AppModule{}.ConsensusVersion(),
+					"ibchooker":          ibchooker.AppModule{}.ConsensusVersion(),
+					"feeibc":             ibcfee.AppModule{}.ConsensusVersion(),
+					"oracle":             oracle.AppModule{}.ConsensusVersion(),
+					"consensus":          consensus.AppModule{}.ConsensusVersion(),
 				},
 			)
 			if tc.expRunErr {
@@ -244,6 +268,18 @@ func TestInitGenesisOnMigration(t *testing.T) {
 			"crisis":       crisis.AppModule{}.ConsensusVersion(),
 			"genutil":      genutil.AppModule{}.ConsensusVersion(),
 			"capability":   capability.AppModule{}.ConsensusVersion(),
+
+			"ibc":                ibc.AppModule{}.ConsensusVersion(),
+			"wasm":               wasm.AppModule{}.ConsensusVersion(),
+			"halving":            halving.AppModule{}.ConsensusVersion(),
+			"interchainaccounts": ica.AppModule{}.ConsensusVersion(),
+			"transfer":           transfer.AppModule{}.ConsensusVersion(),
+			"epochs":             epochs.AppModule{}.ConsensusVersion(),
+			"interchainquery":    interchainquery.AppModule{}.ConsensusVersion(),
+			"ibchooker":          ibchooker.AppModule{}.ConsensusVersion(),
+			"feeibc":             ibcfee.AppModule{}.ConsensusVersion(),
+			"oracle":             oracle.AppModule{}.ConsensusVersion(),
+			"consensus":          consensus.AppModule{}.ConsensusVersion(),
 		},
 	)
 	require.NoError(t, err)

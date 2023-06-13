@@ -15,4 +15,4 @@ type EncodingConfig struct {
 	Amino             *codec.LegacyAmino
 }
 
-const Bech32Prefix = "persistence"
+const Bech32MainPrefix = "persistence"
