@@ -12,7 +12,7 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
 )
 
-const TestOwnerAddress = "cosmos17dtl0mjt3t77kpuhg2edqzjpszulwhgzuj9ljs"
+const TestOwnerAddress = "persistence1pkkayn066msg6kn33wnl5srhdt3tnu2vv3k3tu"
 
 var (
 	coordinator *ibctesting.Coordinator
