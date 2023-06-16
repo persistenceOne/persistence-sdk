@@ -51,7 +51,7 @@ func (s *KeeperTestSuite) SetupTest() {
 
 	s.Require().NoError(err)
 
-	s.msgServer = keeper.NewMsgServerImpl(s.app.OracleKeeper)
+	s.msgServer = keeper.NewMsgServerImpl(*s.app.OracleKeeper)
 	queryHelper := &baseapp.QueryServiceTestHelper{
 		GRPCQueryRouter: s.app.GRPCQueryRouter(),
 		Ctx:             s.ctx,

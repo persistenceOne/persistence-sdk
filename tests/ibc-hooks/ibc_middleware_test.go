@@ -8,7 +8,6 @@ import (
 	"time"
 
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	"github.com/CosmWasm/wasmd/x/wasm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
@@ -39,8 +38,6 @@ type HooksTestSuite struct {
 	// This is used to test cw20s. It will only get assigned in the cw20 test
 	pathCW20 *ibctesting.Path
 }
-
-const defaultPoolAmount int64 = 100000
 
 // TODO: This needs to get removed. Waiting on https://github.com/cosmos/ibc-go/issues/3123
 func (suite *HooksTestSuite) TearDownSuite() {
@@ -225,14 +222,39 @@ func (suite *HooksTestSuite) TestOnRecvPacketHooks() {
 			trace = transfertypes.ParseDenomTrace(sdk.DefaultBondDenom)
 
 			// send coin from chainA to chainB
-			transferMsg := transfertypes.NewMsgTransfer(path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, sdk.NewCoin(trace.IBCDenom(), amount), suite.chainA.SenderAccount.GetAddress().String(), receiver, clienttypes.NewHeight(1, 110), 0)
+			transferMsg := transfertypes.NewMsgTransfer(
+				path.EndpointA.ChannelConfig.PortID,
+				path.EndpointA.ChannelID,
+				sdk.NewCoin(trace.IBCDenom(), amount),
+				suite.chainA.SenderAccount.GetAddress().String(),
+				receiver,
+				clienttypes.NewHeight(1, 110),
+				0,
+				"",
+			)
 			_, err := suite.chainA.SendMsgs(transferMsg)
 			suite.Require().NoError(err) // message committed
 
 			tc.malleate(&status)
 
-			data := transfertypes.NewFungibleTokenPacketData(trace.GetFullDenomPath(), amount.String(), suite.chainA.SenderAccount.GetAddress().String(), receiver)
-			packet := channeltypes.NewPacket(data.GetBytes(), seq, path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, clienttypes.NewHeight(1, 100), 0)
+			data := transfertypes.NewFungibleTokenPacketData(
+				trace.GetFullDenomPath(),
+				amount.String(),
+				suite.chainA.SenderAccount.GetAddress().String(),
+				receiver,
+				"",
+			)
+
+			packet := channeltypes.NewPacket(
+				data.GetBytes(),
+				seq,
+				path.EndpointA.ChannelConfig.PortID,
+				path.EndpointA.ChannelID,
+				path.EndpointB.ChannelConfig.PortID,
+				path.EndpointB.ChannelID,
+				clienttypes.NewHeight(1, 100),
+				0,
+			)
 
 			ack := suite.chainB.GetSimApp().TransferStack.
 				OnRecvPacket(suite.chainB.GetContext(), packet, suite.chainA.SenderAccount.GetAddress())
@@ -292,8 +314,15 @@ func (suite *HooksTestSuite) receivePacketWithSequence(receiver, memo string, pr
 
 	packet := suite.makeMockPacket(receiver, memo, prevSequence)
 
-	err := suite.chainB.GetSimApp().HooksICS4Wrapper.SendPacket(
-		suite.chainB.GetContext(), channelCap, packet)
+	_, err := suite.chainB.GetSimApp().HooksICS4Wrapper.SendPacket(
+		suite.chainB.GetContext(),
+		channelCap,
+		packet.GetSourcePort(),
+		packet.GetSourceChannel(),
+		packet.GetTimeoutHeight().(clienttypes.Height),
+		packet.GetTimeoutTimestamp(),
+		packet.GetData(),
+	)
 	suite.Require().NoError(err, "IBC send failed. Expected success. %s", err)
 
 	// Update both clients
@@ -813,14 +842,4 @@ type ChainActorDefinition struct {
 	Chain
 	name    string
 	address sdk.AccAddress
-}
-
-func (suite *HooksTestSuite) TestOutpostSimplified() {
-	initializer := suite.chainB.SenderAccount.GetAddress()
-	suite.ExecuteOutpostSwap(initializer, initializer, fmt.Sprintf(`chainB/%s`, initializer.String()))
-}
-
-func (suite *HooksTestSuite) TestOutpostExplicit() {
-	initializer := suite.chainB.SenderAccount.GetAddress()
-	suite.ExecuteOutpostSwap(initializer, initializer, fmt.Sprintf(`ibc:channel-0/%s`, initializer.String()))
 }

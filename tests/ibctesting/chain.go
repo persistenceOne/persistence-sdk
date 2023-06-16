@@ -23,8 +23,8 @@ type TestChain struct {
 
 func InitSetupTestingApp(t *testing.T, cdc codec.JSONCodec) func() (ibctesting.TestingApp, map[string]json.RawMessage) {
 	return func() (ibctesting.TestingApp, map[string]json.RawMessage) {
-		simApp := simapp.Setup(t, false)
-		return simApp, simapp.NewDefaultGenesisState(cdc)
+		simApp := simapp.SetupNoBlocks(t, false)
+		return simApp, simApp.DefaultGenesis()
 	}
 }
 
