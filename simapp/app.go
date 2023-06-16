@@ -102,6 +102,9 @@ func init() {
 	}
 
 	DefaultNodeHome = filepath.Join(userHomeDir, ".simapp")
+
+	cfg := simappparams.SetConfig()
+	cfg.Seal()
 }
 
 // NewSimApp returns a reference to an initialized SimApp.
