@@ -47,13 +47,14 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
+
 	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs"
 	epochstypes "github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
-	ibchookertypes "github.com/persistenceOne/persistence-sdk/v2/x/ibchooker/types"
+	ibchooks "github.com/persistenceOne/persistence-sdk/v2/x/ibc-hooks"
+	ibchookstypes "github.com/persistenceOne/persistence-sdk/v2/x/ibc-hooks/types"
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
-
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
 	oracletypes "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
@@ -104,9 +105,9 @@ func appModules(
 		params.NewAppModule(*app.ParamsKeeper),
 		halving.NewAppModule(appCodec, *app.HalvingKeeper),
 		app.TransferModule,
-		app.IBCTransferHooksMiddleware,
 		ica.NewAppModule(app.ICAControllerKeeper, app.ICAHostKeeper),
 		wasm.NewAppModule(appCodec, app.WasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasm.ModuleName)),
+		ibchooks.NewAppModule(*app.AccountKeeper),
 		epochs.NewAppModule(*app.EpochsKeeper),
 		app.InterchainQueryModule,
 		oracle.NewAppModule(appCodec, *app.OracleKeeper, app.AccountKeeper, app.BankKeeper),
@@ -151,8 +152,8 @@ func orderBeginBlockers() []string {
 		vestingtypes.ModuleName,
 		consensustypes.ModuleName,
 		halving.ModuleName,
+		ibchookstypes.ModuleName,
 		wasm.ModuleName,
-		ibchookertypes.ModuleName,
 		interchainquerytypes.ModuleName,
 		group.ModuleName,
 		oracletypes.ModuleName,
@@ -183,9 +184,9 @@ func orderEndBlockers() []string {
 		vestingtypes.ModuleName,
 		consensustypes.ModuleName,
 		halving.ModuleName,
+		ibchookstypes.ModuleName,
 		wasm.ModuleName,
 		epochstypes.ModuleName,
-		ibchookertypes.ModuleName,
 		interchainquerytypes.ModuleName,
 		group.ModuleName,
 		oracletypes.ModuleName,
@@ -222,9 +223,9 @@ func orderInitGenesis() []string {
 		vestingtypes.ModuleName,
 		consensustypes.ModuleName,
 		halving.ModuleName,
+		ibchookstypes.ModuleName,
 		wasm.ModuleName,
 		epochstypes.ModuleName,
-		ibchookertypes.ModuleName,
 		interchainquerytypes.ModuleName,
 		group.ModuleName,
 		oracletypes.ModuleName,

@@ -29,6 +29,7 @@ import (
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	epochstypes "github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
+	ibchookstypes "github.com/persistenceOne/persistence-sdk/v2/x/ibc-hooks/types"
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
 	oracletypes "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
@@ -52,6 +53,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		halving.StoreKey,
 		ibcexported.StoreKey,
 		ibcfeetypes.StoreKey,
+		ibchookstypes.StoreKey,
 		ibctransfertypes.StoreKey,
 		icacontrollertypes.StoreKey,
 		icahosttypes.StoreKey,

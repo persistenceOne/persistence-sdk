@@ -6,16 +6,15 @@ import (
 	"os"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
+	"cosmossdk.io/math"
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	tmjson "github.com/cometbft/cometbft/libs/json"
 	"github.com/cometbft/cometbft/libs/log"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmtypes "github.com/cometbft/cometbft/types"
-	"github.com/stretchr/testify/require"
-
-	"cosmossdk.io/math"
-
 	bam "github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
@@ -30,6 +29,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 )
 
 // SetupOptions defines arguments that are passed into `Simapp` constructor.
@@ -116,6 +116,51 @@ func Setup(t *testing.T, isCheckTx bool) *SimApp {
 	}
 
 	app := SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, balance)
+
+	return app
+}
+
+// SetupNoBlocks initializes a new SimApp without blocks yet. A Nop logger is set in SimApp.
+func SetupNoBlocks(t *testing.T, isCheckTx bool) *SimApp {
+	t.Helper()
+
+	privVal := mock.NewPV()
+	pubKey, err := privVal.GetPubKey()
+	require.NoError(t, err)
+
+	// create validator set with single validator
+	validator := tmtypes.NewValidator(pubKey, 1)
+	valSet := tmtypes.NewValidatorSet([]*tmtypes.Validator{validator})
+
+	// generate genesis account
+	senderPrivKey := secp256k1.GenPrivKey()
+	acc := authtypes.NewBaseAccount(senderPrivKey.PubKey().Address().Bytes(), senderPrivKey.PubKey(), 0, 0)
+	balance := banktypes.Balance{
+		Address: acc.GetAddress().String(),
+		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100000000000000))),
+	}
+
+	app, genesisState := setup(true, 5)
+	genesisState, err = simtestutil.GenesisStateWithValSet(
+		app.AppCodec(),
+		genesisState,
+		valSet,
+		[]authtypes.GenesisAccount{acc},
+		balance,
+	)
+	require.NoError(t, err)
+
+	stateBytes, err := json.MarshalIndent(genesisState, "", " ")
+	require.NoError(t, err)
+
+	// init chain will set the validator set and initialize the genesis accounts
+	app.InitChain(
+		abci.RequestInitChain{
+			Validators:      []abci.ValidatorUpdate{},
+			ConsensusParams: simtestutil.DefaultConsensusParams,
+			AppStateBytes:   stateBytes,
+		},
+	)
 
 	return app
 }
@@ -245,4 +290,17 @@ func NewTestNetworkFixture() network.TestFixture {
 			Amino:             app.LegacyAmino(),
 		},
 	}
+}
+
+// SetupTestingApp initializes the IBC-go testing application
+func SetupTestingApp() (ibctesting.TestingApp, map[string]json.RawMessage) {
+	dir, err := os.MkdirTemp("", "simapp-ibc")
+	if err != nil {
+		panic(fmt.Sprintf("failed creating temporary directory: %v", err))
+	}
+	defer os.RemoveAll(dir)
+
+	app := NewSimApp(log.NewNopLogger(), dbm.NewMemDB(), nil, true, simtestutil.NewAppOptionsWithFlagHome(dir))
+
+	return app, ModuleBasics.DefaultGenesis(app.appCodec)
 }

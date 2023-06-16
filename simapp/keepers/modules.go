@@ -33,7 +33,7 @@ import (
 	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs"
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
-	"github.com/persistenceOne/persistence-sdk/v2/x/ibchooker"
+	ibchooks "github.com/persistenceOne/persistence-sdk/v2/x/ibc-hooks"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
 )
@@ -70,13 +70,13 @@ var AppModuleBasics = []module.AppModuleBasic{
 	evidence.AppModuleBasic{},
 	transfer.AppModuleBasic{},
 	vesting.AppModuleBasic{},
-	wasm.AppModuleBasic{},
 	halving.AppModuleBasic{},
 	ica.AppModuleBasic{},
 	epochs.AppModuleBasic{},
 	interchainquery.AppModuleBasic{},
-	ibchooker.AppModuleBasic{},
+	ibchooks.AppModuleBasic{},
 	ibcfee.AppModuleBasic{},
+	wasm.AppModuleBasic{},
 	oracle.AppModuleBasic{},
 	consensus.AppModuleBasic{},
 }

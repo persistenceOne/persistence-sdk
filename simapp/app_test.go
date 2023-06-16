@@ -45,7 +45,7 @@ import (
 
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs"
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
-	"github.com/persistenceOne/persistence-sdk/v2/x/ibchooker"
+	ibchooks "github.com/persistenceOne/persistence-sdk/v2/x/ibc-hooks"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
 )
@@ -207,13 +207,13 @@ func TestRunMigrations(t *testing.T) {
 					"capability":   capability.AppModule{}.ConsensusVersion(),
 
 					"ibc":                ibc.AppModule{}.ConsensusVersion(),
+					"ibchooks":           ibchooks.AppModule{}.ConsensusVersion(),
 					"wasm":               wasm.AppModule{}.ConsensusVersion(),
 					"halving":            halving.AppModule{}.ConsensusVersion(),
 					"interchainaccounts": ica.AppModule{}.ConsensusVersion(),
 					"transfer":           transfer.AppModule{}.ConsensusVersion(),
 					"epochs":             epochs.AppModule{}.ConsensusVersion(),
 					"interchainquery":    interchainquery.AppModule{}.ConsensusVersion(),
-					"ibchooker":          ibchooker.AppModule{}.ConsensusVersion(),
 					"feeibc":             ibcfee.AppModule{}.ConsensusVersion(),
 					"oracle":             oracle.AppModule{}.ConsensusVersion(),
 					"consensus":          consensus.AppModule{}.ConsensusVersion(),
@@ -270,13 +270,13 @@ func TestInitGenesisOnMigration(t *testing.T) {
 			"capability":   capability.AppModule{}.ConsensusVersion(),
 
 			"ibc":                ibc.AppModule{}.ConsensusVersion(),
+			"ibchooks":           ibchooks.AppModule{}.ConsensusVersion(),
 			"wasm":               wasm.AppModule{}.ConsensusVersion(),
 			"halving":            halving.AppModule{}.ConsensusVersion(),
 			"interchainaccounts": ica.AppModule{}.ConsensusVersion(),
 			"transfer":           transfer.AppModule{}.ConsensusVersion(),
 			"epochs":             epochs.AppModule{}.ConsensusVersion(),
 			"interchainquery":    interchainquery.AppModule{}.ConsensusVersion(),
-			"ibchooker":          ibchooker.AppModule{}.ConsensusVersion(),
 			"feeibc":             ibcfee.AppModule{}.ConsensusVersion(),
 			"oracle":             oracle.AppModule{}.ConsensusVersion(),
 			"consensus":          consensus.AppModule{}.ConsensusVersion(),
