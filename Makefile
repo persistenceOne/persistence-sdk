@@ -168,6 +168,38 @@ clean:
 
 .PHONY: distclean clean
 
+
+###############################################################################
+###                        Integration Tests                                ###
+###############################################################################
+
+integration-test-all: init-test-framework \
+	test-relayer \
+	test-ibc-hooks \
+	-@rm -rf ./data
+	-@killall simd 2>/dev/null
+	-@killall rly 2>/dev/null
+
+init-test-framework: clean-testing-data install
+	@echo "Initializing both blockchains..."
+	./scripts/tests/start.sh
+
+test-relayer:
+	@echo "Testing relayer..."
+	./scripts/tests/relayer/interchain-acc-config/rly-init.sh
+
+test-ibc-hooks: 
+	@echo "Testing ibc hooks..."
+	./scripts/tests/ibc-hooks/increment.sh
+
+clean-testing-data:
+	@echo "Killing simd and removing previous data"
+	-@rm -rf ./data
+	-@killall simd 2>/dev/null
+	-@killall rly 2>/dev/null
+
+.PHONY: integration-test-all init-test-framework test-relayer test-ibc-hooks clean-testing-data
+
 ###############################################################################
 ###                                Protobuf                                 ###
 ###############################################################################
