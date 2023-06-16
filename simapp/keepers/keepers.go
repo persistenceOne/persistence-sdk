@@ -68,6 +68,8 @@ import (
 	ibctypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
+	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 
 	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
 	"github.com/persistenceOne/persistence-sdk/v2/wasmbindings"
@@ -118,6 +120,7 @@ type AppKeepers struct {
 	ICAControllerKeeper   *icacontrollerkeeper.Keeper
 	InterchainQueryKeeper *interchainquerykeeper.Keeper
 	GroupKeeper           *groupkeeper.Keeper
+	RouterKeeper          *routerkeeper.Keeper
 
 	// Modules
 	TransferModule        transfer.AppModule
@@ -417,6 +420,18 @@ func NewAppKeeper(
 	hooksTransferStack := ibchooks.NewIBCMiddleware(&transferIBCModule, appKeepers.HooksICS4Wrapper)
 	appKeepers.TransferStack = &hooksTransferStack
 
+	routerKeeper := routerkeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[routertypes.StoreKey],
+		appKeepers.GetSubspace(routertypes.ModuleName),
+		appKeepers.TransferKeeper,
+		appKeepers.IBCKeeper.ChannelKeeper,
+		appKeepers.DistributionKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.IBCKeeper.ChannelKeeper,
+	)
+	appKeepers.RouterKeeper = routerKeeper
+
 	evidenceKeeper := evidencekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[evidencetypes.StoreKey],
@@ -537,6 +552,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(interchainquerytypes.ModuleName)
 	paramsKeeper.Subspace(oracletypes.ModuleName)
 	paramsKeeper.Subspace(group.ModuleName)
+	paramsKeeper.Subspace(routertypes.ModuleName)
 
 	return paramsKeeper
 }

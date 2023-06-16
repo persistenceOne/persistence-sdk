@@ -32,6 +32,7 @@ import (
 	ibchookstypes "github.com/persistenceOne/persistence-sdk/v2/x/ibc-hooks/types"
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
 	oracletypes "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 )
 
 func (appKeepers *AppKeepers) GenerateKeys() {
@@ -61,6 +62,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		minttypes.StoreKey,
 		oracletypes.StoreKey,
 		paramstypes.StoreKey,
+		routertypes.StoreKey,
 		slashingtypes.StoreKey,
 		stakingtypes.StoreKey,
 		upgradetypes.StoreKey,

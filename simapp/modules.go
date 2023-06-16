@@ -47,6 +47,8 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
+	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
+	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 
 	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs"
@@ -102,6 +104,7 @@ func appModules(
 		consensus.NewAppModule(appCodec, *app.ConsensusParamsKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
 		ibcfee.NewAppModule(*app.IBCFeeKeeper),
+		router.NewAppModule(app.RouterKeeper),
 		params.NewAppModule(*app.ParamsKeeper),
 		halving.NewAppModule(appCodec, *app.HalvingKeeper),
 		app.TransferModule,
@@ -152,6 +155,7 @@ func orderBeginBlockers() []string {
 		vestingtypes.ModuleName,
 		consensustypes.ModuleName,
 		halving.ModuleName,
+		routertypes.ModuleName,
 		ibchookstypes.ModuleName,
 		wasm.ModuleName,
 		interchainquerytypes.ModuleName,
@@ -184,6 +188,7 @@ func orderEndBlockers() []string {
 		vestingtypes.ModuleName,
 		consensustypes.ModuleName,
 		halving.ModuleName,
+		routertypes.ModuleName,
 		ibchookstypes.ModuleName,
 		wasm.ModuleName,
 		epochstypes.ModuleName,
@@ -223,6 +228,7 @@ func orderInitGenesis() []string {
 		vestingtypes.ModuleName,
 		consensustypes.ModuleName,
 		halving.ModuleName,
+		routertypes.ModuleName,
 		ibchookstypes.ModuleName,
 		wasm.ModuleName,
 		epochstypes.ModuleName,

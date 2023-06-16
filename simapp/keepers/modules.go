@@ -36,6 +36,7 @@ import (
 	ibchooks "github.com/persistenceOne/persistence-sdk/v2/x/ibc-hooks"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
+	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 )
 
 // AppModuleBasics defines the module BasicManager is in charge of setting up basic,
@@ -66,6 +67,7 @@ var AppModuleBasics = []module.AppModuleBasic{
 	groupmodule.AppModuleBasic{},
 	ibc.AppModuleBasic{},
 	ibctm.AppModuleBasic{},
+	router.AppModuleBasic{},
 	upgrade.AppModuleBasic{},
 	evidence.AppModuleBasic{},
 	transfer.AppModuleBasic{},

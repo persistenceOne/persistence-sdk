@@ -42,6 +42,7 @@ import (
 	ibcfee "github.com/cosmos/ibc-go/v7/modules/apps/29-fee"
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
+	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs"
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
@@ -206,17 +207,18 @@ func TestRunMigrations(t *testing.T) {
 					"genutil":      genutil.AppModule{}.ConsensusVersion(),
 					"capability":   capability.AppModule{}.ConsensusVersion(),
 
-					"ibc":                ibc.AppModule{}.ConsensusVersion(),
-					"ibchooks":           ibchooks.AppModule{}.ConsensusVersion(),
-					"wasm":               wasm.AppModule{}.ConsensusVersion(),
-					"halving":            halving.AppModule{}.ConsensusVersion(),
-					"interchainaccounts": ica.AppModule{}.ConsensusVersion(),
-					"transfer":           transfer.AppModule{}.ConsensusVersion(),
-					"epochs":             epochs.AppModule{}.ConsensusVersion(),
-					"interchainquery":    interchainquery.AppModule{}.ConsensusVersion(),
-					"feeibc":             ibcfee.AppModule{}.ConsensusVersion(),
-					"oracle":             oracle.AppModule{}.ConsensusVersion(),
-					"consensus":          consensus.AppModule{}.ConsensusVersion(),
+					"ibc":                    ibc.AppModule{}.ConsensusVersion(),
+					"ibchooks":               ibchooks.AppModule{}.ConsensusVersion(),
+					"packetfowardmiddleware": router.AppModule{}.ConsensusVersion(),
+					"wasm":                   wasm.AppModule{}.ConsensusVersion(),
+					"halving":                halving.AppModule{}.ConsensusVersion(),
+					"interchainaccounts":     ica.AppModule{}.ConsensusVersion(),
+					"transfer":               transfer.AppModule{}.ConsensusVersion(),
+					"epochs":                 epochs.AppModule{}.ConsensusVersion(),
+					"interchainquery":        interchainquery.AppModule{}.ConsensusVersion(),
+					"feeibc":                 ibcfee.AppModule{}.ConsensusVersion(),
+					"oracle":                 oracle.AppModule{}.ConsensusVersion(),
+					"consensus":              consensus.AppModule{}.ConsensusVersion(),
 				},
 			)
 			if tc.expRunErr {
@@ -269,17 +271,18 @@ func TestInitGenesisOnMigration(t *testing.T) {
 			"genutil":      genutil.AppModule{}.ConsensusVersion(),
 			"capability":   capability.AppModule{}.ConsensusVersion(),
 
-			"ibc":                ibc.AppModule{}.ConsensusVersion(),
-			"ibchooks":           ibchooks.AppModule{}.ConsensusVersion(),
-			"wasm":               wasm.AppModule{}.ConsensusVersion(),
-			"halving":            halving.AppModule{}.ConsensusVersion(),
-			"interchainaccounts": ica.AppModule{}.ConsensusVersion(),
-			"transfer":           transfer.AppModule{}.ConsensusVersion(),
-			"epochs":             epochs.AppModule{}.ConsensusVersion(),
-			"interchainquery":    interchainquery.AppModule{}.ConsensusVersion(),
-			"feeibc":             ibcfee.AppModule{}.ConsensusVersion(),
-			"oracle":             oracle.AppModule{}.ConsensusVersion(),
-			"consensus":          consensus.AppModule{}.ConsensusVersion(),
+			"ibc":                    ibc.AppModule{}.ConsensusVersion(),
+			"ibchooks":               ibchooks.AppModule{}.ConsensusVersion(),
+			"packetfowardmiddleware": router.AppModule{}.ConsensusVersion(),
+			"wasm":                   wasm.AppModule{}.ConsensusVersion(),
+			"halving":                halving.AppModule{}.ConsensusVersion(),
+			"interchainaccounts":     ica.AppModule{}.ConsensusVersion(),
+			"transfer":               transfer.AppModule{}.ConsensusVersion(),
+			"epochs":                 epochs.AppModule{}.ConsensusVersion(),
+			"interchainquery":        interchainquery.AppModule{}.ConsensusVersion(),
+			"feeibc":                 ibcfee.AppModule{}.ConsensusVersion(),
+			"oracle":                 oracle.AppModule{}.ConsensusVersion(),
+			"consensus":              consensus.AppModule{}.ConsensusVersion(),
 		},
 	)
 	require.NoError(t, err)
