@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cometbft/cometbft/libs/log"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 
@@ -12,13 +13,13 @@ import (
 
 type (
 	Keeper struct {
-		storeKey sdk.StoreKey
+		storeKey storetypes.StoreKey
 	}
 )
 
 // NewKeeper returns a new instance of the x/ibchooks keeper
 func NewKeeper(
-	storeKey sdk.StoreKey,
+	storeKey storetypes.StoreKey,
 ) Keeper {
 	return Keeper{
 		storeKey: storeKey,
