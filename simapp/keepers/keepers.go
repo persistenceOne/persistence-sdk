@@ -68,6 +68,8 @@ import (
 	ibctypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	builderkeeper "github.com/skip-mev/pob/x/builder/keeper"
+	buildertypes "github.com/skip-mev/pob/x/builder/types"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 
@@ -121,6 +123,7 @@ type AppKeepers struct {
 	InterchainQueryKeeper *interchainquerykeeper.Keeper
 	GroupKeeper           *groupkeeper.Keeper
 	RouterKeeper          *routerkeeper.Keeper
+	BuilderKeeper         *builderkeeper.Keeper
 
 	// Modules
 	TransferModule        transfer.AppModule
@@ -432,6 +435,17 @@ func NewAppKeeper(
 	)
 	appKeepers.RouterKeeper = routerKeeper
 
+	builderKeeper := builderkeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[buildertypes.StoreKey],
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.DistributionKeeper,
+		appKeepers.StakingKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+	appKeepers.BuilderKeeper = &builderKeeper
+
 	evidenceKeeper := evidencekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[evidencetypes.StoreKey],
@@ -553,6 +567,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(oracletypes.ModuleName)
 	paramsKeeper.Subspace(group.ModuleName)
 	paramsKeeper.Subspace(routertypes.ModuleName)
+	paramsKeeper.Subspace(buildertypes.ModuleName)
 
 	return paramsKeeper
 }

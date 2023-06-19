@@ -42,6 +42,7 @@ import (
 	ibcfee "github.com/cosmos/ibc-go/v7/modules/apps/29-fee"
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
+	"github.com/skip-mev/pob/x/builder"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs"
@@ -218,6 +219,7 @@ func TestRunMigrations(t *testing.T) {
 					"interchainquery":        interchainquery.AppModule{}.ConsensusVersion(),
 					"feeibc":                 ibcfee.AppModule{}.ConsensusVersion(),
 					"oracle":                 oracle.AppModule{}.ConsensusVersion(),
+					"builder":                builder.AppModule{}.ConsensusVersion(),
 					"consensus":              consensus.AppModule{}.ConsensusVersion(),
 				},
 			)
@@ -282,6 +284,7 @@ func TestInitGenesisOnMigration(t *testing.T) {
 			"interchainquery":        interchainquery.AppModule{}.ConsensusVersion(),
 			"feeibc":                 ibcfee.AppModule{}.ConsensusVersion(),
 			"oracle":                 oracle.AppModule{}.ConsensusVersion(),
+			"builder":                builder.AppModule{}.ConsensusVersion(),
 			"consensus":              consensus.AppModule{}.ConsensusVersion(),
 		},
 	)

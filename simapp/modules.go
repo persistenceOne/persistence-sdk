@@ -59,6 +59,8 @@ import (
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
 	oracletypes "github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	"github.com/skip-mev/pob/x/builder"
+	buildertypes "github.com/skip-mev/pob/x/builder/types"
 )
 
 var ModuleAccountPermissions = map[string][]string{
@@ -73,6 +75,7 @@ var ModuleAccountPermissions = map[string][]string{
 	ibcfeetypes.ModuleName:         nil,
 	wasm.ModuleName:                {authtypes.Burner},
 	oracletypes.ModuleName:         nil,
+	buildertypes.ModuleName:        nil,
 }
 
 func appModules(
@@ -115,6 +118,7 @@ func appModules(
 		app.InterchainQueryModule,
 		oracle.NewAppModule(appCodec, *app.OracleKeeper, app.AccountKeeper, app.BankKeeper),
 		crisis.NewAppModule(app.CrisisKeeper, skipGenesisInvariants, app.GetSubspace(crisistypes.ModuleName)), // always be last to make sure that it checks for all invariants and not only part of them
+		builder.NewAppModule(appCodec, *app.BuilderKeeper),
 	}
 }
 
@@ -153,6 +157,7 @@ func orderBeginBlockers() []string {
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
+		buildertypes.ModuleName,
 		consensustypes.ModuleName,
 		halving.ModuleName,
 		routertypes.ModuleName,
@@ -195,6 +200,7 @@ func orderEndBlockers() []string {
 		interchainquerytypes.ModuleName,
 		group.ModuleName,
 		oracletypes.ModuleName,
+		buildertypes.ModuleName,
 	}
 }
 
@@ -235,6 +241,7 @@ func orderInitGenesis() []string {
 		interchainquerytypes.ModuleName,
 		group.ModuleName,
 		oracletypes.ModuleName,
+		buildertypes.ModuleName,
 	}
 }
 

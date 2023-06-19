@@ -48,6 +48,8 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
+	pobabci "github.com/skip-mev/pob/abci"
+	"github.com/skip-mev/pob/mempool"
 
 	"github.com/persistenceOne/persistence-sdk/v2/simapp/keepers"
 	simappparams "github.com/persistenceOne/persistence-sdk/v2/simapp/params"
@@ -55,6 +57,10 @@ import (
 )
 
 const appName = "SimApp"
+
+const (
+	simChainID = "chain-id-0"
+)
 
 var (
 	// DefaultNodeHome default home directories for the application daemon
@@ -93,6 +99,9 @@ type SimApp struct {
 
 	// module configurator
 	configurator module.Configurator
+
+	// override handler for CheckTx for POB
+	checkTxHandler pobabci.CheckTx
 }
 
 func init() {
@@ -194,7 +203,8 @@ func NewSimApp(
 	app.MountTransientStores(app.GetTransientStoreKey())
 	app.MountMemoryStores(app.GetMemoryStoreKey())
 
-	app.setAnteHandler(encodingConfig.TxConfig, wasmConfig)
+	// includes custom mempool fro skip-mev
+	app.setCustomMempoolAndAnte(encodingConfig.TxConfig, wasmConfig)
 
 	// initialize BaseApp
 	app.SetInitChainer(app.InitChainer)
@@ -232,25 +242,60 @@ func NewSimApp(
 	return app
 }
 
-func (app *SimApp) setAnteHandler(txConfig client.TxConfig, wasmConfig wasmtypes.WasmConfig) {
-	anteHandler, err := NewAnteHandler(
-		HandlerOptions{
-			HandlerOptions: ante.HandlerOptions{
-				AccountKeeper:   app.AccountKeeper,
-				BankKeeper:      app.BankKeeper,
-				FeegrantKeeper:  app.FeegrantKeeper,
-				SignModeHandler: txConfig.SignModeHandler(),
-				SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
-			},
-			IBCKeeper:         app.IBCKeeper,
-			WasmConfig:        &wasmConfig,
-			TXCounterStoreKey: app.GetKVStoreKey()[wasm.StoreKey],
+func (app *SimApp) setCustomMempoolAndAnte(
+	txConfig client.TxConfig,
+	wasmConfig wasmtypes.WasmConfig,
+) {
+	// Set POB's mempool into the app.
+	mempool := mempool.NewAuctionMempool(app.txConfig.TxDecoder(), app.txConfig.TxEncoder(), 0, mempool.NewDefaultAuctionFactory(app.txConfig.TxDecoder()))
+	app.BaseApp.SetMempool(mempool)
+
+	anteOptions := HandlerOptions{
+		HandlerOptions: ante.HandlerOptions{
+			AccountKeeper:   app.AccountKeeper,
+			BankKeeper:      app.BankKeeper,
+			FeegrantKeeper:  app.FeegrantKeeper,
+			SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
+			SignModeHandler: txConfig.SignModeHandler(),
 		},
-	)
+
+		IBCKeeper:         app.IBCKeeper,
+		WasmConfig:        &wasmConfig,
+		TXCounterStoreKey: app.GetKVStoreKey()[wasm.StoreKey],
+
+		BuilderKeeper: app.BuilderKeeper,
+		Mempool:       mempool,
+		TxDecoder:     app.txConfig.TxDecoder(),
+		TxEncoder:     app.txConfig.TxEncoder(),
+	}
+
+	anteHandler, err := NewAnteHandler(anteOptions)
 	if err != nil {
 		panic(fmt.Errorf("failed to create AnteHandler: %s", err))
 	}
-	app.SetAnteHandler(anteHandler)
+
+	// Set the proposal handlers on the BaseApp along with the custom antehandler.
+	proposalHandlers := pobabci.NewProposalHandler(
+		mempool,
+		app.BaseApp.Logger(),
+		anteHandler,
+		anteOptions.TxEncoder,
+		anteOptions.TxDecoder,
+	)
+	app.BaseApp.SetPrepareProposal(proposalHandlers.PrepareProposalHandler())
+	app.BaseApp.SetProcessProposal(proposalHandlers.ProcessProposalHandler())
+	app.BaseApp.SetAnteHandler(anteHandler)
+
+	// Set the custom CheckTx handler on BaseApp.
+	checkTxHandler := pobabci.NewCheckTxHandler(
+		app.BaseApp,
+		app.txConfig.TxDecoder(),
+		mempool,
+		anteHandler,
+		simChainID,
+	)
+
+	app.SetCheckTx(checkTxHandler.CheckTx())
 }
 
 func (app *SimApp) RegisterGRPCServices() {
@@ -275,6 +320,19 @@ func (app *SimApp) setPostHandler() {
 	}
 
 	app.SetPostHandler(postHandler)
+}
+
+// CheckTx will check the transaction with the provided checkTxHandler. We override the default
+// handler so that we can verify bid transactions before they are inserted into the mempool.
+// With the POB CheckTx, we can verify the bid transaction and all of the bundled transactions
+// before inserting the bid transaction into the mempool.
+func (app *SimApp) CheckTx(req abci.RequestCheckTx) abci.ResponseCheckTx {
+	return app.checkTxHandler(req)
+}
+
+// SetCheckTx sets the checkTxHandler for the app.
+func (app *SimApp) SetCheckTx(handler pobabci.CheckTx) {
+	app.checkTxHandler = handler
 }
 
 // Name returns the name of the App
