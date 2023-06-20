@@ -12,5 +12,5 @@ import (
 
 type MintKeeper interface {
 	GetParams(ctx sdk.Context) (params mintTypes.Params)
-	SetParams(ctx sdk.Context, params mintTypes.Params)
+	SetParams(ctx sdk.Context, params mintTypes.Params) error
 }

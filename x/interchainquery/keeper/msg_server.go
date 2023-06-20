@@ -44,7 +44,12 @@ func (k msgServer) SubmitQueryResponse(goCtx context.Context, msg *types.MsgSubm
 
 	pathParts := strings.Split(q.QueryType, "/")
 	if pathParts[len(pathParts)-1] == "key" {
-		if err := utils.ValidateProofOps(ctx, k.IBCKeeper, q.ConnectionId, q.ChainId, msg.Height, pathParts[1], q.Request, msg.Result, msg.ProofOps); err != nil {
+		if err := utils.ValidateProofOps(
+			ctx, k.IBCKeeper,
+			q.ConnectionId, q.ChainId,
+			msg.Height, pathParts[1],
+			q.Request, msg.Result, msg.ProofOps,
+		); err != nil {
 			return nil, err
 		}
 	}
@@ -93,13 +98,6 @@ func (k msgServer) SubmitQueryResponse(goCtx context.Context, msg *types.MsgSubm
 		q.LastHeight = sdk.NewInt(ctx.BlockHeight())
 		k.SetQuery(ctx, q)
 	}
-
-	ctx.EventManager().EmitEvents(sdk.Events{
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-		),
-	})
 
 	return &types.MsgSubmitQueryResponseResponse{}, nil
 }

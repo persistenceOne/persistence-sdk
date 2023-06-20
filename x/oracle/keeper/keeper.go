@@ -5,13 +5,14 @@ import (
 	"strings"
 
 	"cosmossdk.io/errors"
+
+	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
-	gogotypes "github.com/gogo/protobuf/types"
-	"github.com/tendermint/tendermint/libs/log"
+	gogotypes "github.com/cosmos/gogoproto/types"
 
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )

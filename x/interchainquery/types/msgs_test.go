@@ -3,13 +3,13 @@ package types_test
 import (
 	"testing"
 
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/stretchr/testify/require"
 
-	"github.com/persistenceOne/persistence-sdk/v2/ibctesting"
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/keeper"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
-	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
 )
 
 const TestOwnerAddress = "cosmos17dtl0mjt3t77kpuhg2edqzjpszulwhgzuj9ljs"
@@ -53,9 +53,8 @@ func TestMsgSubmitQueryResponse(t *testing.T) {
 	bz, err := bondedQuery.Marshal()
 	require.NoError(t, err)
 
-	validators := GetSimApp(chainB).StakingKeeper.GetBondedValidatorsByPower(chainB.GetContext())
 	qvr := stakingtypes.QueryValidatorsResponse{
-		Validators: ibctesting.SdkValidatorsToValidators(validators),
+		Validators: GetSimApp(chainB).StakingKeeper.GetBondedValidatorsByPower(chainB.GetContext()),
 	}
 
 	msg := types.MsgSubmitQueryResponse{
@@ -67,7 +66,6 @@ func TestMsgSubmitQueryResponse(t *testing.T) {
 	}
 
 	require.NoError(t, msg.ValidateBasic())
-	require.Equal(t, types.RouterKey, msg.Route())
 	require.Equal(t, types.TypeMsgSubmitQueryResponse, msg.Type())
 	require.Equal(t, TestOwnerAddress, msg.GetSigners()[0].String())
 }

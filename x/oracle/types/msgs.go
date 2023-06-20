@@ -1,9 +1,8 @@
 package types
 
 import (
-	"github.com/tendermint/tendermint/crypto/tmhash"
-
 	"cosmossdk.io/errors"
+	"github.com/cometbft/cometbft/crypto/tmhash"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -33,9 +32,6 @@ func NewMsgAggregateExchangeRatePrevote(
 		Validator: validator.String(),
 	}
 }
-
-// Route implements sdk.Msg
-func (msg MsgAggregateExchangeRatePrevote) Route() string { return RouterKey }
 
 // Type implements sdk.Msg
 func (msg MsgAggregateExchangeRatePrevote) Type() string { return TypeMsgAggregateExchangeRatePrevote }
@@ -89,9 +85,6 @@ func NewMsgAggregateExchangeRateVote(
 		Validator:     validator.String(),
 	}
 }
-
-// Route implements sdk.Msg
-func (msg MsgAggregateExchangeRateVote) Route() string { return RouterKey }
 
 // Type implements sdk.Msg
 func (msg MsgAggregateExchangeRateVote) Type() string { return TypeMsgAggregateExchangeRateVote }
@@ -157,9 +150,6 @@ func NewMsgDelegateFeedConsent(operatorAddress sdk.ValAddress, feederAddress sdk
 	}
 }
 
-// Route implements sdk.Msg
-func (msg MsgDelegateFeedConsent) Route() string { return RouterKey }
-
 // Type implements sdk.Msg
 func (msg MsgDelegateFeedConsent) Type() string { return TypeMsgDelegateFeedConsent }
 
@@ -195,9 +185,6 @@ func NewMsgAddFundsToRewardPool(from sdk.AccAddress, funds sdk.Coins) *MsgAddFun
 		Funds: funds,
 	}
 }
-
-// Route implements sdk.Msg
-func (m MsgAddFundsToRewardPool) Route() string { return RouterKey }
 
 // Type implements sdk.Msg
 func (m MsgAddFundsToRewardPool) Type() string { return TypeMsgAddFundsToRewardPool }

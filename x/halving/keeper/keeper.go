@@ -8,12 +8,13 @@ package keeper
 import (
 	"fmt"
 
+	"github.com/cometbft/cometbft/libs/log"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	mintTypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
+
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving/types"
-	"github.com/tendermint/tendermint/libs/log"
 )
 
 // Keeper of the halving store
@@ -63,6 +64,6 @@ func (k Keeper) GetMintingParams(ctx sdk.Context) (params mintTypes.Params) {
 }
 
 // SetMintingParams sets the total set of halving parameters.
-func (k Keeper) SetMintingParams(ctx sdk.Context, params mintTypes.Params) {
-	k.mintKeeper.SetParams(ctx, params)
+func (k Keeper) SetMintingParams(ctx sdk.Context, params mintTypes.Params) error {
+	return k.mintKeeper.SetParams(ctx, params)
 }

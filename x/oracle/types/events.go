@@ -15,5 +15,4 @@ const (
 	EventAttrKeyExchangeRates = "exchange_rates"
 	EventAttrKeyOperator      = "operator"
 	EventAttrKeyFeeder        = "feeder"
-	EventAttrValueCategory    = ModuleName
 )

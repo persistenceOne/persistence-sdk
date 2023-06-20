@@ -2,15 +2,15 @@ package testutil
 
 import (
 	"cosmossdk.io/math"
+	"github.com/cometbft/cometbft/crypto/secp256k1"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
+	simtestutils "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	"github.com/persistenceOne/persistence-sdk/v2/simapp"
-	"github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking"
-	stakingkeeper "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/keeper"
-	stakingtypes "github.com/persistenceOne/persistence-sdk/v2/x/lsnative/staking/types"
-	"github.com/tendermint/tendermint/crypto/secp256k1"
+	"github.com/cosmos/cosmos-sdk/x/staking"
+	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 var (
@@ -45,7 +45,7 @@ func FundModuleAccount(bankKeeper bankkeeper.Keeper, ctx sdk.Context, recipientM
 // StakingAddValidators generates N validators and adds them to staking keeper as bonded validators.
 func StakingAddValidators(
 	bankKeeper bankkeeper.Keeper,
-	stakingKeeper stakingkeeper.Keeper,
+	stakingKeeper *stakingkeeper.Keeper,
 	ctx sdk.Context,
 	num int,
 ) (
@@ -57,7 +57,7 @@ func StakingAddValidators(
 	valAddresses := make([]sdk.ValAddress, num)
 	stakingMsgServer := stakingkeeper.NewMsgServerImpl(stakingKeeper)
 
-	valPubKeys := simapp.CreateTestPubKeys(num)
+	valPubKeys := simtestutils.CreateTestPubKeys(num)
 
 	for i := 0; i < num; i++ {
 		var (
@@ -97,7 +97,7 @@ func newTestMsgCreateValidator(address sdk.ValAddress, pubKey cryptotypes.PubKey
 
 	msg, err := stakingtypes.NewMsgCreateValidator(
 		address, pubKey, sdk.NewCoin(sdk.DefaultBondDenom, amt),
-		stakingtypes.Description{}, commission,
+		stakingtypes.Description{}, commission, math.OneInt(),
 	)
 	if err != nil {
 		return nil, err

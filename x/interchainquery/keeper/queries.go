@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	sdkmath "cosmossdk.io/math"
+	"github.com/cometbft/cometbft/crypto"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/tendermint/crypto"
 
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
 )

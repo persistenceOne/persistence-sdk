@@ -4,11 +4,10 @@ import (
 	"testing"
 	"time"
 
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	"github.com/stretchr/testify/require"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	simapp "github.com/persistenceOne/persistence-sdk/v2/simapp"
-
 	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
 )
 

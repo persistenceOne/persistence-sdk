@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"net/url"
 
+	"cosmossdk.io/errors"
+	"github.com/cometbft/cometbft/proto/tendermint/crypto"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	clienttypes "github.com/cosmos/ibc-go/v6/modules/core/02-client/types"
-	commitmenttypes "github.com/cosmos/ibc-go/v6/modules/core/23-commitment/types"
-	ibcKeeper "github.com/cosmos/ibc-go/v6/modules/core/keeper"
-	tmclienttypes "github.com/cosmos/ibc-go/v6/modules/light-clients/07-tendermint/types"
-	"github.com/tendermint/tendermint/proto/tendermint/crypto"
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+	commitmenttypes "github.com/cosmos/ibc-go/v7/modules/core/23-commitment/types"
+	ibcKeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 )
 
 func ValidateProofOps(ctx sdk.Context, ibcKeeper *ibcKeeper.Keeper, connectionID string, chainID string, height int64, module string, key []byte, data []byte, proofOps *crypto.ProofOps) error {
@@ -17,13 +18,21 @@ func ValidateProofOps(ctx sdk.Context, ibcKeeper *ibcKeeper.Keeper, connectionID
 		return fmt.Errorf("unable to validate proof. No proof submitted")
 	}
 
-	connection, _ := ibcKeeper.ConnectionKeeper.GetConnection(ctx, connectionID)
+	connection, found := ibcKeeper.ConnectionKeeper.GetConnection(ctx, connectionID)
+	if !found {
+		return fmt.Errorf("connection %s not found", connectionID)
+	}
 
 	csHeight := clienttypes.NewHeight(clienttypes.ParseChainID(chainID), uint64(height)+1)
 	consensusState, found := ibcKeeper.ClientKeeper.GetClientConsensusState(ctx, connection.ClientId, csHeight)
 
 	if !found {
 		return fmt.Errorf("unable to fetch consensus state")
+	}
+
+	tmConsState, ok := consensusState.(*ibctm.ConsensusState)
+	if !ok {
+		return fmt.Errorf("error unmarshaling consensus state")
 	}
 
 	clientState, found := ibcKeeper.ClientKeeper.GetClientState(ctx, connection.ClientId)
@@ -38,23 +47,19 @@ func ValidateProofOps(ctx sdk.Context, ibcKeeper *ibcKeeper.Keeper, connectionID
 		return fmt.Errorf("error converting proofs")
 	}
 
-	tmClientState, ok := clientState.(*tmclienttypes.ClientState)
+	tmClientState, ok := clientState.(*ibctm.ClientState)
 	if !ok {
 		return fmt.Errorf("error unmarshaling client state")
 	}
 
 	if len(data) != 0 {
-		// if we got a non-nil response, verify inclusion proof.
-		if err := merkleProof.VerifyMembership(tmClientState.ProofSpecs, consensusState.GetRoot(), path, data); err != nil {
-			return fmt.Errorf("unable to verify inclusion proof: %s", err)
-		}
-
-		return nil
-	}
-	// if we got a nil response, verify non inclusion proof.
-	if err := merkleProof.VerifyNonMembership(tmClientState.ProofSpecs, consensusState.GetRoot(), path); err != nil {
-		return fmt.Errorf("unable to verify non-inclusion proof: %s", err)
+		err = merkleProof.VerifyMembership(tmClientState.ProofSpecs, tmConsState.GetRoot(), path, data)
+		err = errors.Wrap(err, "unable to verify inclusion proof")
+	} else {
+		// if we got a nil response, verify non inclusion proof.
+		err = merkleProof.VerifyNonMembership(tmClientState.ProofSpecs, tmConsState.GetRoot(), path)
+		err = errors.Wrap(err, "unable to verify non-inclusion proof")
 	}
 
-	return nil
+	return err
 }

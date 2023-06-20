@@ -162,7 +162,7 @@ on `go mod tidy -v`.
 ## Protobuf
 
 We use [Protocol Buffers](https://developers.google.com/protocol-buffers) along
-with [gogoproto](https://github.com/gogo/protobuf) to generate code for use in Persistence SDK.
+with [gogoproto](https://github.com/cosmos/gogoproto) to generate code for use in Persistence SDK.
 
 For deterministic behavior around Protobuf tooling, everything is containerized using Docker. Make sure to have Docker
 installed on your machine, or head to [Docker's website](https://docs.docker.com/get-docker/) to install it.
@@ -181,12 +181,11 @@ workspace settings/config.
 
 For example, in vscode your `.vscode/settings.json` should look like:
 
-```
+```json
 {
     "protoc": {
         "options": [
         "--proto_path=${workspaceRoot}/proto",
-        "--proto_path=${workspaceRoot}/third_party/proto"
         ]
     }
 }

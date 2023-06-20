@@ -9,8 +9,11 @@ import (
 	"fmt"
 	"strconv"
 
+	errors "cosmossdk.io/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	mintTypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving/types"
 )
 
@@ -26,9 +29,11 @@ func EndBlocker(ctx sdk.Context, k Keeper) {
 			panic(fmt.Sprintf("max inflation (%s) must be greater than or equal to min inflation (%s)", newMaxInflation.String(), newMinInflation.String()))
 		}
 
-		updatedParams := mintTypes.NewParams(mintParams.MintDenom, newMaxInflation.Sub(newMinInflation), newMaxInflation, newMinInflation, mintParams.GoalBonded, mintParams.BlocksPerYear)
+		updatedParams := minttypes.NewParams(mintParams.MintDenom, mintParams.InflationRateChange, newMaxInflation, newMinInflation, mintParams.GoalBonded, mintParams.BlocksPerYear)
 
-		k.SetMintingParams(ctx, updatedParams)
+		if err := k.SetMintingParams(ctx, updatedParams); err != nil {
+			panic(errors.Wrap(err, "unable to set minting params at halving EndBlocker"))
+		}
 
 		ctx.EventManager().EmitEvent(
 			sdk.NewEvent(

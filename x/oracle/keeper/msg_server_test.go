@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	"cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
 )
@@ -104,7 +104,7 @@ func (s *KeeperTestSuite) TestMsgServer_AggregateExchangeRateVote() {
 
 	// No existing prevote
 	_, err = s.msgServer.AggregateExchangeRateVote(sdk.WrapSDKContext(ctx), voteMsg)
-	s.Require().EqualError(err, sdkerrors.Wrap(types.ErrNoAggregatePrevote, valAddr.String()).Error())
+	s.Require().EqualError(err, errors.Wrap(types.ErrNoAggregatePrevote, valAddr.String()).Error())
 
 	_, err = s.msgServer.AggregateExchangeRatePrevote(sdk.WrapSDKContext(ctx), prevoteMsg)
 	s.Require().NoError(err)
