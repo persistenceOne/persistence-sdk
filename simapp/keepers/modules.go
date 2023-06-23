@@ -36,6 +36,7 @@ import (
 	ibchooks "github.com/persistenceOne/persistence-sdk/v2/x/ibc-hooks"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
+	buildermodule "github.com/skip-mev/pob/x/builder"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 )
 
@@ -81,4 +82,5 @@ var AppModuleBasics = []module.AppModuleBasic{
 	wasm.AppModuleBasic{},
 	oracle.AppModuleBasic{},
 	consensus.AppModuleBasic{},
+	buildermodule.AppModuleBasic{},
 }

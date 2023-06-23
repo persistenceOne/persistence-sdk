@@ -9,6 +9,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	ibccoreante "github.com/cosmos/ibc-go/v7/modules/core/ante"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+
+	"github.com/skip-mev/pob/mempool"
+	builderante "github.com/skip-mev/pob/x/builder/ante"
+	builderkeeper "github.com/skip-mev/pob/x/builder/keeper"
 )
 
 // HandlerOptions are the options required for constructing a default SDK AnteHandler.
@@ -18,6 +22,11 @@ type HandlerOptions struct {
 	IBCKeeper         *ibckeeper.Keeper
 	WasmConfig        *wasmtypes.WasmConfig
 	TXCounterStoreKey storetypes.StoreKey
+
+	Mempool       mempool.Mempool
+	TxDecoder     sdk.TxDecoder
+	TxEncoder     sdk.TxEncoder
+	BuilderKeeper *builderkeeper.Keeper
 }
 
 // NewAnteHandler returns an AnteHandler that checks and increments sequence
@@ -68,6 +77,7 @@ func NewAnteHandler(options HandlerOptions) (sdk.AnteHandler, error) {
 		ante.NewSigVerificationDecorator(options.AccountKeeper, options.SignModeHandler),
 		ante.NewIncrementSequenceDecorator(options.AccountKeeper),
 		ibccoreante.NewRedundantRelayDecorator(options.IBCKeeper),
+		builderante.NewBuilderDecorator(*options.BuilderKeeper, options.TxEncoder, options.Mempool),
 	}
 
 	return sdk.ChainAnteDecorators(anteDecorators...), nil
