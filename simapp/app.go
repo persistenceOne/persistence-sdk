@@ -37,7 +37,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/cosmos/cosmos-sdk/x/auth/ante"
-	"github.com/cosmos/cosmos-sdk/x/auth/posthandler"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
@@ -211,7 +210,6 @@ func NewSimApp(
 	app.SetBeginBlocker(app.BeginBlocker)
 	app.SetEndBlocker(app.EndBlocker)
 
-	// app.setPostHandler()
 	app.setupUpgradeHandlers()
 	app.setupUpgradeStoreLoaders()
 
@@ -311,17 +309,6 @@ func (app *SimApp) RegisterGRPCServices() {
 	reflectionv1.RegisterReflectionServiceServer(app.GRPCQueryRouter(), reflectionSvc)
 }
 
-func (app *SimApp) setPostHandler() {
-	postHandler, err := posthandler.NewPostHandler(
-		posthandler.HandlerOptions{},
-	)
-	if err != nil {
-		panic(err)
-	}
-
-	app.SetPostHandler(postHandler)
-}
-
 // CheckTx will check the transaction with the provided checkTxHandler. We override the default
 // handler so that we can verify bid transactions before they are inserted into the mempool.
 // With the POB CheckTx, we can verify the bid transaction and all of the bundled transactions
@@ -348,8 +335,8 @@ func (app *SimApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.Re
 	return app.ModuleManager.EndBlock(ctx, req)
 }
 
-func (a *SimApp) Configurator() module.Configurator {
-	return a.configurator
+func (app *SimApp) Configurator() module.Configurator {
+	return app.configurator
 }
 
 // InitChainer application update at chain initialization
@@ -394,8 +381,8 @@ func (app *SimApp) TxConfig() client.TxConfig {
 }
 
 // DefaultGenesis returns a default genesis from the registered AppModuleBasic's.
-func (a *SimApp) DefaultGenesis() map[string]json.RawMessage {
-	return ModuleBasics.DefaultGenesis(a.appCodec)
+func (app *SimApp) DefaultGenesis() map[string]json.RawMessage {
+	return ModuleBasics.DefaultGenesis(app.appCodec)
 }
 
 func SendCoinBlockedAddrs() map[string]bool {

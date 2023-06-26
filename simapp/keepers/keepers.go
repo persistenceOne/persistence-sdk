@@ -59,7 +59,6 @@ import (
 	ibcfee "github.com/cosmos/ibc-go/v7/modules/apps/29-fee"
 	ibcfeekeeper "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/keeper"
 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
-	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
 	ibctransfer "github.com/cosmos/ibc-go/v7/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
@@ -126,7 +125,7 @@ type AppKeepers struct {
 	BuilderKeeper         *builderkeeper.Keeper
 
 	// Modules
-	TransferModule        transfer.AppModule
+	TransferModule        ibctransfer.AppModule
 	TransferIBCModule     ibctypes.IBCModule
 	InterchainQueryModule interchainquery.AppModule
 
@@ -363,8 +362,8 @@ func NewAppKeeper(
 	)
 	appKeepers.OracleKeeper = &oracleKeeper
 
-	appKeepers.TransferModule = transfer.NewAppModule(*appKeepers.TransferKeeper)
-	appKeepers.TransferIBCModule = transfer.NewIBCModule(*appKeepers.TransferKeeper)
+	appKeepers.TransferModule = ibctransfer.NewAppModule(*appKeepers.TransferKeeper)
+	appKeepers.TransferIBCModule = ibctransfer.NewIBCModule(*appKeepers.TransferKeeper)
 
 	icaHostKeeper := icahostkeeper.NewKeeper(
 		appCodec,

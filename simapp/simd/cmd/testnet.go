@@ -59,22 +59,25 @@ type initArgs struct {
 	minGasPrices      string
 	nodeDaemonHome    string
 	nodeDirPrefix     string
-	numValidators     int
 	outputDir         string
 	startingIPAddress string
+
+	numValidators int
 }
 
 type startArgs struct {
-	algo          string
-	apiAddress    string
-	chainID       string
-	enableLogging bool
-	grpcAddress   string
-	minGasPrices  string
+	algo         string
+	apiAddress   string
+	chainID      string
+	grpcAddress  string
+	minGasPrices string
+	outputDir    string
+	rpcAddress   string
+
 	numValidators int
-	outputDir     string
+
 	printMnemonic bool
-	rpcAddress    string
+	enableLogging bool
 }
 
 func addTestnetFlagsToCmd(cmd *cobra.Command) {
