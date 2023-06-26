@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 
 	"github.com/spf13/cast"
 
@@ -56,10 +57,6 @@ import (
 )
 
 const appName = "SimApp"
-
-const (
-	simChainID = "chain-id-0"
-)
 
 var (
 	// DefaultNodeHome default home directories for the application daemon
@@ -284,16 +281,26 @@ func (app *SimApp) setCustomMempoolAndAnte(
 	app.BaseApp.SetProcessProposal(proposalHandlers.ProcessProposalHandler())
 	app.BaseApp.SetAnteHandler(anteHandler)
 
+	chainID := app.ChainID()
+	app.BaseApp.Logger().Info("using BaseApp chainID for POB ABCI", "chainID", chainID)
+
 	// Set the custom CheckTx handler on BaseApp.
 	checkTxHandler := pobabci.NewCheckTxHandler(
 		app.BaseApp,
 		app.txConfig.TxDecoder(),
 		mempool,
 		anteHandler,
-		simChainID,
+		chainID,
 	)
 
 	app.SetCheckTx(checkTxHandler.CheckTx())
+}
+
+// ChainID gets chainID from private fields of BaseApp
+// Should be removed once SDK 0.50.x will be adopted
+func (app *SimApp) ChainID() string {
+	field := reflect.ValueOf(app.BaseApp).Elem().FieldByName("chainID")
+	return field.String()
 }
 
 func (app *SimApp) RegisterGRPCServices() {
