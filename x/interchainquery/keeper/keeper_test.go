@@ -176,7 +176,7 @@ func (suite *KeeperTestSuite) TestSubmitQueryResponse() {
 			suite.GetSimApp(suite.chainA).InterchainQueryKeeper.SetQuery(suite.chainA.GetContext(), *tc.query)
 		}
 
-		icqmsgSrv := keeper.NewMsgServerImpl(suite.GetSimApp(suite.chainA).InterchainQueryKeeper)
+		icqmsgSrv := keeper.NewMsgServerImpl(*suite.GetSimApp(suite.chainA).InterchainQueryKeeper)
 
 		qmsg := icqtypes.MsgSubmitQueryResponse{
 			ChainId:     suite.chainB.ChainID,
