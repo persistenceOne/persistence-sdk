@@ -97,7 +97,7 @@ func newTestMsgCreateValidator(address sdk.ValAddress, pubKey cryptotypes.PubKey
 
 	msg, err := stakingtypes.NewMsgCreateValidator(
 		address, pubKey, sdk.NewCoin(sdk.DefaultBondDenom, amt),
-		stakingtypes.Description{}, commission, math.OneInt(),
+		stakingtypes.Description{}, commission,
 	)
 	if err != nil {
 		return nil, err

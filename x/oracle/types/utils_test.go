@@ -161,7 +161,7 @@ func (v MockValidator) GetDelegatorShares() sdk.Dec {
 	return sdk.NewDec(v.power)
 }
 
-func (v MockValidator) GetTotalLiquidShares() sdk.Dec {
+func (v MockValidator) GetLiquidShares() sdk.Dec {
 	return sdk.ZeroDec()
 }
 
