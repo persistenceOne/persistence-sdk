@@ -6,16 +6,15 @@ import (
 	"os"
 	"testing"
 
-	"cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
 
+	"cosmossdk.io/math"
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	tmjson "github.com/cometbft/cometbft/libs/json"
 	"github.com/cometbft/cometbft/libs/log"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmtypes "github.com/cometbft/cometbft/types"
-
 	bam "github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
@@ -30,8 +29,6 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	simcli "github.com/cosmos/cosmos-sdk/x/simulation/client/cli"
-
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 )
 
@@ -98,7 +95,8 @@ func NewSimappWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOptio
 	return app
 }
 
-func simappSetup(t *testing.T, _, commitGenesis bool) *SimApp {
+// Setup initializes a new SimApp. A Nop logger is set in SimApp.
+func Setup(t *testing.T, isCheckTx bool) *SimApp {
 	t.Helper()
 
 	privVal := mock.NewPV()
@@ -117,26 +115,61 @@ func simappSetup(t *testing.T, _, commitGenesis bool) *SimApp {
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100000000000000))),
 	}
 
-	app := SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, commitGenesis, balance)
+	app := SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, balance)
 
 	return app
 }
 
-// Setup initializes a new SimApp. A Nop logger is set in SimApp.
-func Setup(t *testing.T, isCheckTx bool) *SimApp {
-	return simappSetup(t, isCheckTx, true)
-}
-
-// Setup initializes a new SimApp without committing genesis changes. A Nop logger is set in SimApp.
+// SetupNoBlocks initializes a new SimApp without blocks yet. A Nop logger is set in SimApp.
 func SetupNoBlocks(t *testing.T, isCheckTx bool) *SimApp {
-	return simappSetup(t, isCheckTx, false)
+	t.Helper()
+
+	privVal := mock.NewPV()
+	pubKey, err := privVal.GetPubKey()
+	require.NoError(t, err)
+
+	// create validator set with single validator
+	validator := tmtypes.NewValidator(pubKey, 1)
+	valSet := tmtypes.NewValidatorSet([]*tmtypes.Validator{validator})
+
+	// generate genesis account
+	senderPrivKey := secp256k1.GenPrivKey()
+	acc := authtypes.NewBaseAccount(senderPrivKey.PubKey().Address().Bytes(), senderPrivKey.PubKey(), 0, 0)
+	balance := banktypes.Balance{
+		Address: acc.GetAddress().String(),
+		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100000000000000))),
+	}
+
+	app, genesisState := setup(true, 5)
+	genesisState, err = simtestutil.GenesisStateWithValSet(
+		app.AppCodec(),
+		genesisState,
+		valSet,
+		[]authtypes.GenesisAccount{acc},
+		balance,
+	)
+	require.NoError(t, err)
+
+	stateBytes, err := json.MarshalIndent(genesisState, "", " ")
+	require.NoError(t, err)
+
+	// init chain will set the validator set and initialize the genesis accounts
+	app.InitChain(
+		abci.RequestInitChain{
+			Validators:      []abci.ValidatorUpdate{},
+			ConsensusParams: simtestutil.DefaultConsensusParams,
+			AppStateBytes:   stateBytes,
+		},
+	)
+
+	return app
 }
 
 // SetupWithGenesisValSet initializes a new SimApp with a validator set and genesis accounts
 // that also act as delegators. For simplicity, each validator is bonded with a delegation
 // of one consensus engine unit in the default token of the simapp from first genesis
 // account. A Nop logger is set in SimApp.
-func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, commitGenesis bool, balances ...banktypes.Balance) *SimApp {
+func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, balances ...banktypes.Balance) *SimApp {
 	t.Helper()
 
 	app, genesisState := setup(true, 5)
@@ -155,34 +188,16 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 		},
 	)
 
-	if commitGenesis {
-		// commit genesis changes
-		app.Commit()
-		app.BeginBlock(abci.RequestBeginBlock{Header: tmproto.Header{
-			Height:             app.LastBlockHeight() + 1,
-			AppHash:            app.LastCommitID().Hash,
-			ValidatorsHash:     valSet.Hash(),
-			NextValidatorsHash: valSet.Hash(),
-		}})
-	}
+	// commit genesis changes
+	app.Commit()
+	app.BeginBlock(abci.RequestBeginBlock{Header: tmproto.Header{
+		Height:             app.LastBlockHeight() + 1,
+		AppHash:            app.LastCommitID().Hash,
+		ValidatorsHash:     valSet.Hash(),
+		NextValidatorsHash: valSet.Hash(),
+	}})
 
 	return app
-}
-
-// SetupWithGenesisAccounts initializes a new SimApp with the provided genesis
-// accounts and possible balances.
-func SetupWithGenesisAccounts(t *testing.T, genAccs []authtypes.GenesisAccount, balances ...banktypes.Balance) *SimApp {
-	t.Helper()
-
-	privVal := mock.NewPV()
-	pubKey, err := privVal.GetPubKey()
-	require.NoError(t, err)
-
-	// create validator set with single validator
-	validator := tmtypes.NewValidator(pubKey, 1)
-	valSet := tmtypes.NewValidatorSet([]*tmtypes.Validator{validator})
-
-	return SetupWithGenesisValSet(t, valSet, genAccs, true, balances...)
 }
 
 // GenesisStateWithSingleValidator initializes GenesisState with a single validator and genesis accounts
@@ -245,12 +260,6 @@ func initAccountWithCoins(app *SimApp, ctx sdk.Context, addr sdk.AccAddress, coi
 	}
 }
 
-// CheckBalance checks the balance of an account.
-func CheckBalance(t *testing.T, app *SimApp, addr sdk.AccAddress, balances sdk.Coins) {
-	ctxCheck := app.BaseApp.NewContext(true, tmproto.Header{})
-	require.True(t, balances.IsEqual(app.BankKeeper.GetAllBalances(ctxCheck, addr)))
-}
-
 // NewTestNetworkFixture returns a new simapp AppConstructor for network simulation tests
 func NewTestNetworkFixture() network.TestFixture {
 	dir, err := os.MkdirTemp("", "simapp")
@@ -277,7 +286,7 @@ func NewTestNetworkFixture() network.TestFixture {
 		EncodingConfig: testutil.TestEncodingConfig{
 			InterfaceRegistry: app.InterfaceRegistry(),
 			Codec:             app.AppCodec(),
-			TxConfig:          app.GetTxConfig(),
+			TxConfig:          app.TxConfig(),
 			Amino:             app.LegacyAmino(),
 		},
 	}
@@ -285,15 +294,13 @@ func NewTestNetworkFixture() network.TestFixture {
 
 // SetupTestingApp initializes the IBC-go testing application
 func SetupTestingApp() (ibctesting.TestingApp, map[string]json.RawMessage) {
-	db := dbm.NewMemDB()
-	app := NewSimApp(log.NewNopLogger(), db, nil, true, simtestutil.EmptyAppOptions{})
+	dir, err := os.MkdirTemp("", "simapp-ibc")
+	if err != nil {
+		panic(fmt.Sprintf("failed creating temporary directory: %v", err))
+	}
+	defer os.RemoveAll(dir)
 
-	return app, app.DefaultGenesis()
-}
+	app := NewSimApp(log.NewNopLogger(), dbm.NewMemDB(), nil, true, simtestutil.NewAppOptionsWithFlagHome(dir))
 
-func DefaultSimAppOptions() simtestutil.AppOptionsMap {
-	appOptions := make(simtestutil.AppOptionsMap, 0)
-	appOptions[flags.FlagHome] = DefaultNodeHome
-	appOptions[server.FlagInvCheckPeriod] = simcli.FlagPeriodValue
-	return appOptions
+	return app, ModuleBasics.DefaultGenesis(app.appCodec)
 }

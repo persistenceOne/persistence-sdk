@@ -17,7 +17,7 @@ func (s *KeeperTestSuite) TestOracleExportGenesis() {
 	app := simapp.Setup(s.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
-	genesisState := oracle.ExportGenesis(ctx, app.OracleKeeper)
+	genesisState := oracle.ExportGenesis(ctx, *app.OracleKeeper)
 	params := genesisState.GetParams()
 	s.Require().NotNil(params)
 
@@ -29,7 +29,7 @@ func (s *KeeperTestSuite) TestOracleInitGenesis() {
 	app, ctx := s.app, s.ctx
 	addr, valAddr, valAddr2 := s.accAddresses[0], s.valAddresses[0], s.valAddresses[1]
 
-	currGenesisState := oracle.ExportGenesis(ctx, app.OracleKeeper)
+	currGenesisState := oracle.ExportGenesis(ctx, *app.OracleKeeper)
 	params := currGenesisState.GetParams()
 	s.Require().NotNil(params)
 
@@ -125,8 +125,8 @@ func (s *KeeperTestSuite) TestOracleInitGenesis() {
 	}
 
 	// initialize the keeper with new genesis state and confirm that the params are set correctly
-	oracle.InitGenesis(ctx, app.OracleKeeper, newGenesisState)
-	newlyExportedState := oracle.ExportGenesis(ctx, app.OracleKeeper)
+	oracle.InitGenesis(ctx, *app.OracleKeeper, newGenesisState)
+	newlyExportedState := oracle.ExportGenesis(ctx, *app.OracleKeeper)
 
 	s.Require().Equal(newGenesisState.GetParams(), newlyExportedState.GetParams())
 	s.Require().Equal(len(newGenesisState.GetExchangeRates()), len(newlyExportedState.GetExchangeRates()))

@@ -10,15 +10,14 @@ import (
 	"os"
 	"path/filepath"
 
-	tmconfig "github.com/cometbft/cometbft/config"
-	tmrand "github.com/cometbft/cometbft/libs/rand"
-	"github.com/cometbft/cometbft/types"
-	tmtime "github.com/cometbft/cometbft/types/time"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
 	"cosmossdk.io/math"
-
+	tmconfig "github.com/cometbft/cometbft/config"
+	tmrand "github.com/cometbft/cometbft/libs/rand"
+	"github.com/cometbft/cometbft/types"
+	tmtime "github.com/cometbft/cometbft/types/time"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -60,22 +59,25 @@ type initArgs struct {
 	minGasPrices      string
 	nodeDaemonHome    string
 	nodeDirPrefix     string
-	numValidators     int
 	outputDir         string
 	startingIPAddress string
+
+	numValidators int
 }
 
-type startArgs struct { //nolint: maligned
-	algo          string
-	apiAddress    string
-	chainID       string
-	enableLogging bool
-	grpcAddress   string
-	minGasPrices  string
+type startArgs struct {
+	algo         string
+	apiAddress   string
+	chainID      string
+	grpcAddress  string
+	minGasPrices string
+	outputDir    string
+	rpcAddress   string
+
 	numValidators int
-	outputDir     string
+
 	printMnemonic bool
-	rpcAddress    string
+	enableLogging bool
 }
 
 func addTestnetFlagsToCmd(cmd *cobra.Command) {

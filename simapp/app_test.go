@@ -6,13 +6,14 @@ import (
 	"os"
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
+
+	"github.com/CosmWasm/wasmd/x/wasm"
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/libs/log"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/testutil/mock"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
@@ -24,6 +25,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability"
+	"github.com/cosmos/cosmos-sdk/x/consensus"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	"github.com/cosmos/cosmos-sdk/x/distribution"
 	"github.com/cosmos/cosmos-sdk/x/evidence"
@@ -36,11 +38,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
+	ica "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts"
+	ibcfee "github.com/cosmos/ibc-go/v7/modules/apps/29-fee"
+	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
 
-	epochs "github.com/persistenceOne/persistence-sdk/v2/x/epochs"
+	"github.com/persistenceOne/persistence-sdk/v2/x/epochs"
 	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
-	"github.com/persistenceOne/persistence-sdk/v2/x/ibchooker"
 	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
 	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
 )
@@ -85,7 +89,7 @@ func TestRunMigrations(t *testing.T) {
 	app := NewSimApp(logger, db, nil, true, simtestutil.NewAppOptionsWithFlagHome(t.TempDir()))
 
 	// Create a new baseapp and configurator for the purpose of this test.
-	bApp := baseapp.NewBaseApp(app.Name(), logger, db, app.GetTxConfig().TxDecoder())
+	bApp := baseapp.NewBaseApp(app.Name(), logger, db, app.TxConfig().TxDecoder())
 	bApp.SetCommitMultiStoreTracer(nil)
 	bApp.SetInterfaceRegistry(app.InterfaceRegistry())
 	app.BaseApp = bApp
@@ -96,7 +100,7 @@ func TestRunMigrations(t *testing.T) {
 	//
 	// The loop below is the same as calling `RegisterServices` on
 	// ModuleManager, except that we skip x/bank.
-	for name, mod := range app.mm.Modules {
+	for name, mod := range app.ModuleManager.Modules {
 		if name == banktypes.ModuleName {
 			continue
 		}
@@ -180,32 +184,37 @@ func TestRunMigrations(t *testing.T) {
 			// Run migrations only for bank. That's why we put the initial
 			// version for bank as 1, and for all other modules, we put as
 			// their latest ConsensusVersion.
-			_, err = app.mm.RunMigrations(
+			_, err = app.ModuleManager.RunMigrations(
 				app.NewContext(true, tmproto.Header{Height: app.LastBlockHeight()}), configurator,
 				module.VersionMap{
-					"bank":            1,
-					"auth":            auth.AppModule{}.ConsensusVersion(),
-					"authz":           authzmodule.AppModule{}.ConsensusVersion(),
-					"staking":         staking.AppModule{}.ConsensusVersion(),
-					"mint":            mint.AppModule{}.ConsensusVersion(),
-					"distribution":    distribution.AppModule{}.ConsensusVersion(),
-					"slashing":        slashing.AppModule{}.ConsensusVersion(),
-					"gov":             gov.AppModule{}.ConsensusVersion(),
-					"group":           group.AppModule{}.ConsensusVersion(),
-					"params":          params.AppModule{}.ConsensusVersion(),
-					"upgrade":         upgrade.AppModule{}.ConsensusVersion(),
-					"vesting":         vesting.AppModule{}.ConsensusVersion(),
-					"feegrant":        feegrantmodule.AppModule{}.ConsensusVersion(),
-					"evidence":        evidence.AppModule{}.ConsensusVersion(),
-					"crisis":          crisis.AppModule{}.ConsensusVersion(),
-					"genutil":         genutil.AppModule{}.ConsensusVersion(),
-					"capability":      capability.AppModule{}.ConsensusVersion(),
-					"epochs":          epochs.AppModule{}.ConsensusVersion(),
-					"halving":         halving.AppModule{}.ConsensusVersion(),
-					"ibc":             ibc.AppModule{}.ConsensusVersion(),
-					"interchainquery": interchainquery.AppModule{}.ConsensusVersion(),
-					"ibchooker":       ibchooker.AppModule{}.ConsensusVersion(),
-					"oracle":          oracle.AppModule{}.ConsensusVersion(),
+					"bank":         1,
+					"auth":         auth.AppModule{}.ConsensusVersion(),
+					"authz":        authzmodule.AppModule{}.ConsensusVersion(),
+					"staking":      staking.AppModule{}.ConsensusVersion(),
+					"mint":         mint.AppModule{}.ConsensusVersion(),
+					"distribution": distribution.AppModule{}.ConsensusVersion(),
+					"slashing":     slashing.AppModule{}.ConsensusVersion(),
+					"gov":          gov.AppModule{}.ConsensusVersion(),
+					"params":       params.AppModule{}.ConsensusVersion(),
+					"group":        group.AppModule{}.ConsensusVersion(),
+					"upgrade":      upgrade.AppModule{}.ConsensusVersion(),
+					"vesting":      vesting.AppModule{}.ConsensusVersion(),
+					"feegrant":     feegrantmodule.AppModule{}.ConsensusVersion(),
+					"evidence":     evidence.AppModule{}.ConsensusVersion(),
+					"crisis":       crisis.AppModule{}.ConsensusVersion(),
+					"genutil":      genutil.AppModule{}.ConsensusVersion(),
+					"capability":   capability.AppModule{}.ConsensusVersion(),
+
+					"ibc":                ibc.AppModule{}.ConsensusVersion(),
+					"wasm":               wasm.AppModule{}.ConsensusVersion(),
+					"halving":            halving.AppModule{}.ConsensusVersion(),
+					"interchainaccounts": ica.AppModule{}.ConsensusVersion(),
+					"transfer":           transfer.AppModule{}.ConsensusVersion(),
+					"epochs":             epochs.AppModule{}.ConsensusVersion(),
+					"interchainquery":    interchainquery.AppModule{}.ConsensusVersion(),
+					"feeibc":             ibcfee.AppModule{}.ConsensusVersion(),
+					"oracle":             oracle.AppModule{}.ConsensusVersion(),
+					"consensus":          consensus.AppModule{}.ConsensusVersion(),
 				},
 			)
 			if tc.expRunErr {
@@ -235,34 +244,39 @@ func TestInitGenesisOnMigration(t *testing.T) {
 	mockModule.EXPECT().InitGenesis(gomock.Eq(ctx), gomock.Eq(app.appCodec), gomock.Eq(mockDefaultGenesis)).Times(1).Return(nil)
 	mockModule.EXPECT().ConsensusVersion().Times(1).Return(uint64(0))
 
-	app.mm.Modules["mock"] = mockModule
+	app.ModuleManager.Modules["mock"] = mockModule
 
 	// Run migrations only for "mock" module. We exclude it from
 	// the VersionMap to simulate upgrading with a new module.
-	_, err := app.mm.RunMigrations(ctx, app.Configurator(),
+	_, err := app.ModuleManager.RunMigrations(ctx, app.Configurator(),
 		module.VersionMap{
-			"bank":            bank.AppModule{}.ConsensusVersion(),
-			"auth":            auth.AppModule{}.ConsensusVersion(),
-			"authz":           authzmodule.AppModule{}.ConsensusVersion(),
-			"staking":         staking.AppModule{}.ConsensusVersion(),
-			"mint":            mint.AppModule{}.ConsensusVersion(),
-			"distribution":    distribution.AppModule{}.ConsensusVersion(),
-			"slashing":        slashing.AppModule{}.ConsensusVersion(),
-			"gov":             gov.AppModule{}.ConsensusVersion(),
-			"params":          params.AppModule{}.ConsensusVersion(),
-			"upgrade":         upgrade.AppModule{}.ConsensusVersion(),
-			"vesting":         vesting.AppModule{}.ConsensusVersion(),
-			"feegrant":        feegrantmodule.AppModule{}.ConsensusVersion(),
-			"evidence":        evidence.AppModule{}.ConsensusVersion(),
-			"crisis":          crisis.AppModule{}.ConsensusVersion(),
-			"genutil":         genutil.AppModule{}.ConsensusVersion(),
-			"capability":      capability.AppModule{}.ConsensusVersion(),
-			"ibc":             ibc.AppModule{}.ConsensusVersion(),
-			"epochs":          epochs.AppModule{}.ConsensusVersion(),
-			"halving":         halving.AppModule{}.ConsensusVersion(),
-			"interchainquery": interchainquery.AppModule{}.ConsensusVersion(),
-			"ibchooker":       ibchooker.AppModule{}.ConsensusVersion(),
-			"oracle":          oracle.AppModule{}.ConsensusVersion(),
+			"bank":         bank.AppModule{}.ConsensusVersion(),
+			"auth":         auth.AppModule{}.ConsensusVersion(),
+			"authz":        authzmodule.AppModule{}.ConsensusVersion(),
+			"staking":      staking.AppModule{}.ConsensusVersion(),
+			"mint":         mint.AppModule{}.ConsensusVersion(),
+			"distribution": distribution.AppModule{}.ConsensusVersion(),
+			"slashing":     slashing.AppModule{}.ConsensusVersion(),
+			"gov":          gov.AppModule{}.ConsensusVersion(),
+			"params":       params.AppModule{}.ConsensusVersion(),
+			"upgrade":      upgrade.AppModule{}.ConsensusVersion(),
+			"vesting":      vesting.AppModule{}.ConsensusVersion(),
+			"feegrant":     feegrantmodule.AppModule{}.ConsensusVersion(),
+			"evidence":     evidence.AppModule{}.ConsensusVersion(),
+			"crisis":       crisis.AppModule{}.ConsensusVersion(),
+			"genutil":      genutil.AppModule{}.ConsensusVersion(),
+			"capability":   capability.AppModule{}.ConsensusVersion(),
+
+			"ibc":                ibc.AppModule{}.ConsensusVersion(),
+			"wasm":               wasm.AppModule{}.ConsensusVersion(),
+			"halving":            halving.AppModule{}.ConsensusVersion(),
+			"interchainaccounts": ica.AppModule{}.ConsensusVersion(),
+			"transfer":           transfer.AppModule{}.ConsensusVersion(),
+			"epochs":             epochs.AppModule{}.ConsensusVersion(),
+			"interchainquery":    interchainquery.AppModule{}.ConsensusVersion(),
+			"feeibc":             ibcfee.AppModule{}.ConsensusVersion(),
+			"oracle":             oracle.AppModule{}.ConsensusVersion(),
+			"consensus":          consensus.AppModule{}.ConsensusVersion(),
 		},
 	)
 	require.NoError(t, err)
@@ -280,7 +294,7 @@ func TestUpgradeStateOnGenesis(t *testing.T) {
 	// make sure the upgrade keeper has version map in state
 	ctx := app.NewContext(false, tmproto.Header{})
 	vm := app.UpgradeKeeper.GetModuleVersionMap(ctx)
-	for v, i := range app.mm.Modules {
+	for v, i := range app.ModuleManager.Modules {
 		if i, ok := i.(module.HasConsensusVersion); ok {
 			require.Equal(t, vm[v], i.ConsensusVersion())
 		}

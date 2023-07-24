@@ -67,7 +67,7 @@ func (suite *InterChainQueryTestSuite) TestInitGenesis() {
 		0,
 	)
 
-	interchainquery.InitGenesis(suite.chainA.GetContext(), suite.GetSimApp(suite.chainA).InterchainQueryKeeper, types.GenesisState{Queries: []types.Query{*query}})
+	interchainquery.InitGenesis(suite.chainA.GetContext(), *suite.GetSimApp(suite.chainA).InterchainQueryKeeper, types.GenesisState{Queries: []types.Query{*query}})
 
 	id := keeper.GenerateQueryHash(suite.path.EndpointB.ConnectionID, suite.chainB.ChainID, "cosmos.staking.v1beta1.Query/Validators", bz, "")
 	queryResponse, found := suite.GetSimApp(suite.chainA).InterchainQueryKeeper.GetQuery(suite.chainA.GetContext(), id)

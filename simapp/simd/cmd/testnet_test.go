@@ -18,7 +18,6 @@ import (
 	genutiltest "github.com/cosmos/cosmos-sdk/x/genutil/client/testutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/cosmos/cosmos-sdk/x/staking"
-
 	"github.com/persistenceOne/persistence-sdk/v2/simapp"
 )
 
