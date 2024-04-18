@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"net/url"
 
 	"cosmossdk.io/errors"
 	"github.com/cometbft/cometbft/proto/tendermint/crypto"
@@ -40,7 +39,7 @@ func ValidateProofOps(ctx sdk.Context, ibcKeeper *ibcKeeper.Keeper, connectionID
 		return fmt.Errorf("unable to fetch client state")
 	}
 
-	path := commitmenttypes.NewMerklePath([]string{module, url.PathEscape(string(key))}...)
+	path := commitmenttypes.NewMerklePath([]string{module, string(key)}...)
 
 	merkleProof, err := commitmenttypes.ConvertProofs(proofOps)
 	if err != nil {
