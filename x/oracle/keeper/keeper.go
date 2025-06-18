@@ -14,7 +14,7 @@ import (
 	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	gogotypes "github.com/cosmos/gogoproto/types"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 )
 
 // Keeper of the oracle store

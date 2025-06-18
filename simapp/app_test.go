@@ -38,11 +38,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
 
-	epochs "github.com/persistenceOne/persistence-sdk/v2/x/epochs"
-	"github.com/persistenceOne/persistence-sdk/v2/x/halving"
-	"github.com/persistenceOne/persistence-sdk/v2/x/ibchooker"
-	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery"
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
+	epochs "github.com/persistenceOne/persistence-sdk/v3/x/epochs"
+	"github.com/persistenceOne/persistence-sdk/v3/x/halving"
+	"github.com/persistenceOne/persistence-sdk/v3/x/ibchooker"
+	"github.com/persistenceOne/persistence-sdk/v3/x/interchainquery"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle"
 )
 
 func TestSimAppExportAndBlockedAddrs(t *testing.T) {

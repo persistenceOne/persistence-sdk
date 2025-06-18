@@ -13,10 +13,10 @@ import (
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/stretchr/testify/suite"
 
-	persistenceapp "github.com/persistenceOne/persistence-sdk/v2/simapp"
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/keeper"
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/testutil"
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	persistenceapp "github.com/persistenceOne/persistence-sdk/v3/simapp"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/keeper"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/testutil"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 )
 
 type KeeperTestSuite struct {

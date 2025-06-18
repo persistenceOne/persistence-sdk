@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/types"
 )
 
 func GenerateQueryHash(connectionID string, chainID string, queryType string, request []byte, module string) string {

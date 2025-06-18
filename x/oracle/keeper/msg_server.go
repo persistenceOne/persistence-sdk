@@ -8,7 +8,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	sdkstaking "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 )
 
 type msgServer struct {

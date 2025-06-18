@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	icqtypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
+	icqtypes "github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/types"
 )
 
 func (suite *KeeperTestSuite) TestQueries() {

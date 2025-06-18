@@ -5,7 +5,7 @@ import (
 	"github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 
-	"github.com/persistenceOne/persistence-sdk/v2/utils"
+	"github.com/persistenceOne/persistence-sdk/v3/utils"
 )
 
 var _ IBCHandshakeHooks = MultiIBCHandshakeHooks{}

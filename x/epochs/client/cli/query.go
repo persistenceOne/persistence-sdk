@@ -10,7 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/version"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/epochs/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module.

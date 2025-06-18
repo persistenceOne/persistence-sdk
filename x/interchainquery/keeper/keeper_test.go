@@ -1,6 +1,10 @@
 package keeper_test
 
 import (
+	"fmt"
+	abci "github.com/cometbft/cometbft/abci/types"
+	"github.com/cosmos/cosmos-sdk/types/bech32"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -8,9 +12,9 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/persistenceOne/persistence-sdk/v2/simapp"
-	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/keeper"
-	icqtypes "github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
+	"github.com/persistenceOne/persistence-sdk/v3/simapp"
+	"github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/keeper"
+	icqtypes "github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/types"
 )
 
 const TestOwnerAddress = "cosmos17dtl0mjt3t77kpuhg2edqzjpszulwhgzuj9ljs"
@@ -99,6 +103,23 @@ func (suite *KeeperTestSuite) TestSubmitQueryResponse() {
 		Validators: suite.GetSimApp(suite.chainB).StakingKeeper.GetBondedValidatorsByPower(suite.chainB.GetContext()),
 	}
 
+	_, byteAddress, err := bech32.DecodeAndConvert(suite.chainB.SenderAccount.GetAddress().String())
+	if err != nil {
+		panic(err)
+	}
+
+	key := banktypes.CreatePrefixedAccountStoreKey(byteAddress, []byte("uatom"))
+	//qvrProof, _ := suite.chainB.QueryProof(key)
+	res := suite.chainB.App.Query(abci.RequestQuery{
+		Path:   fmt.Sprintf("store/%s/key", "bank"),
+		Height: suite.chainB.App.LastBlockHeight() - 1,
+		Data:   key,
+		Prove:  true,
+	})
+
+	//merkleProof, err := commitmenttypes.ConvertProofs(res.ProofOps)
+	//require.NoError(suite.chainB.T, err)
+
 	tests := []struct {
 		query       *icqtypes.Query
 		setQuery    bool
@@ -168,6 +189,22 @@ func (suite *KeeperTestSuite) TestSubmitQueryResponse() {
 			false,
 			nil,
 		},
+		{
+			suite.GetSimApp(suite.chainA).InterchainQueryKeeper.
+				NewQuery(
+					suite.chainA.GetContext(),
+					"",
+					suite.path.EndpointB.ConnectionID,
+					suite.chainB.ChainID,
+					"store/bank/key",
+					key,
+					sdk.NewInt(100),
+					"",
+					0,
+				),
+			true,
+			nil,
+		},
 	}
 
 	for _, tc := range tests {
@@ -184,6 +221,17 @@ func (suite *KeeperTestSuite) TestSubmitQueryResponse() {
 			Result:      suite.GetSimApp(suite.chainB).AppCodec().MustMarshalJSON(&qvr),
 			Height:      suite.chainB.CurrentHeader.Height,
 			FromAddress: TestOwnerAddress,
+		}
+
+		if tc.query.QueryType == "store/bank/key" {
+			qmsg = icqtypes.MsgSubmitQueryResponse{
+				ChainId:     suite.chainB.ChainID,
+				QueryId:     keeper.GenerateQueryHash(tc.query.ConnectionId, tc.query.ChainId, tc.query.QueryType, key, ""),
+				Result:      res.Value,
+				ProofOps:    res.ProofOps,
+				Height:      suite.chainB.CurrentHeader.Height,
+				FromAddress: TestOwnerAddress,
+			}
 		}
 
 		_, err = icqmsgSrv.SubmitQueryResponse(sdk.WrapSDKContext(suite.chainA.GetContext()), &qmsg)

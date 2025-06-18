@@ -32,8 +32,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 
-	"github.com/persistenceOne/persistence-sdk/v2/simapp"
-	"github.com/persistenceOne/persistence-sdk/v2/simapp/params"
+	"github.com/persistenceOne/persistence-sdk/v3/simapp"
+	"github.com/persistenceOne/persistence-sdk/v3/simapp/params"
 )
 
 // NewRootCmd creates a new root command for simd. It is called once in the

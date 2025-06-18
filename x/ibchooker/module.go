@@ -17,8 +17,8 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
-	ibchookerkeeper "github.com/persistenceOne/persistence-sdk/v2/x/ibchooker/keeper"
-	"github.com/persistenceOne/persistence-sdk/v2/x/ibchooker/types"
+	ibchookerkeeper "github.com/persistenceOne/persistence-sdk/v3/x/ibchooker/keeper"
+	"github.com/persistenceOne/persistence-sdk/v3/x/ibchooker/types"
 )
 
 var (

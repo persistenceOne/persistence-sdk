@@ -3,8 +3,8 @@ package oracle
 import (
 	"time"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/keeper"
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/keeper"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"

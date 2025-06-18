@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/exp/maps"
 
-	"github.com/persistenceOne/persistence-sdk/v2/simapp"
-	"github.com/persistenceOne/persistence-sdk/v2/utils"
-	"github.com/persistenceOne/persistence-sdk/v2/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v3/simapp"
+	"github.com/persistenceOne/persistence-sdk/v3/utils"
+	"github.com/persistenceOne/persistence-sdk/v3/x/epochs/types"
 )
 
 // This test is responsible for testing how epochs increment based off
