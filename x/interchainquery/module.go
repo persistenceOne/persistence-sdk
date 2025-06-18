@@ -14,8 +14,8 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/keeper"
-	"github.com/persistenceOne/persistence-sdk/v2/x/interchainquery/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/keeper"
+	"github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/types"
 )
 
 var (

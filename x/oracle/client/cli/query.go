@@ -9,7 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 )
 
 // GetQueryCmd returns the CLI query commands for the x/oracle module.

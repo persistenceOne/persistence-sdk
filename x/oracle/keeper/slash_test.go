@@ -5,8 +5,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/testutil"
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/testutil"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 )
 
 // TestSlashAndResetMissCounters added more test cases for slashing, incl. unbonded validators.

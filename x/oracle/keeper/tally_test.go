@@ -5,9 +5,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/keeper"
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/testutil"
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/keeper"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/testutil"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 )
 
 // TestTally is a test for the tallying logic that calculates the median.

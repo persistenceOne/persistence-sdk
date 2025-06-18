@@ -14,7 +14,7 @@ import (
 	mintTypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/halving/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/halving/types"
 )
 
 // Keeper of the halving store

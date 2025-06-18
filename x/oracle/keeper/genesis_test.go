@@ -3,9 +3,9 @@ package keeper_test
 import (
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	simapp "github.com/persistenceOne/persistence-sdk/v2/simapp"
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle"
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	simapp "github.com/persistenceOne/persistence-sdk/v3/simapp"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 )
 
 var (

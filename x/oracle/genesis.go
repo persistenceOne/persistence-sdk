@@ -3,8 +3,8 @@ package oracle
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/keeper"
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/keeper"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 )
 
 // InitGenesis initializes the x/oracle module's state from a provided genesis

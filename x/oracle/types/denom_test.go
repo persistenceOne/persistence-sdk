@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	"github.com/persistenceOne/persistence-sdk/v2/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 	"github.com/stretchr/testify/require"
 )
 
