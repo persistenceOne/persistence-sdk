@@ -9,6 +9,7 @@ option go_package = "github.com/persistenceOne/persistence-sdk/v3/x/oracle/types
 
 // Msg defines the oracle Msg service.
 service Msg {
+  option deprecated = true;
   // AggregateExchangeRatePrevote defines a method for submitting an aggregate
   // exchange rate prevote.
   rpc AggregateExchangeRatePrevote(MsgAggregateExchangeRatePrevote) returns (MsgAggregateExchangeRatePrevoteResponse);
@@ -27,6 +28,7 @@ service Msg {
 // MsgAggregateExchangeRatePrevote represents a message to submit an aggregate
 // exchange rate prevote.
 message MsgAggregateExchangeRatePrevote {
+  option deprecated = true;
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
@@ -40,11 +42,14 @@ message MsgAggregateExchangeRatePrevote {
 
 // MsgAggregateExchangeRatePrevoteResponse defines the
 // Msg/AggregateExchangeRatePrevote response type.
-message MsgAggregateExchangeRatePrevoteResponse {}
+message MsgAggregateExchangeRatePrevoteResponse {
+  option deprecated = true;
+}
 
 // MsgAggregateExchangeRateVote represents a message to submit anaggregate
 // exchange rate vote.
 message MsgAggregateExchangeRateVote {
+  option deprecated = true;
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
@@ -62,11 +67,14 @@ message MsgAggregateExchangeRateVote {
 
 // MsgAggregateExchangeRateVoteResponse defines the
 // Msg/AggregateExchangeRateVote response type.
-message MsgAggregateExchangeRateVoteResponse {}
+message MsgAggregateExchangeRateVoteResponse {
+  option deprecated = true;
+}
 
 // MsgDelegateFeedConsent represents a message to delegate oracle voting rights
 // to another address.
 message MsgDelegateFeedConsent {
+  option deprecated = true;
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
@@ -82,9 +90,12 @@ message MsgDelegateFeedConsent {
 
 // MsgDelegateFeedConsentResponse defines the Msg/DelegateFeedConsent response
 // type.
-message MsgDelegateFeedConsentResponse {}
+message MsgDelegateFeedConsentResponse {
+  option deprecated = true;
+}
 
 message MsgAddFundsToRewardPool {
+  option deprecated = true;
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
@@ -101,4 +112,6 @@ message MsgAddFundsToRewardPool {
 }
 
 // MsgAddFundsToRewardPoolResponse
-message MsgAddFundsToRewardPoolResponse {}
+message MsgAddFundsToRewardPoolResponse {
+  option deprecated = true;
+}
