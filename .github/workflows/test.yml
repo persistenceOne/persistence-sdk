@@ -36,7 +36,7 @@ jobs:
           excludelist+=" $(find ./ -type f -path './x/interchainquery/*')"
           excludelist+=" $(find ./ -type f -path './x/oracle/*')"
           for filename in ${excludelist}; do
-            filename=$(echo $filename | sed 's/^./github.com\/persistenceOne\/persistence-sdk/g')
+            filename=$(echo $filename | sed 's/^.\///g')
             echo "Excluding ${filename} from coverage report..."
             sed -i "/$(echo $filename | sed 's/\//\\\//g')/d" ./coverage.out
           done
