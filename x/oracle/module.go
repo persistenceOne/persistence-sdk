@@ -1,9 +1,7 @@
 package oracle
 
 import (
-	"context"
 	"encoding/json"
-	"fmt"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -63,21 +61,12 @@ func (AppModuleBasic) ValidateGenesis(
 	config client.TxEncodingConfig,
 	bz json.RawMessage,
 ) error {
-	var genState types.GenesisState
-	if err := cdc.UnmarshalJSON(bz, &genState); err != nil {
-		return fmt.Errorf("failed to unmarshal %s genesis state: %w", types.ModuleName, err)
-	}
-
 	return nil
 }
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the x/oracle
 // module.
-func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
-	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
-		panic(err)
-	}
-}
+func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {}
 
 // GetTxCmd returns the x/oracle module's root tx command.
 func (AppModuleBasic) GetTxCmd() *cobra.Command { return nil }

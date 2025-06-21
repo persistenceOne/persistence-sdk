@@ -29,7 +29,7 @@ func (q Querier) EpochInfos(c context.Context, _ *types.QueryEpochsInfoRequest) 
 	ctx := sdk.UnwrapSDKContext(c)
 
 	return &types.QueryEpochsInfoResponse{
-		Epochs: q.Keeper.AllEpochInfos(ctx),
+		Epochs: q.AllEpochInfos(ctx),
 	}, nil
 }
 
@@ -45,7 +45,7 @@ func (q Querier) CurrentEpoch(c context.Context, req *types.QueryCurrentEpochReq
 
 	ctx := sdk.UnwrapSDKContext(c)
 
-	info := q.Keeper.GetEpochInfo(ctx, req.Identifier)
+	info := q.GetEpochInfo(ctx, req.Identifier)
 	if info.Identifier != req.Identifier {
 		return nil, errors.New("not available identifier")
 	}
