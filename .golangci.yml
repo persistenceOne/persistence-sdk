@@ -9,7 +9,6 @@ linters:
     - errcheck         # unchecked errors
     - govet            # catches suspicious code constructs
     - staticcheck      # advanced correctness checks
-    - gosimple         # simplify code
     - misspell         # catch typos
     - ineffassign      # detect inefficient assignments
     - unused           # unused variables, funcs, types
