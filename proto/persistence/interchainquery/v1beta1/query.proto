@@ -14,6 +14,8 @@ option go_package = "github.com/persistenceOne/persistence-sdk/v3/x/interchainqu
 
 // Query provides defines the gRPC querier service.
 service QuerySrvr {
+  option deprecated = true;
+
   // Params returns the total set of minting parameters.
   rpc Queries(QueryRequestsRequest) returns (QueryRequestsResponse) {
     option (google.api.http).get =
@@ -23,12 +25,14 @@ service QuerySrvr {
 
 // QueryParamsRequest is the request type for the Query/Params RPC method.
 message QueryRequestsRequest {
+  option deprecated = true;
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
   string chain_id = 2;
 }
 
 // QueryParamsResponse is the response type for the Query/Params RPC method.
 message QueryRequestsResponse {
+  option deprecated = true;
   // params defines the parameters of the module.
   repeated persistence.interchainquery.v1beta1.Query queries = 1
   [(gogoproto.nullable) = false];
@@ -37,6 +41,7 @@ message QueryRequestsResponse {
 
 // GetTxResponse is the response type for the Service.GetTx method.
 message GetTxWithProofResponse {
+  option deprecated = true;
   // tx is the queried transaction.
   cosmos.tx.v1beta1.Tx tx = 1;
   // tx_response is the queried TxResponses.
