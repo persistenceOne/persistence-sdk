@@ -10,19 +10,16 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
-	"github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/keeper"
 	"github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/types"
 )
 
 var (
-	_ module.AppModuleBasic      = AppModuleBasic{}
-	_ module.AppModule           = AppModule{}
-	_ module.EndBlockAppModule   = AppModule{}
-	_ module.AppModuleSimulation = AppModule{}
+	_ module.AppModuleBasic    = AppModuleBasic{}
+	_ module.AppModule         = AppModule{}
+	_ module.EndBlockAppModule = AppModule{}
 )
 
 // ----------------------------------------------------------------------------
@@ -62,7 +59,7 @@ func (a AppModuleBasic) RegisterInterfaces(reg cdctypes.InterfaceRegistry) {
 
 // DefaultGenesis returns the capability module's default genesis state.
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
-	return cdc.MustMarshalJSON(types.DefaultGenesis())
+	return nil
 }
 
 // ValidateGenesis performs genesis state validation for the capability module.
@@ -95,14 +92,12 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 // AppModule implements the AppModule interface for the capability module.
 type AppModule struct {
 	AppModuleBasic
-	keeper keeper.Keeper
 }
 
 // NewAppModule return a new AppModule
-func NewAppModule(cdc codec.Codec, keeper keeper.Keeper) AppModule {
+func NewAppModule(cdc codec.Codec) AppModule {
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(cdc),
-		keeper:         keeper,
 	}
 }
 
@@ -113,10 +108,7 @@ func (am AppModule) Name() string {
 
 // RegisterServices registers a GRPC query service to respond to the
 // module-specific GRPC queries.
-func (am AppModule) RegisterServices(cfg module.Configurator) {
-	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
-	types.RegisterQuerySrvrServer(cfg.QueryServer(), am.keeper)
-}
+func (am AppModule) RegisterServices(cfg module.Configurator) {}
 
 // RegisterInvariants registers the capability module's invariants.
 func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
@@ -124,44 +116,21 @@ func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
 // InitGenesis performs the capability module's genesis initialization It returns
 // no validator updates.
 func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.RawMessage) []abci.ValidatorUpdate {
-	var genState types.GenesisState
-	// Initialize global index to index in genesis state
-	cdc.MustUnmarshalJSON(gs, &genState)
-	InitGenesis(ctx, am.keeper, genState)
-
 	return []abci.ValidatorUpdate{}
 }
 
 // ExportGenesis returns the capability module's exported genesis state as raw JSON bytes.
 func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
-	genState := ExportGenesis(ctx, am.keeper)
-	return cdc.MustMarshalJSON(genState)
+	return nil
 }
 
 // EndBlock executes all ABCI EndBlock logic respective to the capability module. It
 // returns no validator updates.
 func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
-	am.keeper.EndBlocker(ctx)
 	return []abci.ValidatorUpdate{}
 }
 
 // ___________________________________________________________________________
-
-// AppModuleSimulation functions
-
-// GenerateGenesisState creates a randomized GenState of the pool-incentives module.
-func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	// simulation.RandomizedGenState(simState)
-}
-
-// RegisterStoreDecoder registers a decoder for supply module's types
-func (am AppModule) RegisterStoreDecoder(sdr sdk.StoreDecoderRegistry) {
-}
-
-// WeightedOperations returns the all the gov module operations with their respective weights.
-func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
-	return nil // TODO
-}
 
 // ConsensusVersion implements AppModule/ConsensusVersion.
 func (AppModule) ConsensusVersion() uint64 { return 1 }
