@@ -1,20 +1,24 @@
+version: "2"  # required for golangci-lint v2+
+
 run:
   tests: false
 
 linters:
-  disable-all: true
+  default: none
   enable:
-    - errcheck         # catch unchecked errors
-    - govet            # catch suspicious constructs
+    - errcheck         # unchecked errors
+    - govet            # catches suspicious code constructs
     - staticcheck      # advanced correctness checks
-    - gosimple         # detect simpler code rewrites
-    - gofmt            # code style
-    - goimports        # import formatting
-    - misspell         # common typos
-    - ineffassign      # detect ineff assignments
-    - deadcode         # remove unused code
-    - unused           # detect unused vars, funcs, types
+    - gosimple         # simplify code
+    - misspell         # catch typos
+    - ineffassign      # detect inefficient assignments
+    - unused           # unused variables, funcs, types
+  settings:
+    misspell:
+      locale: US
 
-linters-settings:
-  misspell:
-    locale: US
+formatters:
+  enable:
+    - gofmt
+    - goimports
+
