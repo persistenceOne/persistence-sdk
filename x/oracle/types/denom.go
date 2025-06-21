@@ -30,14 +30,3 @@ func (dl DenomList) String() (out string) {
 
 	return strings.TrimSpace(out)
 }
-
-// Contains checks whether or not a SymbolDenom (e.g. XPRT) is in the DenomList
-func (dl DenomList) Contains(symbolDenom string) bool {
-	for _, d := range dl {
-		if strings.EqualFold(d.SymbolDenom, symbolDenom) {
-			return true
-		}
-	}
-
-	return false
-}
