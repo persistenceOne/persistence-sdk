@@ -11,6 +11,7 @@ option go_package = "github.com/persistenceOne/persistence-sdk/v3/x/oracle/types
 
 // Query defines the gRPC querier service.
 service Query {
+  option deprecated = true;
   // ExchangeRates returns exchange rates of all denoms.
   rpc AllExchangeRates(QueryAllExchangeRatesRequest) returns (QueryAllExchangeRatesResponse) {
     option (google.api.http).get = "/persistence/oracle/v1beta1/denoms/all_exchange_rates";
@@ -70,6 +71,7 @@ service Query {
 // QueryExchangeRateRequest is the request type for the Query/ExchangeRate RPC
 // method.
 message QueryExchangeRateRequest {
+  option deprecated = true;
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
@@ -80,6 +82,7 @@ message QueryExchangeRateRequest {
 // QueryExchangeRateResponse is the request type for the Query/ExchangeRate RPC
 // method.
 message QueryExchangeRateResponse {
+  option deprecated = true;
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
@@ -89,11 +92,14 @@ message QueryExchangeRateResponse {
 
 // QueryAllExchangeRatesRequest is the request type for the Query/ExchangeRate RPC
 // method.
-message QueryAllExchangeRatesRequest {}
+message QueryAllExchangeRatesRequest {
+  option deprecated = true;
+}
 
 // QueryAllExchangeRatesResponse is response type for the
 // Query/ExchangeRates RPC method.
 message QueryAllExchangeRatesResponse {
+  option deprecated = true;
   // exchange_rates defines a list of the exchange rate for all whitelisted
   // denoms.
   repeated cosmos.base.v1beta1.DecCoin exchange_rates = 1
@@ -101,11 +107,14 @@ message QueryAllExchangeRatesResponse {
 }
 
 // QueryActiveExchangeRatesRequest is the request type for the Query/ActiveExchangeRates RPC method.
-message QueryActiveExchangeRatesRequest {}
+message QueryActiveExchangeRatesRequest {
+  option deprecated = true;
+}
 
 // QueryActiveExchangeRatesResponse is response type for the
 // Query/ActiveExchangeRates RPC method.
 message QueryActiveExchangeRatesResponse {
+  option deprecated = true;
   // activeRates defines a list of the denomination which oracle prices aggreed
   // upon.
   repeated string active_rates = 1;
@@ -115,6 +124,7 @@ message QueryActiveExchangeRatesResponse {
 // QueryFeederDelegationRequest is the request type for the
 // Query/FeederDelegation RPC method.
 message QueryFeederDelegationRequest {
+  option deprecated = true;
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
@@ -125,6 +135,7 @@ message QueryFeederDelegationRequest {
 // QueryFeederDelegationResponse is response type for the
 // Query/FeederDelegation RPC method.
 message QueryFeederDelegationResponse {
+  option deprecated = true;
   // feeder_addr defines the feeder delegation of a validator
   string feeder_addr = 1;
 }
@@ -132,6 +143,7 @@ message QueryFeederDelegationResponse {
 // QueryMissCounterRequest is the request type for the Query/MissCounter RPC
 // method.
 message QueryMissCounterRequest {
+  option deprecated = true;
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
@@ -142,6 +154,7 @@ message QueryMissCounterRequest {
 // QueryMissCounterResponse is response type for the
 // Query/MissCounter RPC method.
 message QueryMissCounterResponse {
+  option deprecated = true;
   // miss_counter defines the oracle miss counter of a validator
   uint64 miss_counter = 1;
 }
@@ -149,6 +162,7 @@ message QueryMissCounterResponse {
 // QueryAggregatePrevoteRequest is the request type for the
 // Query/AggregatePrevote RPC method.
 message QueryAggregatePrevoteRequest {
+  option deprecated = true;
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
@@ -159,6 +173,7 @@ message QueryAggregatePrevoteRequest {
 // QueryAggregatePrevoteResponse is response type for the
 // Query/AggregatePrevote RPC method.
 message QueryAggregatePrevoteResponse {
+  option deprecated = true;
   // aggregate_prevote defines oracle aggregate prevote submitted by a validator
   // in the current vote period
   AggregateExchangeRatePrevote aggregate_prevote = 1 [(gogoproto.nullable) = false];
@@ -167,11 +182,14 @@ message QueryAggregatePrevoteResponse {
 
 // QueryAggregatePrevotesRequest is the request type for the
 // Query/AggregatePrevotes RPC method.
-message QueryAggregatePrevotesRequest {}
+message QueryAggregatePrevotesRequest {
+  option deprecated = true;
+}
 
 // QueryAggregatePrevotesResponse is response type for the
 // Query/AggregatePrevotes RPC method.
 message QueryAggregatePrevotesResponse {
+  option deprecated = true;
   // aggregate_prevotes defines all oracle aggregate prevotes submitted in the
   // current vote period
   repeated AggregateExchangeRatePrevote aggregate_prevotes = 1 [(gogoproto.nullable) = false];
@@ -180,6 +198,7 @@ message QueryAggregatePrevotesResponse {
 // QueryAggregateVoteRequest is the request type for the Query/AggregateVote RPC
 // method.
 message QueryAggregateVoteRequest {
+  option deprecated = true;
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
@@ -190,6 +209,7 @@ message QueryAggregateVoteRequest {
 // QueryAggregateVoteResponse is response type for the
 // Query/AggregateVote RPC method.
 message QueryAggregateVoteResponse {
+  option deprecated = true;
   // aggregate_vote defines oracle aggregate vote submitted by a validator in
   // the current vote period
   AggregateExchangeRateVote aggregate_vote = 1 [(gogoproto.nullable) = false];
@@ -197,28 +217,37 @@ message QueryAggregateVoteResponse {
 
 // QueryAggregateVotesRequest is the request type for the Query/AggregateVotes
 // RPC method.
-message QueryAggregateVotesRequest {}
+message QueryAggregateVotesRequest {
+  option deprecated = true;
+}
 
 // QueryAggregateVotesResponse is response type for the
 // Query/AggregateVotes RPC method.
 message QueryAggregateVotesResponse {
+  option deprecated = true;
   // aggregate_votes defines all oracle aggregate votes submitted in the current
   // vote period
   repeated AggregateExchangeRateVote aggregate_votes = 1 [(gogoproto.nullable) = false];
 }
 
 // QueryParamsRequest is the request type for the Query/Params RPC method.
-message QueryParamsRequest {}
+message QueryParamsRequest {
+  option deprecated = true;
+}
 
 // QueryParamsResponse is the response type for the Query/Params RPC method.
 message QueryParamsResponse {
+  option deprecated = true;
   // params defines the parameters of the module.
   Params params = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryRewardPoolBalanceRequest {}
+message QueryRewardPoolBalanceRequest {
+  option deprecated = true;
+}
 
 message QueryRewardPoolBalanceResponse {
+  option deprecated = true;
   // funds left in the reward pool
   repeated cosmos.base.v1beta1.Coin remaining_funds = 1 [
     (gogoproto.nullable) = false,

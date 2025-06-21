@@ -9,6 +9,8 @@ option go_package = "github.com/persistenceOne/persistence-sdk/v3/x/oracle/types
 // Params defines the parameters for the oracle module.
 // https://classic-docs.terra.money/docs/develop/module-specifications/spec-oracle.html#parameters
 message Params {
+  option deprecated = true;
+
   option (gogoproto.equal)            = true;
   option (gogoproto.goproto_stringer) = false;
 
@@ -44,6 +46,7 @@ message Params {
 
 // Denom - the object to hold configurations of each denom
 message Denom {
+  option deprecated = true;
   option (gogoproto.equal)            = false;
   option (gogoproto.goproto_getters)  = false;
   option (gogoproto.goproto_stringer) = false;
@@ -59,6 +62,7 @@ message Denom {
 // which is formatted as hex string in SHA256("{salt}:{exchange
 // rate}{denom},...,{exchange rate}{denom}:{voter}")
 message AggregateExchangeRatePrevote {
+  option deprecated = true;
   option (gogoproto.equal)            = false;
   option (gogoproto.goproto_getters)  = false;
   option (gogoproto.goproto_stringer) = false;
@@ -74,6 +78,7 @@ message AggregateExchangeRatePrevote {
 // AggregateExchangeRateVote - struct for voting on
 // the exchange rates of USD denominated in various assets.
 message AggregateExchangeRateVote {
+  option deprecated = true;
   option (gogoproto.equal)            = false;
   option (gogoproto.goproto_getters)  = false;
   option (gogoproto.goproto_stringer) = false;
@@ -92,6 +97,7 @@ message AggregateExchangeRateVote {
 
 // ExchangeRateTuple - struct to store interpreted exchange rates data to store
 message ExchangeRateTuple {
+  option deprecated = true;
   option (gogoproto.equal)            = false;
   option (gogoproto.goproto_getters)  = false;
   option (gogoproto.goproto_stringer) = false;

@@ -108,10 +108,8 @@ import (
 	epochstypes "github.com/persistenceOne/persistence-sdk/v3/x/epochs/types"
 	"github.com/persistenceOne/persistence-sdk/v3/x/halving"
 	"github.com/persistenceOne/persistence-sdk/v3/x/interchainquery"
-	interchainquerykeeper "github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/keeper"
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/types"
 	"github.com/persistenceOne/persistence-sdk/v3/x/oracle"
-	oraclekeeper "github.com/persistenceOne/persistence-sdk/v3/x/oracle/keeper"
 	oracletypes "github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 )
 
@@ -159,14 +157,12 @@ var (
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:      nil,
-		distrtypes.ModuleName:           nil,
-		minttypes.ModuleName:            {authtypes.Minter},
-		stakingtypes.BondedPoolName:     {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName:  {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:             {authtypes.Burner},
-		interchainquerytypes.ModuleName: nil,
-		oracletypes.ModuleName:          nil,
+		authtypes.FeeCollectorName:     nil,
+		distrtypes.ModuleName:          nil,
+		minttypes.ModuleName:           {authtypes.Minter},
+		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:            {authtypes.Burner},
 	}
 )
 
@@ -210,8 +206,6 @@ type SimApp struct {
 	IBCKeeper             *ibckeeper.Keeper
 	EpochsKeeper          *epochskeeper.Keeper
 	HalvingKeeper         halving.Keeper
-	InterchainQueryKeeper interchainquerykeeper.Keeper
-	OracleKeeper          oraclekeeper.Keeper
 
 	ScopedIBCKeeper capabilitykeeper.ScopedKeeper
 
@@ -289,7 +283,7 @@ func NewSimApp(
 		upgradetypes.StoreKey, feegrant.StoreKey, group.StoreKey,
 		evidencetypes.StoreKey, capabilitytypes.StoreKey, authzkeeper.StoreKey,
 		consensusparamstypes.StoreKey, ibcexported.StoreKey, epochstypes.StoreKey,
-		halving.StoreKey, interchainquerytypes.StoreKey, oracletypes.StoreKey,
+		halving.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	// NOTE: The testingkey is just mounted for testing purposes. Actual applications should
@@ -392,17 +386,6 @@ func NewSimApp(
 	app.EpochsKeeper = epochskeeper.NewKeeper(keys[epochstypes.StoreKey])
 	app.EpochsKeeper.SetHooks(epochstypes.NewMultiEpochHooks())
 
-	app.OracleKeeper = oraclekeeper.NewKeeper(
-		appCodec,
-		keys[oracletypes.ModuleName],
-		app.GetSubspace(oracletypes.ModuleName),
-		app.AccountKeeper,
-		app.BankKeeper,
-		app.DistrKeeper,
-		app.StakingKeeper,
-		distrtypes.ModuleName,
-	)
-
 	app.FeeGrantKeeper = feegrantkeeper.NewKeeper(
 		appCodec,
 		keys[feegrant.StoreKey],
@@ -493,12 +476,6 @@ func NewSimApp(
 		app.ScopedIBCKeeper,
 	)
 
-	app.InterchainQueryKeeper = interchainquerykeeper.NewKeeper(
-		appCodec,
-		keys[interchainquerytypes.StoreKey],
-		app.IBCKeeper,
-	)
-
 	// create evidence keeper with router
 	evidenceKeeper := evidencekeeper.NewKeeper(
 		appCodec, keys[evidencetypes.StoreKey], app.StakingKeeper, app.SlashingKeeper,
@@ -539,8 +516,6 @@ func NewSimApp(
 		ibc.NewAppModule(app.IBCKeeper),
 		epochs.NewAppModule(*app.EpochsKeeper),
 		halving.NewAppModule(appCodec, app.HalvingKeeper),
-		interchainquery.NewAppModule(appCodec, app.InterchainQueryKeeper),
-		oracle.NewAppModule(appCodec, app.OracleKeeper, app.AccountKeeper, app.BankKeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -554,7 +529,7 @@ func NewSimApp(
 		authtypes.ModuleName, banktypes.ModuleName, govtypes.ModuleName, crisistypes.ModuleName, genutiltypes.ModuleName,
 		authz.ModuleName, feegrant.ModuleName, group.ModuleName, ibcexported.ModuleName,
 		paramstypes.ModuleName, vestingtypes.ModuleName, consensusparamstypes.ModuleName,
-		epochstypes.ModuleName, halving.ModuleName, interchainquerytypes.ModuleName, oracletypes.ModuleName,
+		epochstypes.ModuleName, halving.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
 		crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName,
@@ -563,7 +538,7 @@ func NewSimApp(
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
 		feegrant.ModuleName, group.ModuleName, ibcexported.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, consensusparamstypes.ModuleName,
-		epochstypes.ModuleName, halving.ModuleName, interchainquerytypes.ModuleName, oracletypes.ModuleName,
+		epochstypes.ModuleName, halving.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -578,7 +553,7 @@ func NewSimApp(
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
 		feegrant.ModuleName, group.ModuleName, ibcexported.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, consensusparamstypes.ModuleName,
-		epochstypes.ModuleName, halving.ModuleName, interchainquerytypes.ModuleName, oracletypes.ModuleName,
+		epochstypes.ModuleName, halving.ModuleName,
 	}
 	app.mm.SetOrderInitGenesis(genesisModuleOrder...)
 	app.mm.SetOrderExportGenesis(genesisModuleOrder...)
@@ -778,7 +753,7 @@ func (app *SimApp) RegisterNodeService(clientCtx client.Context) {
 }
 
 // RegisterSwaggerAPI registers swagger route with API Server
-func RegisterSwaggerAPI(ctx client.Context, rtr *mux.Router) {
+func RegisterSwaggerAPI(_ client.Context, rtr *mux.Router) {
 	statikFS, err := fs.New()
 	if err != nil {
 		panic(err)

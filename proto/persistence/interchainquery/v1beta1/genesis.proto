@@ -6,6 +6,8 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/types";
 
 message Query {
+  option deprecated = true;
+
   string id = 1;
   string connection_id = 2;
   string chain_id = 3;
@@ -29,6 +31,8 @@ message Query {
 }
 
 message DataPoint {
+  option deprecated = true;
+
   string id = 1;
   // change these to uint64 in v0.5.0
   string remote_height = 2 [
@@ -44,5 +48,7 @@ message DataPoint {
 
 // GenesisState defines the epochs module's genesis state.
 message GenesisState {
+  option deprecated = true;
+
   repeated Query queries = 1 [ (gogoproto.nullable) = false ];
 }
