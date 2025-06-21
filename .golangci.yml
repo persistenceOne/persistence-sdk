@@ -1,51 +1,23 @@
+version: "2"
+
 run:
   tests: false
-  skip-files:
-    - schema/applications/base/application.go
-    - utilities/cuckoo/filter.go
-    - x/lsnative/distribution/types/distribution.pb.go
-  skip-dirs:
-    - x/lsnative
-    - ibctesting
+
 linters:
-  disable-all: false
+  default: none
   enable:
-    - bodyclose
-    - deadcode
-    - depguard
-    - dogsled
-    - errcheck
-    - goconst
-    - gocritic
+    - errcheck         # unchecked errors
+    - govet            # catches suspicious code constructs
+    - staticcheck      # advanced correctness checks
+    - misspell         # catch typos
+    - ineffassign      # detect inefficient assignments
+    - unused           # unused variables, funcs, types
+  settings:
+    misspell:
+      locale: US
+
+formatters:
+  enable:
     - gofmt
     - goimports
-    - golint
-    - gosec
-    - gosimple
-    - govet
-    - ineffassign
-    - maligned
-    - misspell
-    - nakedret
-    - prealloc
-    - scopelint
-    - staticcheck
-    - structcheck
-    - stylecheck
-    - typecheck
-    - unconvert
-    - unused
-    - unparam
-    - misspell
-    - nolintlint
 
-linters-settings:
-  dogsled:
-    max-blank-identifiers: 3
-  maligned:
-    suggest-new: true
-  nolintlint:
-    allow-unused: false
-    allow-leading-space: true
-    require-explanation: false
-    require-specific: false

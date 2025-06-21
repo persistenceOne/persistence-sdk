@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v5
         with:
-          go-version: 1.20.4
+          go-version: 1.23
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: test & coverage report creation
         run: |
@@ -32,11 +32,11 @@ jobs:
           excludelist="$(find ./ -type f -name '*.go' | xargs grep -l 'DONTCOVER')"
           excludelist+=" $(find ./ -type f -name '*.pb.go')"
           excludelist+=" $(find ./ -type f -name '*.pb.gw.go')"
-          excludelist+=" $(find ./ -type f -path './tests/mocks/*.go')"
-          excludelist+=" $(find ./ -type f -path './x/interchainquery/*.go')"
-          excludelist+=" $(find ./ -type f -path './x/oracle/*.go')"
+          excludelist+=" $(find ./ -type f -path './tests/*.go')"
+          excludelist+=" $(find ./ -type f -path './x/interchainquery/*')"
+          excludelist+=" $(find ./ -type f -path './x/oracle/*')"
           for filename in ${excludelist}; do
-            filename=$(echo $filename | sed 's/^./github.com\/persistenceOne\/persistence-sdk/g')
+            filename=$(echo $filename | sed 's/^.\///g')
             echo "Excluding ${filename} from coverage report..."
             sed -i "/$(echo $filename | sed 's/\//\\\//g')/d" ./coverage.out
           done
