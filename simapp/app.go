@@ -107,9 +107,7 @@ import (
 	epochskeeper "github.com/persistenceOne/persistence-sdk/v3/x/epochs/keeper"
 	epochstypes "github.com/persistenceOne/persistence-sdk/v3/x/epochs/types"
 	"github.com/persistenceOne/persistence-sdk/v3/x/halving"
-	"github.com/persistenceOne/persistence-sdk/v3/x/interchainquery"
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/types"
-	"github.com/persistenceOne/persistence-sdk/v3/x/oracle"
 	oracletypes "github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
 )
 
@@ -151,8 +149,8 @@ var (
 		ibctm.AppModuleBasic{},
 		epochs.AppModuleBasic{},
 		halving.AppModuleBasic{},
-		interchainquery.AppModuleBasic{},
-		oracle.AppModuleBasic{},
+		// interchainquery.AppModuleBasic{}, // Removed - codec registration moved to encoding config
+		// oracle.AppModuleBasic{}, // Removed - codec registration moved to encoding config
 	)
 
 	// module account permissions
