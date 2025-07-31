@@ -22,10 +22,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"github.com/persistenceOne/persistence-sdk/v3/x/halving/client/cli"
-	"github.com/persistenceOne/persistence-sdk/v3/x/halving/keeper"
-	"github.com/persistenceOne/persistence-sdk/v3/x/halving/simulation"
-	"github.com/persistenceOne/persistence-sdk/v3/x/halving/types"
+	"github.com/persistenceOne/persistence-sdk/v4/x/halving/client/cli"
+	"github.com/persistenceOne/persistence-sdk/v4/x/halving/keeper"
+	"github.com/persistenceOne/persistence-sdk/v4/x/halving/simulation"
+	"github.com/persistenceOne/persistence-sdk/v4/x/halving/types"
 )
 
 var (

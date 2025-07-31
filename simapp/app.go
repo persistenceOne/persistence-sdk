@@ -103,12 +103,12 @@ import (
 	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 
-	"github.com/persistenceOne/persistence-sdk/v3/x/epochs"
-	epochskeeper "github.com/persistenceOne/persistence-sdk/v3/x/epochs/keeper"
-	epochstypes "github.com/persistenceOne/persistence-sdk/v3/x/epochs/types"
-	"github.com/persistenceOne/persistence-sdk/v3/x/halving"
-	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v3/x/interchainquery/types"
-	oracletypes "github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v4/x/epochs"
+	epochskeeper "github.com/persistenceOne/persistence-sdk/v4/x/epochs/keeper"
+	epochstypes "github.com/persistenceOne/persistence-sdk/v4/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v4/x/halving"
+	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v4/x/interchainquery/types"
+	oracletypes "github.com/persistenceOne/persistence-sdk/v4/x/oracle/types"
 )
 
 const appName = "SimApp"

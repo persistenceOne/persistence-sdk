@@ -6,8 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/server"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 
-	"github.com/persistenceOne/persistence-sdk/v3/simapp"
-	"github.com/persistenceOne/persistence-sdk/v3/simapp/simd/cmd"
+	"github.com/persistenceOne/persistence-sdk/v4/simapp"
+	"github.com/persistenceOne/persistence-sdk/v4/simapp/simd/cmd"
 )
 
 func main() {

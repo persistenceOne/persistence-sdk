@@ -12,7 +12,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
-	"github.com/persistenceOne/persistence-sdk/v3/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v4/x/oracle/types"
 )
 
 var (

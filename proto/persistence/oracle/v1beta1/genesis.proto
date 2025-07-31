@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 import "persistence/oracle/v1beta1/oracle.proto";
 import "cosmos_proto/cosmos.proto";
 
-option go_package = "github.com/persistenceOne/persistence-sdk/v3/x/oracle/types";
+option go_package = "github.com/persistenceOne/persistence-sdk/v4/x/oracle/types";
 
 // GenesisState defines the oracle module's genesis state.
 message GenesisState {

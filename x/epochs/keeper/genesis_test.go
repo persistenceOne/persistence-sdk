@@ -7,8 +7,8 @@ import (
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	"github.com/stretchr/testify/require"
 
-	simapp "github.com/persistenceOne/persistence-sdk/v3/simapp"
-	"github.com/persistenceOne/persistence-sdk/v3/x/epochs/types"
+	simapp "github.com/persistenceOne/persistence-sdk/v4/simapp"
+	"github.com/persistenceOne/persistence-sdk/v4/x/epochs/types"
 )
 
 func TestEpochsExportGenesis(t *testing.T) {

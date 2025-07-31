@@ -38,8 +38,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
 
-	epochs "github.com/persistenceOne/persistence-sdk/v3/x/epochs"
-	"github.com/persistenceOne/persistence-sdk/v3/x/halving"
+	epochs "github.com/persistenceOne/persistence-sdk/v4/x/epochs"
+	"github.com/persistenceOne/persistence-sdk/v4/x/halving"
 )
 
 func TestSimAppExportAndBlockedAddrs(t *testing.T) {
