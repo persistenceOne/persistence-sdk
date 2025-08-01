@@ -19,8 +19,8 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 
-	"github.com/persistenceOne/persistence-sdk/v3/simapp"
-	simcmd "github.com/persistenceOne/persistence-sdk/v3/simapp/simd/cmd"
+	"github.com/persistenceOne/persistence-sdk/v4/simapp"
+	simcmd "github.com/persistenceOne/persistence-sdk/v4/simapp/simd/cmd"
 )
 
 var testMbm = module.NewBasicManager(genutil.AppModuleBasic{})
