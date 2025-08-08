@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 	"github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+	"github.com/stretchr/testify/require"
 
 	"github.com/persistenceOne/persistence-sdk/v4/simapp"
 	"github.com/persistenceOne/persistence-sdk/v4/simapp/simd/cmd"

@@ -4,40 +4,36 @@ import (
 	"testing"
 	"time"
 
-	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	"github.com/stretchr/testify/require"
 
-	simapp "github.com/persistenceOne/persistence-sdk/v4/simapp"
 	"github.com/persistenceOne/persistence-sdk/v4/x/epochs/types"
 )
 
 func TestEpochsExportGenesis(t *testing.T) {
-	app := simapp.SetupNoBlocks(t, false)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
+	ctx, epochsKeeper := Setup()
 
 	chainStartTime := ctx.BlockTime()
 	chainStartHeight := ctx.BlockHeight()
 
-	genesis := app.EpochsKeeper.ExportGenesis(ctx)
+	genesis := epochsKeeper.ExportGenesis(ctx)
 	require.Len(t, genesis.Epochs, 3)
 
 	expectedEpochs := types.DefaultGenesis().Epochs
 	for i := 0; i < len(expectedEpochs); i++ {
 		expectedEpochs[i].CurrentEpochStartHeight = chainStartHeight
-		expectedEpochs[i].CurrentEpochStartTime = chainStartTime
+		expectedEpochs[i].StartTime = chainStartTime
 	}
 	require.Equal(t, expectedEpochs, genesis.Epochs)
 }
 
 func TestEpochsInitGenesis(t *testing.T) {
-	app := simapp.Setup(t, false)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
+	ctx, epochsKeeper := Setup()
 
 	// On init genesis, default epochs information is set
 	// To check init genesis again, should make it fresh status
-	epochInfos := app.EpochsKeeper.AllEpochInfos(ctx)
+	epochInfos := epochsKeeper.AllEpochInfos(ctx)
 	for _, epochInfo := range epochInfos {
-		app.EpochsKeeper.DeleteEpochInfo(ctx, epochInfo.Identifier)
+		epochsKeeper.DeleteEpochInfo(ctx, epochInfo.Identifier)
 	}
 
 	now := time.Now()
@@ -83,8 +79,8 @@ func TestEpochsInitGenesis(t *testing.T) {
 		},
 	}
 
-	app.EpochsKeeper.InitGenesis(ctx, genesisState)
-	epochInfo := app.EpochsKeeper.GetEpochInfo(ctx, "monthly")
+	epochsKeeper.InitGenesis(ctx, genesisState)
+	epochInfo := epochsKeeper.GetEpochInfo(ctx, "monthly")
 	require.Equal(t, epochInfo.Identifier, "monthly")
 	require.Equal(t, epochInfo.StartTime.UTC().String(), now.UTC().String())
 	require.Equal(t, epochInfo.Duration, time.Hour*24)

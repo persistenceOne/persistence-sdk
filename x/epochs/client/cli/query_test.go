@@ -5,33 +5,45 @@ import (
 	"testing"
 	"time"
 
-	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+	storetypes "cosmossdk.io/store/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	cdcutil "github.com/cosmos/cosmos-sdk/codec/testutil"
+	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/persistenceOne/persistence-sdk/v4/simapp"
+	epochskeeper "github.com/persistenceOne/persistence-sdk/v4/x/epochs/keeper"
 	"github.com/persistenceOne/persistence-sdk/v4/x/epochs/types"
 )
 
 type QueryTestSuite struct {
 	suite.Suite
 
-	app *simapp.SimApp
-	ctx sdk.Context
-
-	queryHelper *baseapp.QueryServiceTestHelper
-	queryClient types.QueryClient
+	ctx          sdk.Context
+	epochsKeeper *epochskeeper.Keeper
+	queryHelper  *baseapp.QueryServiceTestHelper
+	queryClient  types.QueryClient
 }
 
 func (s *QueryTestSuite) SetupSuite() {
-	s.app = simapp.Setup(s.T(), false)
-	s.ctx = s.app.NewContext(false, tmproto.Header{})
+	epochsStoreKey := storetypes.NewKVStoreKey(types.StoreKey)
+	s.ctx = testutil.DefaultContext(epochsStoreKey, storetypes.NewTransientStoreKey("transient_test"))
+	s.epochsKeeper = epochskeeper.NewKeeper(epochsStoreKey)
+	s.epochsKeeper = s.epochsKeeper.SetHooks(types.NewMultiEpochHooks())
+	s.ctx = s.ctx.WithBlockHeight(1).WithChainID("persistence-1").WithBlockTime(time.Now().UTC())
+	s.epochsKeeper.InitGenesis(s.ctx, *types.DefaultGenesis())
+
+	queryRouter := baseapp.NewGRPCQueryRouter()
+	cfg := module.NewConfigurator(nil, nil, queryRouter)
+	types.RegisterQueryServer(cfg.QueryServer(), epochskeeper.NewQuerier(*s.epochsKeeper))
 	s.queryHelper = &baseapp.QueryServiceTestHelper{
-		GRPCQueryRouter: s.app.GRPCQueryRouter(),
+		GRPCQueryRouter: queryRouter,
 		Ctx:             s.ctx,
 	}
+	interfaceRegistry := cdcutil.CodecOptions{AccAddressPrefix: "persistence", ValAddressPrefix: "persistencevaloper"}.NewInterfaceRegistry()
+	s.queryHelper.SetInterfaceRegistry(interfaceRegistry)
 	s.queryClient = types.NewQueryClient(s.queryHelper)
 
 	// add new epoch
@@ -45,10 +57,8 @@ func (s *QueryTestSuite) SetupSuite() {
 		EpochCountingStarted:    false,
 	}
 
-	err := s.app.EpochsKeeper.AddEpochInfo(s.ctx, epoch)
+	err := s.epochsKeeper.AddEpochInfo(s.ctx, epoch)
 	require.NoError(s.T(), err)
-
-	s.app.Commit()
 }
 
 func (s *QueryTestSuite) TestQueriesNeverAlterState() {

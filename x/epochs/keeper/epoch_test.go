@@ -55,11 +55,11 @@ func (suite *KeeperTestSuite) TestAddEpochInfo() {
 		//nolint:scopelint,testfile
 		suite.Run(name, func() {
 			suite.SetupTest()
-			suite.Ctx = suite.Ctx.WithBlockHeight(startBlockHeight).WithBlockTime(startBlockTime)
-			err := suite.App.EpochsKeeper.AddEpochInfo(suite.Ctx, test.addedEpochInfo)
+			ctx := suite.Ctx.WithBlockHeight(startBlockHeight).WithBlockTime(startBlockTime)
+			err := suite.EpochsKeeper.AddEpochInfo(ctx, test.addedEpochInfo)
 			if !test.expErr {
 				suite.Require().NoError(err)
-				actualEpochInfo := suite.App.EpochsKeeper.GetEpochInfo(suite.Ctx, test.addedEpochInfo.Identifier)
+				actualEpochInfo := suite.EpochsKeeper.GetEpochInfo(ctx, test.addedEpochInfo.Identifier)
 				suite.Require().Equal(test.expEpochInfo, actualEpochInfo)
 			} else {
 				suite.Require().Error(err)
@@ -69,28 +69,32 @@ func (suite *KeeperTestSuite) TestAddEpochInfo() {
 }
 
 func (suite *KeeperTestSuite) TestDuplicateAddEpochInfo() {
+	suite.SetupTest()
+	ctx := suite.Ctx
+
 	identifier := "duplicate_add_epoch_info"
 	epochInfo := types.NewGenesisEpochInfo(identifier, time.Hour*24*30)
-	err := suite.App.EpochsKeeper.AddEpochInfo(suite.Ctx, epochInfo)
+	err := suite.EpochsKeeper.AddEpochInfo(ctx, epochInfo)
 	suite.Require().NoError(err)
-	err = suite.App.EpochsKeeper.AddEpochInfo(suite.Ctx, epochInfo)
+	err = suite.EpochsKeeper.AddEpochInfo(ctx, epochInfo)
 	suite.Require().Error(err)
 }
 
 func (suite *KeeperTestSuite) TestEpochLifeCycle() {
 	suite.SetupTest()
+	ctx := suite.Ctx
 
 	epochInfo := types.NewGenesisEpochInfo("monthly", time.Hour*24*30)
-	err := suite.App.EpochsKeeper.AddEpochInfo(suite.Ctx, epochInfo)
+	err := suite.EpochsKeeper.AddEpochInfo(ctx, epochInfo)
 	suite.Require().NoError(err)
-	epochInfoSaved := suite.App.EpochsKeeper.GetEpochInfo(suite.Ctx, "monthly")
+	epochInfoSaved := suite.EpochsKeeper.GetEpochInfo(ctx, "monthly")
 	// setup expected epoch info
 	expectedEpochInfo := epochInfo
-	expectedEpochInfo.StartTime = suite.Ctx.BlockTime()
-	expectedEpochInfo.CurrentEpochStartHeight = suite.Ctx.BlockHeight()
+	expectedEpochInfo.StartTime = ctx.BlockTime()
+	expectedEpochInfo.CurrentEpochStartHeight = ctx.BlockHeight()
 	suite.Require().Equal(expectedEpochInfo, epochInfoSaved)
 
-	allEpochs := suite.App.EpochsKeeper.AllEpochInfos(suite.Ctx)
+	allEpochs := suite.EpochsKeeper.AllEpochInfos(ctx)
 	suite.Require().Len(allEpochs, 4)
 	suite.Require().Equal(allEpochs[0].Identifier, "day") // alphabetical order
 	suite.Require().Equal(allEpochs[1].Identifier, "hour")

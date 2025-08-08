@@ -1,10 +1,7 @@
 package simapp
 
 import (
-	"time"
-
 	"github.com/cometbft/cometbft/crypto/ed25519"
-	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
@@ -21,8 +18,9 @@ type KeeperTestHelper struct {
 
 // Setup sets up basic environment for suite (App, Ctx, and test accounts)
 func (s *KeeperTestHelper) Setup() {
+	sdk.GetConfig().SetBech32PrefixForAccount("persistence", "persistencepub")
 	s.App = SetupNoBlocks(s.T(), false)
-	s.Ctx = s.App.NewContext(false, tmproto.Header{Height: 1, ChainID: "core-1", Time: time.Now().UTC()})
+	s.Ctx = s.App.NewContext(false)
 
 	s.QueryHelper = &baseapp.QueryServiceTestHelper{
 		GRPCQueryRouter: s.App.GRPCQueryRouter(),

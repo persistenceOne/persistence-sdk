@@ -11,11 +11,17 @@ import (
 
 // InitGenesis new halving genesis
 func InitGenesis(ctx sdk.Context, keeper Keeper, data GenesisState) {
-	keeper.SetParams(ctx, data.Params)
+	err := keeper.SetParams(ctx, data.Params)
+	if err != nil {
+		panic(err)
+	}
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper.
 func ExportGenesis(ctx sdk.Context, keeper Keeper) *GenesisState {
-	params := keeper.GetParams(ctx)
+	params, err := keeper.GetParams(ctx)
+	if err != nil {
+		panic(err)
+	}
 	return NewGenesisState(params)
 }

@@ -5,18 +5,17 @@ import (
 	"testing"
 
 	"cosmossdk.io/errors"
-
+	storetypes "cosmossdk.io/store/types"
+	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/persistenceOne/persistence-sdk/v4/simapp"
 	"github.com/persistenceOne/persistence-sdk/v4/x/epochs/types"
 )
 
 type KeeperTestSuite struct {
-	simapp.KeeperTestHelper
-
-	queryClient types.QueryClient
+	suite.Suite
+	Ctx sdk.Context
 }
 
 func TestKeeperTestSuite(t *testing.T) {
@@ -24,9 +23,9 @@ func TestKeeperTestSuite(t *testing.T) {
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
-	suite.Setup()
-
-	suite.queryClient = types.NewQueryClient(suite.QueryHelper)
+	// Create a minimal context for testing hooks
+	epochsStoreKey := storetypes.NewKVStoreKey(types.StoreKey)
+	suite.Ctx = testutil.DefaultContext(epochsStoreKey, storetypes.NewTransientStoreKey("transient_test"))
 }
 
 func dummyAfterEpochEndEvent(epochIdentifier string, epochNumber int64) sdk.Event {

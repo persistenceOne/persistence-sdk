@@ -17,7 +17,10 @@ var _ types.QueryServer = Keeper{}
 
 func (k Keeper) Params(context context.Context, _ *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(context)
-	params := k.GetParams(ctx)
+	params, err := k.GetParams(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.QueryParamsResponse{Params: params}, nil
 }
