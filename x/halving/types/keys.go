@@ -5,6 +5,8 @@
 
 package types
 
+import "cosmossdk.io/collections"
+
 const (
 	// ModuleName
 	ModuleName = "halving"
@@ -14,4 +16,11 @@ const (
 
 	// StoreKey is the default store key for halving
 	StoreKey = ModuleName
+
+	// RouterKey is the message route for halving
+	RouterKey = ModuleName
+)
+
+var (
+	ParamsKey = collections.NewPrefix(0)
 )

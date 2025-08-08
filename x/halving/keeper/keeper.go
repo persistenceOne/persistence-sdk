@@ -6,11 +6,15 @@
 package keeper
 
 import (
+	"cosmossdk.io/collections"
 	"fmt"
+	"github.com/cosmos/cosmos-sdk/codec"
 
-	"github.com/cometbft/cometbft/libs/log"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	storetypes "cosmossdk.io/core/store"
+	"cosmossdk.io/log"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
+	mintkeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
 	mintTypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
 
@@ -19,21 +23,41 @@ import (
 
 // Keeper of the halving store
 type Keeper struct {
-	storeKey   storetypes.StoreKey
+	storeKey   storetypes.KVStoreService
 	paramSpace paramsTypes.Subspace
-	mintKeeper types.MintKeeper
+	mintKeeper mintkeeper.Keeper
+
+	Schema      collections.Schema
+	ParamsStore collections.Item[types.Params]
+	authority   string
 }
 
 // NewKeeper creates a new halving Keeper instance
-func NewKeeper(
-	key storetypes.StoreKey, paramSpace paramsTypes.Subspace,
-	mintKeeper types.MintKeeper,
+func NewKeeper(cdc codec.BinaryCodec,
+	storeService storetypes.KVStoreService, paramSpace paramsTypes.Subspace,
+	mintKeeper mintkeeper.Keeper, ak authkeeper.AccountKeeper,
+	authority string,
+
 ) Keeper {
-	return Keeper{
-		storeKey:   key,
-		paramSpace: paramSpace.WithKeyTable(types.ParamKeyTable()),
-		mintKeeper: mintKeeper,
+	// ensure that authority is a valid AccAddress
+	if _, err := ak.AddressCodec().StringToBytes(authority); err != nil {
+		panic("authority is not a valid acc address")
 	}
+	sb := collections.NewSchemaBuilder(storeService)
+
+	k := Keeper{
+		storeKey:    storeService,
+		paramSpace:  paramSpace.WithKeyTable(types.ParamKeyTable()),
+		ParamsStore: collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
+		mintKeeper:  mintKeeper,
+		authority:   authority,
+	}
+	schema, err := sb.Build()
+	if err != nil {
+		panic(err)
+	}
+	k.Schema = schema
+	return k
 }
 
 // ______________________________________________________________________
@@ -46,24 +70,38 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 // ______________________________________________________________________
 
 // GetParams returns the total set of parameters.
-func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
-	k.paramSpace.GetParamSet(ctx, &params)
-	return params
+func (k Keeper) GetParams(ctx sdk.Context) (types.Params, error) {
+	return k.ParamsStore.Get(ctx)
 }
 
 // SetParams sets the total set of parameters.
-func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
-	k.paramSpace.SetParamSet(ctx, &params)
+func (k Keeper) SetParams(ctx sdk.Context, params types.Params) error {
+	return k.ParamsStore.Set(ctx, params)
 }
 
 // ______________________________________________________________________
 
 // GetMintingParams returns the total set of halving parameters.
-func (k Keeper) GetMintingParams(ctx sdk.Context) (params mintTypes.Params) {
-	return k.mintKeeper.GetParams(ctx)
+func (k Keeper) GetMintingParams(ctx sdk.Context) (mintTypes.Params, error) {
+	return k.mintKeeper.Params.Get(ctx)
 }
 
 // SetMintingParams sets the total set of halving parameters.
 func (k Keeper) SetMintingParams(ctx sdk.Context, params mintTypes.Params) error {
-	return k.mintKeeper.SetParams(ctx, params)
+	return k.mintKeeper.Params.Set(ctx, params)
+}
+
+// UpdateParams updates the halving module parameters
+func (k Keeper) UpdateParams(ctx sdk.Context, authority string, params types.Params) error {
+	if authority != k.GetAuthority() {
+		return fmt.Errorf("unauthorized: authority %s is not the module authority", authority)
+	}
+
+	k.SetParams(ctx, params)
+	return nil
+}
+
+// GetAuthority returns the module authority address
+func (k Keeper) GetAuthority() string {
+	return k.authority
 }

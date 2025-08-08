@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	errors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
@@ -18,14 +19,20 @@ import (
 )
 
 func EndBlocker(ctx sdk.Context, k Keeper) {
-	params := k.GetParams(ctx)
+	params, err := k.GetParams(ctx)
+	if err != nil {
+		panic(err)
+	}
 
 	if params.BlockHeight != 0 && uint64(ctx.BlockHeight())%params.BlockHeight == 0 {
-		mintParams := k.GetMintingParams(ctx)
-		newMaxInflation := mintParams.InflationMax.QuoTruncate(sdk.NewDecFromInt(Factor))
-		newMinInflation := mintParams.InflationMin.QuoTruncate(sdk.NewDecFromInt(Factor))
+		mintParams, err := k.GetMintingParams(ctx)
+		if err != nil {
+			panic(err)
+		}
+		newMaxInflation := mintParams.InflationMax.QuoTruncate(sdkmath.LegacyNewDecFromInt(Factor))
+		newMinInflation := mintParams.InflationMin.QuoTruncate(sdkmath.LegacyNewDecFromInt(Factor))
 
-		if newMaxInflation.Sub(newMinInflation).LT(sdk.ZeroDec()) {
+		if newMaxInflation.Sub(newMinInflation).LT(sdkmath.LegacyZeroDec()) {
 			panic(fmt.Sprintf("max inflation (%s) must be greater than or equal to min inflation (%s)", newMaxInflation.String(), newMinInflation.String()))
 		}
 

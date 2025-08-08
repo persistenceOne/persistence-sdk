@@ -20,10 +20,10 @@ type App interface {
 	LegacyAmino() *codec.LegacyAmino
 
 	// Application updates every begin block.
-	BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock
+	BeginBlocker(ctx sdk.Context) error
 
 	// Application updates every end block.
-	EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock
+	EndBlocker(ctx sdk.Context) ([]abci.ValidatorUpdate, error)
 
 	// Application update at chain (i.e app) initialization.
 	InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain
@@ -44,3 +44,9 @@ type App interface {
 }
 
 const Bech32Prefix = "persistence"
+const Bech32PrefixAccAddr = "persistence"
+const Bech32PrefixAccPub = "persistencepub"
+const Bech32PrefixValAddr = "persistencevaloper"
+const Bech32PrefixValPub = "persistencevaloperpub"
+const Bech32PrefixConsAddr = "persistencevalcons"
+const Bech32PrefixConsPub = "persistencevalconspub"
