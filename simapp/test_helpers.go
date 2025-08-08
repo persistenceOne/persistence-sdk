@@ -6,16 +6,13 @@ import (
 	"os"
 	"testing"
 
-	"cosmossdk.io/math"
-	"github.com/stretchr/testify/require"
-
 	"cosmossdk.io/log"
+	"cosmossdk.io/math"
+	pruningtypes "cosmossdk.io/store/pruning/types"
 	abci "github.com/cometbft/cometbft/abci/types"
 	tmjson "github.com/cometbft/cometbft/libs/json"
 	tmtypes "github.com/cometbft/cometbft/types"
 	cosmosdb "github.com/cosmos/cosmos-db"
-
-	pruningtypes "cosmossdk.io/store/pruning/types"
 	bam "github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
@@ -30,8 +27,8 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	simcli "github.com/cosmos/cosmos-sdk/x/simulation/client/cli"
-
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
+	"github.com/stretchr/testify/require"
 )
 
 // SetupOptions defines arguments that are passed into `Simapp` constructor.

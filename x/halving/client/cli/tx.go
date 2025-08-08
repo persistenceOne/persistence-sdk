@@ -6,19 +6,17 @@
 package cli
 
 import (
+	"cosmossdk.io/errors"
+	"cosmossdk.io/math"
+	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cobra"
 
-	"cosmossdk.io/errors"
-	"cosmossdk.io/math"
-	"github.com/cosmos/cosmos-sdk/client"
-
-	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/persistenceOne/persistence-sdk/v4/x/halving/types"
 )
 
-// GetTxCmd returns the transaction commands for the halving module.
 func GetTxCmd() *cobra.Command {
 	halvingTxCmd := &cobra.Command{
 		Use:                        types.ModuleName,
@@ -35,7 +33,6 @@ func GetTxCmd() *cobra.Command {
 	return halvingTxCmd
 }
 
-// GetCmdUpdateParams implements a command to update halving parameters.
 func GetCmdUpdateParams() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-params [block-height]",
@@ -47,16 +44,13 @@ func GetCmdUpdateParams() *cobra.Command {
 				return err
 			}
 
-			// Parse block height
 			blockHeight, ok := math.NewIntFromString(args[0])
 			if !ok {
 				return errors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid block height: %s", args[0])
 			}
 
-			// Create params
 			params := types.NewParams(blockHeight.Uint64())
 
-			// Create message
 			msg := types.NewMsgUpdateParams(
 				clientCtx.GetFromAddress().String(),
 				params,

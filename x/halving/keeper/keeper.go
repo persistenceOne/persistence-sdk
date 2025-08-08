@@ -6,12 +6,12 @@
 package keeper
 
 import (
-	"cosmossdk.io/collections"
 	"fmt"
-	"github.com/cosmos/cosmos-sdk/codec"
 
+	"cosmossdk.io/collections"
 	storetypes "cosmossdk.io/core/store"
 	"cosmossdk.io/log"
+	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	mintkeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
@@ -21,7 +21,6 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v4/x/halving/types"
 )
 
-// Keeper of the halving store
 type Keeper struct {
 	storeKey   storetypes.KVStoreService
 	paramSpace paramsTypes.Subspace
@@ -32,12 +31,10 @@ type Keeper struct {
 	authority   string
 }
 
-// NewKeeper creates a new halving Keeper instance
 func NewKeeper(cdc codec.BinaryCodec,
 	storeService storetypes.KVStoreService, paramSpace paramsTypes.Subspace,
 	mintKeeper mintkeeper.Keeper, ak authkeeper.AccountKeeper,
 	authority string,
-
 ) Keeper {
 	// ensure that authority is a valid AccAddress
 	if _, err := ak.AddressCodec().StringToBytes(authority); err != nil {
@@ -60,33 +57,22 @@ func NewKeeper(cdc codec.BinaryCodec,
 	return k
 }
 
-// ______________________________________________________________________
-
-// Logger returns a module-specific logger.
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
-// ______________________________________________________________________
-
-// GetParams returns the total set of parameters.
 func (k Keeper) GetParams(ctx sdk.Context) (types.Params, error) {
 	return k.ParamsStore.Get(ctx)
 }
 
-// SetParams sets the total set of parameters.
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) error {
 	return k.ParamsStore.Set(ctx, params)
 }
 
-// ______________________________________________________________________
-
-// GetMintingParams returns the total set of halving parameters.
 func (k Keeper) GetMintingParams(ctx sdk.Context) (mintTypes.Params, error) {
 	return k.mintKeeper.Params.Get(ctx)
 }
 
-// SetMintingParams sets the total set of halving parameters.
 func (k Keeper) SetMintingParams(ctx sdk.Context, params mintTypes.Params) error {
 	return k.mintKeeper.Params.Set(ctx, params)
 }

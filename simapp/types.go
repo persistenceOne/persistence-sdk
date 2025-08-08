@@ -2,7 +2,6 @@ package simapp
 
 import (
 	abci "github.com/cometbft/cometbft/abci/types"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/server/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -33,7 +32,7 @@ type App interface {
 
 	// Exports the state of the application for a genesis file.
 	ExportAppStateAndValidators(
-		forZeroHeight bool, jailAllowedAddrs []string, modulesToExport []string,
+		forZeroHeight bool, jailAllowedAddrs, modulesToExport []string,
 	) (types.ExportedApp, error)
 
 	// All the registered module account addreses.
@@ -43,10 +42,12 @@ type App interface {
 	SimulationManager() *module.SimulationManager
 }
 
-const Bech32Prefix = "persistence"
-const Bech32PrefixAccAddr = "persistence"
-const Bech32PrefixAccPub = "persistencepub"
-const Bech32PrefixValAddr = "persistencevaloper"
-const Bech32PrefixValPub = "persistencevaloperpub"
-const Bech32PrefixConsAddr = "persistencevalcons"
-const Bech32PrefixConsPub = "persistencevalconspub"
+const (
+	Bech32Prefix         = "persistence"
+	Bech32PrefixAccAddr  = "persistence"
+	Bech32PrefixAccPub   = "persistencepub"
+	Bech32PrefixValAddr  = "persistencevaloper"
+	Bech32PrefixValPub   = "persistencevaloperpub"
+	Bech32PrefixConsAddr = "persistencevalcons"
+	Bech32PrefixConsPub  = "persistencevalconspub"
+)

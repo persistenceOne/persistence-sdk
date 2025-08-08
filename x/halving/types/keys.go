@@ -21,6 +21,4 @@ const (
 	RouterKey = ModuleName
 )
 
-var (
-	ParamsKey = collections.NewPrefix(0)
-)
+var ParamsKey = collections.NewPrefix(0)

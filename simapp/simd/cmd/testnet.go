@@ -32,10 +32,10 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	// genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types" // Not used in newer versions
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 
 	"github.com/persistenceOne/persistence-sdk/v4/simapp"
 )
@@ -475,7 +475,7 @@ func calculateIP(ip string, i int) (string, error) {
 	return ipv4.String(), nil
 }
 
-func writeFile(name string, dir string, contents []byte) error {
+func writeFile(name, dir string, contents []byte) error {
 	file := filepath.Join(dir, name)
 
 	if err := os.MkdirAll(dir, 0o755); err != nil {

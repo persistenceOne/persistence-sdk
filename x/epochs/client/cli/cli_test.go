@@ -1,11 +1,10 @@
 package cli_test
 
 import (
-	"github.com/cosmos/gogoproto/proto"
-	"github.com/stretchr/testify/suite"
-
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/cosmos/cosmos-sdk/testutil/network"
+	"github.com/cosmos/gogoproto/proto"
+	"github.com/stretchr/testify/suite"
 
 	"github.com/persistenceOne/persistence-sdk/v4/simapp"
 	"github.com/persistenceOne/persistence-sdk/v4/x/epochs/client/cli"

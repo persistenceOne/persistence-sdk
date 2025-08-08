@@ -15,7 +15,7 @@ import (
 
 // ExportAppStateAndValidators exports the state of the application for a genesis
 // file.
-func (app *SimApp) ExportAppStateAndValidators(forZeroHeight bool, jailAllowedAddrs []string, modulesToExport []string) (servertypes.ExportedApp, error) {
+func (app *SimApp) ExportAppStateAndValidators(forZeroHeight bool, jailAllowedAddrs, modulesToExport []string) (servertypes.ExportedApp, error) {
 	// as if they could withdraw from the start of the next block
 	ctx := app.NewContext(true)
 
@@ -50,7 +50,6 @@ func (app *SimApp) ExportAppStateAndValidators(forZeroHeight bool, jailAllowedAd
 //
 //	in favor of export at a block height
 func (app *SimApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []string) {
-	// check if there is a allowed address list
 	applyAllowedAddrs := len(jailAllowedAddrs) > 0
 
 	allowedAddrsMap := make(map[string]bool)
@@ -64,12 +63,7 @@ func (app *SimApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []
 		allowedAddrsMap[addr] = true
 	}
 
-	/* Just to be safe, assert the invariants on current state. */
 	app.CrisisKeeper.AssertInvariants(ctx)
-
-	/* Handle fee distribution state. */
-
-	// withdraw all validator commission
 	app.StakingKeeper.IterateValidators(ctx, func(_ int64, val stakingtypes.ValidatorI) (stop bool) {
 		valAddr, err := sdk.ValAddressFromBech32(val.GetOperator())
 		if err != nil {
@@ -79,7 +73,6 @@ func (app *SimApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []
 		return false
 	})
 
-	// withdraw all delegator rewards
 	dels, err := app.StakingKeeper.GetAllDelegations(ctx)
 	if err != nil {
 		panic(err)
@@ -95,17 +88,11 @@ func (app *SimApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []
 		_, _ = app.DistrKeeper.WithdrawDelegationRewards(ctx, delAddr, valAddr)
 	}
 
-	// clear validator slash events
 	app.DistrKeeper.DeleteAllValidatorSlashEvents(ctx)
-
-	// clear validator historical rewards
 	app.DistrKeeper.DeleteAllValidatorHistoricalRewards(ctx)
-
-	// set context height to zero
 	height := ctx.BlockHeight()
 	ctx = ctx.WithBlockHeight(0)
 
-	// reinitialize all validators
 	app.StakingKeeper.IterateValidators(ctx, func(_ int64, val stakingtypes.ValidatorI) (stop bool) {
 		// donate any unwithdrawn outstanding reward fraction tokens to the community pool
 		valAddr, err := sdk.ValAddressFromBech32(val.GetOperator())
@@ -135,7 +122,6 @@ func (app *SimApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []
 		return false
 	})
 
-	// reinitialize all delegations
 	for _, del := range dels {
 		delValAddr, err := sdk.ValAddressFromBech32(del.ValidatorAddress)
 		if err != nil {
@@ -154,12 +140,7 @@ func (app *SimApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []
 		}
 	}
 
-	// reset context height
 	ctx = ctx.WithBlockHeight(height)
-
-	/* Handle staking state. */
-
-	// iterate through redelegations, reset creation height
 	app.StakingKeeper.IterateRedelegations(ctx, func(_ int64, red stakingtypes.Redelegation) (stop bool) {
 		for i := range red.Entries {
 			red.Entries[i].CreationHeight = 0
@@ -168,7 +149,6 @@ func (app *SimApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []
 		return false
 	})
 
-	// iterate through unbonding delegations, reset creation height
 	app.StakingKeeper.IterateUnbondingDelegations(ctx, func(_ int64, ubd stakingtypes.UnbondingDelegation) (stop bool) {
 		for i := range ubd.Entries {
 			ubd.Entries[i].CreationHeight = 0
@@ -209,9 +189,6 @@ func (app *SimApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []
 		log.Fatal(updateErr)
 	}
 
-	/* Handle slashing state. */
-
-	// reset start height on signing infos
 	app.SlashingKeeper.IterateValidatorSigningInfos(
 		ctx,
 		func(addr sdk.ConsAddress, info slashingtypes.ValidatorSigningInfo) (stop bool) {

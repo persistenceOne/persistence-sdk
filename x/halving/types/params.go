@@ -8,10 +8,9 @@ package types
 import (
 	"fmt"
 
-	"gopkg.in/yaml.v2"
-
 	sdkmath "cosmossdk.io/math"
 	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"gopkg.in/yaml.v2"
 )
 
 // Parameter store keys
