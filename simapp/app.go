@@ -195,8 +195,8 @@ type SimApp struct {
 	HalvingKeeper         halving.Keeper
 
 	// the module manager
-	mm *module.Manager
-
+	mm           *module.Manager
+	BasicManager module.BasicManager
 	// simulation manager
 	sm *module.SimulationManager
 
@@ -492,6 +492,7 @@ func NewSimApp(
 		epochs.NewAppModule(*app.EpochsKeeper),
 		halving.NewAppModule(appCodec, app.HalvingKeeper),
 	)
+	app.BasicManager = newBasicManagerFromManager(app)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
 	// there is nothing left over in the validator fee pool, so as to keep the
@@ -808,4 +809,21 @@ func (app *SimApp) GetIBCKeeper() *ibckeeper.Keeper {
 // GetTxConfig implements the TestingApp interface.
 func (app *SimApp) GetTxConfig() client.TxConfig {
 	return app.txConfig
+}
+
+// ModuleBasics defines the module BasicManager that is in charge of setting up basic,
+// non-dependant module elements, such as codec registration
+// and genesis verification.
+func newBasicManagerFromManager(app *SimApp) module.BasicManager {
+	basicManager := module.NewBasicManagerFromManager(
+		app.mm,
+		map[string]module.AppModuleBasic{
+			genutiltypes.ModuleName: genutil.NewAppModuleBasic(genutiltypes.DefaultMessageValidator),
+			govtypes.ModuleName: gov.NewAppModuleBasic(
+				[]govclient.ProposalHandler{
+					paramsclient.ProposalHandler,
+				},
+			),
+		})
+	return basicManager
 }

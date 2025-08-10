@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
 	"io"
 	"os"
 
@@ -22,7 +24,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/server"
 	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -48,6 +49,12 @@ func NewRootCmd() *cobra.Command {
 		WithAccountRetriever(types.AccountRetriever{}).
 		WithHomeDir(simapp.DefaultNodeHome).
 		WithViper("") // In simapp, we don't use any prefix for env variables.
+
+	cfg := sdk.GetConfig()
+	// Configure SDK with proper bech32 prefixes before sealing
+	cfg.SetBech32PrefixForAccount("persistence", "persistencepub")
+	cfg.SetBech32PrefixForValidator("persistencevaloper", "persistencevaloperpub")
+	cfg.SetBech32PrefixForConsensusNode("persistencevalcons", "persistencevalconspub")
 
 	rootCmd := &cobra.Command{
 		Use:   "simd",
@@ -153,14 +160,15 @@ lru_size = 0`
 }
 
 func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
-	cfg := sdk.GetConfig()
-	cfg.Seal()
+	// Create temporary app to get BasicManager
+	initAppOptions := viper.New()
+	tempapp := simapp.NewSimApp(log.NewNopLogger(), cosmosdb.NewMemDB(), nil, false, initAppOptions)
 
 	rootCmd.AddCommand(
-		genutilcli.InitCmd(simapp.ModuleBasics, simapp.DefaultNodeHome),
-		genutilcli.Commands(encodingConfig.TxConfig, simapp.ModuleBasics, simapp.DefaultNodeHome),
+		genutilcli.InitCmd(tempapp.BasicManager, simapp.DefaultNodeHome),
+		genutilcli.Commands(encodingConfig.TxConfig, tempapp.BasicManager, simapp.DefaultNodeHome),
 		tmcli.NewCompletionCmd(rootCmd, true),
-		NewTestnetCmd(simapp.ModuleBasics, banktypes.GenesisBalancesIterator{}),
+		NewTestnetCmd(tempapp.BasicManager, banktypes.GenesisBalancesIterator{}),
 		debug.Cmd(),
 		confixcmd.ConfigCommand(),
 		pruning.Cmd(newApp, simapp.DefaultNodeHome),
@@ -171,8 +179,8 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 
 	// add keybase, auxiliary RPC, query, genesis, and tx child commands
 	rootCmd.AddCommand(
-		queryCommand(),
-		txCommand(),
+		queryCommand(tempapp.BasicManager),
+		txCommand(tempapp.BasicManager),
 		keys.Commands(),
 	)
 
@@ -184,7 +192,7 @@ func addModuleInitFlags(startCmd *cobra.Command) {
 	crisis.AddModuleInitFlags(startCmd)
 }
 
-func queryCommand() *cobra.Command {
+func queryCommand(bm module.BasicManager) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "query",
 		Aliases:                    []string{"q"},
@@ -203,10 +211,11 @@ func queryCommand() *cobra.Command {
 		server.QueryBlockResultsCmd(),
 	)
 
+	bm.AddQueryCommands(cmd)
 	return cmd
 }
 
-func txCommand() *cobra.Command {
+func txCommand(bm module.BasicManager) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "tx",
 		Short:                      "Transactions subcommands",
@@ -227,6 +236,7 @@ func txCommand() *cobra.Command {
 		authcmd.GetSimulateCmd(),
 	)
 
+	bm.AddTxCommands(cmd)
 	return cmd
 }
 
