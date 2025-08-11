@@ -8,16 +8,15 @@ package types
 import (
 	"fmt"
 
-	"gopkg.in/yaml.v2"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 	paramsTypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"gopkg.in/yaml.v2"
 )
 
 // Parameter store keys
 var (
 	KeyBlockHeight = []byte("BlockHeight")
-	Factor         = sdk.NewInt(2)
+	Factor         = sdkmath.NewInt(2)
 )
 
 // ParamTable for halving module.

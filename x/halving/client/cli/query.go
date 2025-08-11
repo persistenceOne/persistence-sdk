@@ -8,10 +8,9 @@ package cli
 import (
 	"context"
 
-	"github.com/spf13/cobra"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/spf13/cobra"
 
 	"github.com/persistenceOne/persistence-sdk/v4/x/halving/types"
 )
@@ -48,7 +47,6 @@ func GetCmdQueryParams() *cobra.Command {
 
 			params := &types.QueryParamsRequest{}
 			res, err := queryClient.Params(context.Background(), params)
-
 			if err != nil {
 				return err
 			}

@@ -2,7 +2,6 @@ package simapp
 
 import (
 	abci "github.com/cometbft/cometbft/abci/types"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/server/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -20,10 +19,10 @@ type App interface {
 	LegacyAmino() *codec.LegacyAmino
 
 	// Application updates every begin block.
-	BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock
+	BeginBlocker(ctx sdk.Context) error
 
 	// Application updates every end block.
-	EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock
+	EndBlocker(ctx sdk.Context) ([]abci.ValidatorUpdate, error)
 
 	// Application update at chain (i.e app) initialization.
 	InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain
@@ -33,7 +32,7 @@ type App interface {
 
 	// Exports the state of the application for a genesis file.
 	ExportAppStateAndValidators(
-		forZeroHeight bool, jailAllowedAddrs []string, modulesToExport []string,
+		forZeroHeight bool, jailAllowedAddrs, modulesToExport []string,
 	) (types.ExportedApp, error)
 
 	// All the registered module account addreses.
@@ -43,4 +42,12 @@ type App interface {
 	SimulationManager() *module.SimulationManager
 }
 
-const Bech32Prefix = "persistence"
+const (
+	Bech32Prefix         = "persistence"
+	Bech32PrefixAccAddr  = "persistence"
+	Bech32PrefixAccPub   = "persistencepub"
+	Bech32PrefixValAddr  = "persistencevaloper"
+	Bech32PrefixValPub   = "persistencevaloperpub"
+	Bech32PrefixConsAddr = "persistencevalcons"
+	Bech32PrefixConsPub  = "persistencevalconspub"
+)
