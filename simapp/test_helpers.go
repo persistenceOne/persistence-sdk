@@ -157,12 +157,12 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 		// commit genesis changes
 		app.Commit()
 		// Note: BeginBlock has been removed in newer versions, using BeginBlocker instead
-		// app.BeginBlock(abci.RequestBeginBlock{Header: tmproto.Header{
-		// 	Height:             app.LastBlockHeight() + 1,
-		// 	AppHash:            app.LastCommitID().Hash,
-		// 	ValidatorsHash:     valSet.Hash(),
-		// 	NextValidatorsHash: valSet.Hash(),
-		// }})
+		ctx := app.NewContext(true)
+		_, err = app.BeginBlocker(ctx)
+		if err != nil {
+			return nil
+		}
+
 	}
 
 	return app

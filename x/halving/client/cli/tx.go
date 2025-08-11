@@ -35,7 +35,7 @@ func GetTxCmd() *cobra.Command {
 
 func GetCmdUpdateParams() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-params [block-height]",
+		Use:   "update-params [num-blocks]",
 		Short: "Update halving parameters",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
