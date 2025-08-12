@@ -4,9 +4,12 @@
 package params
 
 import (
+	"cosmossdk.io/x/tx/signing"
 	"github.com/cosmos/cosmos-sdk/codec"
+	addresscodec "github.com/cosmos/cosmos-sdk/codec/address"
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
+	"github.com/cosmos/gogoproto/proto"
 )
 
 // MakeTestEncodingConfig creates an EncodingConfig for a non-amino based test configuration.
@@ -15,7 +18,17 @@ import (
 // [DEPRECATED]
 func MakeTestEncodingConfig() EncodingConfig {
 	cdc := codec.NewLegacyAmino()
-	interfaceRegistry := types.NewInterfaceRegistry()
+	interfaceRegistry, _ := types.NewInterfaceRegistryWithOptions(types.InterfaceRegistryOptions{
+		ProtoFiles: proto.HybridResolver,
+		SigningOptions: signing.Options{
+			AddressCodec: addresscodec.Bech32Codec{
+				Bech32Prefix: "persistence",
+			},
+			ValidatorAddressCodec: addresscodec.Bech32Codec{
+				Bech32Prefix: "persistencevaloper",
+			},
+		},
+	})
 	marshaler := codec.NewProtoCodec(interfaceRegistry)
 
 	return EncodingConfig{

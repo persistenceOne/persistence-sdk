@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"io"
 	"os"
@@ -49,12 +48,6 @@ func NewRootCmd() *cobra.Command {
 		WithAccountRetriever(types.AccountRetriever{}).
 		WithHomeDir(simapp.DefaultNodeHome).
 		WithViper("") // In simapp, we don't use any prefix for env variables.
-
-	cfg := sdk.GetConfig()
-	// Configure SDK with proper bech32 prefixes before sealing
-	cfg.SetBech32PrefixForAccount("persistence", "persistencepub")
-	cfg.SetBech32PrefixForValidator("persistencevaloper", "persistencevaloperpub")
-	cfg.SetBech32PrefixForConsensusNode("persistencevalcons", "persistencevalconspub")
 
 	rootCmd := &cobra.Command{
 		Use:   "simd",

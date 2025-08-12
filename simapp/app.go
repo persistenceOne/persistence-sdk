@@ -2,11 +2,12 @@ package simapp
 
 import (
 	"encoding/json"
-	paramproposal "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	paramproposal "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
 
 	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
 	reflectionv1 "cosmossdk.io/api/cosmos/reflection/v1"

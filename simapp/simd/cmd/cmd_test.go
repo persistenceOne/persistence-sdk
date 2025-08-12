@@ -2,6 +2,7 @@ package cmd_test
 
 import (
 	"fmt"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -13,7 +14,15 @@ import (
 	"github.com/persistenceOne/persistence-sdk/v4/simapp/simd/cmd"
 )
 
+func SetBech32Config() {
+	cfg := sdk.GetConfig()
+	cfg.SetBech32PrefixForAccount("persistence", "persistencepub")
+	cfg.SetBech32PrefixForValidator("persistencevaloper", "persistencevaloperpub")
+	cfg.SetBech32PrefixForConsensusNode("persistencevalcons", "persistencevalconspub")
+}
+
 func TestInitCmd(t *testing.T) {
+	SetBech32Config()
 	rootCmd := cmd.NewRootCmd()
 	rootCmd.SetArgs([]string{
 		"init",        // Test the init cmd
