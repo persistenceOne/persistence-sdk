@@ -227,4 +227,4 @@ require (
 replace github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 
 // use persistence's forks with LSM implemented
-replace github.com/cosmos/cosmos-sdk => github.com/persistenceOne/cosmos-sdk v0.50.14-lsm
+replace github.com/cosmos/cosmos-sdk => github.com/persistenceOne/cosmos-sdk v0.50.14-lsm-disabled
