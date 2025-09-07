@@ -8,7 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/gogoproto/proto"
 
-	"github.com/persistenceOne/persistence-sdk/v4/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v5/x/epochs/types"
 )
 
 // GetEpochInfo returns epoch info by identifier.

@@ -31,8 +31,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/persistenceOne/persistence-sdk/v4/simapp"
-	"github.com/persistenceOne/persistence-sdk/v4/simapp/params"
+	"github.com/persistenceOne/persistence-sdk/v5/simapp"
+	"github.com/persistenceOne/persistence-sdk/v5/simapp/params"
 )
 
 // NewRootCmd creates a new root command for simd. It is called once in the

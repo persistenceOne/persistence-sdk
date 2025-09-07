@@ -14,8 +14,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	epochskeeper "github.com/persistenceOne/persistence-sdk/v4/x/epochs/keeper"
-	"github.com/persistenceOne/persistence-sdk/v4/x/epochs/types"
+	epochskeeper "github.com/persistenceOne/persistence-sdk/v5/x/epochs/keeper"
+	"github.com/persistenceOne/persistence-sdk/v5/x/epochs/types"
 )
 
 type QueryTestSuite struct {
