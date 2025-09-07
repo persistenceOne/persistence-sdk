@@ -3,9 +3,9 @@ package simapp
 import (
 	"github.com/cosmos/cosmos-sdk/std"
 
-	"github.com/persistenceOne/persistence-sdk/v4/simapp/params"
-	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v4/x/interchainquery/types"
-	oracletypes "github.com/persistenceOne/persistence-sdk/v4/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v5/simapp/params"
+	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v5/x/interchainquery/types"
+	oracletypes "github.com/persistenceOne/persistence-sdk/v5/x/oracle/types"
 )
 
 // MakeTestEncodingConfig creates an EncodingConfig for testing. This function

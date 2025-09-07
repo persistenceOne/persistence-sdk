@@ -26,9 +26,9 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
-	"github.com/persistenceOne/persistence-sdk/v4/x/epochs/client/cli"
-	"github.com/persistenceOne/persistence-sdk/v4/x/epochs/keeper"
-	"github.com/persistenceOne/persistence-sdk/v4/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v5/x/epochs/client/cli"
+	"github.com/persistenceOne/persistence-sdk/v5/x/epochs/keeper"
+	"github.com/persistenceOne/persistence-sdk/v5/x/epochs/types"
 )
 
 var (

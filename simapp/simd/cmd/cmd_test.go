@@ -10,8 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	"github.com/stretchr/testify/require"
 
-	"github.com/persistenceOne/persistence-sdk/v4/simapp"
-	"github.com/persistenceOne/persistence-sdk/v4/simapp/simd/cmd"
+	"github.com/persistenceOne/persistence-sdk/v5/simapp"
+	"github.com/persistenceOne/persistence-sdk/v5/simapp/simd/cmd"
 )
 
 func SetBech32Config() {

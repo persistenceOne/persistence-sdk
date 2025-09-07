@@ -12,7 +12,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
 
-	"github.com/persistenceOne/persistence-sdk/v4/x/halving/types"
+	"github.com/persistenceOne/persistence-sdk/v5/x/halving/types"
 )
 
 // GetQueryCmd returns the cli query commands for the halving module.

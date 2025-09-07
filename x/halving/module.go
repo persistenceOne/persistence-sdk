@@ -20,10 +20,10 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
-	"github.com/persistenceOne/persistence-sdk/v4/x/halving/client/cli"
-	"github.com/persistenceOne/persistence-sdk/v4/x/halving/keeper"
-	"github.com/persistenceOne/persistence-sdk/v4/x/halving/simulation"
-	"github.com/persistenceOne/persistence-sdk/v4/x/halving/types"
+	"github.com/persistenceOne/persistence-sdk/v5/x/halving/client/cli"
+	"github.com/persistenceOne/persistence-sdk/v5/x/halving/keeper"
+	"github.com/persistenceOne/persistence-sdk/v5/x/halving/simulation"
+	"github.com/persistenceOne/persistence-sdk/v5/x/halving/types"
 )
 
 var (

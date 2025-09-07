@@ -10,7 +10,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/stretchr/testify/require"
 
-	"github.com/persistenceOne/persistence-sdk/v4/simapp"
+	"github.com/persistenceOne/persistence-sdk/v5/simapp"
 )
 
 func TestSimGenesisAccountValidate(t *testing.T) {
