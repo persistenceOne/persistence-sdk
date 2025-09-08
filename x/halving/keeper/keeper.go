@@ -83,7 +83,10 @@ func (k Keeper) UpdateParams(ctx sdk.Context, authority string, params types.Par
 		return fmt.Errorf("unauthorized: authority %s is not the module authority", authority)
 	}
 
-	k.SetParams(ctx, params)
+	err := k.SetParams(ctx, params)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
