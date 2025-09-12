@@ -39,6 +39,7 @@ var (
 	_ module.HasConsensusVersion = AppModule{}
 	_ module.HasGenesis          = AppModule{}
 	_ module.HasServices         = AppModule{}
+	_ appmodule.HasBeginBlocker  = AppModule{}
 )
 
 // ----------------------------------------------------------------------------
@@ -142,8 +143,10 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
-func (am AppModule) BeginBlock(ctx sdk.Context) {
-	am.keeper.BeginBlocker(ctx)
+func (am AppModule) BeginBlock(ctx context.Context) error {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	am.keeper.BeginBlocker(sdkCtx)
+	return nil
 }
 
 // IsOnePerModuleType implements the depinject.OnePerModuleType interface.
