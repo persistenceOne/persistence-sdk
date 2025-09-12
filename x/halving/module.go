@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"cosmossdk.io/core/appmodule"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -30,6 +31,7 @@ var (
 	_ module.AppModuleBasic      = AppModuleBasic{}
 	_ module.AppModule           = AppModule{}
 	_ module.AppModuleSimulation = AppModule{}
+	_ appmodule.HasEndBlocker    = AppModule{}
 )
 
 // AppModuleBasic defines the basic application module used by the halving module.
@@ -149,9 +151,9 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 
 // EndBlock returns the end blocker for the halving module. It returns no validator
 // updates.
-func (am AppModule) EndBlock(ctx context.Context) ([]abci.ValidatorUpdate, error) {
+func (am AppModule) EndBlock(ctx context.Context) error {
 	EndBlocker(sdk.UnwrapSDKContext(ctx), am.keeper)
-	return []abci.ValidatorUpdate{}, nil
+	return nil
 }
 
 // ____________________________________________________________________________
