@@ -2,6 +2,8 @@ package simapp
 
 import (
 	"github.com/cosmos/cosmos-sdk/std"
+	"github.com/persistenceOne/persistence-sdk/v5/x/lsm/distribution"
+	"github.com/persistenceOne/persistence-sdk/v5/x/lsm/staking"
 
 	"github.com/persistenceOne/persistence-sdk/v5/simapp/params"
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v5/x/interchainquery/types"
@@ -25,6 +27,12 @@ func MakeTestEncodingConfig() params.EncodingConfig {
 	interchainquerytypes.RegisterInterfaces(encodingConfig.InterfaceRegistry)
 	oracletypes.RegisterLegacyAminoCodec(encodingConfig.Amino)
 	oracletypes.RegisterInterfaces(encodingConfig.InterfaceRegistry)
+
+	//for parsing lsm msgs
+	distribution.RegisterLegacyAminoCodec(encodingConfig.Amino)
+	distribution.RegisterInterfaces(encodingConfig.InterfaceRegistry)
+	staking.RegisterLegacyAminoCodec(encodingConfig.Amino)
+	staking.RegisterInterfaces(encodingConfig.InterfaceRegistry)
 
 	return encodingConfig
 }

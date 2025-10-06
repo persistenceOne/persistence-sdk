@@ -1,0 +1,54 @@
+syntax = "proto3";
+package cosmos.distribution.v1beta1;
+
+option go_package            = "github.com/persistenceOne/persistence-sdk/v5/x/lsm/distribution";
+option (gogoproto.equal_all) = true;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
+import "cosmos/msg/v1/msg.proto";
+import "amino/amino.proto";
+
+// Msg defines the distribution Msg service.
+service Msg_Lsm {
+  option (cosmos.msg.v1.service) = true;
+
+  // WithdrawTokenizeShareRecordReward defines a method to withdraw reward for an owning TokenizeShareRecord
+  rpc WithdrawTokenizeShareRecordReward(MsgWithdrawTokenizeShareRecordReward)
+      returns (MsgWithdrawTokenizeShareRecordRewardResponse);
+
+  // WithdrawAllTokenizeShareRecordReward defines a method to withdraw reward for all owning TokenizeShareRecord
+  rpc WithdrawAllTokenizeShareRecordReward(MsgWithdrawAllTokenizeShareRecordReward)
+      returns (MsgWithdrawAllTokenizeShareRecordRewardResponse);
+}
+
+// MsgWithdrawTokenizeShareRecordReward withdraws tokenize share rewards for a specific record
+message MsgWithdrawTokenizeShareRecordReward {
+  option (cosmos.msg.v1.signer) = "owner_address";
+  option (amino.name)           = "cosmos-sdk/distr/MsgWithdrawTokenizeShareRecordReward";
+
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string owner_address = 1 [(gogoproto.moretags) = "yaml:\"owner_address\""];
+  uint64 record_id     = 2;
+}
+
+// MsgWithdrawTokenizeShareRecordReward defines the Msg/WithdrawTokenizeShareRecordReward response type.
+message MsgWithdrawTokenizeShareRecordRewardResponse {}
+
+// MsgWithdrawAllTokenizeShareRecordReward withdraws tokenize share rewards or all
+// records owned by the designated owner
+message MsgWithdrawAllTokenizeShareRecordReward {
+  option (cosmos.msg.v1.signer) = "owner_address";
+  option (amino.name)           = "cosmos-sdk/distr/MsgWithdrawAllTokenizeShareRecordReward";
+
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string owner_address = 1 [(gogoproto.moretags) = "yaml:\"owner_address\""];
+}
+
+// MsgWithdrawAllTokenizeShareRecordRewardResponse defines the Msg/WithdrawTokenizeShareRecordReward response type.
+message MsgWithdrawAllTokenizeShareRecordRewardResponse {}
