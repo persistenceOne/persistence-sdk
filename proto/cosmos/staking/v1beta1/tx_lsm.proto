@@ -13,7 +13,7 @@ import "amino/amino.proto";
 option go_package = "github.com/persistenceOne/persistence-sdk/v5/x/lsm/staking";
 
 // Msg defines the staking Msg service.
-service Msg {
+service Msg_Lsm {
   option (cosmos.msg.v1.service) = true;
 
   // UnbondValidator defines a method for performing the status transition for a validator

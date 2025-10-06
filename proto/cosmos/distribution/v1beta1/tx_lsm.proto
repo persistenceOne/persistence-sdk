@@ -11,7 +11,7 @@ import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
 
 // Msg defines the distribution Msg service.
-service Msg {
+service Msg_Lsm {
   option (cosmos.msg.v1.service) = true;
 
   // WithdrawTokenizeShareRecordReward defines a method to withdraw reward for an owning TokenizeShareRecord

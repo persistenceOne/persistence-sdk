@@ -32,5 +32,5 @@ func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 		&MsgValidatorBond{},
 	)
 
-	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
+	msgservice.RegisterMsgServiceDesc(registry, &_Msg_Lsm_serviceDesc)
 }

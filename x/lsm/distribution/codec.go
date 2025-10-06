@@ -21,5 +21,5 @@ func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 		&MsgWithdrawAllTokenizeShareRecordReward{},
 	)
 
-	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
+	msgservice.RegisterMsgServiceDesc(registry, &_Msg_Lsm_serviceDesc)
 }
