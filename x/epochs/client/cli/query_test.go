@@ -83,7 +83,6 @@ func (s *QueryTestSuite) TestQueriesNeverAlterState() {
 	}
 
 	for _, tc := range testCases {
-		tc := tc
 
 		s.Run(tc.name, func() {
 			s.SetupSuite()
