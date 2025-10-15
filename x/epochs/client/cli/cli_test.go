@@ -58,7 +58,6 @@ func (s *IntegrationTestSuite) TestGetCmdCurrentEpoch() {
 	}
 
 	for _, tc := range testCases {
-		tc := tc
 
 		s.Run(tc.name, func() {
 			cmd := cli.GetCmdCurrentEpoch()
@@ -94,7 +93,6 @@ func (s *IntegrationTestSuite) TestGetCmdEpochsInfos() {
 	}
 
 	for _, tc := range testCases {
-		tc := tc
 
 		s.Run(tc.name, func() {
 			cmd := cli.GetCmdCurrentEpoch()
