@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
 
-option go_package = "github.com/persistenceOne/persistence-sdk/v5/x/oracle/types";
+option go_package = "github.com/persistenceOne/persistence-sdk/v6/x/oracle/types";
 
 // Msg defines the oracle Msg service.
 service Msg {

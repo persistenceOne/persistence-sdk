@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/persistenceOne/persistence-sdk/v5/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v6/x/epochs/types"
 )
 
 func TestEpochsExportGenesis(t *testing.T) {

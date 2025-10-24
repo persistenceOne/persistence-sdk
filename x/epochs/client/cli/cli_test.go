@@ -6,9 +6,9 @@ import (
 	"github.com/cosmos/gogoproto/proto"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/persistenceOne/persistence-sdk/v5/simapp"
-	"github.com/persistenceOne/persistence-sdk/v5/x/epochs/client/cli"
-	"github.com/persistenceOne/persistence-sdk/v5/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v6/simapp"
+	"github.com/persistenceOne/persistence-sdk/v6/x/epochs/client/cli"
+	"github.com/persistenceOne/persistence-sdk/v6/x/epochs/types"
 )
 
 type IntegrationTestSuite struct {

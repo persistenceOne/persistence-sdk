@@ -18,7 +18,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 
-	"github.com/persistenceOne/persistence-sdk/v5/simapp"
+	"github.com/persistenceOne/persistence-sdk/v6/simapp"
 )
 
 func Test_TestnetCmd(t *testing.T) {
