@@ -385,6 +385,7 @@ func _Msg_Lsm_WithdrawAllTokenizeShareRecordReward_Handler(srv interface{}, ctx 
 	return interceptor(ctx, in, info, handler)
 }
 
+var Msg_Lsm_serviceDesc = _Msg_Lsm_serviceDesc
 var _Msg_Lsm_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "cosmos.distribution.v1beta1.Msg_Lsm",
 	HandlerType: (*Msg_LsmServer)(nil),

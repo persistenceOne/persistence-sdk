@@ -977,6 +977,7 @@ func _Msg_Lsm_ValidatorBond_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+var Msg_Lsm_serviceDesc = _Msg_Lsm_serviceDesc
 var _Msg_Lsm_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "cosmos.staking.v1beta1.Msg_Lsm",
 	HandlerType: (*Msg_LsmServer)(nil),

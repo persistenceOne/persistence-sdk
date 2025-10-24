@@ -1,11 +1,11 @@
 version: v1
 name: buf.build/persistence/persistence-sdk
 deps:
-  - buf.build/persistence/cosmos-sdk-lsm:v0.50.14-lsm
+  - buf.build/cosmos/cosmos-sdk:v0.53.4
   - buf.build/cosmos/cosmos-proto
   - buf.build/cosmos/gogo-proto
   - buf.build/googleapis/googleapis
-  - buf.build/cosmos/ibc:v10.1.1
+  - buf.build/cosmos/ibc:v10.4.0
 build:
   excludes:
     - buf.build/cosmos/cosmos-sdk

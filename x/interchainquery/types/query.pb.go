@@ -347,6 +347,7 @@ func _QuerySrvr_Queries_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+var QuerySrvr_serviceDesc = _QuerySrvr_serviceDesc
 var _QuerySrvr_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "persistence.interchainquery.v1beta1.QuerySrvr",
 	HandlerType: (*QuerySrvrServer)(nil),
