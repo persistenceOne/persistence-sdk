@@ -14,7 +14,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 
-	"github.com/persistenceOne/persistence-sdk/v5/x/halving/types"
+	"github.com/persistenceOne/persistence-sdk/v6/x/halving/types"
 )
 
 func EndBlocker(ctx sdk.Context, k Keeper) {

@@ -36,8 +36,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 
-	epochs "github.com/persistenceOne/persistence-sdk/v5/x/epochs"
-	"github.com/persistenceOne/persistence-sdk/v5/x/halving"
+	epochs "github.com/persistenceOne/persistence-sdk/v6/x/epochs"
+	"github.com/persistenceOne/persistence-sdk/v6/x/halving"
 )
 
 func TestSimAppExportAndBlockedAddrs(t *testing.T) {
