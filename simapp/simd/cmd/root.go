@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"github.com/cosmos/cosmos-sdk/types/module"
 	"io"
 	"os"
 
@@ -23,6 +22,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/server"
 	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -79,6 +79,17 @@ func NewRootCmd() *cobra.Command {
 	}
 
 	initRootCmd(rootCmd, encodingConfig)
+
+	// wire autocli
+	tempDir := tempDir()
+	tempApp := simapp.NewSimApp(log.NewNopLogger(), cosmosdb.NewMemDB(), nil, true, simtestutil.NewAppOptionsWithFlagHome(tempDir))
+	// refresh client ctx from config to ensure RPC client is set
+	initClientCtx, _ = config.ReadFromClientConfig(initClientCtx)
+	autoCliOpts := tempApp.AutoCliOpts()
+	autoCliOpts.ClientCtx = initClientCtx
+	if err := autoCliOpts.EnhanceRootCommand(rootCmd); err != nil {
+		panic(err)
+	}
 
 	return rootCmd
 }
@@ -172,8 +183,8 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 
 	// add keybase, auxiliary RPC, query, genesis, and tx child commands
 	rootCmd.AddCommand(
-		queryCommand(tempapp.BasicManager),
-		txCommand(tempapp.BasicManager),
+		queryCommand(),
+		txCommand(),
 		keys.Commands(),
 	)
 
@@ -185,7 +196,7 @@ func addModuleInitFlags(startCmd *cobra.Command) {
 	crisis.AddModuleInitFlags(startCmd)
 }
 
-func queryCommand(bm module.BasicManager) *cobra.Command {
+func queryCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "query",
 		Aliases:                    []string{"q"},
@@ -204,11 +215,10 @@ func queryCommand(bm module.BasicManager) *cobra.Command {
 		server.QueryBlockResultsCmd(),
 	)
 
-	bm.AddQueryCommands(cmd)
 	return cmd
 }
 
-func txCommand(bm module.BasicManager) *cobra.Command {
+func txCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "tx",
 		Short:                      "Transactions subcommands",
@@ -229,7 +239,6 @@ func txCommand(bm module.BasicManager) *cobra.Command {
 		authcmd.GetSimulateCmd(),
 	)
 
-	bm.AddTxCommands(cmd)
 	return cmd
 }
 
@@ -289,4 +298,14 @@ func appExport(
 	}
 
 	return simApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
+}
+
+// tempDir create a temporary directory to initialize the command line client
+func tempDir() string {
+	dir, err := os.MkdirTemp("", "simapp")
+	if err != nil {
+		panic("failed to create temp dir: " + err.Error())
+	}
+
+	return dir
 }
