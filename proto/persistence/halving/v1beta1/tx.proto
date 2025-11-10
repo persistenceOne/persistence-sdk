@@ -32,5 +32,7 @@ message MsgUpdateParamsResponse {}
 
 // Msg defines the halving Msg service.
 service Msg {
+  option (cosmos.msg.v1.service) = true;
+
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
 } 
