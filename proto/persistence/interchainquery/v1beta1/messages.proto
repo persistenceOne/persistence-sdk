@@ -4,12 +4,14 @@ package persistence.interchainquery.v1beta1;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "tendermint/crypto/proof.proto";
+import "cosmos/msg/v1/msg.proto";
 
 option go_package = "github.com/persistenceOne/persistence-sdk/v6/x/interchainquery/types";
 
 // Msg defines the interchainquery Msg service.
 service Msg {
   option deprecated = true;
+  option (cosmos.msg.v1.service) = true;
 
   // SubmitQueryResponse defines a method for submit query responses.
   rpc SubmitQueryResponse(MsgSubmitQueryResponse)
