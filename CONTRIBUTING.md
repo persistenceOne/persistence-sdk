@@ -54,10 +54,7 @@ When proposing an architecture decision for the Persistence SDK, please start by
 an [issue](https://github.com/persistenceOne/persistence-sdk/issues/new/choose) or
 a [discussion](https://github.com/persistenceOne/persistence-sdk/discussions/new) with a summary of the proposal. Once
 the proposal has been discussed and there is rough alignment on a high-level approach to the design,
-the [ADR creation process](hhttps://github.com/persistenceOne/assetMantle/blob/puneet2019/adr/docs/adr/PROCESS.md) can
-begin. We are following this process to ensure all involved parties are in agreement before any party begins coding the
-proposed implementation. If you would like to see examples of how these are written, please refer to the
-current [ADRs](https://github.com/persistenceOne/assetMantle/tree/puneet2019/adr/docs/adr).
+the ADR creation process can begin. We are following this process to ensure all involved parties are in agreement before any party begins coding the proposed implementation.
 
 ## Development Procedure
 
@@ -256,7 +253,7 @@ distinct stages: **Strategy Discovery**, **Concept Approval**, and
 
 * Architecture Decision Records (ADRs) may be proposed by any contributors or maintainers of the Persistence SDK, and
   should follow the guidelines outlined in the
-  [ADR Creation Process](https://github.com/persistenceOne/persistence-sdk/blob/master/docs/architecture/PROCESS.md)
+  ADR Creation Process
 * After proposal, a time bound period for Request for Comment (RFC) on ADRs commences
 * ADRs are intended to be iterative, and may be merged into `master` while still in a `Proposed` status
 
