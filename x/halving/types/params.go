@@ -60,7 +60,7 @@ func (p *Params) ParamSetPairs() paramsTypes.ParamSetPairs {
 	}
 }
 
-func validateBlockHeight(i interface{}) error {
+func validateBlockHeight(i any) error {
 	_, ok := i.(uint64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)

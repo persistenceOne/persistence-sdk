@@ -65,8 +65,8 @@ func (s *QueryTestSuite) TestQueriesNeverAlterState() {
 	testCases := []struct {
 		name   string
 		query  string
-		input  interface{}
-		output interface{}
+		input  any
+		output any
 	}{
 		{
 			"Query current epoch",
