@@ -6,7 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/query/v1/query.proto";
 import "pob/builder/v1/genesis.proto";
 
-option go_package = "github.com/persistenceOne/persistence-sdk/v6/x/pob/types";
+option go_package = "github.com/persistenceOne/persistence-sdk/v7/x/pob/types";
 
 // Query defines the x/builder querier service.
 service Query {

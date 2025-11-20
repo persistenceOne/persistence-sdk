@@ -1,4 +1,4 @@
-module github.com/persistenceOne/persistence-sdk/v6
+module github.com/persistenceOne/persistence-sdk/v7
 
 go 1.23.11
 

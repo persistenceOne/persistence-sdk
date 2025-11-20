@@ -36,7 +36,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
-	"github.com/persistenceOne/persistence-sdk/v6/simapp"
+	"github.com/persistenceOne/persistence-sdk/v7/simapp"
 )
 
 var (

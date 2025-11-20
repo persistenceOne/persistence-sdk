@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/exp/maps"
 
-	"github.com/persistenceOne/persistence-sdk/v6/utils"
-	"github.com/persistenceOne/persistence-sdk/v6/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v7/utils"
+	"github.com/persistenceOne/persistence-sdk/v7/x/epochs/types"
 )
 
 // This test is responsible for testing how epochs increment based off

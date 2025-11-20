@@ -6,8 +6,8 @@
 package halving
 
 import (
-	"github.com/persistenceOne/persistence-sdk/v6/x/halving/keeper"
-	"github.com/persistenceOne/persistence-sdk/v6/x/halving/types"
+	"github.com/persistenceOne/persistence-sdk/v7/x/halving/keeper"
+	"github.com/persistenceOne/persistence-sdk/v7/x/halving/types"
 )
 
 const (
