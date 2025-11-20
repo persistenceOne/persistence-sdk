@@ -10,7 +10,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/persistenceOne/persistence-sdk/v6/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v7/x/epochs/types"
 )
 
 type KeeperTestSuite struct {

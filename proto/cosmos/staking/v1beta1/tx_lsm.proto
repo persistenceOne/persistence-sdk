@@ -10,7 +10,7 @@ import "cosmos/base/v1beta1/coin.proto";
 import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
 
-option go_package = "github.com/persistenceOne/persistence-sdk/v6/x/lsm/staking";
+option go_package = "github.com/persistenceOne/persistence-sdk/v7/x/lsm/staking";
 
 // Msg defines the staking Msg service.
 service Msg_Lsm {

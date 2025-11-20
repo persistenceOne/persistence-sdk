@@ -2,12 +2,12 @@ package simapp
 
 import (
 	"github.com/cosmos/cosmos-sdk/std"
-	"github.com/persistenceOne/persistence-sdk/v6/x/lsm/distribution"
-	"github.com/persistenceOne/persistence-sdk/v6/x/lsm/staking"
+	"github.com/persistenceOne/persistence-sdk/v7/x/lsm/distribution"
+	"github.com/persistenceOne/persistence-sdk/v7/x/lsm/staking"
 
-	"github.com/persistenceOne/persistence-sdk/v6/simapp/params"
-	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v6/x/interchainquery/types"
-	oracletypes "github.com/persistenceOne/persistence-sdk/v6/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v7/simapp/params"
+	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v7/x/interchainquery/types"
+	oracletypes "github.com/persistenceOne/persistence-sdk/v7/x/oracle/types"
 )
 
 // MakeTestEncodingConfig creates an EncodingConfig for testing. This function

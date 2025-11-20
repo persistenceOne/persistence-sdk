@@ -100,12 +100,12 @@ import (
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
 
-	"github.com/persistenceOne/persistence-sdk/v6/x/epochs"
-	epochskeeper "github.com/persistenceOne/persistence-sdk/v6/x/epochs/keeper"
-	epochstypes "github.com/persistenceOne/persistence-sdk/v6/x/epochs/types"
-	"github.com/persistenceOne/persistence-sdk/v6/x/halving"
-	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v6/x/interchainquery/types"
-	oracletypes "github.com/persistenceOne/persistence-sdk/v6/x/oracle/types"
+	"github.com/persistenceOne/persistence-sdk/v7/x/epochs"
+	epochskeeper "github.com/persistenceOne/persistence-sdk/v7/x/epochs/keeper"
+	epochstypes "github.com/persistenceOne/persistence-sdk/v7/x/epochs/types"
+	"github.com/persistenceOne/persistence-sdk/v7/x/halving"
+	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v7/x/interchainquery/types"
+	oracletypes "github.com/persistenceOne/persistence-sdk/v7/x/oracle/types"
 )
 
 const appName = "SimApp"
