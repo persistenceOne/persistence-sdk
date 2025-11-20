@@ -36,7 +36,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	epochs "github.com/persistenceOne/persistence-sdk/v7/x/epochs"
 	"github.com/persistenceOne/persistence-sdk/v7/x/halving"
 )
 
@@ -205,7 +204,6 @@ func TestRunMigrations(t *testing.T) {
 					"crisis":       crisis.AppModule{}.ConsensusVersion(),
 					"genutil":      genutil.AppModule{}.ConsensusVersion(),
 
-					"epochs":  epochs.AppModule{}.ConsensusVersion(),
 					"halving": halving.AppModule{}.ConsensusVersion(),
 					"ibc":     ibc.AppModule{}.ConsensusVersion(),
 				},
@@ -260,7 +258,6 @@ func TestInitGenesisOnMigration(t *testing.T) {
 			"genutil":      genutil.AppModule{}.ConsensusVersion(),
 
 			"ibc":     ibc.AppModule{}.ConsensusVersion(),
-			"epochs":  epochs.AppModule{}.ConsensusVersion(),
 			"halving": halving.AppModule{}.ConsensusVersion(),
 		},
 	)
