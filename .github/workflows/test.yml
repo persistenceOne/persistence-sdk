@@ -35,6 +35,8 @@ jobs:
           excludelist+=" $(find ./ -type f -path './tests/*.go')"
           excludelist+=" $(find ./ -type f -path './x/interchainquery/*')"
           excludelist+=" $(find ./ -type f -path './x/oracle/*')"
+          excludelist+=" $(find ./ -type f -path './x/lsm/*')"
+          excludelist+=" $(find ./ -type f -path './x/pob/*')"
           for filename in ${excludelist}; do
             filename=$(echo $filename | sed 's/^.\///g')
             echo "Excluding ${filename} from coverage report..."
