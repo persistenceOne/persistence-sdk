@@ -15,22 +15,6 @@ ifeq ($(GO),)
   $(error could not find go. Is it in PATH? $(GO))
 endif
 
-###############################################################################
-###                                Functions                                ###
-###############################################################################
-
-go_get = $(if $(findstring Windows_NT,$(OS)),\
-IF NOT EXIST $(GITHUBDIR)$(FS)$(1)$(FS) ( mkdir $(GITHUBDIR)$(FS)$(1) ) else (cd .) &\
-IF NOT EXIST $(GITHUBDIR)$(FS)$(1)$(FS)$(2)$(FS) ( cd $(GITHUBDIR)$(FS)$(1) && git clone https://github.com/$(1)/$(2) ) else (cd .) &\
-,\
-mkdir -p $(GITHUBDIR)$(FS)$(1) &&\
-(test ! -d $(GITHUBDIR)$(FS)$(1)$(FS)$(2) && cd $(GITHUBDIR)$(FS)$(1) && git clone https://github.com/$(1)/$(2)) || true &&\
-)\
-cd $(GITHUBDIR)$(FS)$(1)$(FS)$(2) && git fetch origin && git checkout -q $(3)
-
-mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-mkfile_dir := $(shell cd $(shell dirname $(mkfile_path)); pwd)
-
 
 ###############################################################################
 ###                                 Tools                                   ###
@@ -48,10 +32,9 @@ BUF_VERSION ?= 0.11.0
 
 TOOLS_DESTDIR  ?= $(GOPATH)/bin
 STATIK         = $(TOOLS_DESTDIR)/statik
-RUNSIM         = $(TOOLS_DESTDIR)/runsim
 
 tools: tools-stamp
-tools-stamp: statik runsim
+tools-stamp: statik
 	# Create dummy file to satisfy dependency and avoid
 	# rebuilding when this Makefile target is hit twice
 	# in a row.
@@ -76,13 +59,9 @@ $(STATIK):
 #
 # ref: https://github.com/golang/go/issues/30515
 # runsim is used for running up simulation tests on different threads.
-runsim: $(RUNSIM)
-$(RUNSIM):
-	@echo "Installing runsim..."
-	@(cd /tmp && go install github.com/cosmos/tools/cmd/runsim@v1.0.0)
 
 tools-clean:
 	rm -f $(STATIK) $(GOLANGCI_LINT) $(RUNSIM)
 	rm -f tools-stamp
 
-.PHONY: tools-clean statik runsim
+.PHONY: tools-clean statik
