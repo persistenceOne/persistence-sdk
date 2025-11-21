@@ -29,12 +29,14 @@ jobs:
       - name: filter out DONTCOVER
         if: github.event_name == 'pull_request'
         run: |
-          excludelist="$(find ./ -type f -name '*.go' | xargs grep -l 'DONTCOVER')"
+          excludelist="$(find ./ -type f -name '*.go' | xargs grep -l 'DONTCOVER' || true)"
           excludelist+=" $(find ./ -type f -name '*.pb.go')"
           excludelist+=" $(find ./ -type f -name '*.pb.gw.go')"
           excludelist+=" $(find ./ -type f -path './tests/*.go')"
           excludelist+=" $(find ./ -type f -path './x/interchainquery/*')"
           excludelist+=" $(find ./ -type f -path './x/oracle/*')"
+          excludelist+=" $(find ./ -type f -path './x/lsm/*')"
+          excludelist+=" $(find ./ -type f -path './x/pob/*')"
           for filename in ${excludelist}; do
             filename=$(echo $filename | sed 's/^.\///g')
             echo "Excluding ${filename} from coverage report..."

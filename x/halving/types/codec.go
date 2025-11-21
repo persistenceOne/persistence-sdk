@@ -22,7 +22,7 @@ var (
 	//
 	// The actual codec used for serialization should be provided to x/halving and
 	// defined at the application level.
-	ModuleCdc = codec.NewAminoCodec(amino)
+	ModuleCdc = amino
 )
 
 func init() {
