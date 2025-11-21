@@ -26,20 +26,7 @@ func (s *KeeperTestHelper) Setup() {
 		GRPCQueryRouter: s.App.GRPCQueryRouter(),
 		Ctx:             s.Ctx,
 	}
-
-	s.SetEpochStartTime()
 	s.TestAccs = CreateRandomAccounts(3)
-}
-
-func (s *KeeperTestHelper) SetEpochStartTime() {
-	epochsKeeper := s.App.EpochsKeeper
-
-	for _, epoch := range epochsKeeper.AllEpochInfos(s.Ctx) {
-		epoch.StartTime = s.Ctx.BlockTime()
-		epochsKeeper.DeleteEpochInfo(s.Ctx, epoch.Identifier)
-		err := epochsKeeper.AddEpochInfo(s.Ctx, epoch)
-		s.Require().NoError(err)
-	}
 }
 
 // CreateRandomAccounts is a function return a list of randomly generated AccAddresses

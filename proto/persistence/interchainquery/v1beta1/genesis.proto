@@ -46,7 +46,7 @@ message DataPoint {
   bytes value = 4 [ (gogoproto.jsontag) = "result,omitempty" ];
 }
 
-// GenesisState defines the epochs module's genesis state.
+// GenesisState defines the icq module's genesis state.
 message GenesisState {
   option deprecated = true;
 

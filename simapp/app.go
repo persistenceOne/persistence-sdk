@@ -97,15 +97,11 @@ import (
 	ibctm "github.com/cosmos/ibc-go/v10/modules/light-clients/07-tendermint"
 	"github.com/gorilla/mux"
 
-	"github.com/rakyll/statik/fs"
-	"github.com/spf13/cast"
-
-	"github.com/persistenceOne/persistence-sdk/v7/x/epochs"
-	epochskeeper "github.com/persistenceOne/persistence-sdk/v7/x/epochs/keeper"
-	epochstypes "github.com/persistenceOne/persistence-sdk/v7/x/epochs/types"
 	"github.com/persistenceOne/persistence-sdk/v7/x/halving"
 	interchainquerytypes "github.com/persistenceOne/persistence-sdk/v7/x/interchainquery/types"
 	oracletypes "github.com/persistenceOne/persistence-sdk/v7/x/oracle/types"
+	"github.com/rakyll/statik/fs"
+	"github.com/spf13/cast"
 )
 
 const appName = "SimApp"
@@ -144,10 +140,7 @@ var (
 		consensus.AppModuleBasic{},
 		ibc.AppModuleBasic{},
 		ibctm.AppModuleBasic{},
-		epochs.AppModuleBasic{},
 		halving.AppModuleBasic{},
-		// interchainquery.AppModuleBasic{}, // Removed - codec registration moved to encoding config
-		// oracle.AppModuleBasic{}, // Removed - codec registration moved to encoding config
 	)
 
 	// module account permissions
@@ -198,7 +191,6 @@ type SimApp struct {
 	GroupKeeper           groupkeeper.Keeper
 	ConsensusParamsKeeper consensusparamskeeper.Keeper
 	IBCKeeper             *ibckeeper.Keeper
-	EpochsKeeper          *epochskeeper.Keeper
 	HalvingKeeper         halving.Keeper
 
 	// the module manager
@@ -274,7 +266,7 @@ func NewSimApp(
 		slashingtypes.StoreKey, govtypes.StoreKey, paramstypes.StoreKey,
 		upgradetypes.StoreKey, feegrant.StoreKey, group.StoreKey,
 		evidencetypes.StoreKey, authzkeeper.StoreKey,
-		consensusparamstypes.StoreKey, ibcexported.StoreKey, epochstypes.StoreKey,
+		consensusparamstypes.StoreKey, ibcexported.StoreKey,
 		halving.StoreKey,
 	)
 	tkeys := storetypes.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -369,9 +361,6 @@ func NewSimApp(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		addresscodec.NewBech32Codec(Bech32Prefix),
 	)
-
-	app.EpochsKeeper = epochskeeper.NewKeeper(keys[epochstypes.StoreKey])
-	app.EpochsKeeper.SetHooks(epochstypes.NewMultiEpochHooks())
 
 	app.FeeGrantKeeper = feegrantkeeper.NewKeeper(
 		appCodec,
@@ -500,7 +489,6 @@ func NewSimApp(
 		groupmodule.NewAppModule(appCodec, app.GroupKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
-		epochs.NewAppModule(*app.EpochsKeeper),
 		halving.NewAppModule(appCodec, app.HalvingKeeper),
 	)
 	app.BasicManager = newBasicManagerFromManager(app)
@@ -516,7 +504,7 @@ func NewSimApp(
 		authtypes.ModuleName, banktypes.ModuleName, govtypes.ModuleName, crisistypes.ModuleName, genutiltypes.ModuleName,
 		authz.ModuleName, feegrant.ModuleName, group.ModuleName, ibcexported.ModuleName,
 		paramstypes.ModuleName, vestingtypes.ModuleName, consensusparamstypes.ModuleName,
-		epochstypes.ModuleName, halving.ModuleName,
+		halving.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
 		crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName,
@@ -525,7 +513,7 @@ func NewSimApp(
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
 		feegrant.ModuleName, group.ModuleName, ibcexported.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, consensusparamstypes.ModuleName,
-		epochstypes.ModuleName, halving.ModuleName,
+		halving.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -540,7 +528,7 @@ func NewSimApp(
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,
 		feegrant.ModuleName, group.ModuleName, ibcexported.ModuleName,
 		paramstypes.ModuleName, upgradetypes.ModuleName, vestingtypes.ModuleName, consensusparamstypes.ModuleName,
-		epochstypes.ModuleName, halving.ModuleName,
+		halving.ModuleName,
 	}
 	app.mm.SetOrderInitGenesis(genesisModuleOrder...)
 	app.mm.SetOrderExportGenesis(genesisModuleOrder...)
@@ -791,7 +779,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(govtypes.ModuleName)
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibcexported.ModuleName)
-	paramsKeeper.Subspace(epochstypes.ModuleName)
 	paramsKeeper.Subspace(interchainquerytypes.ModuleName)
 	paramsKeeper.Subspace(oracletypes.ModuleName)
 
