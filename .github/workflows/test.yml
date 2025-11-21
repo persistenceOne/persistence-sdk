@@ -29,7 +29,7 @@ jobs:
       - name: filter out DONTCOVER
         if: github.event_name == 'pull_request'
         run: |
-          excludelist="$(find ./ -type f -name '*.go' | xargs grep -l 'DONTCOVER')"
+          excludelist="$(find ./ -type f -name '*.go' | xargs grep -l 'DONTCOVER' || true)"
           excludelist+=" $(find ./ -type f -name '*.pb.go')"
           excludelist+=" $(find ./ -type f -name '*.pb.gw.go')"
           excludelist+=" $(find ./ -type f -path './tests/*.go')"
