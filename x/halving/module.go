@@ -104,9 +104,6 @@ func (AppModule) Name() string {
 	return types.ModuleName
 }
 
-// RegisterInvariants registers the halving module invariants.
-func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
-
 // ConsensusVersion returns the halving module's consensus version number.
 func (am AppModule) ConsensusVersion() uint64 {
 	return 1
