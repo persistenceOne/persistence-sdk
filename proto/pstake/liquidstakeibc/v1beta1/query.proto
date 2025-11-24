@@ -16,6 +16,8 @@ option go_package = "github.com/persistenceOne/persistence-sdk/v7/x/liquidstakei
 
 // Query defines the gRPC querier service.
 service Query {
+  option deprecated = true;
+
   // Queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/pstake/liquidstakeibc/v1beta1/params";
@@ -108,72 +110,120 @@ service Query {
   }
 }
 
-message QueryParamsRequest {}
+message QueryParamsRequest {
+  option deprecated = true;
+}
 
 message QueryParamsResponse {
+  option deprecated = true;
+
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryHostChainRequest { string chain_id = 1; }
+message QueryHostChainRequest {
+  option deprecated = true;
+  string chain_id = 1; }
 
 message QueryHostChainResponse {
+  option deprecated = true;
+
   HostChain host_chain = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryHostChainsRequest {}
+message QueryHostChainsRequest {
+  option deprecated = true;
+}
 
-message QueryHostChainsResponse { repeated HostChain host_chains = 1; }
+message QueryHostChainsResponse {
+  option deprecated = true;
+  repeated HostChain host_chains = 1; }
 
-message QueryDepositsRequest { string chain_id = 1; }
+message QueryDepositsRequest {
+  option deprecated = true;
+  string chain_id = 1; }
 
-message QueryDepositsResponse { repeated Deposit deposits = 1; }
+message QueryDepositsResponse {
+  option deprecated = true;
+  repeated Deposit deposits = 1; }
 
-message QueryLSMDepositsRequest { string chain_id = 1; }
+message QueryLSMDepositsRequest {
+  option deprecated = true;
+  string chain_id = 1; }
 
-message QueryLSMDepositsResponse { repeated LSMDeposit deposits = 1; }
+message QueryLSMDepositsResponse {
+  option deprecated = true;
+  repeated LSMDeposit deposits = 1; }
 
-message QueryUnbondingsRequest { string chain_id = 1; }
+message QueryUnbondingsRequest {
+  option deprecated = true;
+  string chain_id = 1; }
 
-message QueryUnbondingsResponse { repeated Unbonding unbondings = 1; }
+message QueryUnbondingsResponse {
+  option deprecated = true;
+  repeated Unbonding unbondings = 1; }
 
 message QueryUnbondingRequest {
+  option deprecated = true;
+
   string chain_id = 1;
   int64 epoch = 2;
 }
 
-message QueryUnbondingResponse { Unbonding unbonding = 1; }
+message QueryUnbondingResponse {
+  option deprecated = true;
+  Unbonding unbonding = 1; }
 
-message QueryUserUnbondingsRequest { string address = 1; }
+message QueryUserUnbondingsRequest {
+  option deprecated = true;
+  string address = 1; }
 
 message QueryUserUnbondingsResponse {
+  option deprecated = true;
+
   repeated UserUnbonding user_unbondings = 1;
 }
 
 message QueryHostChainUserUnbondingsRequest {
+  option deprecated = true;
+
   string chain_id = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryHostChainUserUnbondingsResponse {
+  option deprecated = true;
+
   repeated UserUnbonding user_unbondings = 1;
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryValidatorUnbondingRequest { string chain_id = 1; }
+message QueryValidatorUnbondingRequest {
+  option deprecated = true;
+  string chain_id = 1; }
 
 message QueryValidatorUnbondingResponse {
+  option deprecated = true;
+
   repeated ValidatorUnbonding validator_unbondings = 1;
 }
 
-message QueryDepositAccountBalanceRequest { string chain_id = 1; }
+message QueryDepositAccountBalanceRequest {
+  option deprecated = true;
+  string chain_id = 1; }
 
 message QueryDepositAccountBalanceResponse {
+  option deprecated = true;
+
   cosmos.base.v1beta1.Coin balance = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryExchangeRateRequest { string chain_id = 1; }
+message QueryExchangeRateRequest {
+  option deprecated = true;
+  string chain_id = 1; }
 
 message QueryExchangeRateResponse {
+  option deprecated = true;
+
   string rate = 1 [
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false,
@@ -181,14 +231,22 @@ message QueryExchangeRateResponse {
   ];
 }
 
-message QueryRedelegationsRequest { string chain_id = 1; }
+message QueryRedelegationsRequest {
+  option deprecated = true;
+  string chain_id = 1; }
 
 message QueryRedelegationsResponse {
+  option deprecated = true;
+
   liquidstakeibc.v1beta1.Redelegations redelegations = 1;
 }
 
-message QueryRedelegationTxRequest { string chain_id = 1; }
+message QueryRedelegationTxRequest {
+  option deprecated = true;
+  string chain_id = 1; }
 
 message QueryRedelegationTxResponse {
+  option deprecated = true;
+
   repeated liquidstakeibc.v1beta1.RedelegateTx redelegation_tx = 1;
 }

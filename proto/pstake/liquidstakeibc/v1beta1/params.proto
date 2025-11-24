@@ -9,6 +9,8 @@ option go_package = "github.com/persistenceOne/persistence-sdk/v7/x/liquidstakei
 
 // Params defines the parameters for the module.
 message Params {
+  option deprecated = true;
+
   option (amino.name) = "pstake/x/liquidstakeibc/Params";
 
   string admin_address = 1

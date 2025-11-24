@@ -11,6 +11,8 @@ option go_package = "github.com/persistenceOne/persistence-sdk/v7/x/liquidstakei
 
 // GenesisState defines the liquidstakeibc module's genesis state.
 message GenesisState {
+  option deprecated = true;
+
   Params params = 1 [ (gogoproto.nullable) = false ];
 
   // initial host chain list
