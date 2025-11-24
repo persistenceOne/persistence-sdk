@@ -57,8 +57,7 @@ var (
 	//
 	// The actual codec used for serialization should be provided to x/lscosmos and
 	// defined at the application level.
-	ModuleCdc = codec.NewProtoCodec(cdctypes.NewInterfaceRegistry())
-	AminoCdc  = codec.NewAminoCodec(Amino)
+	AminoCdc = codec.NewLegacyAmino()
 )
 
 func init() {
