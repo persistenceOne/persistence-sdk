@@ -4,4 +4,4 @@
 [![license](https://img.shields.io/github/license/persistenceOne/persistence-sdk.svg)](https://github.com/persistenceOne/persistence-sdk/blob/master/LICENSE)
 [![LoC](https://tokei.rs/b1/github/persistenceOne/persistence-sdk)](https://github.com/persistenceOne/persistence-sdk)
 
-Node modules and client utilities to build Persistence platform node applications.
+Deprecated go module types for being backward compatible with minimal dependency management.
