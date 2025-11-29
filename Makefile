@@ -1,10 +1,6 @@
 #!/usr/bin/make -f
 
-VERSION := $(shell echo $(shell git describe --always --match "v*") | sed 's/^v//')
-TMVERSION := $(shell go list -m github.com/cometbft/cometbft | sed 's:.* ::')
-COMMIT := $(shell git log -1 --format='%H')
-LEDGER_ENABLED ?= true
-HTTPS_GIT := https://github.com/cosmos/cosmos-sdk.git
+HTTPS_GIT := https://github.com/persistenceOne/persistence-sdk.git
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf
 
@@ -12,12 +8,10 @@ export GO111MODULE = on
 
 # process build tags
 
-all: lint test
+all: lint
 
-# The below include contains the tools and runsim targets.
-include contrib/devtools/Makefile
+distclean: clean
 
-distclean: clean tools-clean
 clean:
 	rm -rf \
     $(BUILDDIR)/ \
@@ -55,22 +49,6 @@ go.sum: go.mod
 	echo "Ensure dependencies have not been modified ..." >&2
 	go mod verify
 	go mod tidy
-
-### Testing
-TEST_TARGET ?= ./...
-TEST_ARGS ?= -timeout 12m -race -coverprofile=./coverage.out -covermode=atomic -v
-
-test: test-unit
-
-test-all: test-unit test-race
-
-test-unit:
-	@VERSION=$(VERSION) go test -mod=readonly -tags='ledger test_ledger_mock' $(PACKAGES_NOSIMULATION) $(TEST_TARGET) $(TEST_ARGS)
-
-test-race:
-	@VERSION=$(VERSION) go test -mod=readonly -race $(PACKAGES_NOSIMULATION)
-
-.PHONY: test test-all test-unit test-race
 
 ###############################################################################
 ###                                Linting                                  ###
